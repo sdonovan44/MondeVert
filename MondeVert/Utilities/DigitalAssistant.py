@@ -462,12 +462,16 @@ class DigitalAssist():
                 DigitalAssist.Open_Web(Amazon_CC)
                 continue
 
-            elif "record" in query or "listen up" in query or "can you right" in query or "record mode" in query or "write" in query  or  "transcribe" in query or "could you write" in query or "transcribe" in query or "can you write" in query :
+            elif "stop" in query or "all set" in query or "quit" in query or "m done" in query or "thank" in query or "peace out" in query:
+                DigitalAssist.speak("Happy to help, Peace out brothah man")
+                s2 = False
+
+            elif ("record" in query or "listen up" in query or "can you right" in query or "record mode" in query or "write" in query  or  "transcribe" in query or "could you write" in query or "transcribe" in query or "can you write" in query) and 'stop' not in query :
                 DigitalAssist.speak("Dictated but not Red Mode Activated")
                 DigitalAssist.transcribe(self)
                 continue
 
-            elif ("consolidate" in query and ("file" in query or "folder" in query or "list" in query)):
+            elif (("consolidate" in query or "compile" in query  or "collect" in query )and ("file" in query or "folder" in query or "list"in query )) or ("add" in query and "master" in query):
                 DigitalAssist.speak("Consolidation in progress")
                 DigitalAssist.compileFiles(self)
                 DigitalAssist.speak("Consolidation Complete my dude")
@@ -530,9 +534,7 @@ class DigitalAssist():
                 DigitalAssist.speak("According to wikipedia")
                 DigitalAssist.speak(result)
 
-            elif "stop" in query or "all set" in query or "quit" in query or "m done" in query or  "thank" in query or  "peace out"  in query:
-                DigitalAssist.speak("Happy to help, Peace out brothah man")
-                s2 = False
+
 
             elif "tell me your name" in query or  "your name" in query or "introduce yourself" in query or "introduce your self" in query:
                 DigitalAssist.speak("I am Big Master Funk the fourth also known as Brick top, AND i AM  Your personal desktop Assistant")
@@ -746,7 +748,7 @@ class DigitalAssist():
     def cleanText(self,text):
         result = ''
         parser = GingerIt()
-        #print(len(text))
+        print(len(text))
         if len(text) < 600 :
             result = pd.DataFrame(parser.parse(text))
             #result.drop_duplicates()
@@ -773,7 +775,8 @@ class DigitalAssist():
         current_time1 = datetime.datetime.now()
         current_time2 = current_time1.strftime('%m-%d-%Y_%H.%M.%S')
         text1 = df
-        SavePath1 = r'D:\ShakeBot Testing\''
+        f2 = up.getPath()
+        SavePath1 = f2
         Filename = FileName + "_"
         SavePath2 = SavePath1 + Filename + current_time2 + ".xlsx"
         #SavePath2 = r'D:\ShakeBot Testing\ShaKeBotTest for DA - 12-20-2022.xlsx'
@@ -798,21 +801,31 @@ class DigitalAssist():
             df1 = pd.concat([pd.read_excel(fp) ], ignore_index=True)
             df1.drop_duplicates()
             r = len(df1.index)
+            print(r)
+
             for i in range(r):
-                try:
-                     x = str( df1.loc[i,'Original_Text'])
-                     print(x)
-                     tempDF =  [DigitalAssist.cleanText(self,x)]
-                     x2 = str(df1.loc[i, 'Original_Wording'])
-                     tempDF2 = [DigitalAssist.cleanText(self, x2)]
-                except:
-                  print(i)
+                for x1 in df1.columns:
+                    try:
+                        if x1 =='Original_Text':
+                            x = str( df1.loc[i,'Original_Text'])
+                            print(x)
+                            tempDF =  [DigitalAssist.cleanText(self,x)]
+                        elif x1 == 'Original_Wording':
+                            x2 = str(df1.loc[i, 'Original_Wording'])
+                            print(x2)
+                            tempDF = [DigitalAssist.cleanText(self, x2)]
+                        else:
+                            xx2 = ''
+                    except:
+                        print(x)
+                        print(x2)
 
+                df1.loc[i, 'AI_Corrected_Text'] = [tempDF]
 
-                if tempDF=='' :
-                    df1.loc[i, 'AI_Corrected_Text'] = [tempDF2.loc[0]]
-                else:
-                    df1.loc[i, 'AI_Corrected_Text'] = [tempDF.loc[0]
+                # if tempDF=='' :
+                #     df1.loc[i, 'AI_Corrected_Text'] = [tempDF2]
+                # else:
+                #     df1.loc[i, 'AI_Corrected_Text'] = [tempDF]
                 #print (df1.loc[i,'AI_Corrected_Text'])
                 #print(df1.loc[i, 'AI_Corrected_Text2'])
 
