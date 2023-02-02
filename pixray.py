@@ -37,7 +37,7 @@ from slip import get_clip_perceptor
 from torchvision.transforms import Compose, Resize, CenterCrop, ToTensor, Normalize, InterpolationMode
 
 # installed by doing `pip install git+https://github.com/openai/CLIP`
-from clip import clip
+import clip
 
 import kornia
 import kornia.augmentation as K
