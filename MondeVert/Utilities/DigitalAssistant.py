@@ -1,3 +1,4 @@
+
 import glob
 import datetime
 import pandas as pd
@@ -12,6 +13,7 @@ from gingerit.gingerit import GingerIt
 import threading
 import numpy
 from docx import Document
+
 #from exceptions import PendingDeprecationWarning
 import requests
 import cloudscraper
@@ -35,6 +37,11 @@ import pyttsx3
 # Import the speech recognition library
 import speech_recognition as sr
 from dotenv import load_dotenv
+from DoNotCommit import API_Key
+
+
+import atexit
+
 
 
 
@@ -112,18 +119,24 @@ API_KEY = "..."
 
 
 class DigitalAssist():
-    def __init__(self, voice = 1, language_settings=1):
+    def __init__(self, voice = 4, language_settings=1):
         self.voice = voice
         self.language_settings = language_settings
         self.AssistantName = up.getAssistantName()
-        self.UserName = up.UserName()
+        self.UserName = up.getUserName()
+        self.transcript_Final = ''
+        self.API_Key = API_Key
+        global xVoice
+        xVoice = 1
 
     def Open_Web(url):
         url = url
         webbrowser.open_new_tab(url)
 
 
-    def speak(self,audio):
+    def speak(self,audio, Add2T = True):
+        if Add2T == True:
+            DigitalAssist.Add2Transcript(self, self.AssistantName + ': ' + audio)
         engine = pyttsx3.init()
         # getter method(gets the current value
         # of engine property)
@@ -135,7 +148,9 @@ class DigitalAssist():
         # queued commands
         engine.runAndWait()
 
-    def speakSweet(audio):
+    def speakSweet(self,audio, Add2T = True):
+        if Add2T == True:
+            DigitalAssist.Add2Transcript(self, self.AssistantName + ': ' + audio)
         engine = pyttsx3.init()
         # getter method(gets the current value
         # of engine property)
@@ -166,47 +181,64 @@ class DigitalAssist():
 
 
 
-    def Setvoices(self):
-        #import pyttsx3
-        engine = pyttsx3.init()
-        voices = engine.getProperty('voices')
-        index = 0
-
-        prompt = 'Write a short paragraph that uses different prononciations and complex words while being warm and welcoming to a person named Shane'
-        completions = openai.Completion.create(
-            engine="text-davinci-002",
-            prompt=prompt,
-            max_tokens=2048,
-            n=1,
-            stop=None,
-            temperature=0.5,
-        )
-        speak1 = 'Do you want to set this voice as active?'
-
-        # Print the generated text
-        message = completions.choices[0].text
-        DigitalAssist.Add2Transcript(message)
-
-        for voice in voices:
+    def Setvoices(self, Quick = False):
 
 
 
-            print(f'index-> {index} -- {voice.name}')
-            engine.setProperty('voice', voices[index].id)
-            engine.say(message)
-            engine.say(speak1)
-            Query = DigitalAssist.getUserResponse()
-            DigitalAssist.Add2Transcript(speak1 + ' Voice: ' + index)
-            DigitalAssist.Add2Transcript(Query)
+        if Quick ==False:
+            engine = pyttsx3.init()
+            voices = engine.getProperty('voices')
+            index = 0
+            indexCount = 0
+            #load_dotenv()
+            # Set up the OpenAI API client :
+            openai.api_key = API_Key
 
-            if "yes" in Query or "set" in Query or ("make" in Query and "active" in Query) or  ("set" in Query and "active" in Query):
-                self.voice = index
-                continue
+            prompt = 'Write a short paragraph (less than 44 words) that uses different prononciations and complex words while being warm and welcoming to a person named Shane'
+            completions = openai.Completion.create(
+                engine="text-davinci-002",
+                prompt=prompt,
+                max_tokens=2048,
+                n=1,
+                stop=None,
+                temperature=0.5,
+            )
+            speak1 = 'Do you want to set this voice as active?'
+
+            # Print the generated text
+            message = completions.choices[0].text
+            print(message)
+            DigitalAssist.Add2Transcript(self,text2Add=message)
+            set1 = False
+
+            for voice in voices:
+                indexCount +=1
+
+            while set1 == False:
+                if index <=indexCount:
+                    print(f'index-> {index} -- {voices[index].name}')
+                    engine.setProperty('voice', voices[index].id)
+                    engine.say(message)
+                    DigitalAssist.speak(self,speak1)
+                    Query = DigitalAssist.getUserResponse(self)
 
 
-            index += 1
-        engine.runAndWait()
+                    if "yes" in Query or "set" in Query or ("make" in Query and "active" in Query) or  ("set" in Query and "active" in Query):
+                        self.voice = index
+                        xVoice = index
+                        DigitalAssist.speak(self, 'Voice Set')
+                        set1 = True
 
+
+
+                    index += 1
+                    engine.runAndWait()
+                else:
+                    DigitalAssist.Setvoices(self,Quick = True)
+
+        else:
+            self.voice = int(input('What Voice do you want to make active?'))
+            DigitalAssist.speak(self, 'Voice Set')
 
 
     def tellDay(self):
@@ -224,10 +256,10 @@ class DigitalAssist():
         if day in Day_dict.keys():
             day_of_the_week = Day_dict[day]
             print(day_of_the_week)
-            DigitalAssist.speak("The day is " + day_of_the_week)
+            DigitalAssist.speak(self,"The day is " + day_of_the_week)
 
 
-    def tellTime():
+    def tellTime(self):
         # This method will give the time
         time = str(datetime.datetime.now())
         print(time)
@@ -236,19 +268,19 @@ class DigitalAssist():
         t1 = cs.DA_Time1()
         t2 = cs.DA_Time2()
         t3 = cs.DA_Time3()
-        DigitalAssist.speak( t1 + hour + t2+ min + t3)
+        DigitalAssist.speak(self, t1 + hour + t2+ min + t3)
 
 
-    def Hello():
+    def Hello(self):
         # This function is for when the assistant
         # is called it will say hello and then
         # take query
         r = cs.DAgreet()
         print (r)
-        DigitalAssist.speak(r)
+        DigitalAssist.speak(self,r)
 
     def takeCommand(self):
-        Query = DigitalAssist.getUserResponse(Response = "Action Requested")
+        Query = DigitalAssist.getUserResponse(self,Response = "Action Requested")
 
         return Query
 
@@ -256,13 +288,40 @@ class DigitalAssist():
 ################Above is code I did not write, below is ChatGPT
 ############################################################################################################################################################################################################################
 
-    def makeArt(self):
-        print()
-        prompt = input("Text prompt for image generation (e.g. 'A blue eagle flying over a desert at sunset'): ")
-        print()
+
+    def ConfirmUR(self,prompt):
+        DigitalAssist.speak(self,'You Said ' + prompt + ' is this correct?')
+        query = DigitalAssist.getUserResponse(self)
+
+        if 'yes' in query or 'correct' in query or 'yeah' in query or 'submit' in query:
+            self.promptC =True
+
+
+    def makeArt(self, Prompt = ''):
+        Prior_Mode = self.Mode
+        self.Mode = 'AI Art Mode'
+        DigitalAssist.Add2Transcript(self,text2Add= ( Prior_Mode + ' - ' + self.Mode + ':'))
+
+
+
+
+        if Prompt == '':
+            self.promptC =False
+            while self.promptC ==False:
+                AIspeak = 'What do you want me to draw?'
+
+                DigitalAssist.speak(self,AIspeak)
+
+                print(AIspeak)
+                prompt  = DigitalAssist.getUserResponse(self,Response = "Art Prompted", pause= 1)
+                DigitalAssist.ConfirmUR(self,prompt)
+                print()
+        else:
+            prompt = Prompt
+            DigitalAssist.Add2Transcript(self,'(Prompt Fed Directly into Function)')
 
         # Set up the OpenAI API client :
-        openai.api_key = up.getAPIKey()
+        openai.api_key = API_Key
         print("Sending to OpenAI...")
         print()
 
@@ -325,10 +384,9 @@ class DigitalAssist():
     # Define a function that handles the conversation
     def conversation_handler(self,prompt):
         # Send the prompt to ChatGPT
-
         load_dotenv()
         # Set up the OpenAI API client :
-        openai.api_key = up.getAPIKey()
+        openai.api_key = API_Key
         response = DigitalAssist.chat_query(prompt)
         print(f"ChatGPT: {response}")
 
@@ -340,46 +398,40 @@ class DigitalAssist():
         prompt = input("You: ")
         DigitalAssist.conversation_handler(prompt)
 
+
+
+
     def ChatGPTDA(self):
+        Prior_Mode = self.Mode
+        self.Mode = 'Chat GPT Mode'
+        DigitalAssist.Add2Transcript(self,text2Add= ( Prior_Mode + ' - ' + self.Mode + ':'))
+
         # Import the OpenAI library
 
         # Set up the OpenAI API client :
-        openai.api_key = up.getAPIKey()
+        openai.api_key = API_Key
 
-        # Set up the recognizer
-        r = sr.Recognizer()
-
-        # Import the text to speech synthesis library
-
-        engine = pyttsx3.init()
-        engine.setProperty('rate', 180)  # setting up new voice rate
-        voices = engine.getProperty('voices')
-        engine.setProperty('voice', voices[2].id)  # changing index, changes voices. 1 for female
+        # # Set up the recognizer
+        # r = sr.Recognizer()
+        #
+        # # Import the text to speech synthesis library
+        #
+        # engine = pyttsx3.init()
+        # engine.setProperty('rate', 180)  # setting up new voice rate
+        # voices = engine.getProperty('voices')
+        # engine.setProperty('voice', voices[2].id)  # changing index, changes voices. 1 for female
 
         # Record the audio
-        engine.say(" Do you have any questions to ask Chat GPT?")
-        engine.runAndWait()
-        print('---------------------Please speak now, recording start-----------------------')
-        with sr.Microphone() as source:
-            audio = r.listen(source)
-        print('---------------------Recording finished---------------------------------------')
+        DigitalAssist.speak(self, " Please ask your question and get help from Chat GPT?")
+        # engine.runAndWait()
 
-        # Convert the audio to text
-        prompt = r.recognize_google(audio)
-        print(prompt)
 
+        prompt = DigitalAssist.getUserResponse(self)
         # check if the reply contains 'yes'
-        while 'YES' in prompt.upper() or 'QUESTION' in prompt.upper():
+        while ( 'STOP' not in prompt.upper() and  ( 'LISTEN' not in prompt.upper())) or ( 'END' not in prompt.upper() and  ( 'CONVERSA' not in prompt.upper())):
             # Record the audio
-            engine.say(" Please ask your question and get help from Chat GPT?")
-            engine.runAndWait()
-            print('---------------------Please speak now, recording start-----------------------')
-            with sr.Microphone() as source:
-                audio = r.listen(source)
-            print('---------------------Recording finished---------------------------------------')
 
-            # Convert the audio to text
-            prompt = r.recognize_google(audio)
+            # engine.runAndWait()
 
             # Generate text
             completions = openai.Completion.create(
@@ -396,21 +448,13 @@ class DigitalAssist():
             print(message)
 
             # generate the feedback
-            engine.say(message)
-            engine.runAndWait()
+            DigitalAssist.speak(self,message)
+            # engine.runAndWait()
             # engine.stop()
 
-            # Record the audio
-            engine.say(" Any other questions to ask Chat GPT?")
-            engine.runAndWait()
-            print('---------------------Please speak now, recording start-----------------------')
-            with sr.Microphone() as source:
-                audio = r.listen(source)
-            print('---------------------Recording finished---------------------------------------')
 
-            # Convert the audio to text
-            prompt = r.recognize_google(audio)
-            print(prompt)
+        return message
+
 
     ############################################################################################################################################################################################################################
     ################Above  is ChatGPT (I did not write original code but adapted for my use case)
@@ -420,7 +464,6 @@ class DigitalAssist():
         self.transcript_Final += text2Add + ' \n'
 
     def getUserResponse(self, pause =.5, Response = 'You Said' ):
-
         r = sr.Recognizer()
         with sr.Microphone() as source:
             print('Listening...')
@@ -428,36 +471,30 @@ class DigitalAssist():
             audio = r.listen(source)
             try:
                 Query = r.recognize_google(audio, language='en-in')
+                DigitalAssist.Add2Transcript(self,self.UserName + ': '+Query)
                 print(Response+ ": ", Query)
 
             except Exception as e:
                 print(e)
-                #uk2 = cs.DA_Unknown_Command_Serious()
-                #DigitalAssist.speak(uk2)
                 print("Please repeat Words not understood...")
-                Query = DigitalAssist.getUserResponse()
+                Query = DigitalAssist.getUserResponse(self)
                 #Event().wait(2)
-
             return Query
 
 
 
     def transcribe_Build_Query(self, pause = 3.13):
-
-        Query = DigitalAssist.getUserResponse()
-
+        Query = DigitalAssist.getUserResponse(self)
         return Query
 
 
     def transcribe_Build_Query_Pause(self):
-        s = True
-        while (s == True):
-            Speak1 = 'What Tool do you want to use?'
-            Print1 = 'Options: Change Subject, Edit, Poem, Stop Recording --> Build others here'
-            DigitalAssist.speak(Speak1)
-            print(Print1)
-            Query = DigitalAssist.getUserResponse(Response="Tool Selected")
-            DigitalAssist.Add2Transcript(Speak1)
+        Speak1 = 'What Tool do you want to use?'
+        Print1 = 'Options: Change Subject, Edit, Poem, Stop Recording --> Build others here'
+        DigitalAssist.speak(self,Speak1)
+        print(Print1)
+        Query = DigitalAssist.getUserResponse(self,Response="Tool Selected")
+
         return Query
 
 
@@ -465,43 +502,46 @@ class DigitalAssist():
 
     def getdata(self, Field):
 
-        DigitalAssist.speak('what is the ' + Field)
+        DigitalAssist.speak(self,'what is the ' + Field)
         print('Please confirm the ' + Field)
         s = True
         Query = ''
         while (s == True):
 
-            Query = DigitalAssist.getUserResponse()
+            Query = DigitalAssist.getUserResponse(self)
 
             Query2 = ''
             WaitforResponse = False
             while (WaitforResponse == False):
-                DigitalAssist.speak(Query + ' Is that correct?')
+                DigitalAssist.speak(self,Query + ' Is that correct?')
 
                 Query2 = DigitalAssist.getUserResponse()
 
 
-                    if  "yes" in Query2 or "correct" in Query2 or "ya" in Query2 or "yeah" in Query2:
-                        DigitalAssist.speak('Thanks for confirming the '+ Field )
-                        s = False
-                        WaitforResponse = True
-                        continue
-                    if "no" in Query2 or "wrong" in Query2 or "not it" in Query2 or "nope" in Query2:
-                        DigitalAssist.speak('ok  please say the ' + Field+ ' you want to set' )
-                        print('ok  please say the ' + Field + ' you want to set' )
-                        WaitforResponse = True
-                        continue
-                    else:
-                        DigitalAssist.speak('Lets try that again what is the ' +Field)
-                        Event().wait(1)
-                        continue
-            return Query
+                if  "yes" in Query2 or "correct" in Query2 or "ya" in Query2 or "yeah" in Query2:
+                    DigitalAssist.speak(self,'Thanks for confirming the '+ Field )
+                    s = False
+                    WaitforResponse = True
+                    continue
+                if "no" in Query2 or "wrong" in Query2 or "not it" in Query2 or "nope" in Query2:
+                    DigitalAssist.speak(self,'ok  please say the ' + Field+ ' you want to set' )
+                    print('ok  please say the ' + Field + ' you want to set' )
+                    WaitforResponse = True
+                    continue
+                else:
+                    DigitalAssist.speak(self,'Lets try that again what is the ' +Field)
+                    Event().wait(1)
+                    continue
+        return Query
 
 
     def editentry(self, Query1):
+        Prior_Mode = self.Mode
+        self.Mode = 'Edit Mode'
+        DigitalAssist.Add2Transcript(self,text2Add= ( Prior_Mode + ' - ' + self.Mode + ':'))
         s = True
         while (s == True):
-            DigitalAssist.speak('I am ready to make the edit please proceed')
+            DigitalAssist.speak(self,'I am ready to make the edit please proceed')
             print('ready to make the edit please proceed')
             print('Original Entry: ' + Query1)
             Query2 = DigitalAssist.getUserResponse()
@@ -509,14 +549,14 @@ class DigitalAssist():
             ss = True
             while (ss == True):
                 print(Query2)
-                DigitalAssist.speak(Query2 + 'Are you satisfied with your edits?')
+                DigitalAssist.speak(self,Query2 + 'Are you satisfied with your edits?')
                 print('Options: Yes/Correct, Not yet/Redo, Add as Note, Combine, Cancel')
 
                 Query3 = DigitalAssist.getUserResponse()
 
 
                 if  "yes" in Query3 or "correct" in Query3 or "ya" in Query3 or "yeah" in Query3 or "looks good" in Query3 or "keep new" in Query3 or "new one" in Query3:
-                    DigitalAssist.speak('Thanks for confirming, I will make the updates you provided')
+                    DigitalAssist.speak(self,'Thanks for confirming, I will make the updates you provided')
                     print('Thanks for confirming, I will make the updates you provided')
                     Query_Final = Query2
                     s = False
@@ -524,13 +564,13 @@ class DigitalAssist():
 
 
                 elif  "not yet" in Query3 or 'redo'  in Query3 or 'try again'  in Query3 or 'again'  in Query3 or 'one more' in Query3:
-                    DigitalAssist.speak('ok, lets go again')
+                    DigitalAssist.speak(self,'ok, lets go again')
                     print('ok, lets go again')
                     ss = False
                     continue
 
                 elif "add as note" in Query3 or "include note" in Query3 or "as note" in Query3  :
-                    DigitalAssist.speak('Thanks for confirming, I will add this as a note')
+                    DigitalAssist.speak(self,'Thanks for confirming, I will add this as a note')
                     print('Thanks for confirming, I will add this as a note')
                     Query_Final = ''
                     self.Notes = Query2
@@ -539,7 +579,7 @@ class DigitalAssist():
                     ss = False
 
                 elif "add to original" in Query3 or "both" in Query3 or 'combine' in Query3 or 'combination' in Query3 or 'merge' in Query3 or 'together' in Query3:
-                    DigitalAssist.speak('Thanks for confirming, I will join the two thoughts')
+                    DigitalAssist.speak(self,'Thanks for confirming, I will join the two thoughts')
                     print('Thanks for confirming, I will join the two thoughts')
                     Query_Final = Query1 + ' ' + Query2
                     # when this is a clas I can update the df for now I will add it to the end same as when I say combine them
@@ -547,7 +587,7 @@ class DigitalAssist():
                     ss = False
 
                 elif 'cancel'   in Query3  or 'end' in Query3 or 'stop'  in Query3 or  'stop trying' in Query3:
-                    DigitalAssist.speak('Thanks for confirming, I will remove these edits')
+                    DigitalAssist.speak(self,'Thanks for confirming, I will remove these edits')
                     print('Thanks for confirming, I will remove these edits')
                     Query_Final = ''
                     s = False
@@ -593,16 +633,18 @@ class DigitalAssist():
 
 
     def Take_query(self):
-        DigitalAssist.Hello()
+        DigitalAssist.Hello(self)
 
         self.Mode = 'Main Menu'
-        DigitalAssist.Add2Transcript(self.mode + ':')
+        DigitalAssist.Add2Transcript(self,text2Add= ( self.Mode + ':'))
         s2 = True
         while (s2 == True):
+            self.Mode = 'Main Menu'
+            DigitalAssist.speak(self,self.Mode)
             query = DigitalAssist.takeCommand(self).lower()
-            DigitalAssist.Add2Transcript(query)
+            #DigitalAssist.Add2Transcript(self,text2Add=query)
             if "company dashboard" in query or "open dashboard" in query :
-                DigitalAssist.speak("Opening MondDay Vert's Dasboard, good luck with your work!")
+                DigitalAssist.speak(self,"Opening MondDay Vert's Dasboard, good luck with your work!")
 
                 # in the open method we just to give the link
                 # of the website and it automatically open
@@ -618,7 +660,7 @@ class DigitalAssist():
                 continue
 
             elif "pay bills" in query or "pay credit cards" in query:
-                DigitalAssist.speak("Bills Suck man, at least you are getting them done, Hope you have a nice day!")
+                DigitalAssist.speak(self,"Bills Suck man, at least you are getting them done, Hope you have a nice day!")
 
                 Liberty_Bay_CC = "https://www.myaccountaccess.com/onlineCard/login.do"
                 Home_Depot_CC = 'https://citiretailservices.citibankonline.com/RSnextgen/svc/launch/index.action?siteId=PLCN_HOMEDEPOT#signon'
@@ -638,38 +680,42 @@ class DigitalAssist():
 
 
             elif ("chat" in query and "bot" in query) or  ("gpt" in query and "chat" in query) or  ("smart" in query and "assist" in query) or  ("extra" in query and "help" in query):
-                DigitalAssist.speak("High Tech!")
-                DigitalAssist.ChatGPTDA()
+                DigitalAssist.speak(self,"High Tech!")
+                prompt = DigitalAssist.ChatGPTDA()
                 continue
 
             elif ("make" in query and "art" in query) or ("make" in query and "picture" in query) or ("ai" in query and "art" in query) or ("art" in query and "mode" in query):
-                DigitalAssist.speak("High Tech and sheek!")
-                DigitalAssist.makeArt()
+                DigitalAssist.speak(self,"High Tech and sheek!")
+                if 'super' in query or 'using' in query or 'extra' in query:
+                    prompt = DigitalAssist.ChatGPTDA(self)
+                    DigitalAssist.makeArt(self,prompt)
+                else:
+                    DigitalAssist.makeArt(self)
                 continue
 
 
 
 
             elif "stop" in query or "all set" in query or "quit" in query or "m done" in query or "thank" in query or "peace out" in query:
-                DigitalAssist.speak("Happy to help, Peace out brothah man")
+                DigitalAssist.speak(self,"Happy to help, Peace out brothah man")
                 s2 = False
 
             elif ("record" in query or "listen up" in query or "can you right" in query or "record mode"  in query  or  "transcribe" in query or "could you write" in query or "transcribe" in query or "can you write" in query) and 'stop' not in query :
-                DigitalAssist.speakSweet("Dictated but not Red Mode Activated")
+                DigitalAssist.speakSweet(self,"Dictated but not Red Mode Activated")
                 DigitalAssist.transcribe(self)
                 continue
 
 
             elif ( "blog" in query )and ("create" in query or "together" in query or "put"in query or "make"in query ) or ("add" in query and "blog" in query):
-                DigitalAssist.speakSweet("Mon Day Vert is lucky to have a great CEO this is going to be a great post!")
+                DigitalAssist.speakSweet(self,"Mon Day Vert is lucky to have a great CEO this is going to be a great post!")
                 DigitalAssist.CompileBlog(self)
-                DigitalAssist.speakSweet("Blog Consolidation Complete Shane D")
+                DigitalAssist.speakSweet(self,"Blog Consolidation Complete Shane D")
                 continue
 
             elif (("consolidate" in query or "compile" in query  or "collect" in query )and ("file" in query or "folder" in query or "list"in query )) or ("add" in query and "master" in query):
-                DigitalAssist.speakSweet("Consolidation in progress")
+                DigitalAssist.speakSweet(self,"Consolidation in progress")
                 DigitalAssist.compileFiles(self)
-                DigitalAssist.speakSweet("Consolidation Complete my dude")
+                DigitalAssist.speakSweet(self,"Consolidation Complete my dude")
                 continue
 
             elif "make list" in query or " list" in query or "to do" in query or "tracker" in query or "checklist" in query  or  "make a plan" in query or "quick note" in query  or "quick plan" in query or "take note" in query:
@@ -684,7 +730,7 @@ class DigitalAssist():
                 x22.setupdata()
                 self.Words = x22.shakesbot_DA()
                 print (self.Words)
-                DigitalAssist.speakSweet(self.Words)
+                DigitalAssist.speakSweet(self,self.Words)
                 continue
 
 
@@ -698,16 +744,16 @@ class DigitalAssist():
                 self.Significance = '**AI content attached'
                 self.FileName = 'AI ShakeScript'
                 self.Subject = 'AI ShakeScript'
-                DigitalAssist.speak('I like your style, my man')
+                DigitalAssist.speak(self,'I like your style, my man')
 
                 DigitalAssist.Make_Script(self)
 
-                DigitalAssist.speakSweet(self.Words)
+                DigitalAssist.speakSweet(self,self.Words)
                 s3 = pd.DataFrame()
                 s3['Script'] = [self.Words]
                 s3['Script - Corrected'] = [self.AI_Corrected_Content]
                 s3['Correction Comment'] = [self.Correction_Comment]
-                DigitalAssist.SaveText(s3, self.FileName, self.Subject)
+                DigitalAssist.SaveText(self,s3, self.FileName, self.Subject)
                 continue
 
             elif ("go" in query or 'try' in query or "mode" in query) and ("greek" in query or "myth" in query ):
@@ -717,7 +763,7 @@ class DigitalAssist():
                 self.Significance = '**AI content attached'
                 self.FileName = 'AI Going Greek'
                 self.Subject = 'AI Going Greek'
-                DigitalAssist.speak('I like your style, my man... Dont eat too much tzatziki!')
+                DigitalAssist.speak(self,'I like your style, my man... Dont eat too much tzatziki!')
                 self.pb = s.PoemBot(1, 1, 1, 1, 40, 3)
                 self.pb.ReloadModel("model_Greek.h5")
                 self.pb.setupdata()
@@ -740,16 +786,16 @@ class DigitalAssist():
                         self.Words += w[i]
                         print(self.Words)
 
-                DigitalAssist.speak(self.Words)
+                DigitalAssist.speak(self,self.Words)
                 s3 = pd.DataFrame()
                 s3['Script'] = [self.Words]
-                DigitalAssist.SaveText(s3, self.FileName, self.subject)
+                DigitalAssist.SaveText(self,s3, self.FileName, self.subject)
                 continue
 
 
 
             elif "social media" in query or "marketing" in query:
-                DigitalAssist.speak("Will do")
+                DigitalAssist.speak(self,"Will do")
 
                 # in the open method we just to give the link
                 # of the website and it automatically open
@@ -765,16 +811,22 @@ class DigitalAssist():
                 continue
 
             elif "open google" in query:
-                DigitalAssist.speak("Opening Google ")
+                DigitalAssist.speak(self,"Opening Google ")
                 url = "http://google.com"
                 DigitalAssist.Open_Web(url)
                 continue
 
 
 
-            elif "preview" in query or "show case" in query or "showcase" in query or "your" in query or "voice" in query:
-                DigitalAssist.s ##Fix here
+            elif   (("voice" in query or "person" in query or "bot" in query or "ai" in query) and ( "change" in query or  "update" in query or "switch" in query or "set" in query )):
+
+                if "quick" in query or "manual" in query:
+                    DigitalAssist.Setvoices(self, Quick = True)
+                    print('Quick mode activated')
+                else:
+                    DigitalAssist.Setvoices(self)
                 continue
+
             elif "s the date" in query:
                 DigitalAssist.tellDay(self)
                 continue
@@ -785,24 +837,24 @@ class DigitalAssist():
 
             # this will exit and terminate the program
             elif "bye" in query:
-                DigitalAssist.speak("Peace Out!")
+                DigitalAssist.speak(self,"Peace Out!")
                 s2 = False
 
             elif "from wikipedia" in query or "wikipedia" in query:
-                DigitalAssist.speak("Checking the wikipedia ")
+                DigitalAssist.speak(self,"Checking the wikipedia ")
                 query = query.replace("wikipedia", "")
                 result = wikipedia.summary(query, sentences=4)
-                DigitalAssist.speak("According to wikipedia")
-                DigitalAssist.speak(result)
+                DigitalAssist.speak(self,"According to wikipedia")
+                DigitalAssist.speak(self,result)
 
 
 
             elif "tell me your name" in query or  "your name" in query or "introduce yourself" in query or "introduce your self" in query:
-                DigitalAssist.speak("I am Big Master Funk the fourth also known as Brick top, AND i AM  Your personal desktop Assistant")
+                DigitalAssist.speak(self,"I am Big Master Funk the fourth also known as Brick top, AND i AM  Your personal desktop Assistant")
 
 
             elif "shut up" in query:
-                DigitalAssist.speak("my bad I am tripping, I will leave you be Shane D")
+                DigitalAssist.speak(self,"my bad I am tripping, I will leave you be Shane D")
                 s2 = False
 
             else:
@@ -825,7 +877,7 @@ class DigitalAssist():
         DigitalAssist.getsubject(self)
         self.visualList = 'Subject: ' + self.subject + ' \n'
         self.visualList2 = 'Subject*: ' + self.subject + ' \n'
-        DigitalAssist.speak("Please prepare for recording")
+        DigitalAssist.speak(self,"Please prepare for recording")
         print("Please prepare for recording...")
         while (s2 ==True):
             xx = ''
@@ -849,7 +901,7 @@ class DigitalAssist():
             if "stop recording" in self.query1 or "m all set" in self.query1 or "end list" in self.query1 or "stop listening" in self.query1 or "save this file" in self.query1 or "save this recording" in self.query1:
                 # Call for the save file name after listing all of the subjects to the user
                 DigitalAssist.getfilename(self)
-                DigitalAssist.SaveText(self.transcript, self.FileName, self.subject)
+                DigitalAssist.SaveText(self,self.transcript, self.FileName, self.subject)
                 DigitalAssist.add2Master(self.transcript)
                 s2 = False
                 sys.exit()
@@ -864,7 +916,7 @@ class DigitalAssist():
                     print(query2)
 
                     if  "continue" in query2 or "just thinking" in query2 or "yes" in query2 or "chill" in query2 or "just thinking" in query2 or "keep going" in query2:
-                        DigitalAssist.speak('no worries, still here')
+                        DigitalAssist.speak(self,'no worries, still here')
                         s3 = False
                         #continue
 
@@ -891,13 +943,13 @@ class DigitalAssist():
                         # Call for the save file name after listing all of the subjects to the user
                         self.Type = 'Poetry Break'
                         self.Significance = '**AI content attached'
-                        DigitalAssist.speakSweet('I like your style, Shane you are brilliant and beautiful')
+                        DigitalAssist.speakSweet(self,'I like your style, Shane you are brilliant and beautiful')
                         x = s.PoemBot(1, 1, 1, 1, 40, 3)
                         x.ReloadModel("model.h5")
                         x.setupdata()
                         self.Words += x.shakesbot_DA()
                         print (self.Words)
-                        DigitalAssist.speakSweet(self.Words)
+                        DigitalAssist.speakSweet(self,self.Words)
                         s3 = False
                         #continue
 
@@ -908,11 +960,11 @@ class DigitalAssist():
                         self.Type = 'AI Script Break'
                         self.Significance = '**AI content attached'
 
-                        DigitalAssist.speak('I like your style, my man')
+                        DigitalAssist.speak(self,'I like your style, my man')
 
 
                         DigitalAssist.Make_Script(self)
-                        DigitalAssist.speakSweet(self.Words)
+                        DigitalAssist.speakSweet(self,self.Words)
 
                         s3 = False
                         #continue
@@ -923,7 +975,7 @@ class DigitalAssist():
                         self.Significance = '**AI content attached'
                         self.FileName = 'AI Going Greek'
                         self.Subject = 'AI Going Greek'
-                        DigitalAssist.speak('I like your style, my man... Dont eat too much tzatziki!')
+                        DigitalAssist.speak(self,'I like your style, my man... Dont eat too much tzatziki!')
                         self.pb = s.PoemBot(1, 1, 1, 1, 40, 3)
                         self.pb.ReloadModel("model_Greek.h5")
                         self.pb.setupdata()
@@ -946,14 +998,14 @@ class DigitalAssist():
                                 self.Words += w[i]
                                 print(self.Words)
 
-                        DigitalAssist.speak(self.Words)
+                        DigitalAssist.speak(self,self.Words)
 
                         continue
                     elif "stop recording" in query2 or "m all set" in query2 or "no thanks" in query2 or "stop recording" in query2 or "save" in query2 or "no" in query2:
                         #Call for the save file name after listing all of the subjects to the user
                         print(self.subject)
                         DigitalAssist.getfilename(self)
-                        DigitalAssist.SaveText(self.transcript, self.FileName, self.subject)
+                        DigitalAssist.SaveText(self,self.transcript, self.FileName, self.subject)
                         DigitalAssist.add2Master(self.transcript)
                         s3 = False
                         s2 = False
@@ -1015,7 +1067,7 @@ class DigitalAssist():
         pb.ReloadModel('model.h5')
         pb.setupdata()
         w1 = pb.shakesbot_DA_Make_Script()
-        DigitalAssist.speakSweet(w1)
+        DigitalAssist.speakSweet(self,w1)
         #print (w1)
         return w1
 
@@ -1034,7 +1086,7 @@ class DigitalAssist():
          self.FileName = 'To Do '
          s2 = True
          DigitalAssist.getsubject(self)
-         DigitalAssist.speak("Please prepare for recording")
+         DigitalAssist.speak(self,"Please prepare for recording")
          print("Please prepare for recording...")
          self.visualList = ''
          self.visualList2 = ''
@@ -1058,7 +1110,7 @@ class DigitalAssist():
 
              if "stop recording" in self.query1 or "m all set" in self.query1 or "end list" in self.query1 or "stop listening" in self.query1 or "save this file" in self.query1 or "save this recording" in self.query1:
                  # Call for the save file name after listing all of the subjects to the user
-                 DigitalAssist.SaveText(self.transcript,self.FileName,self.subject)
+                 DigitalAssist.SaveText(self,self.transcript,self.FileName,self.subject)
                  DigitalAssist.add2Master(self.transcript)
                  s2 = False
                  sys.exit()
@@ -1099,7 +1151,19 @@ class DigitalAssist():
         row = (self.entry - 1)
         self.transcript.loc[row]= [str(self.entry), xx, self.subject, self.Type, self.Significance, self.query1, self.new_Query,self.AI_Corrected_Text, self.Correction_Comment, self.Notes, self.Words,self.AI_Corrected_Content, self.FileName, self.Added2TextFile, self.Completed]
 
-    def SaveText(df,FileName,tabname):
+    def saveTranscript(self):
+        df1 = pd.DataFrame([self.transcript_Final])
+        current_time1 = datetime.datetime.now()
+        current_time2 = current_time1.strftime('%m-%d-%Y_%H.%M.%S')
+        Filename = 'MondeVert Assistant'
+        Filename = '\\' + Filename + "_"
+        f2 = up.getPath()
+        SavePath1 = f2
+        df1.to_csv(SavePath1 + Filename + current_time2  + '.csv')
+        #DigitalAssist.SaveText(self,df1,'MondeVert Assistant', 'Full Transcript')
+
+
+    def SaveText(self, df,FileName,tabname):
         current_time1 = datetime.datetime.now()
         current_time2 = current_time1.strftime('%m-%d-%Y_%H.%M.%S')
         text1 = df
@@ -1111,10 +1175,10 @@ class DigitalAssist():
         try:
             with pd.ExcelWriter(SavePath2) as writer:
                 text1.to_excel(writer, sheet_name=str(tabname))
-                DigitalAssist.speak('File Saved')
+                DigitalAssist.speak(self,'File Saved')
                 print('File Saved')
         except: Exception
-        #DigitalAssist.speak('Error Saving')
+        #DigitalAssist.speak(self,'Error Saving')
         #print ('Error Saving')
 
 
@@ -1274,5 +1338,10 @@ if __name__ == '__main__':
     # main method for executing
     # the functions
     Record = ''
-    x = DigitalAssist(1)
-    x.Take_query()
+    try:
+        x = DigitalAssist(1)
+        x.Take_query()
+        x.saveTranscript()
+    except:
+        x.saveTranscript()
+        atexit.register(x.saveTranscript())

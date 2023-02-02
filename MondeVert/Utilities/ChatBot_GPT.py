@@ -12,7 +12,7 @@ import pyttsx3
 # Import the speech recognition library
 import speech_recognition as sr
 from dotenv import load_dotenv
-
+from DoNotCommit import API_Key
 # from git import Repo
 #
 # Repo.clone_from('https://gitlab.com/sfoerster/openai', master)
@@ -36,7 +36,7 @@ def makeArt():
     print()
 
     # Set up the OpenAI API client :
-    openai.api_key = up.getAPIKey()
+    openai.api_key = API_Key
     print("Sending to OpenAI...")
     print()
 
@@ -119,7 +119,7 @@ def conversation_handler(prompt):
 
     load_dotenv()
     # Set up the OpenAI API client :
-    openai.api_key = up.getAPIKey()
+    openai.api_key = API_Key
     response = chat_query(prompt)
     print(f"ChatGPT: {response}")
 
@@ -142,7 +142,7 @@ def ChatGPTDA():
     # Import the OpenAI library
 
     # Set up the OpenAI API client :
-    openai.api_key = up.getAPIKey()
+    openai.api_key = API_Key
 
 
     # Set up the recognizer
@@ -219,9 +219,11 @@ def ChatGPTDA():
 if __name__ == "__main__":
     #ChatGPTDA()
 
-    makeArt()
+    #makeArt()
     # Example of prompt to query
-    prompt = input("What Do you want to Know?: ")
+    # prompt = input("What Do you want to Know?: ")
+    #
+    # # Start the conversation
+    # conversation_handler(prompt)
 
-    # Start the conversation
-    conversation_handler(prompt)
+    makeArt()
