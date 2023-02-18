@@ -221,9 +221,9 @@ if __name__ == "__main__":
 
     #makeArt()
     # Example of prompt to query
-    # prompt = input("What Do you want to Know?: ")
+    prompt = input("What Do you want to Know?: ")
     #
     # # Start the conversation
-    # conversation_handler(prompt)
+    conversation_handler(prompt)
 
-    makeArt()
+    #makeArt()

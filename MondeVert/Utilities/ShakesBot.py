@@ -487,13 +487,13 @@ class PoemBot:
         return SavePath2
 
 
-    def shakesbot_DA(cls):
+    def shakesbot_DA(cls,size = 300):
         current_time1 = datetime.datetime.now()
-        current_time2 = str(current_time1)[:19]
-        print(current_time2)
+        current_time2 = current_time1.strftime('%m-%d-%Y_%H.%M.%S')
         f2 = up.getPath()
         SavePath1 = f2
-        Filename = "\Test Shakes "
+        FileName= 'ShakeBot Poetry'
+        Filename = '\\' + FileName + "_"
         SavePath2 = SavePath1 + Filename + current_time2 + ".xlsx"
 
 
@@ -519,14 +519,14 @@ class PoemBot:
 
 
 
-    def shakesbot_DA_Make_Script(cls):
+    def shakesbot_DA_Make_Script(cls, size = 300):
         crazy = round((randbelow(520000)+170000)/100000,0)
         crazy = crazy/10
         print(crazy)
         s3 = pd.DataFrame()
 
         ##Set 9
-        x0 = PoemBot.generate_text(cls, 300, crazy)
+        x0 = PoemBot.generate_text(cls, size, crazy)
         #print(x0)
         s3['Start'] = [x0]
         return x0
