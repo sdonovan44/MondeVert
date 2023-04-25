@@ -134,6 +134,7 @@ class DigitalAssist():
         self.API_Key = API_Key
         self.Correction_Comment = ''
         self.AI_Corrected_Content = ''
+        self.SilentMode = False
         global xVoice
         global voice_set
         voice_set = self.voice
@@ -154,10 +155,13 @@ class DigitalAssist():
         voices = engine.getProperty('voices')
         engine.setProperty('voice', voices[voice].id)
         # Method for the speaking of the assistant
-        engine.say(audio + "")
-        # Blocks while processing all the currently
-        # queued commands
-        engine.runAndWait()
+        if self.SilentMode == False:
+            engine.say(audio + "")
+            # Blocks while processing all the currently
+            # queued commands
+            engine.runAndWait()
+        else:
+            print('Silent Mode Activated: ' + audio)
 
     def speakSweet(self,audio, Add2T = True):
         if Add2T == True:
@@ -168,11 +172,13 @@ class DigitalAssist():
         voices = engine.getProperty('voices')
         engine.setProperty('voice', voices[4].id)
         # Method for the speaking of the assistant
-        engine.say(audio + "")
-        # Blocks while processing all the currently
-        # queued commands
-        engine.runAndWait()
-
+        if self.SilentMode == False:
+            engine.say(audio + "")
+            # Blocks while processing all the currently
+            # queued commands
+            engine.runAndWait()
+        else:
+            print('Silent Mode Activated: ' + audio)
 
         #def RandomCharacters
 
@@ -205,7 +211,7 @@ class DigitalAssist():
 
             prompt = 'Write a short paragraph (less than 44 words) that uses different pronunciations and complex words while being warm and welcoming to a person named Shane'
             completions = openai.Completion.create(
-                engine="text-davinci-002",
+                engine="text-davinci-003",
                 prompt=prompt,
                 max_tokens=2500,
                 n=1,
@@ -270,14 +276,22 @@ class DigitalAssist():
                                     self.Words, self.AI_Corrected_Content, self.FileName, self.Added2TextFile,
                                     self.Completed]
 
+
+    def ActivateSilentMode(self):
+        self.SilentMode = True
+    def ActivateLoudMode(self):
+        self.SilentMode = False
+
     def saveTranscript(self):
-        df1 = pd.DataFrame([self.transcript_Final])
+
         current_time1 = datetime.datetime.now()
         current_time2 = current_time1.strftime('%m-%d-%Y_%H.%M.%S')
         Filename = 'MondeVert Assistant'
         Filename = '\\' + Filename + "_"
         f2 = up.getPath()
         SavePath1 = f2
+        data = [current_time2,self.transcript_Final]
+        df1 = pd.DataFrame(data,columns = ["TimeStamp","Transcript"])
         df1.to_csv(SavePath1 + Filename + current_time2 + '.csv')
         # DigitalAssist.SaveText(self,df1,'MondeVert Assistant', 'Full Transcript')
         DigitalAssist.add2Master2(df1)
@@ -656,7 +670,7 @@ class DigitalAssist():
         return Query
     def transcribe_Build_Query_Pause(self):
         Speak1 = 'What Tool do you want to use?'
-        Print1 = 'Options: Change Subject, Edit, Poem, Stop Recording --> Build others here'
+        Print1 = 'Options: ChatGPT (ChatBot), Transcribe Mode , Make To Do List, Change Subject, Edit, Poem, Stop Recording --> Build others here'
         DigitalAssist.speak(self,Speak1)
         print(Print1)
         Query = DigitalAssist.getUserResponse(self,Response="Tool Selected")
@@ -851,7 +865,7 @@ class DigitalAssist():
 
             # Generate text
             completions = openai.Completion.create(
-                engine="text-davinci-002",
+                engine="text-davinci-003",
                 prompt=prompt,
                 max_tokens=2444,
                 n=1,
@@ -1009,7 +1023,9 @@ class DigitalAssist():
 
             elif 'shake' not in query and ("inspire" in query or "unique" in query or ("own" in query) or ("version" in query and "3" in query) or ('quick' in query and 'poem' in query ) or  ( "poem" in query or 'poetry' in query)):
                 #make program to ask how spicy to make it lol
-                DigitalAssist.Quick_Poem_v1(self)
+                Poem_Type = random.choices(up.Random_Poem)
+                Poem_Type = Poem_Type[0]
+                DigitalAssist.Quick_Poem_v1(self, GPTPrompt=Poem_Type)
                 s2 = False
                 DigitalAssist.RunChatGPT(self)
 
@@ -1031,23 +1047,53 @@ class DigitalAssist():
                 DigitalAssist.RunChatGPT(self)
 
 
+            elif (("live" in query and 'art in query') or ('podcast' in query or 'stream' in query) ):
+                DigitalAssist.MakeArtLive(self)
+                s2 = False
+                DigitalAssist.RunChatGPT(self)
+
+
+
 
 
             elif ('chorus' in query or 'song' in query) or ("brick" in query and ( "sing" in query or "dj" in query)) :
-                DigitalAssist.Make_a_Rap(self, Mode = 'SadRap')
-                DigitalAssist.speak(self, 'Rap Lyrics Complete')
 
-                DigitalAssist.Make_a_Rap(self)
-                DigitalAssist.speak(self,'Rap Lyrics Complete')
-                DigitalAssist.Make_a_Rap(self, Mode='Raggae')
-                DigitalAssist.speak(self,'Reggae Lyrics Complete')
-                DigitalAssist.Make_a_Chorus(self,Mode='Techno')
-                DigitalAssist.speak(self,'Techno Lyrics Complete')
-                DigitalAssist.Sampler(self, Mode='Techno')
-                DigitalAssist.speak(self,'Techno Samples Provided Complete',voice = 9)
 
-                DigitalAssist.Make_a_Song(self)
-                DigitalAssist.speak(self,'Make a quick song Complete')
+                Song_Genre = random.choices(up.Random_Song_Genre_List)
+                Song_Genre = Song_Genre[0]
+                Song_Genre = 'v3'
+                #Song_Genre = 'techno'
+
+
+                if 'v1' in  Song_Genre:
+                    DigitalAssist.Make_a_Song(self)
+                    DigitalAssist.speak(self, 'Make a quick song Version 1 Complete')
+                elif 'v2' in Song_Genre:
+                    DigitalAssist.Make_a_Chorus(self)
+                    DigitalAssist.speak(self, 'Make a quick song Version 2 Complete')
+                elif 'v3' in Song_Genre:
+                    DigitalAssist.Make_a_Song(self)
+                    DigitalAssist.speak(self, 'Make a quick song Version 3 Complete')
+
+                elif 'Techno' in Song_Genre:
+                    DigitalAssist.Make_a_Chorus(self, Mode='Techno')
+                    DigitalAssist.speak(self, 'Techno Lyrics Complete')
+                    DigitalAssist.Sampler(self, Mode='Techno')
+                    DigitalAssist.speak(self, 'Techno Samples Provided Complete', voice=9)
+                elif Song_Genre =='SadRap':
+                    DigitalAssist.Make_a_Rap(self, Mode='SadRap')
+                    DigitalAssist.speak(self, 'Sad Rap Lyrics Complete')
+                elif Song_Genre == 'Reggae':
+                    DigitalAssist.Make_a_Rap(self, Mode='Raggae')
+                    DigitalAssist.speak(self, 'Reggae Lyrics Complete')
+                elif Song_Genre == 'Rap':
+                    DigitalAssist.Make_a_Rap(self, Mode='Rap')
+                    DigitalAssist.speak(self, 'Rap Lyrics Complete')
+                else:
+                    DigitalAssist.Make_a_Rap(self, Mode='Raggae')
+                    DigitalAssist.speak(self, 'Reggae Lyrics Complete')
+
+
                 s2 = False
                 DigitalAssist.RunChatGPT(self)
 
@@ -1066,9 +1112,23 @@ class DigitalAssist():
                 DigitalAssist.RunChatGPT(self)
 
             elif 'blog' in query or 'website post' in query  or 'post' in query :
-                DigitalAssist.makeBlogPost(self)
+                Blog_Topic = random.choices(up.Random_Blog_Topic)
+
+                Blog_Topic = Blog_Topic[0]
+
+
+                #DigitalAssist.makeBlogPost(self, GPTprompt=Blog_Topic)
+                #DigitalAssist.makeBlogPost(self, GPTprompt=up.RandomTopic)
+                DigitalAssist.makeBlogPost(self, GPTprompt=up.CorrectText)
+
+
+
+
                 s2 = False
                 DigitalAssist.RunChatGPT(self)
+
+
+#Make a program that makes a short background for a character, also have a duo/relationship of some sort and make an interesting scene for a play/screenplay
 
             elif 'wiki' in query or 'wikipedia' in query  or (('pen name' in query or 'page' in query or 'mode' in query ) and 'wiki' in query) :
                 DigitalAssist.Wiki4PenNames(self)
@@ -1118,6 +1178,7 @@ class DigitalAssist():
         p = document.add_paragraph()
         r = p.add_run()
         r.add_text(Script2)
+        document.save(Title+'.docx')
 
 
 #for reference but not currently used
@@ -1137,62 +1198,124 @@ class DigitalAssist():
         # pdf.output(Title + '.pdf', 'F')
 
 
+    def Add2MasterLyrics(self ,current_time2, ArtType, title, ArtistPoetInfo, poem, Tag, SavePath2, Prompts):
+        data = [(current_time2, ArtType, title, ArtistPoetInfo, poem, Tag, SavePath2, Prompts)]
+        df = pd.DataFrame(data,columns = ['Date_Time_Added','Art_Type','Title','Poet_Artist_Info','Poem_Song_Lyrics','Quality','Folder_Path', 'Prompts_Used'])
+        DigitalAssist.add2Master3(df)
 
-
-
-
-        document.save(Title+'.docx')
 
 
     def quickArt(self):
-        prompt = DigitalAssist.ChatGPTDA(self, MakeArt=True, Prompt=('Provide a detailed prompt that is unique and inspiring, pick an artist of your choice to base the style of the work of art'))
-        ArtPath = DigitalAssist.makeArt(self, prompt)
-        ArtPaths = [ArtPath]
-        Prompts_Used = [str('Quick_Art_Poem: ' + up.Quick_Poem_prompt),'Poem_Art_1_prompt: Art Generated using poem directly']
+        prompt = DigitalAssist.ChatGPTDA(self, MakeArt=True, Prompt=(up.QuickArt))
+        ArtPaths = []
+        try:
+            ArtPath = DigitalAssist.makeArt(self, prompt)
+            ArtPaths.append(ArtPath)
+        except:
+            DigitalAssist.speak(self, 'Could not make the Art due to an error')
+
+        Prompts_Used = [str('Quick_Art_Prompt: ' + up.QuickArt)]
         ArtistPoetInfo ='Written By: ' + up.Bot_Name + '      (' + 'Artwork by: ' + up.AI_ArtistName + ')'
         DigitalAssist.NamePoemSavePoem(self, prompt, ArtPaths,Prompts_Used, ArtistPoetInfo, title = 'Quick_Art')
 
 
-    def Quick_Poem_v1(self):
-        prompt = DigitalAssist.ChatGPTDA(self, temp=0.6, MakeArt=True, Prompt=(up.Quick_Poem_prompt),ConfirmBot = False)
-        ArtPath = DigitalAssist.makeArt(self, prompt)
-        Art2 = DigitalAssist.ChatGPTDA(self, temp=0.5, MakeArt=True, Prompt=(up.Poem_Art_2_prompt + '"' + prompt + '"'),ConfirmBot = False)
-        ArtPath2 = DigitalAssist.makeArt(self, Art2)
-        ArtPaths = [ArtPath, ArtPath2]
-        Prompts_Used = [str('Quick_Poem_prompt: ' + up.Quick_Poem_prompt),'Poem_Art_1_prompt: Art Generated using poem directly', str('Prompt Fed into Chat GPT to make art prompt: ' + up.Poem_Art_2_prompt),  str('Chat GPT Prompt sent to Art AI: ' + Art2)]
+    def Quick_Poem_v1(self, GPTPrompt = up.Random_Poem, ARTPrompt = up.Poem_Art_2_prompt):
+        prompt = DigitalAssist.ChatGPTDA(self, temp=0.6, MakeArt=True, Prompt=(GPTPrompt),ConfirmBot = False)
+        ArtPaths = []
+        try:
+            ArtPath = DigitalAssist.makeArt(self, prompt)
+            ArtPaths.append(ArtPath)
+        except:
+            DigitalAssist.speak(self, 'Could not make the Art due to an error')
+
+        Art2 = DigitalAssist.ChatGPTDA(self, temp=0.5, MakeArt=True, Prompt=(ARTPrompt+ '"' + prompt + '"'),ConfirmBot = False)
+
+        try:
+            ArtPath2 = DigitalAssist.makeArt(self, Art2)
+            ArtPaths.append(ArtPath2)
+        except:
+            DigitalAssist.speak(self, 'Could not make the Art due to an error')
+
+        Prompts_Used = [str('Quick_Poem_prompt: ' + GPTPrompt),'Poem_Art_1_prompt: Art Generated using poem directly', str('Prompt Fed into Chat GPT to make art prompt: ' + ARTPrompt),  str('Chat GPT Prompt sent to Art AI: ' + Art2)]
         ArtistPoetInfo ='Poem Written By: ' + up.AI_Poet_Name + '      (' + 'Artwork by: ' + up.AI_ArtistName + ')'
-        DigitalAssist.NamePoemSavePoem(self, prompt, ArtPaths,Prompts_Used, ArtistPoetInfo)
+        DigitalAssist.NamePoemSavePoem(self,  prompt, ArtPaths,Prompts_Used, ArtistPoetInfo)
 
     def SundayScary_Poem(self):
-        prompt = DigitalAssist.ChatGPTDA(self, temp=0.6, MakeArt=True, Prompt=(up.Sunday_Scaries_Poem_prompt))
-        ArtPath = DigitalAssist.makeArt(self, prompt)
-        Art2 = DigitalAssist.ChatGPTDA(self, temp=0.5, MakeArt=True, Prompt=(up.Poem_Art_2_prompt + '"' + prompt + '"'),ConfirmBot = False)
-        ArtPath2 = DigitalAssist.makeArt(self, Art2)
-        ArtPaths = [ArtPath, ArtPath2]
-        Prompts_Used = [str('Quick_Poem_prompt: ' + up.Sunday_Scaries_Poem_prompt),'Poem_Art_1_prompt: Art Generated using poem directly', str('Prompt Fed into Chat GPT to make art prompt: ' + up.Poem_Art_2_prompt),  str('Chat GPT Prompt sent to Art AI: ' + Art2)]
-        ArtistPoetInfo ='Poem Written By: ' + up.AI_Poet_Name + '      (' + 'Artwork by: ' + up.AI_ArtistName + ')'
+        DigitalAssist.Quick_Poem_v1(self,GPTPrompt = up.Sunday_Scaries_Poem_prompt)
+
+
+
+
+
+    def Shake_Poem_v1(self):
+        ArtPaths= []
+
+        DigitalAssist.makeQuickPoem(self)
+        prompt = DigitalAssist.ChatGPTDA(self, temp=0.4, MakeArt=True, Prompt=(up.Shake_Poem_v1_prompt + ' "' + self.Words + '"'))
+        try:
+            ArtPath = DigitalAssist.makeArt(self, prompt)
+            ArtPaths.append(ArtPath)
+        except:
+            DigitalAssist.speak(self, 'Could not make the Art due to an error')
+
+        Art2 = DigitalAssist.ChatGPTDA(self, temp=0.5, MakeArt=True, Prompt=( up.Poem_Art_2_prompt + '"' + prompt + '"'))
+
+        try:
+            ArtPath2 = DigitalAssist.makeArt(self, Art2)
+            ArtPaths.append(ArtPath2)
+        except:
+            DigitalAssist.speak(self, 'Could not make the Art due to an error')
+
+        Prompts_Used = ['Original Prompt: '+ up.Shake_Poem_v1_prompt+ + '"' + self.Words + '"' , 'ChatGPT to DALL-E (poem sent as is): ' + prompt,'User Prompt to get description' + up.Poem_Art_2_prompt + 'poem' ,'Chat-GPT to DALL-E (describing poem): ' + Art2 ]
+        ArtistPoetInfo = str('Poem Written By: ' + up.AI_Poet_Name + '      (' + 'Artwork by: ' + up.AI_ArtistName + ')')
         DigitalAssist.NamePoemSavePoem(self, prompt, ArtPaths,Prompts_Used, ArtistPoetInfo)
 
+    def Shake_Poem_v2(self):
+        ArtPaths= []
+        DigitalAssist.makeQuickPoem(self)
+        prompt = DigitalAssist.ChatGPTDA(self, temp=0.4, MakeArt=True, Prompt=( up.Shake_Poem_v2_prompt + '"' + self.Words + '"'))
+        try:
+            ArtPath = DigitalAssist.makeArt(self, prompt)
+            ArtPaths.append(ArtPath)
+        except:
+            DigitalAssist.speak(self, 'Could not make the Art due to an error')
+
+        Art2 = DigitalAssist.ChatGPTDA(self, temp=0.5, MakeArt=True, Prompt=( up.Poem_Art_2_prompt + '"' + prompt + '"'))
+        try:
+            ArtPath2 = DigitalAssist.makeArt(self, Art2)
+            ArtPaths.append(ArtPath2)
+        except:
+            DigitalAssist.speak(self, 'Could not make the Art due to an error')
+
+        Prompts_Used = ['Original Prompt: '+ up.Shake_Poem_v2_prompt+  '"' + self.Words + '"' , 'ChatGPT to DALL-E (poem sent as is): ' + prompt,'User Prompt to get description' + up.Poem_Art_2_prompt + 'poem' ,'Chat-GPT to DALL-E (describing poem): ' + Art2 ]
+        ArtistPoetInfo =str('Poem Written By: ' + up.AI_Poet_Name + '      (' + 'Artwork by: ' + up.AI_ArtistName + ')')
+        DigitalAssist.NamePoemSavePoem(self, prompt, ArtPaths,Prompts_Used, ArtistPoetInfo)
+
+
+
+
+
     def Sampler(self, Mode = 'ALL'):
+        sample_w = 'Not Techno Mode - N/A'
         words = ''
         if Mode == 'Techno':
             sample_w = up.Techno_Sample_Question2
-            #words += DigitalAssist.ChatGPTDA(self, temp=0.5, MakeArt=True, Prompt=(sample_w), ConfirmBot=False)
+            words += DigitalAssist.ChatGPTDA(self, temp=0.5, MakeArt=True, Prompt=(sample_w), ConfirmBot=False)
 
         sample_p = up.Techno_Sample_Question
 
         Samples = DigitalAssist.ChatGPTDA(self, temp=0.5, MakeArt=True, Prompt=(sample_p), ConfirmBot=False)
-        Prompts_Used = [str('Prompt: ' + Samples)]
+        Prompts_Used = [str('Prompt1: ' + sample_w),str('Prompt2: ' + sample_p) ]
         ArtistPoetInfo = 'Lyrics Written By: ' + up.Song_Writer
         Title = 'Sampler Man'
         prompt = Samples + '\n'+ '\n'+ '\n' + words
-        DigitalAssist.NamePoemSavePoem(self, Samples, [], Prompts_Used, ArtistPoetInfo, title=Title,FolderPath=up.AI_Music_Path)
+        DigitalAssist.NamePoemSavePoem(self, prompt, [], Prompts_Used, ArtistPoetInfo, title=Title,FolderPath=up.AI_Music_Path)
 
 
 
 
     def Make_a_Chorus(self, Mode = 'Random Song'):
-
+        ArtPaths = []
         if Mode == 'Random Song':
             Verse_p = up.verse_prompt
             Chorus_p = up.Chorus_prompt
@@ -1214,7 +1337,7 @@ class DigitalAssist():
         chorus2 = chorus[0:500]
 
 
-        bridge = DigitalAssist.ChatGPTDA(self, temp=0.6, MakeArt=True, Prompt=(Bridge_p + '"' +  chorus2 + '"'),ConfirmBot = False)
+        bridge = DigitalAssist.ChatGPTDA(self, temp=0.4, MakeArt=True, Prompt=(Bridge_p + '"' +  chorus2 + '"'),ConfirmBot = False)
 
         if Mode == 'Techno':
             bridge2 = chorus2
@@ -1230,11 +1353,13 @@ class DigitalAssist():
                 if chorus != '':
                     combo2 = 'Make a work of art inspired by the following song lyrics: ' +  chorus
                     ArtPath = DigitalAssist.makeArt(self, combo2)
+                    ArtPaths.append(ArtPath)
                 else:
                     combo2 = 'Make a random work of art, be creative and unique, make it visually and aesthetic pleasing to the viewer'
                     ArtPath = ''
             else:
                 ArtPath = DigitalAssist.makeArt(self, combo2)
+                ArtPaths.append(ArtPath)
         except:
             ArtPath = ''
         Art2 = DigitalAssist.ChatGPTDA(self, temp=0.5, MakeArt=True, Prompt=(up.Chorus_Art_2_prompt + bridge2), ConfirmBot=False)
@@ -1244,26 +1369,14 @@ class DigitalAssist():
                 if chorus != '':
                     Art2 = 'Make a work of art inspired by the following song lyrics: ' + chorus
                     ArtPath2 = DigitalAssist.makeArt(self, Art2)
+                    ArtPaths.append(ArtPath2)
                 else:
                     Art2 = 'Make a random work of art, be creative and unique, make it visually and aesthetic pleasing to the viewer'
-                    ArtPath2 = ''
-
             else:
                 ArtPath2 = DigitalAssist.makeArt(self, Art2)
-
+                ArtPaths.append(ArtPath2)
         except:
             ArtPath2 = ''
-
-
-        if ArtPath == ''and ArtPath2 =='':
-            ArtPaths = []
-        elif ArtPath == '':
-            ArtPaths = [ArtPath2]
-        elif ArtPath2 =='':
-            ArtPaths = [ArtPath]
-        else:
-            ArtPaths = [ArtPath, ArtPath2]
-
 
         Title = DigitalAssist.ChatGPTDA(self, temp=0.6, MakeArt=True, Prompt=(up.Song_Title_Prompt +  chorus2 ), ConfirmBot=False)
         verses = DigitalAssist.ChatGPTDA(self, temp=0.6, MakeArt=True, Prompt=( Verse_p ),ConfirmBot = False)
@@ -1274,8 +1387,8 @@ class DigitalAssist():
 
 
     def Make_a_Song(self, Mode = 'Random Song'):
-
-        song = DigitalAssist.ChatGPTDA(self, temp=0.6, MakeArt=True, Prompt=(up.Song_prompt),ConfirmBot = False)
+        ArtPaths = []
+        song = DigitalAssist.ChatGPTDA(self, temp=0.6, MakeArt=True, Prompt=(up.Song_prompt2),ConfirmBot = False)
         song2 = song[0:500]
         bridge = DigitalAssist.ChatGPTDA(self, temp=0.6, MakeArt=True, Prompt=(up.Bridge_prompt + '"'  + song2 + '"'),ConfirmBot = False)
         bridge2 = bridge[0:500]
@@ -1284,11 +1397,13 @@ class DigitalAssist():
                 if song !='':
                     bridge = 'Make a work of art inspired by the following song lyrics: ' +  song
                     ArtPath = DigitalAssist.makeArt(self, bridge)
+                    ArtPaths.append(ArtPath)
                 else:
                     bridge = 'Make a random work of art, be creative and unique, make it visually and aesthetic pleasing to the viewer'
                     ArtPath = ''
             else:
                 ArtPath = DigitalAssist.makeArt(self, bridge)
+                ArtPaths.append(ArtPath)
         except:
             ArtPath = ''
 
@@ -1298,32 +1413,25 @@ class DigitalAssist():
                 if song != '':
                     Art2 = 'Make a work of art inspired by the following song lyrics: ' + song
                     ArtPath2 = DigitalAssist.makeArt(self, Art2)
+                    ArtPaths.append(ArtPath2)
                 else:
                     Art2 = 'Make a random work of art, be creative and unique, make it visually and aesthetic pleasing to the viewer'
                     ArtPath2 = ''
 
             else:
                 ArtPath2 = DigitalAssist.makeArt(self, Art2)
+                ArtPaths.append(ArtPath2)
         except:
             ArtPath2 = ''
 
-        if ArtPath == '' and ArtPath2 == '':
-            ArtPaths = []
-        elif ArtPath == '':
-            ArtPaths = [ArtPath2]
-        elif ArtPath2 == '':
-            ArtPaths = [ArtPath]
-        else:
-            ArtPaths = [ArtPath, ArtPath2]
-
-        Title = DigitalAssist.ChatGPTDA(self, temp=0.6, MakeArt=True,   Prompt=(up.Song_Title_Prompt + bridge2  + '. ' + song2), ConfirmBot=False)
+        Title = DigitalAssist.ChatGPTDA(self, temp=0.5, MakeArt=True,   Prompt=(up.Song_Title_Prompt + bridge2  + '. ' + song2), ConfirmBot=False)
         prompt = ('bridge: ' + bridge + "\n" + "\n" + 'song: ' + song +  "\n" + "\n" )
         Prompts_Used = [str('Song Prompt: ' + up.Chorus_prompt), str('Song_prompt: ' + up.Chorus_Art_2_prompt), str('Prompt Fed into Chat GPT to make art prompt: ' + up.Chorus_Art_2_prompt), str('Chat GPT Prompt sent to Art AI: ' + Art2), 'Bridge Prompt: ' + up.Bridge_prompt]
         ArtistPoetInfo ='Lyrics Written By: ' + up.Song_Writer + '      (' + 'Artwork by: ' + up.AI_ArtistName + ')'
         DigitalAssist.NamePoemSavePoem(self, prompt, ArtPaths,Prompts_Used, ArtistPoetInfo, title = Title, FolderPath = up.AI_Music_Path + '\\' + Mode,  ArtType = 'Song Lyrics' + Mode)
 
     def Make_a_Rap(self, Mode = 'Rap'):
-
+        ArtPaths = []
         if Mode == 'Rap':
             Verse_p = up.Rap_Story_prompt
             Chorus_p = up.Rap_Chorus_prompt
@@ -1347,15 +1455,15 @@ class DigitalAssist():
             Chorus_p = up.Rap_Chorus_prompt
             Bridge_p = up.Rap_Bridge_prompt
 
-        verses = DigitalAssist.ChatGPTDA(self, temp=0.6, MakeArt=True,Prompt=(  Verse_p),ConfirmBot=False)
+        verses = DigitalAssist.ChatGPTDA(self, temp=0.4, MakeArt=True,Prompt=(  Verse_p),ConfirmBot=False)
         verses2 = verses[0:500]
         print('Verse Complete, Chorus below')
         chorus = DigitalAssist.ChatGPTDA(self, temp=0.6, MakeArt=True, Prompt=(Chorus_p),  ConfirmBot=False)
         chorus2 = chorus[0:500]
         print('Chorus Complete, Title below')
-        Title = DigitalAssist.ChatGPTDA(self, temp=0.6, MakeArt=True, Prompt=(up.Song_Title_Prompt  + chorus2 ), ConfirmBot=False)
+        Title = DigitalAssist.ChatGPTDA(self, temp=0.5, MakeArt=True, Prompt=(up.Song_Title_Prompt  + chorus2 ), ConfirmBot=False)
         print('Title Complete, bridge below')
-        bridge = DigitalAssist.ChatGPTDA(self, temp=0.6, MakeArt=True,Prompt=(Bridge_p), ConfirmBot=False)
+        bridge = DigitalAssist.ChatGPTDA(self, temp=0.5, MakeArt=True,Prompt=(Bridge_p), ConfirmBot=False)
         bridge2 = bridge[0:500]
         print('bridge Complete, Make Art below')
         combo = Title + bridge2
@@ -1367,11 +1475,13 @@ class DigitalAssist():
                 if chorus != '':
                     combo2 = 'Make a work of art inspired by the following song lyrics: ' + chorus[0:200]
                     ArtPath = DigitalAssist.makeArt(self, combo2)
+                    ArtPaths.append(ArtPath)
                 else:
                     combo2 = 'Make a random work of art, be creative and unique, make it visually and aesthetic pleasing to the viewer'
                     ArtPath = ''
             else:
                 ArtPath = DigitalAssist.makeArt(self, combo2)
+                ArtPaths.append(ArtPath)
 
         except:
             ArtPath = ''
@@ -1381,25 +1491,17 @@ class DigitalAssist():
                 if chorus != '':
                     Art2 = 'Make a work of art inspired by the following song lyrics: ' +  chorus[0:200]
                     ArtPath2 = DigitalAssist.makeArt(self, Art2)
+                    ArtPaths.append(ArtPath2)
                 else:
                     Art2 = 'Make a random work of art, be creative and unique, make it visually and aesthetic pleasing to the viewer'
                     ArtPath2 = ''
 
             else:
                 ArtPath2 = DigitalAssist.makeArt(self, Art2)
+                ArtPaths.append(ArtPath2)
         except:
             ArtPath2 = ''
         print('Art2 Script Complete, Make Art2 below')
-
-
-        if ArtPath == '' and ArtPath2 == '':
-            ArtPaths = []
-        elif ArtPath == '':
-            ArtPaths = [ArtPath2]
-        elif ArtPath2 == '':
-            ArtPaths = [ArtPath]
-        else:
-            ArtPaths = [ArtPath, ArtPath2]
 
         prompt = ('verses: ' + verses + "\n" + "\n" +'bridge: ' + bridge+  "\n" + "\n" +'chorus: ' +  chorus)
         Prompts_Used = [str('Song Prompt: ' + up.Rap_Story_prompt), 'Song_prompt: ' + Art2 , str('Prompt Fed into Chat GPT to make art prompt: ' + up.Chorus_Art_2_prompt),str('Chat GPT Prompt sent to Art AI: ' + Art2), 'Bridge Prompt: ' + up.Bridge_prompt]
@@ -1407,35 +1509,6 @@ class DigitalAssist():
         DigitalAssist.NamePoemSavePoem(self, prompt, ArtPaths,Prompts_Used, ArtistPoetInfo, title = Title, FolderPath = up.AI_Music_Path + '\\' + Mode,  ArtType = 'Song Lyrics' + Mode)
 
 
-    def Add2MasterLyrics(self ,current_time2, ArtType, title, ArtistPoetInfo, poem, Tag, SavePath2, Prompts):
-        data = [(current_time2, ArtType, title, ArtistPoetInfo, poem, Tag, SavePath2, Prompts)]
-        df = pd.DataFrame(data,columns = ['Date_Time_Added','Art_Type','Title','Poet_Artist_Info','Poem_Song_Lyrics','Quality','Folder_Path', 'Prompts_Used'])
-        DigitalAssist.add2Master3(df)
-
-
-    def Shake_Poem_v1(self):
-        DigitalAssist.makeQuickPoem(self)
-        prompt = DigitalAssist.ChatGPTDA(self, temp=0.4, MakeArt=True, Prompt=(up.Shake_Poem_v1_prompt + ' "' + self.Words + '"'))
-        ArtPath = DigitalAssist.makeArt(self, prompt)
-        Art2 = DigitalAssist.ChatGPTDA(self, temp=0.5, MakeArt=True, Prompt=( up.Poem_Art_2_prompt + '"' + prompt + '"'))
-        ArtPath2 = DigitalAssist.makeArt(self, Art2)
-        ArtPaths = [ArtPath, ArtPath2]
-        Prompts_Used = ['Original Prompt: '+ up.Shake_Poem_v1_prompt+ + '"' + self.Words + '"' , 'ChatGPT to DALL-E (poem sent as is): ' + prompt,'User Prompt to get description' + up.Poem_Art_2_prompt + 'poem' ,'Chat-GPT to DALL-E (describing poem): ' + Art2 ]
-        ArtistPoetInfo = str('Poem Written By: ' + up.AI_Poet_Name + '      (' + 'Artwork by: ' + up.AI_ArtistName + ')')
-        DigitalAssist.NamePoemSavePoem(self, prompt, ArtPaths,Prompts_Used, ArtistPoetInfo)
-
-    def Shake_Poem_v2(self):
-        DigitalAssist.makeQuickPoem(self)
-        prompt = DigitalAssist.ChatGPTDA(self, temp=0.4, MakeArt=True, Prompt=( up.Shake_Poem_v2_prompt + '"' + self.Words + '"'))
-        ArtPath = DigitalAssist.makeArt(self, prompt)
-        Art2 = DigitalAssist.ChatGPTDA(self, temp=0.5, MakeArt=True, Prompt=( up.Poem_Art_2_prompt + '"' + prompt + '"'))
-        ArtPath2 = DigitalAssist.makeArt(self, Art2)
-        ArtPaths = [ArtPath, ArtPath2]
-        Prompts_Used = ['Original Prompt: '+ up.Shake_Poem_v2_prompt+  '"' + self.Words + '"' , 'ChatGPT to DALL-E (poem sent as is): ' + prompt,'User Prompt to get description' + up.Poem_Art_2_prompt + 'poem' ,'Chat-GPT to DALL-E (describing poem): ' + Art2 ]
-        ArtistPoetInfo =str('Poem Written By: ' + up.AI_Poet_Name + '      (' + 'Artwork by: ' + up.AI_ArtistName + ')')
-        DigitalAssist.NamePoemSavePoem(self, prompt, ArtPaths,Prompts_Used, ArtistPoetInfo)
-
-        #DigitalAssist.NamePoemSavePoem(self, self.prompt, ArtPaths)
 
     def Wiki4PenNames(self):
         current_time1 = datetime.datetime.now()
@@ -1454,13 +1527,13 @@ class DigitalAssist():
         except:
             CoverArtPath1 = ''
         Script2 = DigitalAssist.ChatGPTDA(self, temp=0.6, MakeArt=False, Prompt=(up.Custom_prompt_2), ConfirmBot=False)
-        CoverArt2 = DigitalAssist.ChatGPTDA(self, temp=0.6, MakeArt=False, Prompt=(up.Art_prompt_2 +  '"' + Script2[0:200] + '"'),ConfirmBot=False)
+        CoverArt2 = DigitalAssist.ChatGPTDA(self, temp=0.5, MakeArt=False, Prompt=(up.Art_prompt_2 +  '"' + Script2[0:200] + '"'),ConfirmBot=False)
         try:
             CoverArtPath2 = DigitalAssist.makeArt(self, CoverArt2)
         except:
             CoverArtPath2 = ''
         Script3 = DigitalAssist.ChatGPTDA(self, temp=0.6, MakeArt=False, Prompt=(up.Custom_prompt_3), ConfirmBot=False)
-        CoverArt3 = DigitalAssist.ChatGPTDA(self, temp=0.6, MakeArt=False, Prompt=(up.Art_prompt_3 +  '"' + Script3[0:200] + '"'),ConfirmBot=False)
+        CoverArt3 = DigitalAssist.ChatGPTDA(self, temp=0.5, MakeArt=False, Prompt=(up.Art_prompt_3 +  '"' + Script3[0:200] + '"'),ConfirmBot=False)
 
         try:
             CoverArtPath3 = DigitalAssist.makeArt(self, CoverArt3)
@@ -1502,78 +1575,24 @@ class DigitalAssist():
 
         DigitalAssist.Add2MasterLyrics(self, current_time2, 'Wiki Page and Social Media', 'Wiki for SJ Rose, Pixel Art and Macabre artist', self.AssistantName, poem, Tag, SavePath1, Prompts)
 
-    def makeBlogPost(self):
+
+
+
+    def makeBlogPost(self, GPTprompt = up.Random_Blog_Topic, ARTprompt = up.Art_1_prompt, BlogAuthor =  up.AI_Blogger):
         current_time1 = datetime.datetime.now()
         current_time2 = current_time1.strftime('%m-%d-%Y')
-        Script1 = DigitalAssist.ChatGPTDA(self, temp=0.5, MakeArt=False, Prompt=(up.Blog_Daily_prompt), ConfirmBot=False)
-        CoverArt1 = DigitalAssist.ChatGPTDA(self, temp=0.5, MakeArt=False,
-                                            Prompt=(up.Art_1_prompt + '"' + Script1[0:75] + '"'), ConfirmBot=False)
+        Script1 = DigitalAssist.ChatGPTDA(self, temp=0.5, MakeArt=False, Prompt=(GPTprompt), ConfirmBot=False)
+        CoverArt1 = DigitalAssist.ChatGPTDA(self, temp=0.5, MakeArt=False, Prompt=(ARTprompt + '"' + Script1[0:200] + '"'), ConfirmBot=False)
 
         try:
             CoverArtPath1 = DigitalAssist.makeArt(self, CoverArt1)
         except:
             CoverArtPath1 = ''
 
-        Prompt1 = (up.Custom_prompt_1 + '|' + up.Art_prompt_1)
+        Prompt1 = (GPTprompt + '|' + ARTprompt)
         ArtPaths = [CoverArtPath1]
 
-        DigitalAssist.NamePoemSavePoem(self, Script1, ArtPaths, Prompt1, up.AI_Blogger,title='Blog_'+Script1[0:15]+'_' + current_time2, FolderPath=up.AI_Blog_Path, ArtType='AI Blog')
-
-        # Script2 = DigitalAssist.ChatGPTDA(self, temp=0.6, MakeArt=False, Prompt=(up.Blog_Post_Explain), ConfirmBot=False)
-        # CoverArt2 = DigitalAssist.ChatGPTDA(self, temp=0.6, MakeArt=False,Prompt=(str(up.Art_1_prompt + '"' + Script2[0:75] + '"')), ConfirmBot=False)
-        #
-        #
-        # try:
-        #     CoverArtPath2 = DigitalAssist.makeArt(self, CoverArt2)
-        # except:
-        #     CoverArtPath2 = ''
-        #
-        # ArtPaths = [ CoverArtPath2]
-        #
-        #
-        # Prompt2 =  up.Blog_Post_Explain + '|' + up.Art_1_prompt
-        #
-        #
-        # DigitalAssist.NamePoemSavePoem(self, Script2, ArtPaths, Prompt2, up.AI_Blogger, title=str('Blog_ChatGPT_'  + current_time2), FolderPath=up.AI_Blog_Path, ArtType='AI Blog')
-
-        Script3 = DigitalAssist.ChatGPTDA(self, temp=0.6, MakeArt=False, Prompt=(up.Blog_Post_SocialProg),
-                                          ConfirmBot=False)
-        CoverArt3 = DigitalAssist.ChatGPTDA(self, temp=0.6, MakeArt=False,
-                                            Prompt=(up.Art_1_prompt + '"' + Script3[0:200] + '"'), ConfirmBot=False)
-
-        try:
-            CoverArtPath3 = DigitalAssist.makeArt(self, CoverArt3)
-        except:
-            CoverArtPath3 = ''
-
-        ArtPaths = [CoverArtPath3]
-
-        Prompt3 = up.Blog_Post_SocialProg + '|' + up.Art_1_prompt
-
-        DigitalAssist.NamePoemSavePoem(self, Script3, ArtPaths, Prompt3, up.AI_Blogger,
-                                       title='Blog_Social_Programs_'+Script1[0:15]+'_'  + current_time2, FolderPath=up.AI_Blog_Path,
-                                       ArtType='AI Blog')
-
-
-
-
-        Script3 = DigitalAssist.ChatGPTDA(self, temp=0.6, MakeArt=False, Prompt=(up.Blog_Post_Portland),
-                                          ConfirmBot=False)
-        CoverArt3 = DigitalAssist.ChatGPTDA(self, temp=0.6, MakeArt=False,
-                                            Prompt=(up.Art_1_prompt + '"' + Script3[0:200] + '"'), ConfirmBot=False)
-
-        try:
-            CoverArtPath3 = DigitalAssist.makeArt(self, CoverArt3)
-        except:
-            CoverArtPath3 = ''
-
-        ArtPaths = [CoverArtPath3]
-
-        Prompt3 = up.Blog_Post_SocialProg + '|' + up.Art_1_prompt
-
-        DigitalAssist.NamePoemSavePoem(self, Script3, ArtPaths, Prompt3, up.AI_Blogger,
-                                       title='Blog_Science_'+Script1[0:15]+'_'  + current_time2, FolderPath=up.AI_Blog_Path,
-                                       ArtType='AI Blog')
+        DigitalAssist.NamePoemSavePoem(self, Script1, ArtPaths, Prompt1, BlogAuthor,title='Blog_'+Script1[0:15]+'_' + current_time2, FolderPath=up.AI_Blog_Path, ArtType='AI Blog')
 
 
 
@@ -1619,7 +1638,6 @@ class DigitalAssist():
     def NamePoemSavePoem(self,poem, ArtPaths,Prompts_Used,ArtistPoetInfo, title = '', FolderPath = up.AI_Poetry_Path , ArtType = 'Poem'):
         dfPrompts = ''
         Tag = ''
-
         if ArtType == 'Poem':
             title_p = up.Poem_Title_Prompt
         else:
@@ -1629,22 +1647,21 @@ class DigitalAssist():
             Title = DigitalAssist.ChatGPTDA(self, temp=0.5, MakeArt=True, Prompt=(title_p  +'"' + poem + '"'), ConfirmBot= False)
         else:
             Title = title
-
         current_time1 = datetime.datetime.now()
         current_time2 = current_time1.strftime('%m-%d-%Y_%H.%M.%S')
         f2 = FolderPath
         SavePath1 = f2
         invalidCharRemoved = re.sub(r"[^a-zA-Z0-9 ]", "", Title)
-
         folder = str(invalidCharRemoved)
+        if len(folder)>40:
+            folder = folder[0:40]
         Title1 = '\\' + str(invalidCharRemoved) + "_"
+        if len(Title1)>180:
+            Title1 = Title1[0:180]
         SavePath2 = SavePath1 +'\\' +folder
         Title2 = SavePath2 + Title1 + current_time2
-
         Tag = DigitalAssist.YayorNay(self)
-
         Title2 = Title2 + Tag
-
 
 
         isExist = os.path.exists(SavePath1)
@@ -1657,25 +1674,15 @@ class DigitalAssist():
             # Create a new directory because it does not exist
             os.makedirs(SavePath2)
 
-
-
-
-
         document = Document()
         document.add_heading(Title, 0)
-        document.add_heading(ArtistPoetInfo, 4)
+        document.add_heading(ArtistPoetInfo, 1)
         p = document.add_paragraph()
         r = p.add_run()
         r.add_text(ArtistPoetInfo)
-        # for i in ArtistPoetInfo:
-        #     document.add_heading(i, 4)
-        #     # p = document.add_paragraph()
-        #     # r = p.add_run()
-        #     # r.add_text(i)
         p = document.add_paragraph()
         r = p.add_run()
         r.add_text(poem)
-
         p = document.add_paragraph()
         r = p.add_run()
         image_counter= 0
@@ -1684,39 +1691,147 @@ class DigitalAssist():
             r.add_picture(i)
             original = i
             target = SavePath2 + Title1  + str(image_counter) +current_time2 + '.png'
-
             shutil.copyfile(original, target)
 
-
-
         document.add_heading('AI Prompts used: ', 7)
-
-
-
-
 
         for i in Prompts_Used:
             p = document.add_paragraph()
             r = p.add_run()
             r.add_text(i)
             dfPrompts += i + '|'
-
-
-
         document.save(Title2+  '_Details.docx')
-
-
         document2 = Document()
         document2.add_heading(Title, 1)
         for i in ArtistPoetInfo:
-            document2.add_heading(i, 4)
-
+            document2.add_heading(i, 1)
         p = document2.add_paragraph()
         r = p.add_run()
         r.add_text(poem)
         document2.save(Title2 + '.docx')
-
         DigitalAssist.Add2MasterLyrics(self,current_time2, ArtType, title, ArtistPoetInfo, poem, Tag, SavePath2, dfPrompts)
+
+
+    def SaveLiveArt(self, ArtPaths, Title = 'Live Art'):
+        current_time1 = datetime.datetime.now()
+        self.current_time22 = current_time1.strftime('%m-%d-%Y')
+        current_time3 = current_time1.strftime('%m-%d-%Y_%H.%M.%S')
+        f2 = up.AI_Live_Art_Path
+        SavePath1 = f2
+
+        invalidCharRemoved = re.sub(r"[^a-zA-Z0-9 ]", "", Title)
+        Title1 = '\\' + str(invalidCharRemoved) + "_"
+        if len(Title1)>100:
+            Title1 = Title1[0:100] + self.current_time22
+        folder = str(invalidCharRemoved)
+        if len(folder) > 40:
+            folder = folder[0:40]
+
+        SavePath2 = SavePath1 + '\\' + folder
+        isExist = os.path.exists(SavePath1)
+        if not isExist:
+            # Create a new directory because it does not exist
+            os.makedirs(SavePath1)
+
+        isExist = os.path.exists(SavePath2)
+        if not isExist:
+            # Create a new directory because it does not exist
+            os.makedirs(SavePath2)
+
+        image_counter = 0
+        for i in ArtPaths:
+            image_counter += 1
+            original = i
+            target = SavePath2 + Title1  + current_time3 + '.png'
+            shutil.copyfile(original, target)
+
+
+#Blog Make Art Live mode
+    def MakeArtLive(self):
+        self.onlyMyWords = ''
+        self.onlyMyWordsLatest2 = ''
+        self.onlyMyWordsLatest = []
+        self.Mode = 'Make Art Live Mode'
+        Title = DigitalAssist.getfilename(self)
+
+        #Ask user if you should have silent mode on?
+
+        s2 = True
+        while (s2 == True):
+
+            DigitalAssist.speak(self, 'Do you Want Silent Mode activated for Chat GPT?')
+            query = DigitalAssist.takeCommand(self).lower()
+            # DigitalAssist.Add2Transcript(self,text2Add=query)
+            if "yes" in query or "silent" in query:
+                self.SilentMode = True
+                s2 = False
+                DigitalAssist.speak(self, 'Silent Mode Activated', voice = 1)
+            elif "no" in query or "nope" in query or "loud" in query:
+                DigitalAssist.speak(self, 'Interrupt Mode Activated', voice=1)
+                self.SilentMode = False
+                s2 = False
+            else:
+                print ("Gonna Have to Repeat That....")
+
+        HowManyLinestoAdd = 7
+        self.LineCount = 0
+        LiveMode = True
+        while (LiveMode ==True):
+            print(self.onlyMyWordsLatest2)
+            self.LineCount = self.LineCount + 1
+            self.query1 = DigitalAssist.transcribe_Build_Query(self,1.44).lower()
+            self.query1 = self.query1 + '.'+ '\n'
+            self.onlyMyWords = self.onlyMyWords +  self.query1
+            self.onlyMyWordsLatest2 = self.onlyMyWordsLatest2 + self.query1
+            self.onlyMyWordsLatest.append( self.query1)
+
+            if 'loud mode' in self.query1:
+                self.SilentMode = False
+            elif (("brick top" in self.query1 or "bricktop" in self.query1 or "show me" in self.query1 or "extra" in self.query1 or "additional" in self.query1) and ("option" in self.query1 or  "tool" in self.query1)) or ("edit mode" in self.query1) or  ("need to" in self.query1 and "make edit" in self.query1):
+                s3 = True
+                while (s3 == True):
+                #this is where you say next steps (This can be a separate function)
+                    query2 = DigitalAssist.transcribe_Build_Query_Pause(self).lower()
+                    print(query2)
+
+                    if 'chat' in query2 and ('gpt' in query2 or 'bot' in query2 or 'ai' in query2 or 'mode' in query2):
+                        DigitalAssist.RunChatGPT(self)
+                    elif ('take' in query2 or 'note' in query2 or 'write' in query2 or 'transcribe' in query2):
+                        DigitalAssist.transcribe(self)
+                    elif ('none' in query2 or 'no ' in query2 or 'mistake' in query2 or 'my bad' in query2 or 'go back' in query2):
+                        s3 == True
+                    elif ('stop' in query2 or 'cancel' in query2 or 'quit' in query2 or 'cut' in query2):
+                        sys.exit()
+                        continue
+            else:
+                SubjectMatter = DigitalAssist.Pick_Random_Lines(self,SetofLines=self.onlyMyWordsLatest   , LineCount = 2)
+                if self.LineCount == HowManyLinestoAdd + 1:
+                    DigitalAssist.LiveArt(self, SubjectMatter, Title= Title)
+                    self.onlyMyWordsLatest = []
+                    self.onlyMyWordsLatest2 = ''
+
+        Script1 = 'Human Transcript: ' +  self.onlyMyWords + '\n' + 'Full Transcript: ' +    self.transcript_Final
+        DigitalAssist.NamePoemSavePoem(self, Script1, [], '', 'Shane Donovan - MondeVert CEO', title=Title + '_' + self.current_time22, FolderPath=up.AI_Live_Art_Path,ArtType='MondeVert Podcast with Live Art')
+
+
+
+    def LiveArt(self , SubjectMatter = 'Random subject of your choice, weirder the better', Title = 'Podcast UnNamed'):
+        #LiveArt1 = DigitalAssist.ChatGPTDA(self, temp=0.5, MakeArt=True, Prompt=(up.MakeArtLive_prompt1), ConfirmBot=False)
+        #ArtPath1 = DigitalAssist.makeArt(self, LiveArt1)
+        ArtPath2 = DigitalAssist.makeArt(self, up.MakeArtLive_prompt2 + ': ' + SubjectMatter)
+        #ArtPaths = [ArtPath1, ArtPath2]
+        ArtPaths = [ ArtPath2]
+        DigitalAssist.SaveLiveArt(self, ArtPaths, Title)
+
+    def Pick_Random_Lines(self, SetofLines, LineCount = 2):
+        Line1 = random.choices(SetofLines)
+        Line1 = Line1[0]
+        Line2 = Line1
+        while Line2 == Line1:
+            Line2 = random.choices(SetofLines)
+            Line2 = Line2[0]
+            continue
+        return str(Line1 + Line2)
 
 
 #Main Menu
