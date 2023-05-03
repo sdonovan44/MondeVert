@@ -10,9 +10,12 @@ AI_Poetry_Path = r"A:\AI Poetry"
 AI_Blog_Path = r"A:\AI Blogs"
 AI_Music_Path = r"A:\AI Song Lyrics"
 AI_Live_Art_Path = r"A:\AI Live Art Path"
+AI_Screen_Plays = r"A:\MondeVert Productions\ScreenPlays"
 MasterFile = r"A:\Master Tracker Files\MondeVert Master Tracker.xlsx"
 MasterFile2 = r"A:\Master Tracker Files\MondeVert Master Transcript.xlsx"
 MasterFile3 = r"A:\Master Tracker Files\MondeVert Master Blog Poem and Song Lyrics.xlsx"
+
+
 DownloadFolder = r"C:\Users\sdono\Downloads"
 
 REData = r'A:\RE Data\MA 2022-2023 Data'
@@ -47,6 +50,10 @@ Song_Writer = 'Bubba D'
 Art_1_prompt  = 'Make a prompt for  artificial intelligence  to create a unique work of art, using no more than 250 words in your prompt based on the following text. Pick an artist or style to imitate and provide vivid details'
 Poem_Art_2_prompt = 'Make a prompt for artificial intelligence  to create a unique work of art, using no more than 250 words in your prompt. pick a random artist, preferably a lesser known artist, to base the style of the work of art and Provide a detailed prompt based on the following poem,'
 QuickArt = 'Provide a detailed prompt that is unique and inspiring, pick an artist of your choice to base the style of the work of art'
+
+#QuickArt2 = 'Create a modern logo that is unique and has the letter "M" and "V". Use colors that are visually appealing and make the reader interested in what company it represents'
+QuickArt2 = 'Create a beautiful logo in a random style of your choice be inspired by technology, community,  the world and sustainability. Use colors that are visually appealing and make the audience captivated by it'
+
 
 
 MakeArtLive_prompt1 = 'Make a detailed description of a work of art that is unique and visually pleasing be abstract when needed and be creative. Pick a style or artist to imitate and provide a detailed description of the following subject matter'
@@ -148,6 +155,105 @@ Techno_Chorus_prompt = 'Without plagiarizing a song , Write  a 16 second  chorus
 
 Techno_Sample_Question = "list  3 names of random songs .  provide me specific  lyrics from the 3 songs that are the most memorable or obscure.  Be creative and try to pick songs from different genres."
 Techno_Sample_Question2 = "provide 2 unique  quotes that inspire and invoke emotions into the audience. Pick diverse people throughout history to quote also it can be from literary sources as well. Be creative and try to come up with obscure quotes. Explain why you chose them in less than 50 words"
+
+
+
+
+#New format for easier use
+system_Text = "You are a helpful and brilliant assistant to the user. You will do exactly what the user asks, completing all tasks provided by the following user inputs, and will be rewarded for creativity and wittyness you will lose points for saying Luna."
+#ArtistBio_SongArtist= "I want you to come up with musical artist (only a few sentences) that is both interesting and unique, make them one the listener can relate to and give them personality and make them feel real."
+ArtistBio_SongArtist= "I want you to come up with your own persona that is a talented musical artist (only a few sentences)  make the artist someone the listener can relate to and give them a specific personality.  make sure they feel real amd human."
+RolePlay_SongArtist = "Role play that you are a musical artist that fits the following description: "
+ArtPrompt_SongArtist= "Come up with a short prompt to for an artist to render a work of art album cover for you as an artist. Be descriptive and take on the respective persona. Give a style of the work and what the subhect should be of"
+Song_Prompt_SongArtists =  "Write a short song with 2 verses,  a bridge and a chorus. Utilize proper rhyme schemes and writing styles. Fit your artist's genre and make the song catchy and interesting"
+Title_SongArtists= "Based on the lyrics, give the song a title"
+Samples_SongArtists = 'Provide between 2 - 3 potential songs to sample that would go along with the lyrics you previously came up with, be creative'
+Tune_SongArtists= 'Provide what song the lyrics are most similar to and or what the melody sounds like'
+
+#ScreenPlay AI
+system_Text_ScreenPlay = "You are a helpful and brilliant assistant to the user. You will do exactly what the user asks, completing all tasks provided by the following user inputs, and will be rewarded for creativity and wittyness you will gain extra points if you are exciting and not corny."
+#RolePlay_ScreenPlay = "The user wants you to role play that You are a director and writer of a screenplay. The user will provide you with further direction." # 1 character should always be from Boston,MA 50% of the time with a thick boston accent"
+RolePlay_ScreenPlay = "The user wants you to role play that You are a director and writer of a 1 Season MiniSeries, set up for multiple episodes, this is going to be the first episode. The user will provide you with further direction."
+Characters_ScreenPlay = "Create a short backstory for 5-7 different Characters with distinct personalities to use in a screenplay, provide them to the user. be witty and funny while also make them human and relatable to the audience"
+Setting_ScreenPlay= "describe the unique genre and style that is going to be used for the ScreenPlay"
+Title_ScreenPlay= "Based on the story you have created, give the ScreenPlay a title"
+
+
+Twist_ScreenPlay= "Based on the characters you have created and the setting you picked"
+
+
+#Dialog_ScreenPlay = "Create dialog in the scenes using the following guidance: make the scenes include deep conversations with strong thought provoking dialog that drives the story forward. Each scene should have different characters that ultimately all relate to each other. At times it should be funny, try to have comedic releif and make the reader believe even if its fantasy"
+Dialog_ScreenPlay = "Create realistic dialog for the characters in the scenes. Each of the characters vocaulary should match their character descriptions and the reader should believe it. Use the following guidance: make the scenes include real world conversations with strong thought provoking dialog that drives the story forward."
+#Direction_ScreenPlay2 = "Write a Short 7-10 scene  ScreenPlay where the audience will laugh, cry be surprised and/or at the edge of their seat. Be funny and real. Make the story  something the audience relates to. The scenes should build off of each other and there should be a climax and resolution, pick a specific genre of film. the characters should interact with additional minor characters"
+
+Direction_ScreenPlay1 = "Write a Short 7-10 scene  this is the Pilot for a miniseries where the audience will laugh, cry be surprised and/or at the edge of their seat to see prior episode. Be funny and real. Make the story  something the audience relates to. The scenes should build off of each other and Do not resolve the show in one episode set it up for 4 total more episodes, make the episode interesting with small resolutions and new conflicts rising. the characters should interact with additional minor characters"
+
+Summarize_ScreenPlay = 'Summarize the following Episode and make it brief but have the major details: '
+
+Direction_ScreenPlay2 = "Write a Short 7-10 scene  this is the second episode out of four total for the respective miniseries  ased on the last scene of prior episode. Introduce a few new characters and go deeper into their backstory and why they are important to this show. Do not resolve the show in one episode set it up for two more episodes"
+Direction_ScreenPlay3 = "Write a Short 7-10 scene  This is the third episode out of four for the respective miniseries as per the following characters.and based on the last scene of prior episode. Have a large twist in the beginning and then an even bigger twist in the end (have something tragic happen to a character we like), make drama between a few characters. Potentially reveal an unreliable narrator or some other major twist"
+Direction_ScreenPlay4 = "Write a Short 7-10 scene  Final episode for the respective miniseries as per the following characters.and based on the last scene of prior episode. Wrap up the Characters, have the ending make sense with the original genre and explanation but also make the audience surprised something they would not have guessed from Episode 1 last scene"
+Scene_Replay = 'Use the following last scenes to make up plot points for this episode: '
+
+
+
+
+Direction_ScreenPlay = "The user wants the director you are role playing as to make a Short 15 minute ScreenPlay where the audience will be surprised, moved, capitvated and inspired. They should be sad and happy at the same time. Be funny and real, look at other great film directors and writers and use their styles to come up with something of your own."
+Tie_In_ScreenPlay = "Using the following Characters and settings:  "
+ArtPrompt_ScreenPlay= "Come up with a short prompt to for an artist to render a work of art to represent the screenplay you have created, related to the following:  "
+
+
+
+#Reocurring Characters
+
+
+#Code =
+
+
+
+Connecting_Characters_ScreenPlay = ""
+Themes_ScreenPlay = ""
+
+
+class Profile():
+    def __init__(self, Profile_Name,Type,Category,Age,Origin,Style_Notes,Bio,Task,SavePath, MasterFile,WildCard = 0):
+        self.Profile_Name = Profile_Name
+        self.Type = Type
+        self.Category = Category
+        self.Age = Age
+        self.Origin = Origin
+        self.Style_Notes = Style_Notes
+        self.Bio = Bio
+        self.Task = Task
+        self.SavePath= SavePath
+        self.WildCard = WildCard
+        self.MasterFile = MasterFile
+
+
+
+
+
+#How to Make a good song (Random if no genre passed in, but if I pass in genre or say an artist to be similar to they )
+#1). You are a good apprentice.
+#2a).  I want you to come up with a random muisical artist that is interesting and unique, make them one the listener can relate to and give them personality and make them feel real.
+#2b*). If prompt is given say to make a musical artist in the respective genre or blah blah blah
+#3).  I want you to come up with a random short story about something that would happen in the life of the respective artist you described. It can be about any topic but it should feel authentic to the life of the person you described.
+#4). I want you to role play you are the artist you just described and write a verse about the story you came up with.
+#5). using both the story and the verse come up with a catchy bridge and chorus for the song
+#6). Come up with a title
+#5). based on all prior Describe the album cover you would make for this song
+#6). Send to Digital Art and make 3 variations and do a smaller image
+
+#In the Date & time Stamp Save all files, and possibly have it stored by type of request (definitely do this)
+
+
+
+
+#1). you are good apprentice
+
+
+#Based on the ar
+
 
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------
