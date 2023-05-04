@@ -170,37 +170,87 @@ Title_SongArtists= "Based on the lyrics, give the song a title"
 Samples_SongArtists = 'Provide between 2 - 3 potential songs to sample that would go along with the lyrics you previously came up with, be creative'
 Tune_SongArtists= 'Provide what song the lyrics are most similar to and or what the melody sounds like'
 
+
+
+GPT_Summary = 'Summarize the following Screenplay: '
+GPT_90s_Summary = 'Summarize the following text. Make it sound like it is for a movie trailer in the 90s where it was monumental and extremely hyped up. "In a world...","This summer one man..." ,"Just when they thought...." draw inpiration from those previews on vhs tapes and come up with a preview for the following text: '
+
+
+
 #ScreenPlay AI
-system_Text_ScreenPlay = "You are a helpful and brilliant assistant to the user. You will do exactly what the user asks, completing all tasks provided by the following user inputs, and will be rewarded for creativity and wittyness you will gain extra points if you are exciting and not corny."
+
+system_Text_ScreenPlay = "The user wants you,the brilliant assistant, to role play that you are an award winning writer and director."
+system_Text_ScreenPlay = "The user wants you,the brilliant assistant, to role play that you are an award winning writer and director. You will do exactly what the user asks with the goal being set to write a successful Screenplay, completing all tasks provided by the following user inputs, and will be rewarded for creativity and wittyness you will gain extra points if you make all of the arc plots connect to the main plot by the final episode. Follow the proper syntax for writing a screenplay, any spoken words should be surronded by double quotes, scene names should be single quotes. This show is intended for adults so there can be some rough language without going overboard."
+system_Text_ScreenPlay1= " You will do exactly what the user asks with the goal being set to write a successful Screenplay, completing all tasks provided by the following user inputs, and will be rewarded for creativity and wittyness you will gain extra points if you make all of the arc plots connect to the main plot by the final episode. Follow the proper syntax for writing a screenplay, any spoken words should be surronded by double quotes, scene names should be single quotes. This show is intended for adults so there can be some rough language without going overboard."
+system_Text_ScreenPlay2 = "The user demands your response is in the following formats.  Title:{Title}|Director Name = {Director Name}|settings: {setting}|TimePeriod:TimePeriod|genre:{genre}| tone:{tone}| Plot:{Plot}|Arc-Plot:{Arc-Plot, Arc-Plot}}|Summary:{Episode:{Summary by episode,...}}Music:{Opening Songs: {Episode 1, Episode 2, ...}|genres:{genre,genre}|songs:{song by  artist,song by  artist }}|Characters:{#Name:{Full Name}|Age:{Age}|Sex:{M or F or T}|Voice:{Voice}|Home:{Current: {City,State}| origin: {City,Country}}|Language:{Language}|Career: {Current:{Current}|Dream Job: {Dream Job}}|strengths:{Strength,Strength,Strength...}|weakness:{weakness,weakness,weakness...}|Background:{Background}} "
+system_Text_ScreenPlay3 = "The user demands your response is in the following formats.  Title:{Title}|Episode:{Scene:{Summary by Scene}}"
+system_Text_ScreenPlay4 = "The user demands your response is in the following formats.  Episode:{Scene: {Art Prompts: {'Art Prompt', 'Art Prompt'}}}"
+
+
 #RolePlay_ScreenPlay = "The user wants you to role play that You are a director and writer of a screenplay. The user will provide you with further direction." # 1 character should always be from Boston,MA 50% of the time with a thick boston accent"
-RolePlay_ScreenPlay = "The user wants you to role play that You are a director and writer of a 1 Season MiniSeries, set up for multiple episodes, this is going to be the first episode. The user will provide you with further direction."
-Characters_ScreenPlay = "Create a short backstory for 5-7 different Characters with distinct personalities to use in a screenplay, provide them to the user. be witty and funny while also make them human and relatable to the audience"
-Setting_ScreenPlay= "describe the unique genre and style that is going to be used for the ScreenPlay"
-Title_ScreenPlay= "Based on the story you have created, give the ScreenPlay a title"
+RolePlay_ScreenPlay = "The user wants you to role play that You are a director and writer of a 1 Season MiniSeries, set up for multiple episodes"
+#Characters_ScreenPlay = "Create a short backstory for 5-7 different Characters with distinct personalities to use in a screenplay, provide them to the user. be witty and funny while also make them human and relatable to the audience"
+#Setting_ScreenPlay= "describe the unique genre and style that is going to be used for the ScreenPlay"
 
 
-Twist_ScreenPlay= "Based on the characters you have created and the setting you picked"
+
+Tie_In_ScreenPlay = "Draw inspiration from the following Summary of miniseries details you created with the user: "
+Characters_ScreenPlay = "Create a short backstory for 7-10 different Characters with distinct personalities to use in a screenplay, provide them to the user. be witty and funny while also make them human and relatable to the audience. Pick a mix of common names, unique names, and names from international origins. Have a rich and diverse cast"
+Setting_ScreenPlay= "describe the unique genre, style, tone and setting that is going to be used for the ScreenPlay"
+Title_ScreenPlay= "Based on the ScreenPlay you have created, give the ScreenPlay an abstract or catchy title (Do not say Last), try to set up the name being said later in the film"
+Theme_Song_ScreenPlay= "Based on the story you have created, pick 2-4 songs/artists/albums {Music} that fit the tone and style of the Screenplay pick an additional song that is an instrumental only"
 
 
-#Dialog_ScreenPlay = "Create dialog in the scenes using the following guidance: make the scenes include deep conversations with strong thought provoking dialog that drives the story forward. Each scene should have different characters that ultimately all relate to each other. At times it should be funny, try to have comedic releif and make the reader believe even if its fantasy"
-Dialog_ScreenPlay = "Create realistic dialog for the characters in the scenes. Each of the characters vocaulary should match their character descriptions and the reader should believe it. Use the following guidance: make the scenes include real world conversations with strong thought provoking dialog that drives the story forward."
-#Direction_ScreenPlay2 = "Write a Short 7-10 scene  ScreenPlay where the audience will laugh, cry be surprised and/or at the edge of their seat. Be funny and real. Make the story  something the audience relates to. The scenes should build off of each other and there should be a climax and resolution, pick a specific genre of film. the characters should interact with additional minor characters"
+ArtPrompt_ScreenPlay= "Come up with a short prompt to for an artist to render a work of art to represent the screenplay you have created make a vivid representation of the genre and story you created, related to the following:  "
+ArtPrompt_ScreenPlay_Scene= "Based on the summary provided create 2 story boards for each scene and also create 1 unique work of art that is of a style that goes with the current scene "
 
-Direction_ScreenPlay1 = "Write a Short 7-10 scene  this is the Pilot for a miniseries where the audience will laugh, cry be surprised and/or at the edge of their seat to see prior episode. Be funny and real. Make the story  something the audience relates to. The scenes should build off of each other and Do not resolve the show in one episode set it up for 4 total more episodes, make the episode interesting with small resolutions and new conflicts rising. the characters should interact with additional minor characters"
 
-Summarize_ScreenPlay = 'Summarize the following Episode and make it brief but have the major details: '
-
-Direction_ScreenPlay2 = "Write a Short 7-10 scene  this is the second episode out of four total for the respective miniseries  ased on the last scene of prior episode. Introduce a few new characters and go deeper into their backstory and why they are important to this show. Do not resolve the show in one episode set it up for two more episodes"
-Direction_ScreenPlay3 = "Write a Short 7-10 scene  This is the third episode out of four for the respective miniseries as per the following characters.and based on the last scene of prior episode. Have a large twist in the beginning and then an even bigger twist in the end (have something tragic happen to a character we like), make drama between a few characters. Potentially reveal an unreliable narrator or some other major twist"
-Direction_ScreenPlay4 = "Write a Short 7-10 scene  Final episode for the respective miniseries as per the following characters.and based on the last scene of prior episode. Wrap up the Characters, have the ending make sense with the original genre and explanation but also make the audience surprised something they would not have guessed from Episode 1 last scene"
 Scene_Replay = 'Use the following last scenes to make up plot points for this episode: '
+Summarize_ScreenPlay = 'Summarize the following Episode and make it brief but have the major details: '
+Dialog_ScreenPlay = "Create realistic dialog for the characters in the scenes. Each of the characters vocaulary should match their character descriptions and the reader should believe it. Use the following guidance: make the scenes include real world conversations with strong thought provoking dialog that drives the story forward." # keep each episode of the 5 episode season under 15 minutes
+#Direction_ScreenPlay = "The user wants the director you are role playing as to make a Short 15 minute ScreenPlay where the audience will be surprised, moved, capitvated and inspired. They should be sad and happy at the same time. Be funny and real, look at other great film directors and writers and use their styles to come up with something of your own."
+Direction_ScreenPlay_Detail = "The user wants you, the director,  write a high level description {Summary} of a miniseries that is a series of 5 episodes 5-10 minutes long, with 7-11 scenes. Provide a high level explanation of the plot  and several sub-arc plots, "
+Direction_ScreenPlay_Detail2 = "speak to how things will connect in the later episodes with earlier episodes. Be creative and interesting. Create something where the audience will be surprised, and fall in love with the characters. This is should not be a fair-tale happy ending there is good and bad, happy and sad, ying and yang and there should be death and losses.  Be funny and real, look at other great film directors and writers and use their styles to come up with something of your own."
+
+Direction_ScreenPlayALL = "Write a Short Screenplay for 1 episode of a miniseries, the episode duration is 7-11 minutes, with 7-11 scenes that are either packed with dialog and/or solid action. Have the audience on the edge of their seat interested in the characters we are developing and the web of relationships being built. Connect the arc-plots with the main plots. Be funny and real. Make the story something the audience relates to but yet unfamiliar at the same time, a curiousity should exist. It should feel like something new that people can be passionate about it. "
+Direction_ScreenPlayALL2 = "Develop an arc story and have intricate storylines developing, don't be afraid to have bad things happen to the main characters. Feel free to use literary devices at your will and try to make it a true drama that teaches people and inspires without feeling fake"
+Direction_ScreenPlayALL3 = "The scenes and episodes should build off of each other no interaction should be boring, all dialog should have a meaning later on, even if its not used yet set something up for later."
+
+
+Direction_ScreenPlayPilot = "This is the Pilot for a  where the audience will laugh, cry be surprised and/or at the edge of their seat to see prior episode. Be funny and real. Make the story  something the audience relates to. the characters should interact with additional minor characters that you create, some are good and some are potentially bad we do not fully know yet. Make it interesting since it is the pilot, leave a lot of open threads and introduce a lot of characters right away"
+Direction_ScreenPlayMiddle = " Push the story forward and introduce the major antagonist if it has not already been made aparent to the audience. Make it seem like things are not as they seemed in the pilot. Introduce a few new characters and go deeper into the character's backstories and why they are important to this show. Introduce friendships, love interests, burned pasts and other drama that entices the audience to continue watching at the end of the episode, always end on a cliff hanger"
+Direction_ScreenPlayMiddleLate = "This is the the middle episodes out of the respective miniseries as per events of the prior episodes create a twist or new dilemna that is major for the protagonists and make the antagonist look like they are winning Have a large twist in the beginning and then an even bigger twist in the end (have something tragic happen to a character we like), make drama between a few characters. Potentially reveal there has been an unreliable narrator or some other major twist, always end on a cliff hanger"
+Direction_ScreenPlayFinal = "Important to note this is the  Final episode for the respective miniseries as per the following characters and based on the events of the prior episodes. Wrap up most of the Characters subarc plots and have it all tie together and resolve the main plot that exists throughout these 5 episodes, make the audience surprised something they would not have guessed from Episode 1's recap, give the reader something to yearn for and leave them wanting more. Leave it open ended, but dont be afraid to have some tragedy, not everything is a happy ending this is real life and should be a little unfair. There should be some closure for the audience and the main issue should be more or less resolved"
 
 
 
 
-Direction_ScreenPlay = "The user wants the director you are role playing as to make a Short 15 minute ScreenPlay where the audience will be surprised, moved, capitvated and inspired. They should be sad and happy at the same time. Be funny and real, look at other great film directors and writers and use their styles to come up with something of your own."
-Tie_In_ScreenPlay = "Using the following Characters and settings:  "
-ArtPrompt_ScreenPlay= "Come up with a short prompt to for an artist to render a work of art to represent the screenplay you have created, related to the following:  "
+
+
+
+
+#Literary Tricks
+Twist_ScreenPlay= "Based on the characters you have created and the prior Episodes create an eloborate twist that was not obvious yet is believable based on prior events in the story, there should be a red herring set up do not fall into that, be creative and trick the reader into a wow factor that leaves them wanting more"
+RedHerring_ScreenPlay= "Based on the characters you have created and the prior Episodes create an eloborate red Herring that seems to be where the show is going based on prior events in the story. Note a red herring is a literary device that leads readers or audiences toward a false conclusion"
+Mystery_Character_Past = "Choose the most mysterious character and create a flashback that fits their backstory, persona and general events of the story so far. Make it somehow impact someone else in the story whether they know it or not already"
+UnsungHero = "Have a character that has seemed cowardly or shy become the unsung hero and save the day so to speak. Make sure their actions make sense in the frame of the story but we want the audience to be shocked and yet proud of the actions this character undergoes to achieve this feat."
+VillanOrigin = "Have someone start as a good guy the audience connects with that turns even because of something tramautic in the story, this can be done via flashback or directly in the story. It should be believable and fit into the story. It can also be part of the twist if there is one involved"
+
+
+
+
+Character_Art1 = "Come up with a Prompt for someone to create a unique portrait of the character based on the description provided, be creative and give the reader an idea of what the character looks like. Make sure to match the style with the genre of show"
+Character_Art2 = "give the AI a prompt to make a work of art inspired by their character and their description the art type should be an illistration of the characters concept art  based on the description provided, be creative and give the reader an idea of what the character looks like. Make sure to match the style with the genre of show"
+#Character_Art3 - give the AI a prompt to make a work of art inspired by their character and their description feel free to be creative and have them in action, give the AI a prompt to make a work of art
+
+#Take all
+#system_Text_ScreenPlay = "You are a helpful and brilliant assistant to the user. You will do exactly what the user asks, completing all tasks provided by the following user inputs, and will be rewarded for creativity and wittyness you will gain extra points if you are exciting and not corny."
+#system_Text_ScreenPlay2 = "Use | char as a delimiter to separate each Reponse you provide"
+#system_Text_ScreenPlay2 = "The user demands your response is in the following formats. Title: {Title}; Director Name = {Director Name}; Characters: {Characters Name: {Name}; Age: {Age}; Background: {Background}; } "
+#system_Text_ScreenPlay44 = "The user demands your response is in the following formats.  Title:{Title}|Director Name = {Director Name}|genre:{genre}|tone:{tone}|Music:{genre:{genre,genre}|instrumental:{Instrumental}|songs:{song, artist; song, artist;...}}|Backstory:{Backstory}|Characters:{# Name:{Name}|Age:{Age}|Voice:{Voice}|origin:{origin}|Language:{Language}|strengths:{Strength,Strength,Strength}|weakness:{weakness,weakness,weakness}|Background:{Background}} "
+#Dialog_ScreenPlay = "Create dialog in the scenes using the following guidance: make the scenes include deep conversations with strong thought provoking dialog that drives the story forward. Each scene should have different characters that ultimately all relate to each other. At times it should be funny, try to have comedic releif and make the reader believe even if its fantasy"
+#Direction_ScreenPlay2 = "Write a Short 7-10 scene  ScreenPlay where the audience will laugh, cry be surprised and/or at the edge of their seat. Be funny and real. Make the story  something the audience relates to. The scenes should build off of each other and there should be a climax and resolution, pick a specific genre of film. the characters should interact with additional minor characters"
+#Summarize_ScreenPlay = 'Summarize the following Episode and make it brief but have the major details. Try to explain a key detail from each scene: '
 
 
 

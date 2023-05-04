@@ -292,10 +292,11 @@ class DigitalAssist():
         Filename = '\\' + Filename + "_"
         f2 = up.getPath()
         SavePath1 = f2
-        data = [current_time2,self.transcript_Final]
+        data = [(current_time2,self.transcript_Final)]
         print(data)
         try:
             df1 = pd.DataFrame(data,columns = ["TimeStamp","Transcript"])
+            #df1 = pd.DataFrame(data)
             df1.to_csv(SavePath1 + Filename + current_time2 + '.csv')
 
         # DigitalAssist.SaveText(self,df1,'MondeVert Assistant', 'Full Transcript')
@@ -1019,6 +1020,7 @@ class DigitalAssist():
 
             elif 'screen' in query or 'play' in query or 'movie' in query or 'script' in query:
                 DigitalAssist.Make_a_ScreenPlay(self)
+                #DigitalAssist.Make_a_ScreenPlay_Testing(self)
 
             elif "art" in query and ("basic" in query or "auto" in query or "quick" in query):
                 DigitalAssist.quickArt(self)
@@ -1189,7 +1191,165 @@ class DigitalAssist():
         DigitalAssist.NamePoemSavePoem(self, prompt, ArtPaths, Prompts_Used, ArtistPoetInfo, title=Title,
                                        FolderPath=up.AI_Music_Path + '\\' + Mode, ArtType='Song Lyrics' + Mode)
 
-    def Make_a_ScreenPlay(self, Mode='Random Song'):
+
+    #
+    #
+    # def Make_a_ScreenPlay_Testing(self, Mode='Random Song'):
+    #     ArtPaths = []
+    #     openai.api_key = API_Key
+    #     Plot = ""
+    #     crazy = round((randbelow(520000) + 170000) / 100000, 0)
+    #     crazy = crazy / 10
+    #     if crazy < .3:
+    #         crazy +=.1
+    #
+    #     print(crazy)
+    #
+    #     response = openai.ChatCompletion.create(
+    #         model="gpt-3.5-turbo",
+    #         messages=[
+    #             {"role": "system", "content": up.system_Text_ScreenPlay + up.system_Text_ScreenPlay2},
+    #
+    #             {"role": "user", "content": up.RolePlay_ScreenPlay},
+    #             {"role": "user", "content": up.Setting_ScreenPlay},
+    #
+    #
+    #             {"role": "user", "content": up.Characters_ScreenPlay},
+    #
+    #             {"role": "user", "content": up.Title_ScreenPlay}
+    #
+    #         ], temperature=crazy
+    #     )
+    #     print(response)
+    #     Skeleton_Story = response.choices[0].message.content
+    #
+    #     print(Skeleton_Story)
+    #     DigitalAssist.speak(self, Skeleton_Story)
+    # def CharArt(self, Skeleton_Story = ''):
+    #     Test_Skel = Skeleton_Story.split('#')
+    #    # print(Test_Skel)
+    #     Details = Test_Skel[0]
+    #
+    #     Characters = []
+    #     x = len(Test_Skel)
+    #     for c in range(0,x):
+    #         print(c)
+    #         Characters.append(Test_Skel[c])
+    #
+    #     for c in Characters:
+    #
+    #         if c != 0:
+    #             Art_PromptChar = DigitalAssist.GPTArt(self, crazy, up.ArtPrompt_ScreenPlay_Scene, Skeleton_Story,
+    #                                            sys_prompt=up.Character_Art1 + c)
+    #
+    #             Art_PromptChar2 = DigitalAssist.GPTArt(self, crazy, up.ArtPrompt_ScreenPlay_Scene, Skeleton_Story,
+    #                                            sys_prompt=up.Character_Art2 + c)
+    #         else:
+    #             cddd = ''
+    #
+    #
+    #     try:
+    #         DigitalAssist.speak(self, Art_PromptChar)
+    #         print(Art_PromptChar)
+    #         ArtPath2 = DigitalAssist.makeArt(self, Art_PromptChar)
+    #         ArtPaths.append(ArtPath2)
+    #     except:
+    #             dn = ''
+    #
+    #     try:
+    #         DigitalAssist.speak(self, Art_PromptChar2)
+    #         print(Art_PromptChar2)
+    #         ArtPath2 = DigitalAssist.makeArt(self, Art_PromptChar2)
+    #         ArtPaths.append(ArtPath2)
+    #     except:
+    #             dn = ''
+    #
+
+
+
+        # print(Skeleton_Story)
+        # DigitalAssist.speak(self, Skeleton_Story)
+        #
+        # Song1 = openai.ChatCompletion.create(
+        #     model="gpt-3.5-turbo",
+        #     messages=[
+        #         {"role": "system", "content": up.system_Text_ScreenPlay},
+        #         {"role": "user", "content": up.RolePlay_ScreenPlay},
+        #         {"role": "user", "content": up.Tie_In_ScreenPlay},
+        #         {"role": "user", "content": Skeleton_Story},
+        #         {"role": "user", "content": up.Direction_ScreenPlayALL},
+        #         {"role": "user", "content": up.Direction_ScreenPlayALL2},
+        #
+        #         {"role": "user", "content": up.Direction_ScreenPlay1},
+        #         {"role": "user", "content": up.Dialog_ScreenPlay}
+        #
+        #     ]
+        #     , temperature=crazy
+        # )
+        # ScreenPlay = Song1.choices[0].message.content
+        #
+        #
+        # print(ScreenPlay)
+        # DigitalAssist.speak(self, ScreenPlay)
+
+    def GPTSummary(self, crazy = '',prompt = up.GPT_Summary,Plot = '', sys_prompt = up.system_Text_ScreenPlay + up.system_Text_ScreenPlay3):
+
+        openai.api_key = API_Key
+
+
+        if crazy != '':
+            crazy = round((randbelow(520000) + 170000) / 100000, 0)
+            crazy = crazy / 10
+
+        print(crazy)
+
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": sys_prompt},
+                {"role": "user", "content": prompt + Plot},
+
+            ], temperature=crazy
+        )
+
+        Skeleton_Story = response.choices[0].message.content
+        return Skeleton_Story
+
+#Every Scene I should come up with pictures to show (find things to trigger a picture getting created and multi-thread it so it does not stop anything, I should have it nice and output within the App if possible
+#Also I should have the ability to assign a voice to a given character and keep that for the audio transcript/recording. Also provide the Raw Words.
+    #Snatch prequel
+    #Big Lewbowski Prequel and Sequel
+    #Something about Mary Sequel (add my own ideas)
+    #Ancient egyption culture and other cultures
+    # #(have the different technologies showing how they use sound and frequencies to move giant stones underground. Large caves and artifical light makes the world seem like another planet,
+    # #have it seem like a distant planet etc, also have some of the extinct animals and animals/plants we never heard of. Describe landscape in vivid detail and make the reader fall in love with the lore.
+    #Twist is they end up being underground and when humans are dealing with global warming we break in and accidentally become slaves.
+ #   eventually we try to become a unified people as they realize we made the same mistakes as them
+#    #Write the MetaVerse Elon Musk Story -- This is going to be a video game too(like pokemon)
+    def GPTArt(self, crazy = '',prompt = up.ArtPrompt_ScreenPlay,Plot = '', sys_prompt = up.system_Text_ScreenPlay ):
+        openai.api_key = API_Key
+
+        Art_Prompt1 = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": sys_prompt},
+                {"role": "user", "content": up.RolePlay_ScreenPlay},
+                #{"role": "user", "content": up.Direction_ScreenPlay},
+                {"role": "user", "content": prompt + Plot}
+            ], temperature=crazy
+        )
+
+        GPTARTPROMPT = Art_Prompt1.choices[0].message.content
+        return GPTARTPROMPT
+#
+#$$$$$Savetime
+
+
+
+#Give artist a profile and save it for use - make them have a set style that is repeated for the entire book (will be great for gothic and kid stories)
+
+    def Make_a_ScreenPlay(self, Mode='ScreenPlay'):
+        self.Mode = 'ScreenPlay'
         ArtPaths = []
         openai.api_key = API_Key
         Plot = ""
@@ -1203,9 +1363,10 @@ class DigitalAssist():
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[
-                {"role": "system", "content": up.system_Text},
-                {"role": "user", "content": up.RolePlay_ScreenPlay},
-                #{"role": "user", "content": up.Direction_ScreenPlay},
+                {"role": "system", "content": up.system_Text_ScreenPlay + up.system_Text_ScreenPlay2},
+                #{"role": "user", "content": up.RolePlay_ScreenPlay},
+                {"role": "user", "content": up.Direction_ScreenPlay_Detail},
+                {"role": "user", "content": up.Direction_ScreenPlay_Detail2},
                 {"role": "user", "content": up.Setting_ScreenPlay},
                 {"role": "user", "content": up.Characters_ScreenPlay},
                 {"role": "user", "content": up.Title_ScreenPlay}
@@ -1218,16 +1379,25 @@ class DigitalAssist():
 
         print(Skeleton_Story)
         DigitalAssist.speak(self, Skeleton_Story)
+        print('***********************************************************')
+        print('***********************************************************')
+        print('***********************************************************')
+        print('***********************************************************')
+        print('Episode 1:')
 
         Song1 = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[
-                {"role": "system", "content": up.system_Text_ScreenPlay},
-                {"role": "user", "content": up.RolePlay_ScreenPlay},
-                {"role": "user", "content": up.Tie_In_ScreenPlay},
-                {"role": "user", "content": Skeleton_Story},
-                {"role": "user", "content": up.Direction_ScreenPlay1},
+                {"role": "system", "content": up.system_Text_ScreenPlay + up.system_Text_ScreenPlay1},
+                #{"role": "user", "content": up.RolePlay_ScreenPlay},
+                {"role": "user", "content": up.Tie_In_ScreenPlay + Skeleton_Story},
+                {"role": "user", "content": up.Direction_ScreenPlayALL},
+                {"role": "user", "content": up.Direction_ScreenPlayALL2},
+                {"role": "user", "content": up.Direction_ScreenPlayALL3},
+                {"role": "user", "content": up.Direction_ScreenPlayPilot},
                 {"role": "user", "content": up.Dialog_ScreenPlay}
+
+
 
             ]
             , temperature=crazy
@@ -1238,146 +1408,323 @@ class DigitalAssist():
         print(ScreenPlay)
         DigitalAssist.speak(self, ScreenPlay)
 
+        Summary_Episode1 = DigitalAssist.GPTSummary(self, crazy,up.Summarize_ScreenPlay, ScreenPlay)
 
-
-        Summary_Episode1 = DigitalAssist.ChatGPTDA(self, temp=crazy, MakeArt=True,
-                                                   Prompt=(up.Summarize_ScreenPlay + ScreenPlay), ConfirmBot=False)
-
+        print('***********************************************************')
+        print("Summary Episode I: ")
+        print(Summary_Episode1)
         Plot += Summary_Episode1
+
         # print(Summary_Episode1)
         # DigitalAssist.speak(self, Summary_Episode1)
 
         # Episode 2
+        print('***********************************************************')
+        print('***********************************************************')
+        print('***********************************************************')
+        print('***********************************************************')
+        print('Episode 2:')
+
         if crazy < .6:
             crazy +=.1
         Song1 = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[
-                {"role": "system", "content": up.system_Text_ScreenPlay},
-                {"role": "user", "content": up.RolePlay_ScreenPlay},
-                {"role": "user", "content": up.Tie_In_ScreenPlay},
-                {"role": "user", "content": Skeleton_Story},
+                {"role": "system", "content": up.system_Text_ScreenPlay + up.system_Text_ScreenPlay1},
+                {"role": "user", "content": up.Tie_In_ScreenPlay + Skeleton_Story},
+
                 {"role": "user", "content": up.Scene_Replay + Plot},
-                {"role": "user", "content": up.Direction_ScreenPlay2},
-                {"role": "user", "content": up.Dialog_ScreenPlay}
+                {"role": "user", "content": up.Direction_ScreenPlayALL},
+                {"role": "user", "content": up.Direction_ScreenPlayALL2},
+                {"role": "user", "content": up.Direction_ScreenPlayALL3},
+                {"role": "user", "content": up.Direction_ScreenPlayMiddle},
+                {"role": "user", "content": up.Dialog_ScreenPlay},
+                {"role": "user", "content": up.RedHerring_ScreenPlay}
 
             ]
             , temperature=crazy
         )
         ScreenPlay2 = Song1.choices[0].message.content
-
-        print(ScreenPlay2)
+        # print(ScreenPlay2)
         DigitalAssist.speak(self, ScreenPlay2)
+        Summary_Episode2 = DigitalAssist.GPTSummary(self, crazy, up.Summarize_ScreenPlay, ScreenPlay2)
+        print('***********************************************************')
+        print("Summary Episode II: ")
+        print(Summary_Episode2)
+        DigitalAssist.speak(self, Summary_Episode2)
 
-        Summary_Episode2 = DigitalAssist.ChatGPTDA(self, temp=crazy, MakeArt=True,
-                                                   Prompt=(up.Summarize_ScreenPlay + Plot), ConfirmBot=False)
 
-
+        Plot += Summary_Episode2
 
         # print(Summary_Episode2)
         # DigitalAssist.speak(self, Summary_Episode2)
 
         # Episode 3
+        print('***********************************************************')
+        print('***********************************************************')
+        print('***********************************************************')
+        print('***********************************************************')
+        print('Episode 3:')
         if crazy < .6:
             crazy +=.3
         elif crazy <.7:
             crazy +=.2
         elif crazy > 5:
-            crazy = 3
+            crazy = 4
         Song1 = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[
-                {"role": "system", "content": up.system_Text_ScreenPlay},
+                {"role": "system", "content": up.system_Text_ScreenPlay + up.system_Text_ScreenPlay1},
                 {"role": "user", "content": up.RolePlay_ScreenPlay},
-                {"role": "user", "content": up.Tie_In_ScreenPlay},
-                {"role": "user", "content": Skeleton_Story},
+                {"role": "user", "content": up.Tie_In_ScreenPlay + Skeleton_Story},
                 {"role": "user", "content": up.Scene_Replay + Plot},
-                {"role": "user", "content": up.Direction_ScreenPlay3},
-                {"role": "user", "content": up.Dialog_ScreenPlay}
+                {"role": "user", "content": up.Direction_ScreenPlayALL},
+                {"role": "user", "content": up.Direction_ScreenPlayALL2},
+                {"role": "user", "content": up.Direction_ScreenPlayALL3},
+                {"role": "user", "content": up.Direction_ScreenPlayMiddleLate},
+                {"role": "user", "content": up.Dialog_ScreenPlay},
+                {"role": "user", "content": up.UnsungHero},
+                {"role": "user", "content": up.Twist_ScreenPlay}
 
             ]
             , temperature=crazy
         )
         ScreenPlay3 = Song1.choices[0].message.content
-
         # print(ScreenPlay3)
         # DigitalAssist.speak(self, ScreenPlay3)
-
-        Summary_Episode3 = DigitalAssist.ChatGPTDA(self, temp=crazy, MakeArt=True,
-                                                   Prompt=(up.Summarize_ScreenPlay + ScreenPlay3), ConfirmBot=False)
-
+        Summary_Episode3 = DigitalAssist.GPTSummary(self, crazy,up.Summarize_ScreenPlay,ScreenPlay3)
         Plot += Summary_Episode3
 
-        # print(Summary_Episode3)
-        # DigitalAssist.speak(self, Summary_Episode3)
+        print('***********************************************************')
 
+        print("Summary Episode III: ")
+        print(Summary_Episode3)
+        DigitalAssist.speak(self, Summary_Episode3)
+
+
+        print('***********************************************************')
+        print('***********************************************************')
+        print('***********************************************************')
+        print('***********************************************************')
+        print('Episode 4:')
         # Episode 4
-        if crazy < .8:
-            crazy =.6
+        if crazy < .6:
+            crazy +=.3
+        elif crazy <.7:
+            crazy +=.2
+        elif crazy > 5:
+            crazy = 4
         Song1 = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[
-                {"role": "system", "content": up.system_Text_ScreenPlay},
+                {"role": "system", "content": up.system_Text_ScreenPlay + up.system_Text_ScreenPlay1},
                 {"role": "user", "content": up.RolePlay_ScreenPlay},
-                {"role": "user", "content": up.Tie_In_ScreenPlay},
-                {"role": "user", "content": Skeleton_Story},
+                {"role": "user", "content": up.Tie_In_ScreenPlay + Skeleton_Story},
                 {"role": "user", "content": up.Scene_Replay + Plot},
-                {"role": "user", "content": up.Direction_ScreenPlay4},
-                {"role": "user", "content": up.Dialog_ScreenPlay}
+                {"role": "user", "content": up.Direction_ScreenPlayALL},
+                {"role": "user", "content": up.Direction_ScreenPlayALL2},
+                {"role": "user", "content": up.Direction_ScreenPlayALL3},
+                {"role": "user", "content": up.Direction_ScreenPlayMiddleLate},
+                {"role": "user", "content": up.Dialog_ScreenPlay},
+                {"role": "user", "content": up.Mystery_Character_Past},
+                {"role": "user", "content": up.VillanOrigin}
 
             ]
             , temperature=crazy
         )
         ScreenPlay4 = Song1.choices[0].message.content
+        # print(ScreenPlay3)
+        # DigitalAssist.speak(self, ScreenPlay4)
+        Summary_Episode4 = DigitalAssist.GPTSummary(self, crazy,up.Summarize_ScreenPlay,Plot)
+        Plot += Summary_Episode4
+        print('***********************************************************')
+        print('***********************************************************')
+        print('***********************************************************')
+        print('***********************************************************')
+        print("Summary Episode IV: ")
+        print(Summary_Episode4)
+        DigitalAssist.speak(self, Summary_Episode4)
 
-
-
-        print(ScreenPlay4)
-        DigitalAssist.speak(self, ScreenPlay4)
-
-        Summary_Episode4 = DigitalAssist.ChatGPTDA(self, temp=crazy, MakeArt=True,
-                                                   Prompt=(up.Summarize_ScreenPlay + ScreenPlay4), ConfirmBot=False)
-
-        # print(Summary_Episode4)
-        # DigitalAssist.speak(self, Summary_Episode4)
-
-        Plot+= Summary_Episode4
-
-        Art_Prompt1 = openai.ChatCompletion.create(
+        # Episode 5 - Try to make the messages part a variable so we can scale to do seasons and not just one season (for movies you can build the entire story this way, scene by scene maybe)
+        print('Episode 5:')
+        if crazy < .8:
+            crazy =.6
+        Song1 = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[
-                {"role": "system", "content": up.system_Text},
+                {"role": "system", "content": up.system_Text_ScreenPlay + up.system_Text_ScreenPlay1},
                 {"role": "user", "content": up.RolePlay_ScreenPlay},
-                #{"role": "user", "content": up.Direction_ScreenPlay},
-                {"role": "user", "content": up.ArtPrompt_ScreenPlay + Skeleton_Story}
-            ], temperature=crazy
+                {"role": "user", "content": up.Tie_In_ScreenPlay + Skeleton_Story},
+                {"role": "user", "content": up.Scene_Replay + Plot},
+                {"role": "user", "content": up.Direction_ScreenPlayALL},
+                {"role": "user", "content": up.Direction_ScreenPlayALL2},
+                {"role": "user", "content": up.Direction_ScreenPlayALL3},
+                {"role": "user", "content": up.Direction_ScreenPlayFinal},
+                {"role": "user", "content": up.Dialog_ScreenPlay}
+
+            ]
+            , temperature=crazy
         )
+        ScreenPlayFinal = Song1.choices[0].message.content
+        print(ScreenPlayFinal)
+        DigitalAssist.speak(self, ScreenPlayFinal)
+        Summary_EpisodeFinal = DigitalAssist.GPTSummary(self, crazy,up.Summarize_ScreenPlay, Plot)
+
+        print('***********************************************************')
+
+        print("Summary Episode V: ")
+        print(Summary_EpisodeFinal)
+        DigitalAssist.speak(self, Summary_EpisodeFinal)
+
+#        Come up with Music for the
+        Plot+= Summary_EpisodeFinal
+        Summary_Summer_90s = DigitalAssist.GPTSummary(self, crazy, up.GPT_90s_Summary,Plot)
+
+        print('***********************************************************')
+        print('***********************************************************')
+        print('***********************************************************')
+        print('***********************************************************')
+        print("90s Movie Preview: ")
+        print(Summary_Summer_90s)
+        DigitalAssist.speak(self, Summary_Summer_90s)
 
 
+        print('***********************************************************')
+        print('***********************************************************')
+        print('***********************************************************')
+        print('***********************************************************')
+        print("Art prompts ")
 
-        Art_Prompt = Art_Prompt1.choices[0].message.content
+
+        Art_Prompt = DigitalAssist.GPTArt(self, crazy, up.ArtPrompt_ScreenPlay, Skeleton_Story,sys_prompt= up.system_Text_ScreenPlay + up.system_Text_ScreenPlay4)
+       # Art_Prompt = Art_Prompt11.choices[0].message.content
+
+
+        Art_Prompt1 = DigitalAssist.GPTArt(self, crazy, up.ArtPrompt_ScreenPlay_Scene, Summary_Episode1,sys_prompt= up.system_Text_ScreenPlay + up.system_Text_ScreenPlay4)
+        Art_Prompt2 = DigitalAssist.GPTArt(self, crazy, up.ArtPrompt_ScreenPlay_Scene, Summary_Episode2, sys_prompt= up.system_Text_ScreenPlay + up.system_Text_ScreenPlay4)
+        Art_Prompt3 = DigitalAssist.GPTArt(self, crazy, up.ArtPrompt_ScreenPlay_Scene, Summary_Episode3, sys_prompt= up.system_Text_ScreenPlay + up.system_Text_ScreenPlay4)
+        Art_Prompt4 = DigitalAssist.GPTArt(self, crazy, up.ArtPrompt_ScreenPlay_Scene, Summary_Episode4, sys_prompt= up.system_Text_ScreenPlay + up.system_Text_ScreenPlay4)
+        Art_Prompt5 = DigitalAssist.GPTArt(self, crazy, up.ArtPrompt_ScreenPlay_Scene, Summary_EpisodeFinal,sys_prompt= up.system_Text_ScreenPlay + up.system_Text_ScreenPlay4)
+
 
 
 
 
         print(Art_Prompt)
-        DigitalAssist.speak(self, Art_Prompt)
+
 
         # Art2 = DigitalAssist.ChatGPTDA(self, temp=crazy, MakeArt=True, Prompt=(Art_Prompt),ConfirmBot=False)
         try:
+            DigitalAssist.speak(self, Art_Prompt)
+            print('***********************************************************')
+            print("Art prompt Movie Poster ")
+            print(Art_Prompt)
+
             ArtPath2 = DigitalAssist.makeArt(self, Art_Prompt)
             ArtPaths.append(ArtPath2)
+            try:
+                DigitalAssist.speak(self, Art_Prompt1)
+                print('***********************************************************')
+                print("Art prompts Episode I: ")
+                print(Art_Prompt1)
+                ArtPath2 = DigitalAssist.makeArt(self, Art_Prompt1)
+                ArtPaths.append(ArtPath2)
+            except:
+                    dn = ''
+
+            try:
+                DigitalAssist.speak(self, Art_Prompt2)
+                print('***********************************************************')
+                print("Art prompts Episode II:  ")
+                print(Art_Prompt2)
+                ArtPath2 = DigitalAssist.makeArt(self, Art_Prompt2)
+                ArtPaths.append(ArtPath2)
+            except:
+                    dn = ''
+
+            try:
+                DigitalAssist.speak(self, Art_Prompt3)
+                print('***********************************************************')
+                print("Art prompts Episode III: ")
+                print(Art_Prompt3)
+                ArtPath2 = DigitalAssist.makeArt(self, Art_Prompt3)
+                ArtPaths.append(ArtPath2)
+            except:
+                    dn = ''
+
+            try:
+                DigitalAssist.speak(self, Art_Prompt4)
+                print('***********************************************************')
+                print("Art prompts Episode IV: ")
+                print(Art_Prompt4)
+                ArtPath2 = DigitalAssist.makeArt(self, Art_Prompt4)
+                ArtPaths.append(ArtPath2)
+            except:
+                    dn = ''
+
+            try:
+                DigitalAssist.speak(self, Art_Prompt5)
+                print('***********************************************************')
+                print("Art prompts Episode V: ")
+                print(Art_Prompt5)
+                ArtPath2 = DigitalAssist.makeArt(self, Art_Prompt5)
+                ArtPaths.append(ArtPath2)
+            except:
+                    dn = ''
+
+
+
+
 
         except:
             ArtPath2 = ''
 
+        Test_Skel = Skeleton_Story.split('#')
+        # print(Test_Skel)
+        Details = Test_Skel[0]
 
-        ScreenPlay = "EPISODE I      :" +  ScreenPlay +"               EPISODE II: " +  ScreenPlay2 + "       EPISODE III: " + ScreenPlay3 +"         EPISODE IV:" +  ScreenPlay4
+        Characters = []
+        x = len(Test_Skel)
+        for c in range(0, x):
+            print(c)
+            Characters.append(Test_Skel[c])
 
-        Title = 'SD - MondeVert Productions - Classified'
-        # Title = DigitalAssist.ChatGPTDA(self, temp=crazy, MakeArt=True, Prompt=(up.Title_ScreenPlay + ScreenPlay3[150:]),
-        #                                 ConfirmBot=False)
-        prompt = "Artist info:" + Skeleton_Story + 'Summary: '+ Plot + "Work of Art Inspiration:" + Art_Prompt  + "      Song:" + ScreenPlay
+        for c in Characters:
+
+            if c != 0:
+                Art_PromptChar = DigitalAssist.GPTArt(self, crazy, up.ArtPrompt_ScreenPlay_Scene, Skeleton_Story,
+                                                      sys_prompt=up.Character_Art1 + c)
+
+                Art_PromptChar2 = DigitalAssist.GPTArt(self, crazy, up.ArtPrompt_ScreenPlay_Scene, Skeleton_Story,
+                                                       sys_prompt=up.Character_Art2 + c)
+            else:
+                cddd = ''
+
+        try:
+            DigitalAssist.speak(self, Art_PromptChar)
+            print(Art_PromptChar)
+            ArtPath2 = DigitalAssist.makeArt(self, Art_PromptChar)
+            ArtPaths.append(ArtPath2)
+        except:
+            dn = ''
+
+        try:
+            DigitalAssist.speak(self, Art_PromptChar2)
+            print(Art_PromptChar2)
+            ArtPath2 = DigitalAssist.makeArt(self, Art_PromptChar2)
+            ArtPaths.append(ArtPath2)
+        except:
+            dn = ''
+
+
+        ScreenPlay = "EPISODE I      :" +  ScreenPlay +"               EPISODE II: " +  ScreenPlay2 + "       EPISODE III: " + ScreenPlay3 +"         EPISODE IV:" +  ScreenPlay4+"         EPISODE V:" +  ScreenPlayFinal
+
+        #Title = 'SD - MondeVert Productions - Classified'
+        Title = DigitalAssist.ChatGPTDA(self, temp=crazy, MakeArt=True, Prompt=(up.Title_ScreenPlay + Plot),ConfirmBot=False)
+        if len(Title)> 45:
+            Title = Title[0:45]
+
+        prompt = " 90s Summer Preview: " +Summary_Summer_90s +" Details:" + Skeleton_Story + 'Summary: '+ Plot + "Work of Art Inspiration:" + Art_Prompt  + "      Song:" + ScreenPlay
         Prompts_Used = [
             up.system_Text + up.RolePlay_SongArtist + "AI Created a Persona shown as the Artist Bio Above" + up.Song_prompt + up.ArtPrompt_SongArtist]
         ArtistPoetInfo = 'Lyrics Written By: ' + up.Song_Writer + '      (' + 'Artwork by: ' + up.AI_ArtistName + ')'
@@ -1427,59 +1774,10 @@ class DigitalAssist():
         ArtistPoetInfo ='Poem Written By: ' + up.AI_Poet_Name + '      (' + 'Artwork by: ' + up.AI_ArtistName + ')'
         DigitalAssist.NamePoemSavePoem(self,  prompt, ArtPaths,Prompts_Used, ArtistPoetInfo)
 
+
+
     def SundayScary_Poem(self):
         DigitalAssist.Quick_Poem_v1(self,GPTPrompt = up.Sunday_Scaries_Poem_prompt)
-
-
-
-
-
-    def Shake_Poem_v1(self):
-        ArtPaths= []
-
-        DigitalAssist.makeQuickPoem(self)
-        prompt = DigitalAssist.ChatGPTDA(self, temp=0.4, MakeArt=True, Prompt=(up.Shake_Poem_v1_prompt + ' "' + self.Words + '"'))
-        try:
-            ArtPath = DigitalAssist.makeArt(self, prompt)
-            ArtPaths.append(ArtPath)
-        except:
-            DigitalAssist.speak(self, 'Could not make the Art due to an error')
-
-        Art2 = DigitalAssist.ChatGPTDA(self, temp=0.5, MakeArt=True, Prompt=( up.Poem_Art_2_prompt + '"' + prompt + '"'))
-
-        try:
-            ArtPath2 = DigitalAssist.makeArt(self, Art2)
-            ArtPaths.append(ArtPath2)
-        except:
-            DigitalAssist.speak(self, 'Could not make the Art due to an error')
-
-        Prompts_Used = ['Original Prompt: '+ up.Shake_Poem_v1_prompt+ + '"' + self.Words + '"' , 'ChatGPT to DALL-E (poem sent as is): ' + prompt,'User Prompt to get description' + up.Poem_Art_2_prompt + 'poem' ,'Chat-GPT to DALL-E (describing poem): ' + Art2 ]
-        ArtistPoetInfo = str('Poem Written By: ' + up.AI_Poet_Name + '      (' + 'Artwork by: ' + up.AI_ArtistName + ')')
-        DigitalAssist.NamePoemSavePoem(self, prompt, ArtPaths,Prompts_Used, ArtistPoetInfo)
-
-    def Shake_Poem_v2(self):
-        ArtPaths= []
-        DigitalAssist.makeQuickPoem(self)
-        prompt = DigitalAssist.ChatGPTDA(self, temp=0.4, MakeArt=True, Prompt=( up.Shake_Poem_v2_prompt + '"' + self.Words + '"'))
-        try:
-            ArtPath = DigitalAssist.makeArt(self, prompt)
-            ArtPaths.append(ArtPath)
-        except:
-            DigitalAssist.speak(self, 'Could not make the Art due to an error')
-
-        Art2 = DigitalAssist.ChatGPTDA(self, temp=0.5, MakeArt=True, Prompt=( up.Poem_Art_2_prompt + '"' + prompt + '"'))
-        try:
-            ArtPath2 = DigitalAssist.makeArt(self, Art2)
-            ArtPaths.append(ArtPath2)
-        except:
-            DigitalAssist.speak(self, 'Could not make the Art due to an error')
-
-        Prompts_Used = ['Original Prompt: '+ up.Shake_Poem_v2_prompt+  '"' + self.Words + '"' , 'ChatGPT to DALL-E (poem sent as is): ' + prompt,'User Prompt to get description' + up.Poem_Art_2_prompt + 'poem' ,'Chat-GPT to DALL-E (describing poem): ' + Art2 ]
-        ArtistPoetInfo =str('Poem Written By: ' + up.AI_Poet_Name + '      (' + 'Artwork by: ' + up.AI_ArtistName + ')')
-        DigitalAssist.NamePoemSavePoem(self, prompt, ArtPaths,Prompts_Used, ArtistPoetInfo)
-
-
-
 
 
 
@@ -1520,21 +1818,21 @@ class DigitalAssist():
 
             #Say Quick Art or Auto Art or Basic Art
             if 'awesome'  in query or 'love'  in query or 'yay' in query or  'yes'  in query or 'best' in query:
-                rr = '- Sounded Great'
+                rr = 'Buono'
                 s2 = False
                 continue
 
             elif 'good'  in query or 'love'  in query or 'yay' in query or  'yes'  in query:
-                rr = '- Good - POTENTIAL HERE'
+                rr = '(Good)'
                 s2 = False
                 continue
 
             elif 'ok' in query or 'okay' in query or 'not bad' in query or 'so so' in query:
-                rr = ' - So So'
+                rr = '(So So)'
                 s2 = False
 
             elif 'no' in query or 'hate' in query or 'bad' in query or 'terrible' in query or 'yuck' in query:
-                rr = ' - BAD'
+                rr = ' (BAD)'
                 s2 = False
             else:
                 rr = ''
@@ -1563,14 +1861,15 @@ class DigitalAssist():
         SavePath1 = f2
         invalidCharRemoved = re.sub(r"[^a-zA-Z0-9 ]", "", Title)
         folder = str(invalidCharRemoved)
-        if len(folder)>40:
-            folder = folder[0:40]
+        if len(folder)>44:
+            folder = folder[0:44]
         Title1 = '\\' + str(invalidCharRemoved) + "_"
-        if len(Title1)>180:
-            Title1 = Title1[0:180]
+        if len(Title1)>44:
+            Title1 = Title1[0:44]
         SavePath2 = SavePath1 +'\\' +folder
         Title2 = SavePath2 + Title1 + current_time2
-        Tag = DigitalAssist.YayorNay(self)
+        Tag = ""
+        Tag += DigitalAssist.YayorNay(self)
         Title2 = Title2 + Tag
 
 
@@ -1621,6 +1920,22 @@ class DigitalAssist():
         r.add_text(poem)
         document2.save(Title2 + '.docx')
         DigitalAssist.Add2MasterLyrics(self,current_time2, ArtType, title, ArtistPoetInfo, poem, Tag, SavePath2, dfPrompts)
+
+
+
+
+        data = [(Title,ArtistPoetInfo, poem, FolderPath, ArtType , Tag)]
+        #print(data)
+        try:
+            df1 = pd.DataFrame(data,columns = ['Title','Artist Info', 'ScreenPlay','FolderPath', 'Category', 'Self-Critique'])
+            print(df1)
+            print(Title2)
+            df1.to_csv(Title2 + current_time2 + '.txt')
+
+        # DigitalAssist.SaveText(self,df1,'MondeVert Assistant', 'Full Transcript')
+            DigitalAssist.add2Master2(df1)
+        except:
+            print('Review Error')
 
 
     def SaveLiveArt(self, ArtPaths, Title = 'Live Art'):
@@ -2263,6 +2578,9 @@ if __name__ == '__main__':
     x = DigitalAssist(1)
     x.Take_query()
 
+    #Testing
+    #x.Make_a_ScreenPlay_Testing()
+    #x.Make_a_ScreenPlay()
 
     #x.saveTranscript()
     atexit.register(x.saveTranscript)
