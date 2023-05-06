@@ -1072,7 +1072,8 @@ class DigitalAssist():
 
             elif ('chorus' in query or 'song' in query) or ("brick" in query and ( "sing" in query or "dj" in query)) :
 
-                DigitalAssist.Make_a_Song(self)
+                #DigitalAssist.Make_a_Song(self)
+                DigitalAssist.Make_a_SongRR(self)
                 DigitalAssist.speak(self, 'Make a quick song Complete')
                 s2 = False
                 DigitalAssist.RunChatGPT(self)
@@ -1163,6 +1164,78 @@ class DigitalAssist():
                 {"role": "system",  "content":  up.system_Text},
                 {"role": "user",    "content": up.RolePlay_SongArtist + Artist_Bio},
                 {"role": "user","content": up.ArtPrompt_SongArtist}
+            ], temperature = crazy
+        )
+
+        Art_Prompt = Art_Prompt1.choices[0].message.content
+
+        print(Artist_Bio)
+        DigitalAssist.speak(self,Artist_Bio)
+        print(Song)
+        DigitalAssist.speak(self, Song)
+        print(Art_Prompt)
+        DigitalAssist.speak(self, Art_Prompt)
+
+
+        #Art2 = DigitalAssist.ChatGPTDA(self, temp=crazy, MakeArt=True, Prompt=(Art_Prompt),ConfirmBot=False)
+        try:
+             ArtPath2 = DigitalAssist.makeArt(self, Art_Prompt)
+             ArtPaths.append(ArtPath2)
+
+        except:
+            ArtPath2 = ''
+
+        Title = DigitalAssist.ChatGPTDA(self, temp=crazy, MakeArt=True,Prompt=(up.Song_Title_Prompt + Song), ConfirmBot=False)
+        prompt = "Artist info:"  + Artist_Bio+   "Work of Art Inspiration:"  + Art_Prompt + "Song:" + Song
+        Prompts_Used = [up.system_Text + up.RolePlay_SongArtist + "AI Created a Persona shown as the Artist Bio Above" + up.Song_prompt + up.ArtPrompt_SongArtist]
+        ArtistPoetInfo = 'Lyrics Written By: ' + up.Song_Writer + '      (' + 'Artwork by: ' + up.AI_ArtistName + ')'
+        DigitalAssist.NamePoemSavePoem(self, prompt, ArtPaths, Prompts_Used, ArtistPoetInfo, title=Title,
+                                       FolderPath=up.AI_Music_Path + '\\' + Mode, ArtType='Song Lyrics' + Mode)
+
+
+
+
+
+    def Make_a_SongRR(self, Mode='Random Song'):
+        ArtPaths = []
+        openai.api_key = API_Key
+
+        crazy = round((randbelow(520000)+170000)/100000,0)
+        crazy = crazy/10
+        print(crazy)
+
+
+        response =  openai.ChatCompletion.create(
+             model="gpt-3.5-turbo",
+             messages=[
+                 {"role": "system",  "content": up.system_TextRR},
+                 {"role": "user", "content": up.ArtistBio_SongArtistRR}
+             ], temperature = crazy
+         )
+
+        Artist_Bio = response.choices[0].message.content
+
+        Song1 = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system",  "content": up.system_TextRR},
+                {"role": "user",    "content": up.RolePlay_SongArtistRR + Artist_Bio},
+                {"role": "user","content": up.Song_Prompt_SongArtistsRR},
+                {"role": "user", "content": up.Title_SongArtistsRR},
+                {"role": "user", "content": up.Samples_SongArtistsRR},
+                {"role": "user", "content": up.Tune_SongArtistsRR}
+
+            ]
+           , temperature = crazy
+        )
+        Song = Song1.choices[0].message.content
+
+        Art_Prompt1 = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system",  "content":  up.system_TextRR},
+                {"role": "user",    "content": up.RolePlay_SongArtistRR + Artist_Bio},
+                {"role": "user","content": up.ArtPrompt_SongArtistRR}
             ], temperature = crazy
         )
 
@@ -1352,6 +1425,9 @@ class DigitalAssist():
         ScreenPlay = []
         i = 0
         Plot = ''
+        Add_IN = ''
+
+
 
         self.Mode = 'ScreenPlay'
         ArtPaths = []
@@ -1386,387 +1462,232 @@ class DigitalAssist():
 
 
 
-        print('***********************************************************')
-        print('***********************************************************')
-        print('***********************************************************')
-        print('***********************************************************')
-        print('Episode 1:')
-
-        # Episode_Count = 5
-        # for eCount in range 0 to Episode_Count
-        eCount = 1
-        if eCount == 1:
-            Direction_ScreenPlay_Repeat = up.Direction_System + up.system_Text_ScreenPlay + up.system_Text_ScreenPlay1 + up.Direction_Over + up.Direction_comma + up.Direction_USER + up.Tie_In_ScreenPlay + Skeleton_Story + up.Direction_Over + up.Direction_comma + up.Direction_USER + up.Direction_ScreenPlayALL + up.Direction_Over + up.Direction_comma + up.Direction_USER + up.Direction_ScreenPlayALL2 + up.Direction_Over + up.Direction_comma + up.Direction_USER + up.Direction_ScreenPlayALL3 + up.Direction_Over + up.Direction_comma
-        else:
-            Direction_ScreenPlay_Repeat = up.Direction_System + up.system_Text_ScreenPlay + up.system_Text_ScreenPlay1 + up.Direction_Over + up.Direction_comma + up.Direction_USER + up.Tie_In_ScreenPlay + Skeleton_Story + up.Direction_Over + up.Direction_comma + up.Direction_USER + up.Scene_Replay + Plot + up.Direction_Over + up.Direction_comma + up.Direction_USER + up.Direction_ScreenPlayALL + up.Direction_Over + up.Direction_comma + up.Direction_USER + up.Direction_ScreenPlayALL2 + up.Direction_Over + up.Direction_comma + up.Direction_USER + up.Direction_ScreenPlayALL3 + up.Direction_Over + up.Direction_comma
-
-        Direction_ScreenPlay_PILOT = up.Direction_USER + up.Direction_ScreenPlayPilot + up.Direction_Over + up.Direction_comma + up.Direction_USER + up.Dialog_ScreenPlay + up.Direction_Over
-        Direction_ScreenPlay_Middle =  up.Direction_USER +  up.Direction_ScreenPlayMiddle+ up.Direction_Over + up.Direction_comma + up.Direction_USER +  up.Dialog_ScreenPlay+ up.Direction_Over + up.Direction_comma+ up.Direction_USER + up.RedHerring_ScreenPlay + up.Direction_Over
+        #This is how I set up the prompts for the show, I could randomize when to activate red herrings etc based on Add-In Feature
+        Direction_ScreenPlay = []
+        Direction_ScreenPlay.append(up.Direction_ScreenPlay_Pilot)
+        Direction_ScreenPlay.append(up.Direction_ScreenPlayMiddle)
+        Direction_ScreenPlay.append(up.Direction_ScreenPlayMiddleLate)
+        Direction_ScreenPlay.append(up.Direction_ScreenPlayMiddleLate)
+        Direction_ScreenPlay.append(up.Direction_ScreenPlayFinal)
 
 
 
 
-#Have it set the value based on the # in the season 1 vs Final, middle, vs middle late (you can auto-assign this based on how many episodes in a season vs # of seasons etc)
-        SetUp = Direction_ScreenPlay_Repeat + Direction_ScreenPlay_PILOT
-        print(SetUp)
+
+        Episode_Count = 5
+        for i in range (0,Episode_Count):
+            Episode_Direction = Direction_ScreenPlay[i]
+
+            if i ==1:
+                Add_IN = up.RedHerring_ScreenPlay
+            elif i == 2:
+                Add_IN = up.UnsungHero + up.Twist_ScreenPlay
+            elif i == 3:
+                Add_IN = up.Mystery_Character_Past + up.VillanOrigin
 
 
 
-        Song1 = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=[SetUp]
-            , temperature=crazy
-        )
-        ScreenPlay0 = Song1.choices[0].message.content
-        ScreenPlay.append(ScreenPlay0)
 
-        print(ScreenPlay[i])
-        DigitalAssist.speak(self, ScreenPlay[i])
-
-        Summary_Episode1 = DigitalAssist.GPTSummary(self, crazy,up.Summarize_ScreenPlay, ScreenPlay[i])
-        Summary_Episodes.append(Summary_Episode1)
-
-        print(Summary_Episodes[i])
-        #DigitalAssist.speak(self, Summary_Episodes[i])
+            print('***********************************************************')
+            print('***********************************************************')
+            print('***********************************************************')
+            print('***********************************************************')
+            print('Episode ' + str(i+1))
+            Add_IN = ''
 
 
-        print('***********************************************************')
-        print("Summary Episode I: ")
-        print(Summary_Episodes[i])
-        Plot += Summary_Episodes[i]
-        #this needs to go up so we can eventually do it all in one
-        i+=1
-
-
-#This will be where I repeat
-
-
-        # Episode 2
-        print('***********************************************************')
-        print('***********************************************************')
-        print('***********************************************************')
-        print('***********************************************************')
-        print('Episode II:')
-
-        if crazy < .6:
-            crazy +=.1
-
-        Summary_Episode2 = ''
-        try:
-            # SetUp = up.Direction_ScreenPlay_Repeat +   up.Direction_ScreenPlay_Middle
-            # print(SetUp)
             Song1 = openai.ChatCompletion.create(
                 model="gpt-3.5-turbo",
                 messages=[
-                    {"role": "system", "content": up.system_Text_ScreenPlay0 + up.system_Text_ScreenPlay1},
-                    {"role": "user", "content": up.Scene_Replay + Plot},
-                    {"role": "user", "content": up.Tie_In_ScreenPlay + Skeleton_Story},
-                    {"role": "user", "content": up.Direction_ScreenPlayALL},
-                    {"role": "user", "content": up.Direction_ScreenPlayALL2},
-                    {"role": "user", "content": up.Direction_ScreenPlayALL3},
-                    {"role": "user", "content": up.Direction_ScreenPlayMiddle},
-                    {"role": "user", "content": up.RedHerring_ScreenPlay},
-                    {"role": "user", "content": up.Dialog_ScreenPlay}
-                ]
-                , temperature=crazy
-            )
-            ScreenPlay2 = Song1.choices[0].message.content
+                    {"role": "user", "content": up.system_Text_ScreenPlay + up.system_Text_ScreenPlay1},
+                    {"role": "system", "content": up.Tie_In_ScreenPlay + Skeleton_Story},
+                    {"role": "system", "content": up.Direction_ScreenPlayALL},
+                    {"role": "system", "content": up.Direction_ScreenPlayALL2},
+                    {"role": "system", "content":  up.Direction_ScreenPlayALL3},
+                    ##--------------------Common Above/Unique Below----------
+                    {"role": "system", "content":  Episode_Direction+ Add_IN},
+                    ##--------------------Dialog----------
+                    {"role": "system", "content":  up.Dialog_ScreenPlay}
+                ], temperature=crazy )
 
-            print(ScreenPlay2)
-            DigitalAssist.speak(self, ScreenPlay2)
-            Summary_Episode2 = DigitalAssist.GPTSummary(self, crazy, up.Summarize_ScreenPlay, ScreenPlay2)
+            ScreenPlay0 = Song1.choices[0].message.content
+            ScreenPlay.append(ScreenPlay0)
+
+            print(ScreenPlay[i])
+            DigitalAssist.speak(self, ScreenPlay[i])
+
+            Summary_Episode1 = DigitalAssist.GPTSummary(self, crazy,up.Summarize_ScreenPlay, ScreenPlay[i])
+            Summary_Episodes.append(Summary_Episode1)
+
+            print(Summary_Episodes[i])
+            #DigitalAssist.speak(self, Summary_Episodes[i])
+
+
             print('***********************************************************')
-            print("Summary Episode II: ")
-            print(Summary_Episode2)
-            #DigitalAssist.speak(self, Summary_Episode2)
-            Plot += Summary_Episode2
-        except:
-            "Error this is still not working, you just hid the issue --> Review or bring back the old way"
+            print("Summary Episode " + str(i + 1))
+            print(Summary_Episodes[i])
+            Plot += Summary_Episodes[i]
+            ScreenPlay += "EPISODE " + str(i+ 1)+ ScreenPlay[0]
 
-
-
-        # print(Summary_Episode2)
-        # DigitalAssist.speak(self, Summary_Episode2)
-
-        # Episode 3
-        print('***********************************************************')
-        print('***********************************************************')
-        print('***********************************************************')
-        print('***********************************************************')
-        print('Episode III:')
-        if crazy < .6:
-            crazy +=.3
-        elif crazy <.7:
-            crazy +=.2
-        elif crazy > 5:
-            crazy = 4
-        Song1 = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": up.system_Text_ScreenPlay0 + up.system_Text_ScreenPlay1},
-
-                {"role": "user", "content": up.Tie_In_ScreenPlay + Skeleton_Story},
-                {"role": "user", "content": up.Scene_Replay + Plot},
-                {"role": "user", "content": up.Direction_ScreenPlayALL},
-                {"role": "user", "content": up.Direction_ScreenPlayALL2},
-                {"role": "user", "content": up.Direction_ScreenPlayALL3},
-                {"role": "user", "content": up.Direction_ScreenPlayMiddleLate},
-                {"role": "user", "content": up.Dialog_ScreenPlay},
-                {"role": "user", "content": up.UnsungHero},
-                {"role": "user", "content": up.Twist_ScreenPlay}
-
-            ]
-            , temperature=crazy
-        )
-        ScreenPlay3 = Song1.choices[0].message.content
-        print(ScreenPlay3)
-        DigitalAssist.speak(self, ScreenPlay3)
-
-
-        Summary_Episode3 = DigitalAssist.GPTSummary(self, crazy,up.Summarize_ScreenPlay,ScreenPlay3)
-        Plot += Summary_Episode3
-
-        print('***********************************************************')
-        print("Summary Episode III: ")
-        print(Summary_Episode3)
-       # DigitalAssist.speak(self, Summary_Episode3)
-
-
-        print('***********************************************************')
-        print('***********************************************************')
-        print('***********************************************************')
-        print('***********************************************************')
-        print('Episode IV:')
-        # Episode 4
-        if crazy < .6:
-            crazy +=.3
-        elif crazy <.7:
-            crazy +=.2
-        elif crazy > 5:
-            crazy = 4
-        Song1 = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": up.system_Text_ScreenPlay0 + up.system_Text_ScreenPlay1},
-                {"role": "user", "content": up.Tie_In_ScreenPlay + Skeleton_Story},
-                {"role": "user", "content": up.Scene_Replay + Plot},
-                {"role": "user", "content": up.Direction_ScreenPlayALL},
-                {"role": "user", "content": up.Direction_ScreenPlayALL2},
-                {"role": "user", "content": up.Direction_ScreenPlayALL3},
-                {"role": "user", "content": up.Direction_ScreenPlayMiddleLate},
-                {"role": "user", "content": up.Mystery_Character_Past},
-                {"role": "user", "content": up.VillanOrigin},
-                {"role": "user", "content": up.Dialog_ScreenPlay}
-
-            ]
-            , temperature=crazy
-        )
-        ScreenPlay4 = Song1.choices[0].message.content
-        print(ScreenPlay4)
-        DigitalAssist.speak(self, ScreenPlay4)
-        Summary_Episode4 = DigitalAssist.GPTSummary(self, crazy,up.Summarize_ScreenPlay,ScreenPlay4)
-        Plot += Summary_Episode4
-        print('***********************************************************')
-        print('***********************************************************')
-        print('***********************************************************')
-        print('***********************************************************')
-        print("Summary Episode IV: ")
-        print(Summary_Episode4)
-        #DigitalAssist.speak(self, Summary_Episode4)
-
-        # Episode 5 - Try to make the messages part a variable so we can scale to do seasons and not just one season (for movies you can build the entire story this way, scene by scene maybe)
-        print('Episode V:')
-        if crazy < .8:
-            crazy =.6
-        Song1 = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": up.system_Text_ScreenPlay0 + up.system_Text_ScreenPlay1},
-                {"role": "user", "content": up.Tie_In_ScreenPlay + Skeleton_Story},
-                {"role": "user", "content": up.Scene_Replay + Plot},
-                {"role": "user", "content": up.Direction_ScreenPlayALL},
-                {"role": "user", "content": up.Direction_ScreenPlayALL2},
-                {"role": "user", "content": up.Direction_ScreenPlayALL3},
-                {"role": "user", "content": up.Direction_ScreenPlayFinal},
-                {"role": "user", "content": up.Dialog_ScreenPlay}
-
-            ]
-            , temperature=crazy
-        )
-        ScreenPlayFinal = Song1.choices[0].message.content
-        print(ScreenPlayFinal)
-        DigitalAssist.speak(self, ScreenPlayFinal)
-        Summary_EpisodeFinal = DigitalAssist.GPTSummary(self, crazy,up.Summarize_ScreenPlay, ScreenPlayFinal)
-
-        print('***********************************************************')
-
-        print("Summary Episode V: ")
-        print(Summary_EpisodeFinal)
-        #DigitalAssist.speak(self, Summary_EpisodeFinal)
-
-#        Come up with Music for the
-        Plot+= Summary_EpisodeFinal
-
-        Plot_NoSpoiler = Summary_Episode1 + Summary_Episode2 + Summary_Episode3
-
-        Summary_Summer_90s = DigitalAssist.GPTSummary(self, crazy, up.GPT_90s_Summary,Plot_NoSpoiler)
-
-        print('***********************************************************')
-        print('***********************************************************')
-        print('***********************************************************')
-        print('***********************************************************')
-        print("90s Movie Preview: ")
-        print(Summary_Summer_90s)
-        DigitalAssist.speak(self, Summary_Summer_90s)
-
-
-        print('***********************************************************')
-        print('***********************************************************')
-        print('***********************************************************')
-        print('***********************************************************')
-        print("Character Art prompts ")
-
-
-        #''
-        #if this does not work I can make replace that text with the char so it works
-        Test_Skel1 = Skeleton_Story.replace(":", "")
-        Test_Skel1 = Test_Skel1.replace("Characters", "#")
-
-        Test_Skel = Test_Skel1.split('#')
-        # print(Test_Skel)
-        Details = Test_Skel[0]
-
-        Characters = []
-        x = len(Test_Skel)
-        for c in range(0, x):
-            #print(c)
-            if c != 0 :
-                Characters.append(Test_Skel[c])
-
-        for c in Characters:
-            print(' ')
-            print('-------------------------------------------')
-            print('-------------------------------------------')
-            print("Character: " + c)
-            print('-------------------------------------------')
-            print("Character Art1: " + up.Character_Art1 + c)
-            Art_PromptChar = DigitalAssist.GPTArt(self, crazy, up.Character_Art2 + c, Skeleton_Story)
-
-            print("Character Art2: " + up.Character_Art2 + c)
-            Art_PromptChar2 = DigitalAssist.GPTArt(self, crazy, up.Character_Art2 + c, Skeleton_Story)
 
 
         try:
-            DigitalAssist.speak(self, Art_PromptChar)
-            print(Art_PromptChar)
-            ArtPath2 = DigitalAssist.makeArt(self, Art_PromptChar)
-            ArtPaths.append(ArtPath2)
-        except:
-            dn = ''
+            Remove_l = (-1) * len(Summary_Episodes[4] + Summary_Episodes[5])
+            Plot_NoSpoiler = Plot[Remove_l:]
+            print(Plot_NoSpoiler)
 
-        try:
-            DigitalAssist.speak(self, Art_PromptChar2)
-            print(Art_PromptChar2)
-            ArtPath2 = DigitalAssist.makeArt(self, Art_PromptChar2)
-            ArtPaths.append(ArtPath2)
-        except:
-            dn = ''
+            Summary_Summer_90s = DigitalAssist.GPTSummary(self, crazy, up.GPT_90s_Summary,Plot_NoSpoiler)
 
-
-
-
-        print('***********************************************************')
-        print('***********************************************************')
-        print('***********************************************************')
-        print('***********************************************************')
-        print("Art prompts ")
-
-
-        try:
-            Art_Prompt = DigitalAssist.GPTArt(self, crazy, up.direction_Text_Artist_ScreenPlay + up.ArtPrompt_ScreenPlay, Skeleton_Story,sys_prompt=up.system_Text_Artist_ScreenPlay + up.system_Text_ScreenPlay_Art1)
-            DigitalAssist.speak(self, Art_Prompt)
             print('***********************************************************')
-            print("Art prompt Movie Poster ")
-            print(Art_Prompt)
+            print('***********************************************************')
+            print('***********************************************************')
+            print('***********************************************************')
+            print("90s Movie Preview: ")
+            print(Summary_Summer_90s)
+            DigitalAssist.speak(self, Summary_Summer_90s)
+
+
+            print('***********************************************************')
+            print('***********************************************************')
+            print('***********************************************************')
+            print('***********************************************************')
+            print("Character Art prompts ")
+
+
+            #''
+            #if this does not work I can make replace that text with the char so it works
+            #Test_Skel1 = Skeleton_Story.replace(":", "")
+            Test_Skel1 = Skeleton_Story.replace("Characters:", "#")
+            Test_Skel1 = Test_Skel1.replace("Characters", "#")
+
+            Test_Skel = Test_Skel1.split('#')
+            # print(Test_Skel)
+            Details = Test_Skel[0]
+
+            Characters = []
+            x = len(Test_Skel)
+            for c in range(0, x):
+                #print(c)
+                if c != 0 :
+                    Characters.append(Test_Skel[c])
+
+            for c in Characters:
+                print(' ')
+                print('-------------------------------------------')
+                print('-------------------------------------------')
+                print("Character: " + c)
+                print('-------------------------------------------')
+                print("Character Art1: " + up.Character_Art1 + c)
+                Art_PromptChar = DigitalAssist.GPTArt(self, crazy, up.Character_Art2 + c, Skeleton_Story)
+
+                print("Character Art2: " + up.Character_Art2 + c)
+                Art_PromptChar2 = DigitalAssist.GPTArt(self, crazy, up.Character_Art2 + c, Skeleton_Story)
+
+
             try:
-                ArtPath2 = DigitalAssist.makeArt(self, Art_Prompt)
+                DigitalAssist.speak(self, Art_PromptChar)
+                print(Art_PromptChar)
+                ArtPath2 = DigitalAssist.makeArt(self, Art_PromptChar)
                 ArtPaths.append(ArtPath2)
             except:
-                d = ''
-        except:
-            ArtPath2 = ''
-       # Art_Prompt = Art_Prompt11.choices[0].message.content
-
-
-
-        for x in range (0,5):
-            if x == 0 :
-                Summary_Episode = Summary_Episode1
-            elif x ==1:
-                Summary_Episode = Summary_Episode2
-            elif x == 2:
-                Summary_Episode = Summary_Episode3
-            elif x == 3:
-                Summary_Episode = Summary_Episode4
-            elif x == 4:
-                Summary_Episode = Summary_EpisodeFinal
-
-
-
+                dn = ''
 
             try:
-                Art_Prompt1 = DigitalAssist.GPTArt(self, crazy, up.direction_Text_Artist_ScreenPlay + up.ArtPrompt_ScreenPlay_Scene,
-                                                   Summary_Episode,sys_prompt=up.system_Text_Artist_ScreenPlay + up.system_Text_ScreenPlay_Art1  + up.system_Text_ScreenPlay_Art)
+                DigitalAssist.speak(self, Art_PromptChar2)
+                print(Art_PromptChar2)
+                ArtPath2 = DigitalAssist.makeArt(self, Art_PromptChar2)
+                ArtPaths.append(ArtPath2)
             except:
-                print('Error did not work but kept going')
+                dn = ''
+
+
+
+
+            print('***********************************************************')
+            print('***********************************************************')
+            print('***********************************************************')
+            print('***********************************************************')
+            print("Art prompts ")
+
 
             try:
-
-                Test_Skel1 = Skeleton_Story.replace(":", "")
-                Test_Skel1 = Test_Skel1.replace("Art Prompts", "#")
-                # ''
-                Test_Skel = Art_Prompt1.split('#')
-
-                Art_Prompts_pre = []
-                Art_Prompts = []
-                x = len(Test_Skel)
-                for c in range(0, x):
-                    #print(c)
-                    if c != 0 :
-                        Art_Prompts_pre.append(Test_Skel[c])
-
-
-                Test_Skel = Art_Prompt1.split(';')
-                print("Test_Skel: " + Test_Skel)
-
-                x = len(Test_Skel)
-                for c in range(0, x):
-                    Art_Prompts.append(Test_Skel[c])
-
-
-
-                for ap in Art_Prompts:
-                    DigitalAssist.speak(self, ap)
-                    print('***********************************************************')
-                    print("Art prompt Movie Poster ")
-                    print(ap)
-                    ArtPath2 = DigitalAssist.makeArt(self, ap)
+                Art_Prompt = DigitalAssist.GPTArt(self, crazy, up.direction_Text_Artist_ScreenPlay + up.ArtPrompt_ScreenPlay, Skeleton_Story,sys_prompt=up.system_Text_Artist_ScreenPlay + up.system_Text_ScreenPlay_Art1)
+                DigitalAssist.speak(self, Art_Prompt)
+                print('***********************************************************')
+                print("Art prompt Movie Poster ")
+                print(Art_Prompt)
+                try:
+                    ArtPath2 = DigitalAssist.makeArt(self, Art_Prompt)
                     ArtPaths.append(ArtPath2)
-
+                except:
+                    d = ''
             except:
-                print("New stuff failed yo")
-
-        # Art_Prompt2 = DigitalAssist.GPTArt(self, crazy, up.direction_Text_Artist_ScreenPlay + up.ArtPrompt_ScreenPlay_Scene, Summary_Episode2, sys_prompt= up.system_Text_Artist_ScreenPlay + up.system_Text_ScreenPlay_Art1 +up.system_Text_ScreenPlay_Art)
-        # Art_Prompt3 = DigitalAssist.GPTArt(self, crazy, up.direction_Text_Artist_ScreenPlay + up.ArtPrompt_ScreenPlay_Scene, Summary_Episode3, sys_prompt= up.system_Text_Artist_ScreenPlay + up.system_Text_ScreenPlay_Art1 +up.system_Text_ScreenPlay_Art)
-        # Art_Prompt4 = DigitalAssist.GPTArt(self, crazy, up.direction_Text_Artist_ScreenPlay + up.ArtPrompt_ScreenPlay_Scene, Summary_Episode4, sys_prompt= up.system_Text_Artist_ScreenPlay + up.system_Text_ScreenPlay_Art1 +up.system_Text_ScreenPlay_Art)
-        # Art_Prompt5 = DigitalAssist.GPTArt(self, crazy, up.direction_Text_Artist_ScreenPlay + up.ArtPrompt_ScreenPlay_Scene, Summary_EpisodeFinal,sys_prompt= up.system_Text_Artist_ScreenPlay + up.system_Text_ScreenPlay_Art1 +up.system_Text_ScreenPlay_Art)
-        #
+                ArtPath2 = ''
+           # Art_Prompt = Art_Prompt11.choices[0].message.content
 
 
 
+            for x in range (0,5):
+
+                Summary_Episode = Summary_Episode[x]
 
 
-        ScreenPlay = "EPISODE I      :" +  ScreenPlay0 +"               EPISODE II: " +  ScreenPlay2 + "       EPISODE III: " + ScreenPlay3 +"         EPISODE IV:" +  ScreenPlay4+"         EPISODE V:" +  ScreenPlayFinal
+
+                try:
+                    Art_Prompt1 = DigitalAssist.GPTArt(self, crazy, up.direction_Text_Artist_ScreenPlay + up.ArtPrompt_ScreenPlay_Scene,
+                                                       Summary_Episode,sys_prompt=up.system_Text_Artist_ScreenPlay + up.system_Text_ScreenPlay_Art1  + up.system_Text_ScreenPlay_Art)
+                except:
+                    print('Error did not work but kept going')
+
+                try:
+
+                    Test_Skel1 = Skeleton_Story.replace(":", "")
+                    Test_Skel1 = Test_Skel1.replace("Art Prompts", "#")
+                    # ''
+                    Test_Skel = Art_Prompt1.split('#')
+
+                    Art_Prompts_pre = []
+                    Art_Prompts = []
+                    x = len(Test_Skel)
+                    for c in range(0, x):
+                        #print(c)
+                        if c != 0 :
+                            Art_Prompts_pre.append(Test_Skel[c])
+
+
+                    Test_Skel = Art_Prompt1.split(';')
+                    print("Test_Skel: " + Test_Skel)
+
+                    x = len(Test_Skel)
+                    for c in range(0, x):
+                        Art_Prompts.append(Test_Skel[c])
+
+
+
+                    for ap in Art_Prompts:
+                        DigitalAssist.speak(self, ap)
+                        print('***********************************************************')
+                        print("Art prompt Movie Poster ")
+                        print(ap)
+                        ArtPath2 = DigitalAssist.makeArt(self, ap)
+                        ArtPaths.append(ArtPath2)
+
+                except:
+                    print("New stuff failed yo")
+
+            # Art_Prompt2 = DigitalAssist.GPTArt(self, crazy, up.direction_Text_Artist_ScreenPlay + up.ArtPrompt_ScreenPlay_Scene, Summary_Episode2, sys_prompt= up.system_Text_Artist_ScreenPlay + up.system_Text_ScreenPlay_Art1 +up.system_Text_ScreenPlay_Art)
+            # Art_Prompt3 = DigitalAssist.GPTArt(self, crazy, up.direction_Text_Artist_ScreenPlay + up.ArtPrompt_ScreenPlay_Scene, Summary_Episode3, sys_prompt= up.system_Text_Artist_ScreenPlay + up.system_Text_ScreenPlay_Art1 +up.system_Text_ScreenPlay_Art)
+            # Art_Prompt4 = DigitalAssist.GPTArt(self, crazy, up.direction_Text_Artist_ScreenPlay + up.ArtPrompt_ScreenPlay_Scene, Summary_Episode4, sys_prompt= up.system_Text_Artist_ScreenPlay + up.system_Text_ScreenPlay_Art1 +up.system_Text_ScreenPlay_Art)
+            # Art_Prompt5 = DigitalAssist.GPTArt(self, crazy, up.direction_Text_Artist_ScreenPlay + up.ArtPrompt_ScreenPlay_Scene, Summary_EpisodeFinal,sys_prompt= up.system_Text_Artist_ScreenPlay + up.system_Text_ScreenPlay_Art1 +up.system_Text_ScreenPlay_Art)
+            #
+
+
+        except:
+            print("Large error skip, but this is needed for now")
+
+
+
+        #ScreenPlay = "EPISODE I      :" +  ScreenPlay[0] +"               EPISODE II: " +  ScreenPlay2 + "       EPISODE III: " + ScreenPlay3 +"         EPISODE IV:" +  ScreenPlay4+"         EPISODE V:" +  ScreenPlayFinal
 
         #Title = 'SD - MondeVert Productions - Classified'
         Title = DigitalAssist.ChatGPTDA(self, temp=crazy, MakeArt=True, Prompt=(up.Title_ScreenPlay + Plot),ConfirmBot=False)

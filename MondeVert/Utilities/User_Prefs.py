@@ -172,6 +172,40 @@ Tune_SongArtists= 'Provide what song the lyrics are most similar to and or what 
 
 
 
+
+
+#New format for easier use
+system_TextRR = "You are a helpful and brilliant assistant to the user. You will do exactly what the user asks, completing all tasks provided by the following user inputs. The user demands you role play you are an award winning song-writer and musician with the ability to compose beatuiful songs that inspire people to be the best they can be.You will be rewarded for creativity and wittyness you will lose points for making basic songs that are corny/cliche. "
+#ArtistBio_SongArtist= "I want you to come up with musical artist (only a few sentences) that is both interesting and unique, make them one the listener can relate to and give them personality and make them feel real."
+RolePlay_SongArtistRR = "As previously mentioned you are tasked with Role playing that you are a skilled musical artist that fits the following description: "
+Artist_Bio_Details = 'I am a creative hard working man that is very compationate and I played sports in highschool but found myself having a difficult time in college from classes to fights I always found myself in the wrong place at the wrong time. I had a girlfriend in highschool and I loved her but we ended when she went off to college the "times spent with her are the best times of my life dreaming bout the day that I could make her my wife" '
+ArtistBio_SongArtistRR= "Use the prior details to create your persona for your role play. You are 'Richard Reid' a compassionate and loving individual with a hear of gold.  the listener can relate to and give them a specific personality.  make sure they feel real amd human."
+
+#####RIchard this is where you change it to make a new song ### do not change any other lines for now until I am back
+Song_Subject = 'song to be about the Grateful Dead I love the Grateful Dead my family and friends and sports '
+
+
+
+##### Do not make any more edits bro please for the life of me and all that is holy do not touch anything else
+
+
+
+
+
+
+Song_Prompt_SongArtistsRR =  "Write a short song with 2 verses,  a bridge and a chorus. Utilize proper rhyme schemes and writing styles. Fit your artist's genre and make the song catchy and interesting"
+ArtPrompt_SongArtistRR= "Come up with a short prompt to for an artist to render a work of art album cover for the song you created as an artist. Be descriptive and take on the respective persona. Give a style of the work and what the subhect should be of"
+Title_SongArtistsRR= "Based on the lyrics, give the song a title"
+Samples_SongArtistsRR = 'Provide between 2 - 3 potential songs to sample that would go along with the lyrics you previously came up with, be creative'
+Tune_SongArtistsRR= 'Provide what song the lyrics are most similar to and or what the melody sounds like'
+
+
+
+
+
+
+
+
 GPT_Summary = 'Summarize the following Screenplay: '
 GPT_90s_Summary = 'Summarize the following text. Make it sound like it is for a movie trailer in the 90s where it was monumental and extremely hyped up. The voice itself was epic: "In a world...","This summer one man..." ,"Just when they thought....". The audience should be left wanting more, leave them with several vliff hangers and introduce the main characters, mention things that make the audience become misled draw inpiration from those previews on vhs tapes and come up with your own preview for the following text: '
 
@@ -201,8 +235,8 @@ GPT_90s_Summary = 'Summarize the following text. Make it sound like it is for a 
 
 system_Text_ScreenPlay0 = "The user wants you,the brilliant assistant, to role play that you are an award winning writer and director."
 system_Text_ScreenPlay1= " You will do exactly what the user asks with the goal being set to write a successful Screenplay, completing all tasks provided by the following user inputs, and will be rewarded for creativity and wit you will gain extra points if you make all of the arc plots connect to the main plot by the final episode. Follow the proper syntax for writing a screenplay, any spoken words should be surrounded by double quotes, scene names should be single quotes. This show is intended for adults so there can be some rough language without going overboard. episodes 5-10 minutes long, with 7-11 scenes each if you do not follow these guidelines you will lose points"
-system_Text_ScreenPlay2 = "The user demands your response is in the following formats.  Title:{Title}|Director Name = {Director Name}|settings: {setting}|TimePeriod:{TimePeriod}|genre:{genre}| tone:{tone}| Music:{genres:{song genre}|songs:{song by  artist,song by  artist }}| Plot:{Plots}|Arc-Plots:{Arc-Plots}|Red Herring:{Red Herrings}|Plot Twists:{Plot Twists}|Summary:{By Episode}|Characters:{Name:{Full Name}|Age:{Age}|Voice:{Voice}|Home:{Current: {City,State}|origin: {City,Country}}|Language:{Language}|Career: {Current:{Current Job}|Dream Job: {Dream Job}}|strengths:{Strengths}|weakness:{weaknesses}|Background:{Background}}"
-system_Text_ScreenPlay3 = "The user demands your response is in the following formats.  Title:{Title}|Episode:{Scene:{Summary by Scene}}"
+system_Text_ScreenPlay2 = "The user demands your response fits the following table:  Title:{Title}|Director Name = {Director Name}|Location: {Location}|TimePeriod:{TimePeriod}|genre:{genre}| tone:{tone}| Music:{genres:{song genre},songs:{song by  artist,song by  artist }}| Plots:{Plots}|Arc-Plots:{Arc-Plots}|Red Herrings:{Red Herrings}|Plot Twists:{Plot Twists}|Summary:{Episode}|Characters:{Name:{First Last}|Age:{Age}|Voice:{Voice}|Home:{Current:{City,State}|origin:{City,Country}}|Language:{Language}|Career:{Current:{Current Job}|Dream Job:{Dream Job}}|strengths:{strengths,strengths,strengths...}|weakness:{weakness,weaknesses,weaknesses...}|Background:{Background}}"
+system_Text_ScreenPlay3 = "The user demands your response is in the following formats.  Episode:{Scene:{Summary}}"
 system_Text_Soundtrack = "The user demands your response is in the following formats.  Episode:{Scene: {'Music:{genres:{genre,genre}|songs:{song by  artist,song by  artist }}"
 system_Text_ScreenPlay_Art = "The user demands your response is in the following formats.  Episode:{Scene: {Art Prompts: {'Art Prompt', 'Art Prompt'}}; Scene: {Art Prompts: {'Art Prompt', 'Art Prompt'}}}"
 system_Text_ScreenPlay_Art1 = "the artist you are describing the prompt to will not  know the characters so rather than say their name, describe them and describe their precense, shape, size, clothes, and also describe the scenes vividly. This is supposed to make the words come to life. Try to highlight the parts of the text that is most unique"
@@ -245,7 +279,7 @@ Setting_ScreenPlay= "describe the unique genre, style, tone and setting that is 
 
 
 
-Title_ScreenPlay= "Based on the ScreenPlay you have created, give the ScreenPlay an abstract or catchy title (Do not say Last), try to set up the name being said later in the film"
+Title_ScreenPlay= "Based on the ScreenPlay you have created, give the ScreenPlay an abstract or catchy title"
 Theme_Song_ScreenPlay= "Based on the story you have created, pick 2-4 songs/artists/albums {Music} that fit the tone and style of the Screenplay pick an additional song that is an instrumental only"
 
 
@@ -262,7 +296,7 @@ VillanOrigin = "Have someone start as a good guy the audience connects with that
 
 
 
-Scene_Replay = 'The story should have continuity with the following text:  '
+Scene_Replay = 'Maintain proper Screenplay format as a requirement! Refer to this text only as information as this text is a summary of the prior screenplay (I could not provide full file since its a large file)  '
 Summarize_ScreenPlay = 'Summarize the following Episode and make the description brief but provide the major details scene by scene: '
 Dialog_ScreenPlay = "Create realistic dialog for the characters in the scenes. Each of the characters vocaulary should match their character descriptions and the reader should believe it. Use the following guidance: make the scenes include real world conversations with strong thought provoking dialog that drives the story forward." # keep each episode of the 5 episode season under 15 minutes
 #Direction_ScreenPlay = "The user wants the director you are role playing as to make a Short 15 minute ScreenPlay where the audience will be surprised, moved, capitvated and inspired. They should be sad and happy at the same time. Be funny and real, look at other great film directors and writers and use their styles to come up with something of your own."
@@ -281,18 +315,30 @@ Direction_ScreenPlayALL3 = "The scenes and episodes should build off of each oth
 
 
 #This is how we change beginning vs middle vs end (have mechanism to randomly add literary devices)
-Direction_ScreenPlayPilot = "This is the Pilot for a  where the audience will laugh, cry be surprised and/or at the edge of their seat to see the next episode. Be funny and real. Make the story  something the audience relates to. the characters should interact with additional minor characters that you create, some are good and some are potentially bad we do not fully know yet. Make it interesting since it is the pilot, leave a lot of open threads and introduce a lot of characters right away"
+Direction_ScreenPlay_Pilot= "This is the Pilot for a  where the audience will laugh, cry be surprised and/or at the edge of their seat to see the next episode. Be funny and real. Make the story  something the audience relates to. the characters should interact with additional minor characters that you create, some are good and some are potentially bad we do not fully know yet. Make it interesting since it is the pilot, leave a lot of open threads and introduce a lot of characters right away"
 Direction_ScreenPlayMiddle = " Push the story forward and introduce the major antagonist if it has not already been made aparent to the audience. Make it seem like things are not as they seemed in the pilot. Introduce a few new characters and go deeper into the character's backstories and why they are important to this show. Introduce friendships, love interests, burned pasts and other drama that entices the audience to continue watching at the end of the episode, always end on a cliff hanger"
 Direction_ScreenPlayMiddleLate = "This is the the middle episodes out of the respective miniseries reveal the big twist or set it up to surprise the audience. Test the protagonists' core values and try to break them, possibly make the antagonist look like they are winning Have a large twist in the beginning and then an even bigger twist in the end. Dont be afraid to have something tragic happen to a character we like, its always safe to make drama between a few characters, fit it to the story. Always end on a cliff hanger"
 Direction_ScreenPlayFinal = "Important to note this is the  Final episode for the respective miniseries as per the following characters and based on the events of the prior episodes. Wrap up most of the Characters subarc plots and have it all tie together and resolve the main plot that exists throughout these 5 episodes, make the audience surprised something they would not have guessed from Episode 1's recap, give the reader something to yearn for and leave them wanting more. Leave it open ended, but dont be afraid to have some tragedy, not everything is a happy ending this is real life and should be a little unfair. There should be some closure for the audience and the main issue should be more or less resolved"
 
 
-Direction_USER = """{"role": "user", "content": """
-Direction_System = """{"role": "system", "content": """
-Direction_Over = """ }"""
-Direction_comma = ","
 
 
+Direction_USER = '"role": "user", "content"'
+Direction_System = '"role": "system", "content"'
+#
+# Direction_Over = """ }"""
+# Direction_comma = ","
+#
+# # Episode_Count = 5
+# # for eCount in range 0 to Episode_Count
+# eCount = 1
+# if eCount == 1:
+#     Direction_ScreenPlay_Repeat = up.Direction_System + up.system_Text_ScreenPlay + up.system_Text_ScreenPlay1 + up.Direction_Over + up.Direction_comma + up.Direction_USER + up.Tie_In_ScreenPlay + Skeleton_Story + up.Direction_Over + up.Direction_comma + up.Direction_USER + up.Direction_ScreenPlayALL + up.Direction_Over + up.Direction_comma + up.Direction_USER + up.Direction_ScreenPlayALL2 + up.Direction_Over + up.Direction_comma + up.Direction_USER + up.Direction_ScreenPlayALL3 + up.Direction_Over + up.Direction_comma
+# else:
+#     Direction_ScreenPlay_Repeat = up.Direction_System + up.system_Text_ScreenPlay + up.system_Text_ScreenPlay1 + up.Direction_Over + up.Direction_comma + up.Direction_USER + up.Tie_In_ScreenPlay + Skeleton_Story + up.Direction_Over + up.Direction_comma + up.Direction_USER + up.Scene_Replay + Plot + up.Direction_Over + up.Direction_comma + up.Direction_USER + up.Direction_ScreenPlayALL + up.Direction_Over + up.Direction_comma + up.Direction_USER + up.Direction_ScreenPlayALL2 + up.Direction_Over + up.Direction_comma + up.Direction_USER + up.Direction_ScreenPlayALL3 + up.Direction_Over + up.Direction_comma
+#
+# Direction_ScreenPlay_PILOT = up.Direction_USER + up.Direction_ScreenPlayPilot + up.Direction_Over + up.Direction_comma + up.Direction_USER + up.Dialog_ScreenPlay + up.Direction_Over
+# Direction_ScreenPlay_Middle = up.Direction_USER + up.Direction_ScreenPlayMiddle + up.Direction_Over + up.Direction_comma + up.Direction_USER + up.Dialog_ScreenPlay + up.Direction_Over + up.Direction_comma + up.Direction_USER + up.RedHerring_ScreenPlay + up.Direction_Over
 
 #Thriller, drama, dark comedy,realistic fiction, historic fiction, time period pieces, ,superhero, horror/thriller, action
 
