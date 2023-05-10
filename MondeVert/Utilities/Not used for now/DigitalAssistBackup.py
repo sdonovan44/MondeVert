@@ -1,8 +1,8 @@
-
 import glob
 import datetime
 import pandas as pd
 import wikipedia
+
 global Record
 import sys
 import random
@@ -16,7 +16,7 @@ import threading
 import numpy
 from docx import Document
 import re
-#from exceptions import PendingDeprecationWarning
+# from exceptions import PendingDeprecationWarning
 import requests
 import cloudscraper
 import tensorflow
@@ -40,7 +40,6 @@ import pyttsx3
 import speech_recognition as sr
 from dotenv import load_dotenv
 from DoNotCommit import API_Key
-import DoNotCommit  as DNC
 
 import atexit
 
@@ -56,58 +55,49 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.application import MIMEApplication
 from email.header import Header
 
-#from email_config import gmail_pass, user, host, port
-
-
+# from email_config import gmail_pass, user, host, port
 
 
 URL = "..."  # noqa
 API_KEY = "..."
 
 
+# make a transcript class that takes down all of my requests and saves to a text file
+# have specific command for the assistant to save in a certain folder (always add date & time to the file
+# create things like to do lists
+# ideas
+# stories and dialogue
+# the key is being able to store it properly and sytemically access as well
+# every program I create should be executeable through the assistant
 
 
+# Urgent to do
+# Make it a class
+# have transcribe and also proofread (later) add method where in the middle of dictating you can add titles so it gets properly makred eventually
+# bullets etc. parenthesis
+# Have it so every pause puts a new line in between so its easy to pull out pauses etc.
+# Most important is to have a mode where it callse poembot and reads the lines to me.
+# .... also I would like for it to be a mini drama where I get multiple voices and characters that read
+# the output etc eventually learn how to animate/make a nice script.
+# create a series so eventually we might have a way to feed in characters to poem bot so its not just random like it is now lol
+
+# 12/18/2022 get the assistant able to open the respective web browsers
+# set up mouse so it has shortcuts
+# be able to run on both mac and also the pc
+# import the site view bot
+# update the youtube bot so it hides ips properly and also so it loops through videos to not draw attention
+#    (make it so it starts off slow then has pockets of 100 here and there big days occasionally and find out how to make it work properly
+# have assistant able to run those on command (buy wifi adapter so I can have it running whenever & get new monitor for that too
 
 
-        #make a transcript class that takes down all of my requests and saves to a text file
-        #have specific command for the assistant to save in a certain folder (always add date & time to the file
-        #create things like to do lists
-        #ideas
-        #stories and dialogue
-        #the key is being able to store it properly and sytemically access as well
-        #every program I create should be executeable through the assistant
-
-
-
-        #Urgent to do
-        #Make it a class
-        #have transcribe and also proofread (later) add method where in the middle of dictating you can add titles so it gets properly makred eventually
-        # bullets etc. parenthesis
-        #Have it so every pause puts a new line in between so its easy to pull out pauses etc.
-        #Most important is to have a mode where it callse poembot and reads the lines to me.
-        # .... also I would like for it to be a mini drama where I get multiple voices and characters that read
-        # the output etc eventually learn how to animate/make a nice script.
-        # create a series so eventually we might have a way to feed in characters to poem bot so its not just random like it is now lol
-
-        #12/18/2022 get the assistant able to open the respective web browsers
-        #set up mouse so it has shortcuts
-        #be able to run on both mac and also the pc
-        #import the site view bot
-        #update the youtube bot so it hides ips properly and also so it loops through videos to not draw attention
-        #    (make it so it starts off slow then has pockets of 100 here and there big days occasionally and find out how to make it work properly
-        #have assistant able to run those on command (buy wifi adapter so I can have it running whenever & get new monitor for that too
-
-
-
-
-        #Update transcribe commands (Review file so far,#Have a separate function to make the title (different than subject)
-        ##Also I should be able to mark the file as important based on results (add tag)
-        #Make a program that goes through and corrects the script into a new tab (puts subject as start of the word blocks (with other data in parenthesis for tagging)
-        #Also make it so that the poems do not overwrite but get concatenated together
-        #Make a theatre method that uses multithreading to do stuff
-        #overall threads should allow this to run faster
-        #Make it so I can update all meta data and also add more metadata
-        #Goal, mark as header (prior or next maybe)
+# Update transcribe commands (Review file so far,#Have a separate function to make the title (different than subject)
+##Also I should be able to mark the file as important based on results (add tag)
+# Make a program that goes through and corrects the script into a new tab (puts subject as start of the word blocks (with other data in parenthesis for tagging)
+# Also make it so that the poems do not overwrite but get concatenated together
+# Make a theatre method that uses multithreading to do stuff
+# overall threads should allow this to run faster
+# Make it so I can update all meta data and also add more metadata
+# Goal, mark as header (prior or next maybe)
 
 
 #
@@ -134,13 +124,12 @@ API_KEY = "..."
 #         return self._process_data(text, data)
 
 
-
 def send_email_w_attachment(to, subject, body, filename):
     # create message object
     to = 'sdonovan@mondevert.co; RichardDX44@gmail.com'
     subject = 'New Song for Rich'
 
-    send_email_no_attachment(to,subject, body)
+    send_email_no_attachment(to, subject, body)
 
     message = MIMEMultipart()
 
@@ -163,14 +152,12 @@ def send_email_w_attachment(to, subject, body, filename):
         message.attach(att)
 
     # setup email server
-    server = smtplib.SMTP_SSL(DNC.host, up.port)
-    server.login(DNC.user, DNC.gmail_pass)
+    server = smtplib.SMTP_SSL(up.host, up.port)
+    server.login(up.user, up.gmail_pass)
 
     # send email and quit server
-    server.sendmail(DNC.user, to, message.as_string())
+    server.sendmail(up.user, to, message.as_string())
     server.quit()
-
-
 
 
 def send_email_no_attachment(to, subject, body):
@@ -181,7 +168,7 @@ def send_email_no_attachment(to, subject, body):
     message = MIMEMultipart()
 
     # add in header
-    message['From'] = Header(DNC.user)
+    message['From'] = Header(up.user)
     message['To'] = Header(to)
     message['Subject'] = Header(subject)
 
@@ -189,19 +176,16 @@ def send_email_no_attachment(to, subject, body):
     message.attach(MIMEText(body, 'plain', 'utf-8'))
 
     # setup email server
-    server = smtplib.SMTP_SSL(DNC.host, up.port)
-    server.login(DNC.user, DNC.gmail_pass)
+    server = smtplib.SMTP_SSL(up.host, up.port)
+    server.login(up.user, up.gmail_pass)
 
     # send email and quit server
-    server.sendmail(DNC.user, to, message.as_string())
+    server.sendmail(up.user, to, message.as_string())
     server.quit()
 
 
-
-
-
 class DigitalAssist():
-    def __init__(self, voice = 4, language_settings=1):
+    def __init__(self, voice=4, language_settings=1):
         self.voice = voice
         self.language_settings = language_settings
         self.AssistantName = up.getAssistantName()
@@ -219,7 +203,8 @@ class DigitalAssist():
     def Open_Web(url):
         url = url
         webbrowser.open_new_tab(url)
-    def speak(self,audio, Add2T = True, voice = ''):
+
+    def speak(self, audio, Add2T=True, voice=''):
         if voice == '':
             voice = self.voice
 
@@ -239,7 +224,7 @@ class DigitalAssist():
         else:
             print('Silent Mode Activated: ' + audio)
 
-    def speakSweet(self,audio, Add2T = True):
+    def speakSweet(self, audio, Add2T=True):
         if Add2T == True:
             DigitalAssist.Add2Transcript(self, self.AssistantName + ': ' + audio)
         engine = pyttsx3.init()
@@ -256,15 +241,14 @@ class DigitalAssist():
         else:
             print('Silent Mode Activated: ' + audio)
 
-        #def RandomCharacters
+        # def RandomCharacters
 
     def testvoices(self):
-        #import pyttsx3
+        # import pyttsx3
         engine = pyttsx3.init()
         voices = engine.getProperty('voices')
         index = 0
         for voice in voices:
-
             print(f'index-> {index} -- {voice.name}')
             engine.setProperty('voice', voices[index].id)
             engine.say("Shane do you like this voice more than the last one you busy little bee turkish" + "")
@@ -272,16 +256,14 @@ class DigitalAssist():
             index += 1
         engine.runAndWait()
 
-    def Setvoices(self, Quick = False):
+    def Setvoices(self, Quick=False):
 
-
-
-        if Quick ==False:
+        if Quick == False:
             engine = pyttsx3.init()
             voices = engine.getProperty('voices')
             index = 0
             indexCount = 0
-            #load_dotenv()
+            # load_dotenv()
             # Set up the OpenAI API client :
             openai.api_key = API_Key
 
@@ -299,34 +281,32 @@ class DigitalAssist():
             # Print the generated text
             message = completions.choices[0].text
             print(message)
-            DigitalAssist.Add2Transcript(self,text2Add=message)
+            DigitalAssist.Add2Transcript(self, text2Add=message)
             set1 = False
 
             for voice in voices:
-                indexCount +=1
+                indexCount += 1
 
             while set1 == False:
-                if index <=indexCount:
+                if index <= indexCount:
                     print(f'index-> {index} -- {voices[index].name}')
                     engine.setProperty('voice', voices[index].id)
                     engine.say(message)
-                    DigitalAssist.speak(self,speak1)
+                    DigitalAssist.speak(self, speak1)
                     Query = DigitalAssist.getUserResponse(self)
 
-
-                    if "yes" in Query or "set" in Query or ("make" in Query and "active" in Query) or  ("set" in Query and "active" in Query):
+                    if "yes" in Query or "set" in Query or ("make" in Query and "active" in Query) or (
+                            "set" in Query and "active" in Query):
                         self.voice = index
                         voice_set = self.voice
                         xVoice = index
                         DigitalAssist.speak(self, 'Voice Set')
                         set1 = True
 
-
-
                     index += 1
                     engine.runAndWait()
                 else:
-                    DigitalAssist.Setvoices(self,Quick = True)
+                    DigitalAssist.Setvoices(self, Quick=True)
 
         else:
             self.voice = int(input('What Voice do you want to make active?'))
@@ -335,6 +315,7 @@ class DigitalAssist():
         ####################################################################################################################################################################################
         ## Below are more utlities that help me to do repetitive tasks quicker
         ####################################################################################################################################################################################
+
     def createDF(self):
         test = [('', '', '', '', '', '', '', '', '', '', '', '', '', '', '')]
         self.transcript = pd.DataFrame(test, columns=['Entry #', 'Date', 'Subject', 'Type/Marker', 'Priority',
@@ -352,9 +333,9 @@ class DigitalAssist():
                                     self.Words, self.AI_Corrected_Content, self.FileName, self.Added2TextFile,
                                     self.Completed]
 
-
     def ActivateSilentMode(self):
         self.SilentMode = True
+
     def ActivateLoudMode(self):
         self.SilentMode = False
 
@@ -366,14 +347,14 @@ class DigitalAssist():
         Filename = '\\' + Filename + "_"
         f2 = up.getPath()
         SavePath1 = f2
-        data = [(current_time2,self.transcript_Final)]
+        data = [(current_time2, self.transcript_Final)]
         print(data)
         try:
-            df1 = pd.DataFrame(data,columns = ["TimeStamp","Transcript"])
-            #df1 = pd.DataFrame(data)
+            df1 = pd.DataFrame(data, columns=["TimeStamp", "Transcript"])
+            # df1 = pd.DataFrame(data)
             df1.to_csv(SavePath1 + Filename + current_time2 + '.csv')
 
-        # DigitalAssist.SaveText(self,df1,'MondeVert Assistant', 'Full Transcript')
+            # DigitalAssist.SaveText(self,df1,'MondeVert Assistant', 'Full Transcript')
             DigitalAssist.add2Master2(df1)
         except:
             print('Review Error')
@@ -400,6 +381,7 @@ class DigitalAssist():
             Exception
         # DigitalAssist.speak(self,'Error Saving')
         # print ('Error Saving')
+
     def cleanText(self, text):
         # result = ''
         parser = GingerIt()
@@ -416,7 +398,7 @@ class DigitalAssist():
                     texttemp = text[0 + (5000 * i):4999 + (5000 * i)]
                     if len(texttemp) > 0:
                         result11 = pd.DataFrame(parser.parse(text))
-                        result1 = [result1 + texttemp ]
+                        result1 = [result1 + texttemp]
                 result = pd.DataFrame(result1, columns='result')
 
             if len(result.loc[0, 'result']) > 0:
@@ -436,6 +418,7 @@ class DigitalAssist():
             return rr
 
         return rr
+
     def makeQuickPoem(self):
         x = s.PoemBot(1, 1, 1, 1, 40, 3)
         x.ReloadModel("model.h5")
@@ -445,6 +428,7 @@ class DigitalAssist():
         print(self.Words)
         self.Words = DigitalAssist.cleanText(self, self.Words)
         DigitalAssist.speakSweet(self, self.Words)
+
     def StartThread(self):
         trd1 = threading.Thread(target=DigitalAssist.Make_Script2(self))
         self.w[i] = trd1.start()
@@ -452,6 +436,7 @@ class DigitalAssist():
         print(x)
 
         self.threads.append(trd1)
+
     def Make_Script(self):
         size = 1
         self.threads = []
@@ -469,6 +454,7 @@ class DigitalAssist():
             self.Words += str(self.w[ii])
 
         self.AI_Corrected_Content = DigitalAssist.cleanText(self, self.Words)
+
     def Make_Script2(self):
         pb = s.PoemBot(1, 1, 1, 1, 40, 3)
         pb.ReloadModel('model.h5')
@@ -477,9 +463,11 @@ class DigitalAssist():
         DigitalAssist.speakSweet(self, w1)
         # print (w1)
         return w1
+
     def generateGreek(self):
         w2 = self.pb.generateGreek() + ' \n' + ' \n'
         return w2
+
     def add2Master(df1):
         f2 = up.getMFPath()
         df2 = pd.read_excel(f2)
@@ -488,6 +476,7 @@ class DigitalAssist():
         df3.iloc[:, 1:]
         # creating a new excel file and save the data
         df3.to_excel(f2, index=False)
+
     def add2Master2(df1):
         f2 = up.getMF2Path()
         df2 = pd.read_excel(f2)
@@ -498,9 +487,6 @@ class DigitalAssist():
         # creating a new excel file and save the data
         df3.to_excel(f2, index=False)
 
-
-
-
     def add2Master3(df1):
         f2 = up.MasterFile3
         df2 = pd.read_excel(f2)
@@ -510,6 +496,7 @@ class DigitalAssist():
 
         # creating a new excel file and save the data
         df3.to_excel(f2, index=False)
+
     def CompileBlog(self):
         f2 = up.getMFPath()
         df2 = pd.read_excel(f2)
@@ -563,6 +550,7 @@ class DigitalAssist():
             level=1)
         document.add_paragraph()
         document.save('MondeVert Blog (Polished3) --> ' + current_time2 + '.docx')
+
     def compileFiles(self):
         f1 = up.getPath()
         files = glob.glob(f1 + '*.xlsx')
@@ -621,7 +609,8 @@ class DigitalAssist():
         if day in Day_dict.keys():
             day_of_the_week = Day_dict[day]
             print(day_of_the_week)
-            DigitalAssist.speak(self,"The day is " + day_of_the_week)
+            DigitalAssist.speak(self, "The day is " + day_of_the_week)
+
     def tellTime(self):
         # This method will give the time
         time = str(datetime.datetime.now())
@@ -631,14 +620,16 @@ class DigitalAssist():
         t1 = cs.DA_Time1()
         t2 = cs.DA_Time2()
         t3 = cs.DA_Time3()
-        DigitalAssist.speak(self, t1 + hour + t2+ min + t3)
+        DigitalAssist.speak(self, t1 + hour + t2 + min + t3)
+
     def Hello(self):
         # This function is for when the assistant
         # is called it will say hello and then
         # take query
         r = cs.DAgreet()
-        print (r)
-        DigitalAssist.speak(self,r)
+        print(r)
+        DigitalAssist.speak(self, r)
+
     ############################################################################################################################################################################################################################
     ############################################################################################################################################################################################################################
     ################Above is code I did not write, below is code that allows user to update values of respective values
@@ -646,13 +637,17 @@ class DigitalAssist():
     ############################################################################################################################################################################################################################
     def getfilename(self):
         self.FileName = DigitalAssist.getdata(self, 'FileName')
-    def  getsubject(self):
+
+    def getsubject(self):
         self.subject = DigitalAssist.getdata(self, 'subject')
-    def  getDictation_Type(self):
-        self.Dictation_Type  =  DigitalAssist.getdata(self, 'Type')
-    def  getSignificance(self):
-        self.Significance =  DigitalAssist.getdata(self, 'Significance')
-    def  getNote(self):
+
+    def getDictation_Type(self):
+        self.Dictation_Type = DigitalAssist.getdata(self, 'Type')
+
+    def getSignificance(self):
+        self.Significance = DigitalAssist.getdata(self, 'Significance')
+
+    def getNote(self):
         self.Notes += '|' + DigitalAssist.getdata(self, 'Notes')
 
     def getdata(self, Field):
@@ -684,17 +679,16 @@ class DigitalAssist():
                     continue
         return Query
 
-############################################################################################################################################################################################################################
-############################################################################################################################################################################################################################
-################ below is code that allow me to confirm with the user the inputs are correct
-############################################################################################################################################################################################################################
-############################################################################################################################################################################################################################
+    ############################################################################################################################################################################################################################
+    ############################################################################################################################################################################################################################
+    ################ below is code that allow me to confirm with the user the inputs are correct
+    ############################################################################################################################################################################################################################
+    ############################################################################################################################################################################################################################
     def takeCommand(self):
-        Query = DigitalAssist.getUserResponse(self,Response = "Action Requested")
+        Query = DigitalAssist.getUserResponse(self, Response="Action Requested")
         return Query
 
-
-    def getUserResponse(self, pause =.5, Response = 'You Said' ):
+    def getUserResponse(self, pause=.5, Response='You Said'):
         r = sr.Recognizer()
         with sr.Microphone() as source:
             print('Listening...')
@@ -702,59 +696,56 @@ class DigitalAssist():
             audio = r.listen(source)
             try:
                 Query = r.recognize_google(audio, language='en-in')
-                DigitalAssist.Add2Transcript(self,self.UserName + ': '+Query)
-                print(Response+ ": ", Query)
+                DigitalAssist.Add2Transcript(self, self.UserName + ': ' + Query)
+                print(Response + ": ", Query)
 
             except Exception as e:
                 print(e)
                 print("Please repeat Words not understood...")
                 Query = DigitalAssist.getUserResponse(self)
-                #Event().wait(2)
+                # Event().wait(2)
             return Query
 
-
-
-
-
-    def ConfirmUR(self,prompt):
-        DigitalAssist.speak(self,'You Said ' + prompt + ' is this correct?')
+    def ConfirmUR(self, prompt):
+        DigitalAssist.speak(self, 'You Said ' + prompt + ' is this correct?')
         query = DigitalAssist.getUserResponse(self)
 
         if 'yes' in query or 'correct' in query or 'yeah' in query or 'submit' in query:
-            self.promptB =True
+            self.promptB = True
 
     def editBotPrompt(self, message):
-        DigitalAssist.speak(self, 'Edit Mode Activated', voice = 4)
-        DigitalAssist.speak(self,'What do you want to use for a prompt?',voice = 4)
+        DigitalAssist.speak(self, 'Edit Mode Activated', voice=4)
+        DigitalAssist.speak(self, 'What do you want to use for a prompt?', voice=4)
         query = DigitalAssist.getUserResponse(self)
 
-        if 'cancel'in query:
+        if 'cancel' in query:
             r = message
-            #Do nothing
+            # Do nothing
         else:
             DigitalAssist.ConfirmBOT(self, query)
-            if self.promptB ==True:
+            if self.promptB == True:
                 self.message = query
 
-
-    def ConfirmBOT(self,message):
-        DigitalAssist.speak(self,'Chat GPT responded with: ' + message + ' do you want to use this prompt?',voice = 4)
+    def ConfirmBOT(self, message):
+        DigitalAssist.speak(self, 'Chat GPT responded with: ' + message + ' do you want to use this prompt?', voice=4)
         query = DigitalAssist.getUserResponse(self)
 
         if 'yes' in query or 'correct' in query or 'yeah' in query or 'submit' in query:
-            self.promptB =True
+            self.promptB = True
 
         if 'edit' in query or 'change' in query and ('prompt' in query or 'words' in query):
             DigitalAssist.editBotPrompt(self, message)
-    def transcribe_Build_Query(self, pause = 3.13):
+
+    def transcribe_Build_Query(self, pause=3.13):
         Query = DigitalAssist.getUserResponse(self)
         return Query
+
     def transcribe_Build_Query_Pause(self):
         Speak1 = 'What Tool do you want to use?'
         Print1 = 'Options: ChatGPT (ChatBot), Transcribe Mode , Make To Do List, Change Subject, Edit, Poem, Stop Recording --> Build others here'
-        DigitalAssist.speak(self,Speak1)
+        DigitalAssist.speak(self, Speak1)
         print(Print1)
-        Query = DigitalAssist.getUserResponse(self,Response="Tool Selected")
+        Query = DigitalAssist.getUserResponse(self, Response="Tool Selected")
         return Query
 
     ############################################################################################################################################################################################################################
@@ -764,47 +755,44 @@ class DigitalAssist():
     ############################################################################################################################################################################################################################
     ############################################################################################################################################################################################################################
 
-    def makeArt(self, Prompt = ''):
+    def makeArt(self, Prompt=''):
 
         DigitalAssist.Add2Transcript(self, ' \n')
         Prior_Mode = self.Mode
         self.Mode = 'AI Art Mode'
-        DigitalAssist.Add2Transcript(self,text2Add= ( Prior_Mode + ' - ' + self.Mode + ':'))
+        DigitalAssist.Add2Transcript(self, text2Add=(Prior_Mode + ' - ' + self.Mode + ':'))
         DigitalAssist.Add2Transcript(self, ' \n')
         self.promptB = False
 
         Promptc = 'True'
 
-        if Prompt =='':
-           Promptc = 'True'
+        if Prompt == '':
+            Promptc = 'True'
         else:
             Promptc = 'False'
-
-
 
         if Prompt == '':
             print('Prompt is NULL: ' + Promptc)
 
-
-            while self.promptB ==False:
+            while self.promptB == False:
                 AIspeak = 'What do you want me to draw?'
 
-                DigitalAssist.speak(self,AIspeak)
+                DigitalAssist.speak(self, AIspeak)
 
                 print(AIspeak)
-                prompt  = DigitalAssist.getUserResponse(self,Response = "Art Prompted", pause= 1)
+                prompt = DigitalAssist.getUserResponse(self, Response="Art Prompted", pause=1)
 
                 if 'cancel' in prompt or 'stop' in prompt or 'quit' in prompt or 'done' in prompt or 'exit' in prompt:
                     DigitalAssist.saveTranscript(self)
                     self.promptB == True
                     continue
 
-                DigitalAssist.ConfirmUR(self,prompt)
+                DigitalAssist.ConfirmUR(self, prompt)
                 print()
         else:
             prompt = Prompt
             print(prompt)
-            DigitalAssist.Add2Transcript(self,'(Prompt Fed Directly into Function)')
+            DigitalAssist.Add2Transcript(self, '(Prompt Fed Directly into Function)')
 
         # Set up the OpenAI API client :
         openai.api_key = API_Key
@@ -830,15 +818,15 @@ class DigitalAssist():
         FileName = prompt
         print('Length of File Name: ' + str(len(FileName)))
         if len(FileName) >= 150:
-            FileName=FileName[0:150]
+            FileName = FileName[0:150]
             print('Length of File Name: ' + str(len(FileName)))
 
         fname = f"{''.join([c for c in FileName.strip().replace(' ', '_') if c.isalnum() or c == '_'])}.png"
 
-        if not os.path.exists("images"):
-            os.mkdir("images")
+        if not os.path.exists("../images"):
+            os.mkdir("../images")
 
-        if os.path.isfile(os.path.join(up.AI_Art_Path,'\'', fname)):
+        if os.path.isfile(os.path.join(up.AI_Art_Path, '\'', fname)):
             fname = fname.split(".")[0] + f".{''.join(random.choice(string.ascii_letters) for x in range(5))}.png"
 
         fname = os.path.join(up.AI_Art_Path, fname)
@@ -861,10 +849,8 @@ class DigitalAssist():
 
         return fname
 
-
-
     # Define a function that sends a message to ChatGPT
-    def chat_query(self,prompt):
+    def chat_query(self, prompt):
         model_engine = "text-davinci-003"
         completions = openai.Completion.create(
             engine=model_engine,
@@ -878,7 +864,7 @@ class DigitalAssist():
         return message
 
     # Define a function that handles the conversation
-    def conversation_handler(self,prompt):
+    def conversation_handler(self, prompt):
         # Send the prompt to ChatGPT
         load_dotenv()
         # Set up the OpenAI API client :
@@ -894,12 +880,12 @@ class DigitalAssist():
         prompt = input("You: ")
         DigitalAssist.conversation_handler(prompt)
 
-    def ChatGPTDA(self, temp = 0.5,MakeArt = False, Prompt = '', UseArtPrompt = False, ConfirmBot = True):
+    def ChatGPTDA(self, temp=0.5, MakeArt=False, Prompt='', UseArtPrompt=False, ConfirmBot=True):
         DigitalAssist.Add2Transcript(self, ' \n')
         Prior_Mode = self.Mode
         self.Mode = 'Chat GPT Mode'
         self.message = ''
-        DigitalAssist.Add2Transcript(self,text2Add= ( Prior_Mode + ' - ' + self.Mode + ':'))
+        DigitalAssist.Add2Transcript(self, text2Add=(Prior_Mode + ' - ' + self.Mode + ':'))
         DigitalAssist.Add2Transcript(self, ' \n')
         prompt = ''
         self.promptB = False
@@ -907,26 +893,22 @@ class DigitalAssist():
         # Set up the OpenAI API client :
         openai.api_key = API_Key
         # Record the audio
-        DigitalAssist.speak(self, " Chat GPT is running!",voice = 4)
+        DigitalAssist.speak(self, " Chat GPT is running!", voice=4)
 
-
-        if UseArtPrompt ==True:
+        if UseArtPrompt == True:
             MakeArtPrompt = "Provide me with a prompt to share with artificial inteligence that will create a unique and visually pleasing work of art. "
         else:
             MakeArtPrompt = ''
-
 
         if Prompt == '':
             sStop1 = False
         else:
             sStop1 = True
 
-
         sStop = False
         # check if the reply contains 'yes'
         while sStop == False:
             # Record the audio
-
 
             DigitalAssist.Add2Transcript(self, MakeArtPrompt)
 
@@ -935,14 +917,13 @@ class DigitalAssist():
                 prompt = MakeArtPrompt + Prompt
                 print(prompt)
             else:
-                prompt =  MakeArtPrompt + DigitalAssist.getUserResponse(self, pause=1.44)
+                prompt = MakeArtPrompt + DigitalAssist.getUserResponse(self, pause=1.44)
                 if ('STOP' in prompt.upper() and (
                         'LISTEN' in prompt.upper())) or 'QUIT' == prompt.upper() or ' QUIT ' == prompt.upper() or (
                         'END' in prompt.upper() and ('CONVERSA' in prompt.upper())):
                     sStop = True
                     # print ('Its supposed to quit here')
                     continue
-
 
             # Generate text
             completions = openai.Completion.create(
@@ -956,16 +937,14 @@ class DigitalAssist():
             self.message = completions.choices[0].text
             print(self.message)
 
-
-
-            if  MakeArt == False and ('MAKE' in prompt.upper() or 'ART' in prompt.upper()) and 'PROMPT' in prompt.upper() and sStop1 == False:
+            if MakeArt == False and (
+                    'MAKE' in prompt.upper() or 'ART' in prompt.upper()) and 'PROMPT' in prompt.upper() and sStop1 == False:
                 DigitalAssist.ConfirmBOT(self, self.message)
                 if self.promptB == True:
-                    DigitalAssist.makeArt(self,self.message)
+                    DigitalAssist.makeArt(self, self.message)
                     continue
                 else:
                     continue
-
 
             if MakeArt == True or sStop1 == True:
                 if ConfirmBot == True:
@@ -993,16 +972,14 @@ class DigitalAssist():
     ############################################################################################################################################################################################################################
     ############################################################################################################################################################################################################################
 
-
-
     def editentry(self, Query1):
         DigitalAssist.Add2Transcript(self, ' \n')
         Prior_Mode = self.Mode
         self.Mode = 'Edit Mode'
-        DigitalAssist.Add2Transcript(self,text2Add= ( Prior_Mode + ' - ' + self.Mode + ':'))
+        DigitalAssist.Add2Transcript(self, text2Add=(Prior_Mode + ' - ' + self.Mode + ':'))
         s = True
         while (s == True):
-            DigitalAssist.speak(self,'I am ready to make the edit please proceed')
+            DigitalAssist.speak(self, 'I am ready to make the edit please proceed')
             print('ready to make the edit please proceed')
             print('Original Entry: ' + Query1)
             Query2 = DigitalAssist.getUserResponse()
@@ -1010,45 +987,44 @@ class DigitalAssist():
             ss = True
             while (ss == True):
                 print(Query2)
-                DigitalAssist.speak(self,Query2 + 'Are you satisfied with your edits?')
+                DigitalAssist.speak(self, Query2 + 'Are you satisfied with your edits?')
                 print('Options: Yes/Correct, Not yet/Redo, Add as Note, Combine, Cancel')
 
                 Query3 = DigitalAssist.getUserResponse(self)
 
-
-                if  "yes" in Query3 or "correct" in Query3 or "ya" in Query3 or "yeah" in Query3 or "looks good" in Query3 or "keep new" in Query3 or "new one" in Query3:
-                    DigitalAssist.speak(self,'Thanks for confirming, I will make the updates you provided')
+                if "yes" in Query3 or "correct" in Query3 or "ya" in Query3 or "yeah" in Query3 or "looks good" in Query3 or "keep new" in Query3 or "new one" in Query3:
+                    DigitalAssist.speak(self, 'Thanks for confirming, I will make the updates you provided')
                     print('Thanks for confirming, I will make the updates you provided')
                     Query_Final = Query2
                     s = False
                     ss = False
 
 
-                elif  "not yet" in Query3 or 'redo'  in Query3 or 'try again'  in Query3 or 'again'  in Query3 or 'one more' in Query3:
-                    DigitalAssist.speak(self,'ok, lets go again')
+                elif "not yet" in Query3 or 'redo' in Query3 or 'try again' in Query3 or 'again' in Query3 or 'one more' in Query3:
+                    DigitalAssist.speak(self, 'ok, lets go again')
                     print('ok, lets go again')
                     ss = False
                     continue
 
-                elif "add as note" in Query3 or "include note" in Query3 or "as note" in Query3  :
-                    DigitalAssist.speak(self,'Thanks for confirming, I will add this as a note')
+                elif "add as note" in Query3 or "include note" in Query3 or "as note" in Query3:
+                    DigitalAssist.speak(self, 'Thanks for confirming, I will add this as a note')
                     print('Thanks for confirming, I will add this as a note')
                     Query_Final = ''
                     self.Notes = Query2
-                    #when this is a class I can update the df for now I will add it to the end same as when I say combine them
+                    # when this is a class I can update the df for now I will add it to the end same as when I say combine them
                     s = False
                     ss = False
 
                 elif "add to original" in Query3 or "both" in Query3 or 'combine' in Query3 or 'combination' in Query3 or 'merge' in Query3 or 'together' in Query3:
-                    DigitalAssist.speak(self,'Thanks for confirming, I will join the two thoughts')
+                    DigitalAssist.speak(self, 'Thanks for confirming, I will join the two thoughts')
                     print('Thanks for confirming, I will join the two thoughts')
                     Query_Final = Query1 + ' ' + Query2
                     # when this is a clas I can update the df for now I will add it to the end same as when I say combine them
                     s = False
                     ss = False
 
-                elif 'cancel'   in Query3  or 'end' in Query3 or 'stop'  in Query3 or  'stop trying' in Query3:
-                    DigitalAssist.speak(self,'Thanks for confirming, I will remove these edits')
+                elif 'cancel' in Query3 or 'end' in Query3 or 'stop' in Query3 or 'stop trying' in Query3:
+                    DigitalAssist.speak(self, 'Thanks for confirming, I will remove these edits')
                     print('Thanks for confirming, I will remove these edits')
                     Query_Final = ''
                     s = False
@@ -1057,39 +1033,32 @@ class DigitalAssist():
                 else:
                     Event().wait(1)
 
-
         return Query_Final
 
-############################################################################################################################################################################################################################
-############################################################################################################################################################################################################################
-############################################################################################################################################################################################################################
-################Long Code where I give Digital Assistant commands##    (user menus)
-############################################################################################################################################################################################################################
-############################################################################################################################################################################################################################
-
-
-
-
+    ############################################################################################################################################################################################################################
+    ############################################################################################################################################################################################################################
+    ############################################################################################################################################################################################################################
+    ################Long Code where I give Digital Assistant commands##    (user menus)
+    ############################################################################################################################################################################################################################
+    ############################################################################################################################################################################################################################
 
     def RunChatGPT(self):
         self.Mode = 'Chat GPT -  Menu'
 
         DigitalAssist.speak(self, self.Mode + ' What Chat GPT mode do you want to use?')
 
-        print( self.Mode + ' What Chat GPT mode do you want to use?')
+        print(self.Mode + ' What Chat GPT mode do you want to use?')
 
         s2 = True
         while (s2 == True):
-            DigitalAssist.Add2Transcript(self,' \n')
+            DigitalAssist.Add2Transcript(self, ' \n')
             query = DigitalAssist.takeCommand(self).lower()
 
-
-            #Say Quick Art or Auto Art or Basic Art
-            if 'normal'  in query or 'conv'  in query or 'reg' in query or  'talk'  in query or 'master' in query or 'basic' in query or 'task' in query or 'monde' in query or 'monday' in query or 'vert' in query :
-                #prompt = DigitalAssist.ChatGPTDA(self)
+            # Say Quick Art or Auto Art or Basic Art
+            if 'normal' in query or 'conv' in query or 'reg' in query or 'talk' in query or 'master' in query or 'basic' in query or 'task' in query or 'monde' in query or 'monday' in query or 'vert' in query:
+                # prompt = DigitalAssist.ChatGPTDA(self)
 
                 DigitalAssist.MondeVertTask(self)
-
 
                 DigitalAssist.RunChatGPT(self)
                 s2 = False
@@ -1102,7 +1071,7 @@ class DigitalAssist():
 
             elif 'screen' in query or 'play' in query or 'movie' in query or 'script' in query:
                 DigitalAssist.Make_a_ScreenPlay(self)
-                #DigitalAssist.Make_a_ScreenPlay_Testing(self)
+                # DigitalAssist.Make_a_ScreenPlay_Testing(self)
 
             elif "art" in query and ("basic" in query or "auto" in query or "quick" in query):
                 DigitalAssist.quickArt(self)
@@ -1110,15 +1079,18 @@ class DigitalAssist():
                 s2 = False
 
             # Say Prompted Art or super Art or advanced Art
-            elif "art" in query and ( "advance" in query or  "super" in query or  "open" in query or ( "with" in query and   "prompt" in query)):
-                prompt = DigitalAssist.ChatGPTDA(self, MakeArt=True, UseArtPrompt = True)
+            elif "art" in query and ("advance" in query or "super" in query or "open" in query or (
+                    "with" in query and "prompt" in query)):
+                prompt = DigitalAssist.ChatGPTDA(self, MakeArt=True, UseArtPrompt=True)
 
-                ArtPath =  DigitalAssist.makeArt(self, prompt)
+                ArtPath = DigitalAssist.makeArt(self, prompt)
                 DigitalAssist.RunChatGPT(self)
                 s2 = False
 
-            elif 'shake' not in query and ("inspire" in query or "unique" in query or ("own" in query) or ("version" in query and "3" in query) or ('quick' in query and 'poem' in query ) or  ( "poem" in query or 'poetry' in query)):
-                #make program to ask how spicy to make it lol
+            elif 'shake' not in query and ("inspire" in query or "unique" in query or ("own" in query) or (
+                    "version" in query and "3" in query) or ('quick' in query and 'poem' in query) or (
+                                                   "poem" in query or 'poetry' in query)):
+                # make program to ask how spicy to make it lol
                 Poem_Type = random.choices(up.Random_Poem)
                 Poem_Type = Poem_Type[0]
                 DigitalAssist.Quick_Poem_v1(self, GPTPrompt=Poem_Type)
@@ -1126,24 +1098,27 @@ class DigitalAssist():
                 DigitalAssist.RunChatGPT(self)
 
 
-            elif "shake" in query and ("poem" in query or "poet" in query  or ("version" in query and "1" in query)):
+            elif "shake" in query and ("poem" in query or "poet" in query or ("version" in query and "1" in query)):
                 DigitalAssist.Shake_Poem_v1(self)
                 s2 = False
                 DigitalAssist.RunChatGPT(self)
 
-            elif ("poem" in query or 'poetry' in query or 'shake' in query) and ("inspire" in query or "unique" in query or ("make" in query or "own" in query) or ("version" in query and "2" in query)):
+            elif ("poem" in query or 'poetry' in query or 'shake' in query) and (
+                    "inspire" in query or "unique" in query or ("make" in query or "own" in query) or (
+                    "version" in query and "2" in query)):
                 DigitalAssist.Shake_Poem_v2(self)
                 s2 = False
                 DigitalAssist.RunChatGPT(self)
 
 
-            elif ("sunday" in query and ('scary' in query or 'scaries' in query)) or ("sunday" in query and ( "poem" in query or "story" in query) ):
+            elif ("sunday" in query and ('scary' in query or 'scaries' in query)) or (
+                    "sunday" in query and ("poem" in query or "story" in query)):
                 DigitalAssist.SundayScary_Poem(self)
                 s2 = False
                 DigitalAssist.RunChatGPT(self)
 
 
-            elif (("live" in query and 'art in query') or ('podcast' in query or 'stream' in query) ):
+            elif (("live" in query and 'art in query') or ('podcast' in query or 'stream' in query)):
                 DigitalAssist.MakeArtLive(self)
                 s2 = False
                 DigitalAssist.RunChatGPT(self)
@@ -1152,9 +1127,9 @@ class DigitalAssist():
 
 
 
-            elif ('chorus' in query or 'song' in query) or ("brick" in query and ( "sing" in query or "dj" in query)) :
+            elif ('chorus' in query or 'song' in query) or ("brick" in query and ("sing" in query or "dj" in query)):
 
-                #DigitalAssist.Make_a_Song(self)
+                # DigitalAssist.Make_a_Song(self)
                 DigitalAssist.Make_a_SongRR(self)
                 DigitalAssist.speak(self, 'Make a quick song Complete')
                 s2 = False
@@ -1169,34 +1144,36 @@ class DigitalAssist():
                 DigitalAssist.RunChatGPT(self)
 
 
-            elif 'dad' in query or 'timmy' in query or ' guy' in query   or 'tim ' in query or (('simon' in query or 'old man' in query or 'timmy d' in query ) and 'help' in query) or ('timmy' in query and 'd' in query):
+            elif 'dad' in query or 'timmy' in query or ' guy' in query or 'tim ' in query or (
+                    ('simon' in query or 'old man' in query or 'timmy d' in query) and 'help' in query) or (
+                    'timmy' in query and 'd' in query):
                 DigitalAssist.TimmyDMode(self)
                 s2 = False
                 DigitalAssist.RunChatGPT(self)
 
-            elif 'blog' in query or 'website post' in query  or 'post' in query :
+            elif 'blog' in query or 'website post' in query or 'post' in query:
                 Blog_Topic = random.choices(up.Random_Blog_Topic)
 
                 Blog_Topic = Blog_Topic[0]
 
-
-                #DigitalAssist.makeBlogPost(self, GPTprompt=Blog_Topic)
-                #DigitalAssist.makeBlogPost(self, GPTprompt=up.RandomTopic)
+                # DigitalAssist.makeBlogPost(self, GPTprompt=Blog_Topic)
+                # DigitalAssist.makeBlogPost(self, GPTprompt=up.RandomTopic)
                 DigitalAssist.makeBlogPost(self, GPTprompt=up.CorrectText)
 
                 s2 = False
                 DigitalAssist.RunChatGPT(self)
 
 
-#Make a program that makes a short background for a character, also have a duo/relationship of some sort and make an interesting scene for a play/screenplay
+            # Make a program that makes a short background for a character, also have a duo/relationship of some sort and make an interesting scene for a play/screenplay
 
-            elif 'wiki' in query or 'wikipedia' in query  or (('pen name' in query or 'page' in query or 'mode' in query ) and 'wiki' in query) :
+            elif 'wiki' in query or 'wikipedia' in query or (
+                    ('pen name' in query or 'page' in query or 'mode' in query) and 'wiki' in query):
                 DigitalAssist.Wiki4PenNames(self)
                 s2 = False
                 DigitalAssist.RunChatGPT(self)
 
 
-            elif 'cancel' in query or 'stop' in query or 'quit'in query or 'done' in query or  'exit' in query:
+            elif 'cancel' in query or 'stop' in query or 'quit' in query or 'done' in query or 'exit' in query:
                 DigitalAssist.saveTranscript(self)
                 sys.exit()
                 s2 = False
@@ -1205,133 +1182,124 @@ class DigitalAssist():
                 print('Please try again, ')
                 continue
 
-#Provide me with a copy of the short bio you come up with and then using that I want you to role play you are the respective artist and write a short 1 page story about something that would happen in the life of the respective artist you described. It can be about any topic but it should feel authentic to the life of the person you described."}
+    # Provide me with a copy of the short bio you come up with and then using that I want you to role play you are the respective artist and write a short 1 page story about something that would happen in the life of the respective artist you described. It can be about any topic but it should feel authentic to the life of the person you described."}
     def Make_a_Song(self, Mode='Random Song'):
         ArtPaths = []
         openai.api_key = API_Key
 
-        crazy = round((randbelow(520000)+170000)/100000,0)
-        crazy = crazy/10
+        crazy = round((randbelow(520000) + 170000) / 100000, 0)
+        crazy = crazy / 10
         print(crazy)
 
-
-        response =  openai.ChatCompletion.create(
-             model="gpt-3.5-turbo",
-             messages=[
-                 {"role": "system",  "content": up.system_Text},
-                 {"role": "user", "content": up.ArtistBio_SongArtist}
-             ], temperature = crazy
-         )
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": up.system_Text},
+                {"role": "user", "content": up.ArtistBio_SongArtist}
+            ], temperature=crazy
+        )
 
         Artist_Bio = response.choices[0].message.content
 
         Song1 = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[
-                {"role": "system",  "content": up.system_Text},
-                {"role": "user",    "content": up.RolePlay_SongArtist + Artist_Bio},
-                {"role": "user","content": up.Song_Prompt_SongArtists},
+                {"role": "system", "content": up.system_Text},
+                {"role": "user", "content": up.RolePlay_SongArtist + Artist_Bio},
+                {"role": "user", "content": up.Song_Prompt_SongArtists},
                 {"role": "user", "content": up.Title_SongArtists},
                 {"role": "user", "content": up.Samples_SongArtists},
                 {"role": "user", "content": up.Tune_SongArtists}
 
             ]
-           , temperature = crazy
+            , temperature=crazy
         )
         Song = Song1.choices[0].message.content
 
         Art_Prompt1 = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[
-                {"role": "system",  "content":  up.system_Text},
-                {"role": "user",    "content": up.RolePlay_SongArtist + Artist_Bio},
-                {"role": "user","content": up.ArtPrompt_SongArtist}
-            ], temperature = crazy
+                {"role": "system", "content": up.system_Text},
+                {"role": "user", "content": up.RolePlay_SongArtist + Artist_Bio},
+                {"role": "user", "content": up.ArtPrompt_SongArtist}
+            ], temperature=crazy
         )
 
         Art_Prompt = Art_Prompt1.choices[0].message.content
 
         print(Artist_Bio)
-        DigitalAssist.speak(self,Artist_Bio)
+        DigitalAssist.speak(self, Artist_Bio)
         print(Song)
         DigitalAssist.speak(self, Song)
         print(Art_Prompt)
         DigitalAssist.speak(self, Art_Prompt)
 
-
-        #Art2 = DigitalAssist.ChatGPTDA(self, temp=crazy, MakeArt=True, Prompt=(Art_Prompt),ConfirmBot=False)
+        # Art2 = DigitalAssist.ChatGPTDA(self, temp=crazy, MakeArt=True, Prompt=(Art_Prompt),ConfirmBot=False)
         try:
-             ArtPath2 = DigitalAssist.makeArt(self, Art_Prompt)
-             ArtPaths.append(ArtPath2)
+            ArtPath2 = DigitalAssist.makeArt(self, Art_Prompt)
+            ArtPaths.append(ArtPath2)
 
         except:
             ArtPath2 = ''
 
-        Title = DigitalAssist.ChatGPTDA(self, temp=crazy, MakeArt=True,Prompt=(up.Song_Title_Prompt + Song), ConfirmBot=False)
-        prompt = "Artist info:"  + Artist_Bio+   "Work of Art Inspiration:"  + Art_Prompt + "Song:" + Song
-        Prompts_Used = [up.system_Text + up.RolePlay_SongArtist + "AI Created a Persona shown as the Artist Bio Above" + up.Song_prompt + up.ArtPrompt_SongArtist]
+        Title = DigitalAssist.ChatGPTDA(self, temp=crazy, MakeArt=True, Prompt=(up.Song_Title_Prompt + Song),
+                                        ConfirmBot=False)
+        prompt = "Artist info:" + Artist_Bio + "Work of Art Inspiration:" + Art_Prompt + "Song:" + Song
+        Prompts_Used = [
+            up.system_Text + up.RolePlay_SongArtist + "AI Created a Persona shown as the Artist Bio Above" + up.Song_prompt + up.ArtPrompt_SongArtist]
         ArtistPoetInfo = 'Lyrics Written By: ' + up.Song_Writer + '      (' + 'Artwork by: ' + up.AI_ArtistName + ')'
         DigitalAssist.NamePoemSavePoem(self, prompt, ArtPaths, Prompts_Used, ArtistPoetInfo, title=Title,
                                        FolderPath=up.AI_Music_Path + '\\' + Mode, ArtType='Song Lyrics' + Mode)
-
-
-
-
 
     def Make_a_SongRR(self, Mode='Random Song'):
         ArtPaths = []
         openai.api_key = API_Key
 
-        crazy = round((randbelow(520000)+170000)/100000,0)
-        crazy = crazy/10
+        crazy = round((randbelow(520000) + 170000) / 100000, 0)
+        crazy = crazy / 10
         print(crazy)
 
-
-        crazy +=.2
+        crazy += .2
         if crazy < .4:
             crazy = .6
-        if crazy >.9 :
+        if crazy > .9:
             crazy = .7
 
         # Title = "Richies Music"
         current_time1 = datetime.datetime.now()
         current_time2 = current_time1.strftime('%m-%d-%Y_%H.%M.%S')
-        #f2 = FolderPath
+        # f2 = FolderPath
         f2 = up.SavePath
         SavePath1 = f2
 
-
-
-        response =  openai.ChatCompletion.create(
-             model="gpt-3.5-turbo",
-             messages=[
-                 {"role": "system",  "content": up.system_TextRR},
-                 {"role": "user", "content": up.ArtistBio_SongArtistRR + up.Artist_Bio_DetailsRR}
-             ], temperature = crazy
-         )
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": up.system_TextRR},
+                {"role": "user", "content": up.ArtistBio_SongArtistRR + up.Artist_Bio_DetailsRR}
+            ], temperature=crazy
+        )
 
         Artist_Bio = response.choices[0].message.content
 
-        #print('Artist_Bio: ' + Artist_Bio)
+        # print('Artist_Bio: ' + Artist_Bio)
         print('************************************************************************************************')
 
         Song1 = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[
-                {"role": "system",  "content": up.system_TextRR},
-                {"role": "user",   "content": up.RolePlay_SongArtistRR + Artist_Bio},
-                {"role": "user","content": up.Song_Prompt_SongArtistsRR + up.Song_Subject},
-                {"role": "user", "content": up.Song_Format_Prompt + up.SongFormat },
-                #{"role": "user", "content": up.Title_SongArtistsRR},
-                #{"role": "user", "content": up.Samples_SongArtistsRR},
-               # {"role": "user", "content": up.Tune_SongArtistsRR}
+                {"role": "system", "content": up.system_TextRR},
+                {"role": "user", "content": up.RolePlay_SongArtistRR + Artist_Bio},
+                {"role": "user", "content": up.Song_Prompt_SongArtistsRR + up.Song_Subject},
+                {"role": "user", "content": up.Song_Format_Prompt + up.SongFormat},
+                # {"role": "user", "content": up.Title_SongArtistsRR},
+                # {"role": "user", "content": up.Samples_SongArtistsRR},
+                # {"role": "user", "content": up.Tune_SongArtistsRR}
 
             ]
-           , temperature = crazy
+            , temperature=crazy
         )
         Song = Song1.choices[0].message.content
-
-
 
         # Create original details
         response = openai.ChatCompletion.create(
@@ -1356,7 +1324,6 @@ class DigitalAssist():
         SavePath2 = SavePath1 + '\\' + folder
         Title2 = SavePath2 + Title1 + current_time2
 
-
         # Create original details
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
@@ -1370,7 +1337,6 @@ class DigitalAssist():
 
         Samples2 = response.choices[0].message.content
 
-
         # Create original details
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
@@ -1383,8 +1349,6 @@ class DigitalAssist():
         )
 
         ReWrite = response.choices[0].message.content
-
-
 
         # Create original details
         response = openai.ChatCompletion.create(
@@ -1409,49 +1373,47 @@ class DigitalAssist():
 
         *************************************************
         *************************************************
-        
-        
+
+
         Potential Samples: """ + Samples2 + """
-        
-        
+
+
         *************************************************
         *************************************************
-        
-        
+
+
         Title: """ + Title + """
 
 
 
         *************************************************
         *************************************************
-        
-        
-        
-        Song: """ + Song        + """ 
-        
-        
+
+
+
+        Song: """ + Song + """ 
+
+
         *************************************************
         *************************************************
-        
-        
-        
-        
+
+
+
+
         Song 2.0: """ + ReWrite + """
-        
-        
+
+
         *************************************************
         *************************************************
-        
-        
-        
-        
-        DJMondeVert: """ +  DJMondeVert +         """
+
+
+
+
+        DJMondeVert: """ + DJMondeVert + """
         *************************************************
         *************************************************
-        
+
         """
-
-
 
         print(data)
 
@@ -1461,7 +1423,7 @@ class DigitalAssist():
         data1 = [(data)]
 
         try:
-            df1 = pd.DataFrame(data1, columns = 'Text')
+            df1 = pd.DataFrame(data1, columns='Text')
             # print(df1)
             # print(Title2)
             filename = Title2
@@ -1472,7 +1434,6 @@ class DigitalAssist():
         except:
             print('Review Error File did not save ')
 
-
         try:
             send_email_w_attachment(up.to, up.subject, Song, filename)
         except:
@@ -1482,44 +1443,43 @@ class DigitalAssist():
         Art_Prompt1 = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[
-                {"role": "system",  "content":  up.system_TextRR},
-                {"role": "user",    "content": up.RolePlay_SongArtistRR + Artist_Bio},
-                {"role": "user","content": up.ArtPrompt_SongArtistRR}
-            ], temperature = crazy
+                {"role": "system", "content": up.system_TextRR},
+                {"role": "user", "content": up.RolePlay_SongArtistRR + Artist_Bio},
+                {"role": "user", "content": up.ArtPrompt_SongArtistRR}
+            ], temperature=crazy
         )
 
         Art_Prompt = Art_Prompt1.choices[0].message.content
-        print("Work of Art Inspiration:"  + Art_Prompt)
+        print("Work of Art Inspiration:" + Art_Prompt)
 
-        #print(Artist_Bio)
-        #DigitalAssist.speak(self,Artist_Bio)
-        #print(Song)
-        #DigitalAssist.speak(self, Song)
-        #print(Art_Prompt)
-        #DigitalAssist.speak(self, Art_Prompt)
+        # print(Artist_Bio)
+        # DigitalAssist.speak(self,Artist_Bio)
+        # print(Song)
+        # DigitalAssist.speak(self, Song)
+        # print(Art_Prompt)
+        # DigitalAssist.speak(self, Art_Prompt)
 
-
-        #Art2 = DigitalAssist.ChatGPTDA(self, temp=crazy, MakeArt=True, Prompt=(Art_Prompt),ConfirmBot=False)
+        # Art2 = DigitalAssist.ChatGPTDA(self, temp=crazy, MakeArt=True, Prompt=(Art_Prompt),ConfirmBot=False)
         try:
-             ArtPath2 = DigitalAssist.makeArt(self, Art_Prompt)
-             ArtPaths.append(ArtPath2)
+            ArtPath2 = DigitalAssist.makeArt(self, Art_Prompt)
+            ArtPaths.append(ArtPath2)
 
         except:
             ArtPath2 = ''
 
         DigitalAssist.speak(self, "Saving the files round 2")
-        prompt = data+   "Work of Art Inspiration:"  + Art_Prompt
-        Prompts_Used = [up.system_Text + up.RolePlay_SongArtist + "AI Created a Persona shown as the Artist Bio Above" + up.Song_prompt + up.ArtPrompt_SongArtist]
+        prompt = data + "Work of Art Inspiration:" + Art_Prompt
+        Prompts_Used = [
+            up.system_Text + up.RolePlay_SongArtist + "AI Created a Persona shown as the Artist Bio Above" + up.Song_prompt + up.ArtPrompt_SongArtist]
         ArtistPoetInfo = 'Lyrics Written By: ' + up.Song_Writer + '      (' + 'Artwork by: ' + up.AI_ArtistName + ')'
         DigitalAssist.NamePoemSavePoem(self, prompt, ArtPaths, Prompts_Used, ArtistPoetInfo, title=Title,
                                        FolderPath=up.AI_Music_Path + '\\' + Mode, ArtType='Song Lyrics' + Mode)
 
-        #DigitalAssist.speak(self, ReWrite )
+        # DigitalAssist.speak(self, ReWrite )
 
-
-
-
-    def MondeVertTask(self,Role = '', Background = '', Task = '', FinalOutput = 'Text with proper MLA formatting, do not provide made up information only facts (unless user asks for fiction)', Special = '' ,Title = '', Mode='Random Task', Logic_AI = ''):
+    def MondeVertTask(self, Role='', Background='', Task='',
+                      FinalOutput='Text with proper MLA formatting, do not provide made up information only facts (unless user asks for fiction)',
+                      Special='', Title='', Mode='Random Task', Logic_AI=''):
         ArtPaths = []
         openai.api_key = API_Key
         crazy = round((randbelow(520000) + 170000) / 100000, 0)
@@ -1531,9 +1491,6 @@ class DigitalAssist():
         if crazy > .9:
             crazy = .7
 
-
-
-
         # Title = "Richies Music"
         current_time1 = datetime.datetime.now()
         current_time2 = current_time1.strftime('%m-%d-%Y_%H.%M.%S')
@@ -1541,23 +1498,18 @@ class DigitalAssist():
         f2 = up.SavePath
         SavePath1 = f2
 
-
-
-#just for testing remove eventually
+        # just for testing remove eventually
         crazy = .5
-
 
         Project_Description = 'N/A not ready to test this yet'
         Result = 'N/A not ready to test this yet'
         Result_AI = 'N/A not ready to test this yet'
         AIPrompt = 'N/A not ready to test this yet'
         Result_Combine = 'N/A not ready to test this yet'
-        Title =up.Test_Title
+        Title = up.Test_Title
 
-
-        skit = True
+        skit = False
         Review_Critic = True
-
 
         Task2 = up.Test_Task2
         Format2 = up.Test_Format2
@@ -1567,10 +1519,12 @@ class DigitalAssist():
         Task = up.Test_Task
         Format0 = up.Test_Format0
         Format = up.Test_Format
+        Format_f = Format
+        if skit = True:
+            Format_f = Format0
         # if null then maybe change what you tell the model (you could reiterate to do the best job and be detailed but not wordy)
         Special = up.Test_Special
         Role = up.Test_Role
-
 
 
 
@@ -1585,7 +1539,7 @@ class DigitalAssist():
             messages=[
                 {"role": "system", "content": up.system_TextJoaT + Role},
                 {"role": "user", "content": up.Role_Play_Prompt + Role},
-                {"role": "user", "content": up.USER_Format_Prompt + Format0},
+                {"role": "user", "content": up.USER_Format_Prompt + Format_f},
                 {"role": "user", "content": up.USER_SPECIAL_Prompt + Special},
                 {"role": "user", "content": up.USER_Background_Prompt + Background}
             ], temperature=crazy
@@ -1598,14 +1552,9 @@ class DigitalAssist():
         else:
             Project_Description = Project_Description
 
-
-
         print('************************************************************************************************')
 
-
-
-
-#This is for the result if you let the AI describe project and details and then make the response
+        # This is for the result if you let the AI describe project and details and then make the response
         Result1 = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[
@@ -1613,24 +1562,21 @@ class DigitalAssist():
                 {"role": "user", "content": up.Role_Play_Prompt + Role},
                 {"role": "user", "content": up.USER_Format_Prompt + Format},
                 {"role": "user", "content": up.USER_SPECIAL_Prompt + Special},
-                {"role": "user", "content": up.AI_Background_Prompt + Project_Description },
+                {"role": "user", "content": up.AI_Background_Prompt + Project_Description},
                 {"role": "user", "content": up.USER_Task_Prompt + Task},
             ]
             , temperature=crazy
         )
         Result = Result1.choices[0].message.content
 
-
-
-
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[
                 {"role": "system", "content": up.system_TextJoaT + Role},
                 {"role": "user", "content": up.Role_Play_Prompt + Role},
-                #{"role": "user", "content": up.USER_Format_Prompt + Format},
+                # {"role": "user", "content": up.USER_Format_Prompt + Format},
                 {"role": "user", "content": up.USER_SPECIAL_Prompt + Special},
-                {"role": "user", "content": up.AI_Background_Prompt + Project_Description },
+                {"role": "user", "content": up.AI_Background_Prompt + Project_Description},
                 {"role": "user", "content": up.USER_Task_Prompt + Task},
             ], temperature=crazy
         )
@@ -1647,22 +1593,14 @@ class DigitalAssist():
                 {"role": "user", "content": up.Role_Play_Prompt + Role},
                 {"role": "user", "content": up.USER_Format_Prompt + Format},
                 {"role": "user", "content": up.USER_SPECIAL_Prompt + Special},
-                {"role": "user", "content": up.AI_Background_Prompt + Project_Description },
+                {"role": "user", "content": up.AI_Background_Prompt + Project_Description},
                 {"role": "user", "content": up.USER_Task_Prompt + Task},
             ]
             , temperature=crazy
         )
         Result_AI = Result1.choices[0].message.content
 
-
-
-
-
-
-
-
         print('************************************************************************************************')
-
 
         try:
             Result2 = openai.ChatCompletion.create(
@@ -1671,10 +1609,11 @@ class DigitalAssist():
                     {"role": "system", "content": up.system_TextJoaT + Role},
                     {"role": "user", "content": up.Role_Play_Prompt + Role},
                     {"role": "user", "content": up.UserRequest + Format + Special + Project_Description + Task},
-                    #{"role": "user", "content": up.USER_SPECIAL_Prompt + Special},
+                    # {"role": "user", "content": up.USER_SPECIAL_Prompt + Special},
                     {"role": "user", "content": up.AI_Background_Prompt + Project_Description},
-                    {"role": "user", "content": up.CombineBothResults + "Result 1: " + Result + "Result 2: " + Result_AI},
-                    {"role": "user", "content": up.USER_Task_Prompt + Task },
+                    {"role": "user",
+                     "content": up.CombineBothResults + "Result 1: " + Result + "Result 2: " + Result_AI},
+                    {"role": "user", "content": up.USER_Task_Prompt + Task},
                 ]
                 , temperature=crazy
             )
@@ -1688,11 +1627,11 @@ class DigitalAssist():
                         {"role": "system", "content": up.system_TextJoaT + Role},
                         {"role": "user", "content": up.Role_Play_Prompt + Role},
                         {"role": "user", "content": up.UserRequest + Format + Special + Project_Description + Task},
-                        #{"role": "user", "content": up.USER_SPECIAL_Prompt + Special},
+                        # {"role": "user", "content": up.USER_SPECIAL_Prompt + Special},
                         {"role": "user", "content": up.AI_Background_Prompt + Project_Description},
                         {"role": "user",
                          "content": up.CombineBothResults + "Result 1: " + Result},
-                        {"role": "user", "content": up.USER_Task_Prompt + Task },
+                        {"role": "user", "content": up.USER_Task_Prompt + Task},
                     ]
                     , temperature=crazy
                 )
@@ -1702,17 +1641,12 @@ class DigitalAssist():
                 print("could not combine 2 versions")
                 dn = 55
 
-
-
-
         if Title == '':
-
-
             # Create original details
             response = openai.ChatCompletion.create(
                 model="gpt-3.5-turbo",
                 messages=[
-                    {"role": "system", "content": up.system_TextJoaT },
+                    {"role": "system", "content": up.system_TextJoaT},
                     {"role": "user", "content": up.Role_Play_Prompt + Project_Description},
                     {"role": "user", "content": up.MondeVert_Title}
 
@@ -1721,9 +1655,8 @@ class DigitalAssist():
 
             Title = response.choices[0].message.content
 
-#This is funny content where the AI reviews the youtube script
-        if Review_Critic ==True:
-
+        # This is funny content where the AI reviews the youtube script
+        if Review_Critic == True:
             # Create original details
             response = openai.ChatCompletion.create(
                 model="gpt-3.5-turbo",
@@ -1742,9 +1675,6 @@ class DigitalAssist():
 
             Bitter_Critic = response.choices[0].message.content
 
-
-
-
         invalidCharRemoved = re.sub(r"[^a-zA-Z0-9 ]", "", Title)
         folder = str(invalidCharRemoved)
         if len(folder) > 44:
@@ -1754,8 +1684,6 @@ class DigitalAssist():
             Title1 = Title1[0:44]
         SavePath2 = SavePath1 + '\\' + folder
         Title2 = SavePath2 + Title1 + current_time2
-
-
 
         print('************************************************************************************************')
         print('************************************************************************************************')
@@ -1804,7 +1732,7 @@ class DigitalAssist():
 
 
 
-        Result_Combine: """ + Result_Combine+ """
+        Result_Combine: """ + Result_Combine + """
 
 
 
@@ -1814,8 +1742,6 @@ class DigitalAssist():
 
 
         Bitter_Critic: """ + Bitter_Critic
-
-
 
         print(data)
 
@@ -1850,7 +1776,6 @@ class DigitalAssist():
         Art_Prompt = Art_Prompt1.choices[0].message.content
         print("Work of Art Inspiration:" + Art_Prompt)
 
-
         try:
             ArtPath2 = DigitalAssist.makeArt(self, Art_Prompt)
             ArtPaths.append(ArtPath2)
@@ -1863,23 +1788,17 @@ class DigitalAssist():
         Title = Title.replace("Title:", "")
         Title = Title.replace("Title", "")
 
-
         prompt = data + "Work of Art Inspiration:" + Art_Prompt
         Prompts_Used = [
             up.system_Text + up.RolePlay_SongArtist + "AI Created a Persona shown as the Artist Bio Above" + up.Song_prompt + up.ArtPrompt_SongArtist]
         ArtistPoetInfo = 'Lyrics Written By: ' + up.Song_Writer + '      (' + 'Artwork by: ' + up.AI_ArtistName + ')'
         DigitalAssist.NamePoemSavePoem(self, prompt, ArtPaths, Prompts_Used, ArtistPoetInfo, title=Title,
-                                       FolderPath=up.AI_Task_Path + '\\' + Mode, ArtType='Task' + Mode)
+                                       FolderPath=up.AI_Music_Path + '\\' + Mode, ArtType='Song Lyrics' + Mode)
 
-
-
-
-
-
-    def GPTSummary(self, crazy = '',prompt = up.GPT_Summary,Plot = '', sys_prompt = up.system_Text_ScreenPlay0 + up.system_Text_ScreenPlay3):
+    def GPTSummary(self, crazy='', prompt=up.GPT_Summary, Plot='',
+                   sys_prompt=up.system_Text_ScreenPlay0 + up.system_Text_ScreenPlay3):
 
         openai.api_key = API_Key
-
 
         if crazy != '':
             crazy = round((randbelow(520000) + 170000) / 100000, 0)
@@ -1899,18 +1818,19 @@ class DigitalAssist():
         Skeleton_Story = response.choices[0].message.content
         return Skeleton_Story
 
-#Every Scene I should come up with pictures to show (find things to trigger a picture getting created and multi-thread it so it does not stop anything, I should have it nice and output within the App if possible
-#Also I should have the ability to assign a voice to a given character and keep that for the audio transcript/recording. Also provide the Raw Words.
-    #Snatch prequel
-    #Big Lewbowski Prequel and Sequel
-    #Something about Mary Sequel (add my own ideas)
-    #Ancient egyption culture and other cultures
+    # Every Scene I should come up with pictures to show (find things to trigger a picture getting created and multi-thread it so it does not stop anything, I should have it nice and output within the App if possible
+    # Also I should have the ability to assign a voice to a given character and keep that for the audio transcript/recording. Also provide the Raw Words.
+    # Snatch prequel
+    # Big Lewbowski Prequel and Sequel
+    # Something about Mary Sequel (add my own ideas)
+    # Ancient egyption culture and other cultures
     # #(have the different technologies showing how they use sound and frequencies to move giant stones underground. Large caves and artifical light makes the world seem like another planet,
     # #have it seem like a distant planet etc, also have some of the extinct animals and animals/plants we never heard of. Describe landscape in vivid detail and make the reader fall in love with the lore.
-    #Twist is they end up being underground and when humans are dealing with global warming we break in and accidentally become slaves.
- #   eventually we try to become a unified people as they realize we made the same mistakes as them
-#    #Write the MetaVerse Elon Musk Story -- This is going to be a video game too(like pokemon)
-    def GPTArt(self, crazy = '',prompt = up.ArtPrompt_ScreenPlay + up.direction_Text_Artist_ScreenPlay,Plot = '', sys_prompt = up.system_Text_Artist_ScreenPlay  ):
+    # Twist is they end up being underground and when humans are dealing with global warming we break in and accidentally become slaves.
+    #   eventually we try to become a unified people as they realize we made the same mistakes as them
+    #    #Write the MetaVerse Elon Musk Story -- This is going to be a video game too(like pokemon)
+    def GPTArt(self, crazy='', prompt=up.ArtPrompt_ScreenPlay + up.direction_Text_Artist_ScreenPlay, Plot='',
+               sys_prompt=up.system_Text_Artist_ScreenPlay):
         openai.api_key = API_Key
 
         Art_Prompt1 = openai.ChatCompletion.create(
@@ -1923,36 +1843,28 @@ class DigitalAssist():
 
         GPTARTPROMPT = Art_Prompt1.choices[0].message.content
         return GPTARTPROMPT
-#
-#$$$$$Savetime
 
+    #
+    # $$$$$Savetime
 
+    # Give artist a profile and save it for use - make them have a set style that is repeated for the entire book (will be great for gothic and kid stories)
 
-#Give artist a profile and save it for use - make them have a set style that is repeated for the entire book (will be great for gothic and kid stories)
-
-
-
-# 1). Adapt for Movie/Book/Short Story/Indie Film
-#     2). Enhance the tool so you have option to pass in subject (by Default choose a random genre
-#3). Need to build a google search version where I ask open ended questions and it summarizes and provides useful links for me to explore
-# 4). Coding version of this and start to use it
-# 5). Update Rap one for me and make it indie etc.
-    #6). create a version that does advertisements
-    #7). Animation
-    #8). Take all of the notes I add and make a story
-    #9). Make a tool that starts with basic idea, makes song.... book, short story, Movie
-    #10. Make tool post to instagram and twitter (do this asap and start doing it)
-    #11). Have a folder of pictures that it goes through and 3 times a day or something posts to my sites. Then it moves to another folder. Take poetry and maybe post it with all nuts and bolts ready
-    #12). For sampler, maybe build a tool to go out and download songs from itunes when it suggests it so I can mess around
-    #13). Tabs in and out (edit sounds to be other instruments)
-    #14). Edit the voice output so I can text to speech sound better
-    #15). make a play out of the voices we already have??
-    #16 get picture working with comma separated list.
-
-
-
-
-
+    # 1). Adapt for Movie/Book/Short Story/Indie Film
+    #     2). Enhance the tool so you have option to pass in subject (by Default choose a random genre
+    # 3). Need to build a google search version where I ask open ended questions and it summarizes and provides useful links for me to explore
+    # 4). Coding version of this and start to use it
+    # 5). Update Rap one for me and make it indie etc.
+    # 6). create a version that does advertisements
+    # 7). Animation
+    # 8). Take all of the notes I add and make a story
+    # 9). Make a tool that starts with basic idea, makes song.... book, short story, Movie
+    # 10. Make tool post to instagram and twitter (do this asap and start doing it)
+    # 11). Have a folder of pictures that it goes through and 3 times a day or something posts to my sites. Then it moves to another folder. Take poetry and maybe post it with all nuts and bolts ready
+    # 12). For sampler, maybe build a tool to go out and download songs from itunes when it suggests it so I can mess around
+    # 13). Tabs in and out (edit sounds to be other instruments)
+    # 14). Edit the voice output so I can text to speech sound better
+    # 15). make a play out of the voices we already have??
+    # 16 get picture working with comma separated list.
 
     def Make_a_ScreenPlay(self, Mode='ScreenPlay'):
         Summary_Episodes = []
@@ -1975,11 +1887,11 @@ class DigitalAssist():
         crazy = round((randbelow(520000) + 170000) / 100000, 0)
         crazy = crazy / 10
         if crazy < .3:
-            crazy +=.1
+            crazy += .1
 
         print('Crazy Factor: ' + str(crazy))
 
-        UserInput =False
+        UserInput = False
 
         if UserInput == False:
             Subject = up.RandomGenre()
@@ -1987,18 +1899,17 @@ class DigitalAssist():
             Subject = UserInput
         print('Subject: ' + Subject)
 
-
-#Create original details
+        # Create original details
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[
                 {"role": "system", "content": up.system_Text_ScreenPlay0 + up.system_Text_ScreenPlay2},
                 {"role": "user", "content": up.Direction_ScreenPlay_Detail},
                 {"role": "user", "content": up.Direction_ScreenPlay_Detail2},
-                {"role": "user", "content": up.Direction_ScreenPlay_Detail3 +Subject },
+                {"role": "user", "content": up.Direction_ScreenPlay_Detail3 + Subject},
                 {"role": "user", "content": up.Setting_ScreenPlay},
                 {"role": "user", "content": up.Characters_ScreenPlay},
-               # {"role": "user", "content": up.Title_ScreenPlay}
+                # {"role": "user", "content": up.Title_ScreenPlay}
 
             ], temperature=crazy
         )
@@ -2019,23 +1930,20 @@ class DigitalAssist():
 
         Skeleton_Story = Skeleton_Story2 + Skeleton_Story1
 
-
-
         print('***********************************************************************************')
         print(Skeleton_Story)
         print('***********************************************************************************')
 
-
         # DigitalAssist.speak(self, Skeleton_Story)
 
-        #Create full outline
+        # Create full outline
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[
                 {"role": "system", "content": up.system_Text_ScreenPlay0 + up.system_Text_ScreenPlay4},
                 {"role": "user", "content": up.Create_Outline1 + Skeleton_Story},
 
-               # {"role": "user", "content": up.Title_ScreenPlay}
+                # {"role": "user", "content": up.Title_ScreenPlay}
 
             ], temperature=crazy
         )
@@ -2047,14 +1955,7 @@ class DigitalAssist():
         print('***********************************************************************************')
         print('***********************************************************************************')
 
-
-
-
-
-
-
-
-        #This is how I set up the prompts for the show, I could randomize when to activate red herrings etc based on Add-In Feature
+        # This is how I set up the prompts for the show, I could randomize when to activate red herrings etc based on Add-In Feature
         Direction_ScreenPlay = []
         Direction_ScreenPlay.append(up.Direction_ScreenPlay_Pilot)
         Direction_ScreenPlay.append(up.Direction_ScreenPlayMiddle)
@@ -2062,28 +1963,19 @@ class DigitalAssist():
         Direction_ScreenPlay.append(up.Direction_ScreenPlayMiddleLate)
         Direction_ScreenPlay.append(up.Direction_ScreenPlayFinal)
 
-
-
-
         ScreenPlay_Final = ''
         Episode_Count = 5
-        for i in range (0,Episode_Count):
+        for i in range(0, Episode_Count):
             Episode_Direction = Direction_ScreenPlay[i]
 
-
-            if i ==1:
+            if i == 1:
                 Add_IN = up.RedHerring_ScreenPlay
             elif i == 2:
                 Add_IN = up.UnsungHero + up.Twist_ScreenPlay
             elif i == 3:
                 Add_IN = up.Mystery_Character_Past + up.VillanOrigin
 
-
-
-
-
-
-#Prior to writing an episode we should create the outline for the episode based on
+            # Prior to writing an episode we should create the outline for the episode based on
 
             if i != 0:
 
@@ -2092,9 +1984,9 @@ class DigitalAssist():
                     model="gpt-3.5-turbo",
                     messages=[
                         {"role": "system", "content": up.system_Text_ScreenPlay0 + up.system_Text_ScreenPlay4},
-                        {"role": "user", "content": up.Compare_Detail_v_Summary1 + Plot },
-                        {"role": "user", "content": up.Compare_Detail_v_Summary2+ Outline_All},
-                        {"role": "user", "content": up.Compare_Detail_v_Summary3 },
+                        {"role": "user", "content": up.Compare_Detail_v_Summary1 + Plot},
+                        {"role": "user", "content": up.Compare_Detail_v_Summary2 + Outline_All},
+                        {"role": "user", "content": up.Compare_Detail_v_Summary3},
 
                         # {"role": "user", "content": up.Title_ScreenPlay}
 
@@ -2103,9 +1995,7 @@ class DigitalAssist():
 
                 Outline_Next2 = response.choices[0].message.content
 
-
-                #Store this to maybe use later as a way to keep story moving together well
-
+                # Store this to maybe use later as a way to keep story moving together well
 
                 # Revise
                 response = openai.ChatCompletion.create(
@@ -2123,15 +2013,15 @@ class DigitalAssist():
                 Outline_Next = response.choices[0].message.content
 
             else:
-                #if i = 0 want to create an outline for next episode
+                # if i = 0 want to create an outline for next episode
 
                 # Create outline for next 2 episodes
                 response = openai.ChatCompletion.create(
                     model="gpt-3.5-turbo",
                     messages=[
                         {"role": "system", "content": up.system_Text_ScreenPlay0 + up.system_Text_ScreenPlay4},
-                        {"role": "user", "content": up.Compare_Detail_v_Summary2+ Outline_All},
-                        {"role": "user", "content": up.Outline_Pilot }
+                        {"role": "user", "content": up.Compare_Detail_v_Summary2 + Outline_All},
+                        {"role": "user", "content": up.Outline_Pilot}
 
                         # {"role": "user", "content": up.Title_ScreenPlay}
 
@@ -2151,9 +2041,8 @@ class DigitalAssist():
             print('  ')
             print('  ')
             print('  ')
-            print('Episode ' + str(i+1))
+            print('Episode ' + str(i + 1))
             Add_IN = ''
-
 
             Song1 = openai.ChatCompletion.create(
                 model="gpt-3.5-turbo",
@@ -2163,47 +2052,37 @@ class DigitalAssist():
                     {"role": "system", "content": up.Tie_In_ScreenPlay2 + Outline_Next},
                     {"role": "system", "content": up.Direction_ScreenPlayALL},
                     {"role": "system", "content": up.Direction_ScreenPlayALL2},
-                    {"role": "system", "content":  up.Direction_ScreenPlayALL3},
+                    {"role": "system", "content": up.Direction_ScreenPlayALL3},
                     ##--------------------Common Above/Unique Below----------
-                    #{"role": "system", "content":  Episode_Direction+ Add_IN},
+                    # {"role": "system", "content":  Episode_Direction+ Add_IN},
                     {"role": "system", "content": Episode_Direction},
                     ##--------------------Dialog----------
-                    {"role": "system", "content":  up.Dialog_ScreenPlay}
-                ], temperature=crazy )
+                    {"role": "system", "content": up.Dialog_ScreenPlay}
+                ], temperature=crazy)
 
             ScreenPlay0 = Song1.choices[0].message.content
             ScreenPlay.append(ScreenPlay0)
 
             print(ScreenPlay[i])
 
-
-
-
-            Summary_Episode1 = DigitalAssist.GPTSummary(self, crazy,up.Summarize_ScreenPlay, ScreenPlay[i])
+            Summary_Episode1 = DigitalAssist.GPTSummary(self, crazy, up.Summarize_ScreenPlay, ScreenPlay[i])
             Summary_Episodes.append(Summary_Episode1)
-
 
             PriorSummary = Summary_Episodes[i]
             PriorScreenPlay = ScreenPlay[i]
             PriorNext2 = Outline_Next2
             PriorOutline = Outline_Next
 
-
             # print('***********************************************************')
             # print("Summary Episode " + str(i + 1))
             # print(Summary_Episodes[i])
             Plot += Summary_Episodes[i]
-            ScreenPlay += "EPISODE " + str(i+ 1)+ ScreenPlay[i]
+            ScreenPlay += "EPISODE " + str(i + 1) + ScreenPlay[i]
             Outline_Details = Skeleton_Story + Outline_All
             Outline_Next2_Ref2 += Outline_Next2
 
-
-
-
-
         Title = DigitalAssist.ChatGPTDA(self, temp=crazy, MakeArt=True, Prompt=(up.Title_ScreenPlay + Plot),
                                         ConfirmBot=False)
-
 
         current_time1 = datetime.datetime.now()
         current_time2 = current_time1.strftime('%m-%d-%Y_%H.%M.%S')
@@ -2219,10 +2098,6 @@ class DigitalAssist():
             Title1 = Title1[0:44]
         SavePath2 = SavePath1 + '\\' + folder
 
-
-
-
-
         filename1.append('Screen Play - ' + Title1)
         filename1.append('Details_Outline - ' + Title1)
         filename1.append('OutlineNext2_Ref - ' + Title1)
@@ -2231,22 +2106,19 @@ class DigitalAssist():
         print('Review the filnames:')
         print(filename)
 
-
         data.append([ScreenPlay])
-        data.append ([Outline_Details])
+        data.append([Outline_Details])
         data.append([Outline_Next2_Ref2])
         data.append([Plot])
 
-
-
-        for x in range (0,4):
-        # print(data)
+        for x in range(0, 4):
+            # print(data)
             try:
 
                 DigitalAssist.SaveCSV(data[x], filename1[x], SavePath2)
                 # DigitalAssist.SaveText(self,df1,'MondeVert Assistant', 'Full Transcript')
 
-                #DigitalAssist.add2Master2(df1)
+                # DigitalAssist.add2Master2(df1)
             except:
                 print('Review Error File did not save ')
 
@@ -2260,14 +2132,11 @@ class DigitalAssist():
             Plot_NoSpoiler = Plot[Remove_l:]
             print(Plot_NoSpoiler)
         except:
-                print('error on no spoiler')
-        DigitalAssist.speak(self,ScreenPlay_Final)
-
-
-
+            print('error on no spoiler')
+        DigitalAssist.speak(self, ScreenPlay_Final)
 
         try:
-            Summary_Summer_90s = DigitalAssist.GPTSummary(self, crazy, up.GPT_90s_Summary,Plot_NoSpoiler)
+            Summary_Summer_90s = DigitalAssist.GPTSummary(self, crazy, up.GPT_90s_Summary, Plot_NoSpoiler)
         except:
             print('error on 90s trailer')
 
@@ -2279,17 +2148,15 @@ class DigitalAssist():
             print(Summary_Summer_90s)
             DigitalAssist.speak(self, Summary_Summer_90s)
 
-
             print('***********************************************************')
             print('***********************************************************')
             print('***********************************************************')
             print('***********************************************************')
             print("Character Art prompts ")
 
-
-            #''
-            #if this does not work I can make replace that text with the char so it works
-            #Test_Skel1 = Skeleton_Story.replace(":", "")
+            # ''
+            # if this does not work I can make replace that text with the char so it works
+            # Test_Skel1 = Skeleton_Story.replace(":", "")
 
             print('Skeleton_Story')
             print(Skeleton_Story)
@@ -2308,8 +2175,8 @@ class DigitalAssist():
             Characters = []
             x = len(Test_Skel)
             for c in range(0, x):
-                #print(c)
-                if c != 0 :
+                # print(c)
+                if c != 0:
                     Characters.append(Test_Skel[c])
 
             print('Characters')
@@ -2319,14 +2186,13 @@ class DigitalAssist():
                 print(' ')
                 print('-------------------------------------------')
                 print('-------------------------------------------')
-                #print("Character: " + c)
+                # print("Character: " + c)
                 print('-------------------------------------------')
                 print("Character Art1: " + up.Character_Art1 + c)
                 Art_PromptChar = DigitalAssist.GPTArt(self, crazy, up.Character_Art2 + c, Skeleton_Story)
 
                 print("Character Art2: " + up.Character_Art2 + c)
                 Art_PromptChar2 = DigitalAssist.GPTArt(self, crazy, up.Character_Art2 + c, Skeleton_Story)
-
 
             try:
                 DigitalAssist.speak(self, Art_PromptChar)
@@ -2344,18 +2210,17 @@ class DigitalAssist():
             except:
                 dn = ''
 
-
-
-
             print('***********************************************************')
             print('***********************************************************')
             print('***********************************************************')
             print('***********************************************************')
             print("Art prompts ")
 
-
             try:
-                Art_Prompt = DigitalAssist.GPTArt(self, crazy, up.direction_Text_Artist_ScreenPlay + up.ArtPrompt_ScreenPlay, Skeleton_Story,sys_prompt=up.system_Text_Artist_ScreenPlay + up.system_Text_ScreenPlay_Art1)
+                Art_Prompt = DigitalAssist.GPTArt(self, crazy,
+                                                  up.direction_Text_Artist_ScreenPlay + up.ArtPrompt_ScreenPlay,
+                                                  Skeleton_Story,
+                                                  sys_prompt=up.system_Text_Artist_ScreenPlay + up.system_Text_ScreenPlay_Art1)
                 DigitalAssist.speak(self, Art_Prompt)
                 print('***********************************************************')
                 print("Art prompt Movie Poster ")
@@ -2367,19 +2232,17 @@ class DigitalAssist():
                     d = ''
             except:
                 ArtPath2 = ''
-           # Art_Prompt = Art_Prompt11.choices[0].message.content
+            # Art_Prompt = Art_Prompt11.choices[0].message.content
 
-
-
-            for x in range (0,5):
+            for x in range(0, 5):
 
                 Summary_Episode = Summary_Episodes[x]
 
-
-
                 try:
-                    Art_Prompt1 = DigitalAssist.GPTArt(self, crazy, up.direction_Text_Artist_ScreenPlay + up.ArtPrompt_ScreenPlay_Scene,
-                                                       Summary_Episode,sys_prompt=up.system_Text_Artist_ScreenPlay + up.system_Text_ScreenPlay_Art1  + up.system_Text_ScreenPlay_Art)
+                    Art_Prompt1 = DigitalAssist.GPTArt(self, crazy,
+                                                       up.direction_Text_Artist_ScreenPlay + up.ArtPrompt_ScreenPlay_Scene,
+                                                       Summary_Episode,
+                                                       sys_prompt=up.system_Text_Artist_ScreenPlay + up.system_Text_ScreenPlay_Art1 + up.system_Text_ScreenPlay_Art)
                 except:
                     print('Error did not work but kept going')
 
@@ -2394,8 +2257,8 @@ class DigitalAssist():
                     Art_Prompts = []
                     x = len(Test_Skel)
                     for c in range(0, x):
-                        #print(c)
-                        if c != 0 :
+                        # print(c)
+                        if c != 0:
                             Art_Prompts_pre.append(Test_Skel[c])
 
                     print(Art_Prompt1)
@@ -2405,8 +2268,6 @@ class DigitalAssist():
                     x = len(Test_Skel)
                     for c in range(0, x):
                         Art_Prompts.append(Test_Skel[c])
-
-
 
                     for ap in Art_Prompts:
                         DigitalAssist.speak(self, ap)
@@ -2425,31 +2286,25 @@ class DigitalAssist():
             # Art_Prompt5 = DigitalAssist.GPTArt(self, crazy, up.direction_Text_Artist_ScreenPlay + up.ArtPrompt_ScreenPlay_Scene, Summary_EpisodeFinal,sys_prompt= up.system_Text_Artist_ScreenPlay + up.system_Text_ScreenPlay_Art1 +up.system_Text_ScreenPlay_Art)
             #
 
+        # ScreenPlay = "EPISODE I      :" +  ScreenPlay[0] +"               EPISODE II: " +  ScreenPlay2 + "       EPISODE III: " + ScreenPlay3 +"         EPISODE IV:" +  ScreenPlay4+"         EPISODE V:" +  ScreenPlayFinal
 
+        # Title = 'SD - MondeVert Productions - Classified'
 
-
-
-
-        #ScreenPlay = "EPISODE I      :" +  ScreenPlay[0] +"               EPISODE II: " +  ScreenPlay2 + "       EPISODE III: " + ScreenPlay3 +"         EPISODE IV:" +  ScreenPlay4+"         EPISODE V:" +  ScreenPlayFinal
-
-        #Title = 'SD - MondeVert Productions - Classified'
-
-        if len(Title)> 45:
+        if len(Title) > 45:
             Title = Title[0:45]
 
-        prompt = " 90s Summer Preview: " +Summary_Summer_90s +" Details:" + Skeleton_Story + 'Summary: '+ Plot + "Work of Art Inspiration:" + Art_Prompt  + "      Song:" + ScreenPlay
+        prompt = " 90s Summer Preview: " + Summary_Summer_90s + " Details:" + Skeleton_Story + 'Summary: ' + Plot + "Work of Art Inspiration:" + Art_Prompt + "      Song:" + ScreenPlay
         Prompts_Used = [
             up.system_Text + up.RolePlay_SongArtist + "AI Created a Persona shown as the Artist Bio Above" + up.Song_prompt + up.ArtPrompt_SongArtist]
         ArtistPoetInfo = 'Lyrics Written By: ' + up.Song_Writer + '      (' + 'Artwork by: ' + up.AI_ArtistName + ')'
         DigitalAssist.NamePoemSavePoem(self, prompt, ArtPaths, Prompts_Used, ArtistPoetInfo, title=Title,
                                        FolderPath=up.AI_Screen_Plays + '\\' + Mode, ArtType='Screen Play' + Mode)
 
-    def Add2MasterLyrics(self ,current_time2, ArtType, title, ArtistPoetInfo, poem, Tag, SavePath2, Prompts):
+    def Add2MasterLyrics(self, current_time2, ArtType, title, ArtistPoetInfo, poem, Tag, SavePath2, Prompts):
         data = [(current_time2, ArtType, title, ArtistPoetInfo, poem, Tag, SavePath2, Prompts)]
-        df = pd.DataFrame(data,columns = ['Date_Time_Added','Art_Type','Title','Poet_Artist_Info','Poem_Song_Lyrics','Quality','Folder_Path', 'Prompts_Used'])
+        df = pd.DataFrame(data, columns=['Date_Time_Added', 'Art_Type', 'Title', 'Poet_Artist_Info', 'Poem_Song_Lyrics',
+                                         'Quality', 'Folder_Path', 'Prompts_Used'])
         DigitalAssist.add2Master3(df)
-
-
 
     def quickArt(self):
         prompt = DigitalAssist.ChatGPTDA(self, MakeArt=True, Prompt=(up.QuickArt))
@@ -2462,12 +2317,11 @@ class DigitalAssist():
             DigitalAssist.speak(self, 'Could not make the Art due to an error')
 
         Prompts_Used = [str('Quick_Art_Prompt: ' + up.QuickArt)]
-        ArtistPoetInfo ='Written By: ' + up.Bot_Name + '      (' + 'Artwork by: ' + up.AI_ArtistName + ')'
-        DigitalAssist.NamePoemSavePoem(self, prompt, ArtPaths,Prompts_Used, ArtistPoetInfo, title = 'Quick_Art')
+        ArtistPoetInfo = 'Written By: ' + up.Bot_Name + '      (' + 'Artwork by: ' + up.AI_ArtistName + ')'
+        DigitalAssist.NamePoemSavePoem(self, prompt, ArtPaths, Prompts_Used, ArtistPoetInfo, title='Quick_Art')
 
-
-    def Quick_Poem_v1(self, GPTPrompt = up.Random_Poem, ARTPrompt = up.Poem_Art_2_prompt):
-        prompt = DigitalAssist.ChatGPTDA(self, temp=0.6, MakeArt=True, Prompt=(GPTPrompt),ConfirmBot = False)
+    def Quick_Poem_v1(self, GPTPrompt=up.Random_Poem, ARTPrompt=up.Poem_Art_2_prompt):
+        prompt = DigitalAssist.ChatGPTDA(self, temp=0.6, MakeArt=True, Prompt=(GPTPrompt), ConfirmBot=False)
         ArtPaths = []
         try:
             ArtPath = DigitalAssist.makeArt(self, prompt)
@@ -2475,7 +2329,8 @@ class DigitalAssist():
         except:
             DigitalAssist.speak(self, 'Could not make the Art due to an error')
 
-        Art2 = DigitalAssist.ChatGPTDA(self, temp=0.5, MakeArt=True, Prompt=(ARTPrompt+ '"' + prompt + '"'),ConfirmBot = False)
+        Art2 = DigitalAssist.ChatGPTDA(self, temp=0.5, MakeArt=True, Prompt=(ARTPrompt + '"' + prompt + '"'),
+                                       ConfirmBot=False)
 
         try:
             ArtPath2 = DigitalAssist.makeArt(self, Art2)
@@ -2483,24 +2338,21 @@ class DigitalAssist():
         except:
             DigitalAssist.speak(self, 'Could not make the Art due to an error')
 
-        Prompts_Used = [str('Quick_Poem_prompt: ' + GPTPrompt),'Poem_Art_1_prompt: Art Generated using poem directly', str('Prompt Fed into Chat GPT to make art prompt: ' + ARTPrompt),  str('Chat GPT Prompt sent to Art AI: ' + Art2)]
-        ArtistPoetInfo ='Poem Written By: ' + up.AI_Poet_Name + '      (' + 'Artwork by: ' + up.AI_ArtistName + ')'
-        DigitalAssist.NamePoemSavePoem(self,  prompt, ArtPaths,Prompts_Used, ArtistPoetInfo)
-
-
+        Prompts_Used = [str('Quick_Poem_prompt: ' + GPTPrompt), 'Poem_Art_1_prompt: Art Generated using poem directly',
+                        str('Prompt Fed into Chat GPT to make art prompt: ' + ARTPrompt),
+                        str('Chat GPT Prompt sent to Art AI: ' + Art2)]
+        ArtistPoetInfo = 'Poem Written By: ' + up.AI_Poet_Name + '      (' + 'Artwork by: ' + up.AI_ArtistName + ')'
+        DigitalAssist.NamePoemSavePoem(self, prompt, ArtPaths, Prompts_Used, ArtistPoetInfo)
 
     def SundayScary_Poem(self):
-        DigitalAssist.Quick_Poem_v1(self,GPTPrompt = up.Sunday_Scaries_Poem_prompt)
+        DigitalAssist.Quick_Poem_v1(self, GPTPrompt=up.Sunday_Scaries_Poem_prompt)
 
-
-
-
-
-    def makeBlogPost(self, GPTprompt = up.Random_Blog_Topic, ARTprompt = up.Art_1_prompt, BlogAuthor =  up.AI_Blogger):
+    def makeBlogPost(self, GPTprompt=up.Random_Blog_Topic, ARTprompt=up.Art_1_prompt, BlogAuthor=up.AI_Blogger):
         current_time1 = datetime.datetime.now()
         current_time2 = current_time1.strftime('%m-%d-%Y')
         Script1 = DigitalAssist.ChatGPTDA(self, temp=0.5, MakeArt=False, Prompt=(GPTprompt), ConfirmBot=False)
-        CoverArt1 = DigitalAssist.ChatGPTDA(self, temp=0.5, MakeArt=False, Prompt=(ARTprompt + '"' + Script1[0:200] + '"'), ConfirmBot=False)
+        CoverArt1 = DigitalAssist.ChatGPTDA(self, temp=0.5, MakeArt=False,
+                                            Prompt=(ARTprompt + '"' + Script1[0:200] + '"'), ConfirmBot=False)
 
         try:
             CoverArtPath1 = DigitalAssist.makeArt(self, CoverArt1)
@@ -2510,32 +2362,29 @@ class DigitalAssist():
         Prompt1 = (GPTprompt + '|' + ARTprompt)
         ArtPaths = [CoverArtPath1]
 
-        DigitalAssist.NamePoemSavePoem(self, Script1, ArtPaths, Prompt1, BlogAuthor,title='Blog_'+Script1[0:15]+'_' + current_time2, FolderPath=up.AI_Blog_Path, ArtType='AI Blog')
-
-
-
-
+        DigitalAssist.NamePoemSavePoem(self, Script1, ArtPaths, Prompt1, BlogAuthor,
+                                       title='Blog_' + Script1[0:15] + '_' + current_time2, FolderPath=up.AI_Blog_Path,
+                                       ArtType='AI Blog')
 
     def YayorNay(self):
         self.Mode = 'Yay or Nay -  Menu'
 
         DigitalAssist.speak(self, self.Mode + ' What did you think ' + self.UserName)
 
-        print( self.Mode + ' What did you think ' + self.UserName)
+        print(self.Mode + ' What did you think ' + self.UserName)
 
         s2 = True
         while (s2 == True):
-            DigitalAssist.Add2Transcript(self,' \n')
+            DigitalAssist.Add2Transcript(self, ' \n')
             query = DigitalAssist.takeCommand(self).lower()
 
-
-            #Say Quick Art or Auto Art or Basic Art
-            if 'awesome'  in query or 'love'  in query or 'yay' in query or  'yes'  in query or 'best' in query:
+            # Say Quick Art or Auto Art or Basic Art
+            if 'awesome' in query or 'love' in query or 'yay' in query or 'yes' in query or 'best' in query:
                 rr = 'Buono'
                 s2 = False
                 continue
 
-            elif 'good'  in query or 'love'  in query or 'yay' in query or  'yes'  in query:
+            elif 'good' in query or 'love' in query or 'yay' in query or 'yes' in query:
                 rr = '(Good)'
                 s2 = False
                 continue
@@ -2553,8 +2402,6 @@ class DigitalAssist():
 
         return rr
 
-
-
     def SaveCSV(Text, Title, FolderPath):
         current_time1 = datetime.datetime.now()
         current_time2 = current_time1.strftime('%m-%d-%Y_%H.%M.%S')
@@ -2562,14 +2409,13 @@ class DigitalAssist():
         SavePath1 = f2
         invalidCharRemoved = re.sub(r"[^a-zA-Z0-9 ]", "", Title)
         folder = str(invalidCharRemoved)
-        if len(folder)>44:
+        if len(folder) > 44:
             folder = folder[0:44]
         Title1 = '\\' + str(invalidCharRemoved) + "_"
-        if len(Title1)>44:
+        if len(Title1) > 44:
             Title1 = Title1[0:44]
-        SavePath2 = SavePath1 +'\\' +folder
+        SavePath2 = SavePath1 + '\\' + folder
         Title2 = SavePath2 + Title1 + current_time2
-
 
         isExist = os.path.exists(SavePath1)
         if not isExist:
@@ -2595,20 +2441,18 @@ class DigitalAssist():
         except:
             print('Review Error File did not save ')
 
-
-
-
-
-    def NamePoemSavePoem(self,poem, ArtPaths,Prompts_Used,ArtistPoetInfo, title = '', FolderPath = up.AI_Poetry_Path , ArtType = 'Poem'):
+    def NamePoemSavePoem(self, poem, ArtPaths, Prompts_Used, ArtistPoetInfo, title='', FolderPath=up.AI_Poetry_Path,
+                         ArtType='Poem'):
         dfPrompts = ''
         Tag = ''
         if ArtType == 'Poem':
             title_p = up.Poem_Title_Prompt
         else:
-            title_p= up.Song_Title_Prompt
+            title_p = up.Song_Title_Prompt
 
-        if title =='':
-            Title = DigitalAssist.ChatGPTDA(self, temp=0.5, MakeArt=True, Prompt=(title_p  +'"' + poem + '"'), ConfirmBot= False)
+        if title == '':
+            Title = DigitalAssist.ChatGPTDA(self, temp=0.5, MakeArt=True, Prompt=(title_p + '"' + poem + '"'),
+                                            ConfirmBot=False)
         else:
             Title = title
 
@@ -2618,17 +2462,16 @@ class DigitalAssist():
         SavePath1 = f2
         invalidCharRemoved = re.sub(r"[^a-zA-Z0-9 ]", "", Title)
         folder = str(invalidCharRemoved)
-        if len(folder)>44:
+        if len(folder) > 44:
             folder = folder[0:44]
         Title1 = '\\' + str(invalidCharRemoved) + "_"
-        if len(Title1)>44:
+        if len(Title1) > 44:
             Title1 = Title1[0:44]
-        SavePath2 = SavePath1 +'\\' +folder
+        SavePath2 = SavePath1 + '\\' + folder
         Title2 = SavePath2 + Title1 + current_time2
         Tag = ""
         Tag += DigitalAssist.YayorNay(self)
         Title2 = Title2 + Tag
-
 
         isExist = os.path.exists(SavePath1)
         if not isExist:
@@ -2645,18 +2488,18 @@ class DigitalAssist():
         document.add_heading(ArtistPoetInfo, 1)
         p = document.add_paragraph()
         r = p.add_run()
-        #r.add_text(ArtistPoetInfo)
+        # r.add_text(ArtistPoetInfo)
         p = document.add_paragraph()
         r = p.add_run()
         r.add_text(poem)
         p = document.add_paragraph()
         r = p.add_run()
-        image_counter= 0
+        image_counter = 0
         for i in ArtPaths:
-            image_counter +=1
+            image_counter += 1
             r.add_picture(i)
             original = i
-            target = SavePath2 + Title1  + str(image_counter) +current_time2 + '.png'
+            target = SavePath2 + Title1 + str(image_counter) + current_time2 + '.png'
             shutil.copyfile(original, target)
 
         document.add_heading('AI Prompts used: ', 7)
@@ -2666,7 +2509,7 @@ class DigitalAssist():
             r = p.add_run()
             r.add_text(i)
             dfPrompts += i + '|'
-        document.save(Title2+  '_Details.docx')
+        document.save(Title2 + '_Details.docx')
 
         document2 = Document()
         document2.add_heading(Title, 0)
@@ -2676,20 +2519,19 @@ class DigitalAssist():
         r = p.add_run()
         r.add_text(poem)
         document2.save(Title2 + '.docx')
-        DigitalAssist.Add2MasterLyrics(self,current_time2, ArtType, title, ArtistPoetInfo, poem, Tag, SavePath2, dfPrompts)
+        DigitalAssist.Add2MasterLyrics(self, current_time2, ArtType, title, ArtistPoetInfo, poem, Tag, SavePath2,
+                                       dfPrompts)
 
-
-
-
-        data = [(Title,ArtistPoetInfo, poem, FolderPath, ArtType , Tag)]
-        #print(data)
+        data = [(Title, ArtistPoetInfo, poem, FolderPath, ArtType, Tag)]
+        # print(data)
         try:
-            df1 = pd.DataFrame(data,columns = ['Title','Artist Info', 'ScreenPlay','FolderPath', 'Category', 'Self-Critique'])
+            df1 = pd.DataFrame(data, columns=['Title', 'Artist Info', 'ScreenPlay', 'FolderPath', 'Category',
+                                              'Self-Critique'])
             print(df1)
             print(Title2)
             df1.to_csv(Title2 + current_time2 + '.txt')
 
-        # DigitalAssist.SaveText(self,df1,'MondeVert Assistant', 'Full Transcript')
+            # DigitalAssist.SaveText(self,df1,'MondeVert Assistant', 'Full Transcript')
             try:
                 DigitalAssist.add2Master2(df1)
             except:
@@ -2697,8 +2539,7 @@ class DigitalAssist():
         except:
             print('Review Error')
 
-
-    def SaveLiveArt(self, ArtPaths, Title = 'Live Art'):
+    def SaveLiveArt(self, ArtPaths, Title='Live Art'):
         current_time1 = datetime.datetime.now()
         self.current_time22 = current_time1.strftime('%m-%d-%Y')
         current_time3 = current_time1.strftime('%m-%d-%Y_%H.%M.%S')
@@ -2707,7 +2548,7 @@ class DigitalAssist():
 
         invalidCharRemoved = re.sub(r"[^a-zA-Z0-9 ]", "", Title)
         Title1 = '\\' + str(invalidCharRemoved) + "_"
-        if len(Title1)>100:
+        if len(Title1) > 100:
             Title1 = Title1[0:100] + self.current_time22
         folder = str(invalidCharRemoved)
         if len(folder) > 40:
@@ -2728,11 +2569,10 @@ class DigitalAssist():
         for i in ArtPaths:
             image_counter += 1
             original = i
-            target = SavePath2 + Title1  + current_time3 + '.png'
+            target = SavePath2 + Title1 + current_time3 + '.png'
             shutil.copyfile(original, target)
 
-
-#Blog Make Art Live mode
+    # Blog Make Art Live mode
     def MakeArtLive(self):
         self.onlyMyWords = ''
         self.onlyMyWordsLatest2 = ''
@@ -2740,7 +2580,7 @@ class DigitalAssist():
         self.Mode = 'Make Art Live Mode'
         Title = DigitalAssist.getfilename(self)
 
-        #Ask user if you should have silent mode on?
+        # Ask user if you should have silent mode on?
 
         s2 = True
         while (s2 == True):
@@ -2751,32 +2591,35 @@ class DigitalAssist():
             if "yes" in query or "silent" in query:
                 self.SilentMode = True
                 s2 = False
-                DigitalAssist.speak(self, 'Silent Mode Activated', voice = 1)
+                DigitalAssist.speak(self, 'Silent Mode Activated', voice=1)
             elif "no" in query or "nope" in query or "loud" in query:
                 DigitalAssist.speak(self, 'Interrupt Mode Activated', voice=1)
                 self.SilentMode = False
                 s2 = False
             else:
-                print ("Gonna Have to Repeat That....")
+                print("Gonna Have to Repeat That....")
 
         HowManyLinestoAdd = 7
         self.LineCount = 0
         LiveMode = True
-        while (LiveMode ==True):
+        while (LiveMode == True):
             print(self.onlyMyWordsLatest2)
             self.LineCount = self.LineCount + 1
-            self.query1 = DigitalAssist.transcribe_Build_Query(self,1.44).lower()
-            self.query1 = self.query1 + '.'+ '/n'
-            self.onlyMyWords = self.onlyMyWords +  self.query1
+            self.query1 = DigitalAssist.transcribe_Build_Query(self, 1.44).lower()
+            self.query1 = self.query1 + '.' + '/n'
+            self.onlyMyWords = self.onlyMyWords + self.query1
             self.onlyMyWordsLatest2 = self.onlyMyWordsLatest2 + self.query1
-            self.onlyMyWordsLatest.append( self.query1)
+            self.onlyMyWordsLatest.append(self.query1)
 
             if 'loud mode' in self.query1:
                 self.SilentMode = False
-            elif (("brick top" in self.query1 or "bricktop" in self.query1 or "show me" in self.query1 or "extra" in self.query1 or "additional" in self.query1) and ("option" in self.query1 or  "tool" in self.query1)) or ("edit mode" in self.query1) or  ("need to" in self.query1 and "make edit" in self.query1):
+            elif ((
+                          "brick top" in self.query1 or "bricktop" in self.query1 or "show me" in self.query1 or "extra" in self.query1 or "additional" in self.query1) and (
+                          "option" in self.query1 or "tool" in self.query1)) or ("edit mode" in self.query1) or (
+                    "need to" in self.query1 and "make edit" in self.query1):
                 s3 = True
                 while (s3 == True):
-                #this is where you say next steps (This can be a separate function)
+                    # this is where you say next steps (This can be a separate function)
                     query2 = DigitalAssist.transcribe_Build_Query_Pause(self).lower()
                     print(query2)
 
@@ -2784,32 +2627,33 @@ class DigitalAssist():
                         DigitalAssist.RunChatGPT(self)
                     elif ('take' in query2 or 'note' in query2 or 'write' in query2 or 'transcribe' in query2):
                         DigitalAssist.transcribe(self)
-                    elif ('none' in query2 or 'no ' in query2 or 'mistake' in query2 or 'my bad' in query2 or 'go back' in query2):
+                    elif (
+                            'none' in query2 or 'no ' in query2 or 'mistake' in query2 or 'my bad' in query2 or 'go back' in query2):
                         s3 == True
                     elif ('stop' in query2 or 'cancel' in query2 or 'quit' in query2 or 'cut' in query2):
                         sys.exit()
                         continue
             else:
-                SubjectMatter = DigitalAssist.Pick_Random_Lines(self,SetofLines=self.onlyMyWordsLatest   , LineCount = 2)
+                SubjectMatter = DigitalAssist.Pick_Random_Lines(self, SetofLines=self.onlyMyWordsLatest, LineCount=2)
                 if self.LineCount == HowManyLinestoAdd + 1:
-                    DigitalAssist.LiveArt(self, SubjectMatter, Title= Title)
+                    DigitalAssist.LiveArt(self, SubjectMatter, Title=Title)
                     self.onlyMyWordsLatest = []
                     self.onlyMyWordsLatest2 = ''
 
-        Script1 = 'Human Transcript: ' +  self.onlyMyWords + '/n' + 'Full Transcript: ' +    self.transcript_Final
-        DigitalAssist.NamePoemSavePoem(self, Script1, [], '', 'Shane Donovan - MondeVert CEO', title=Title + '_' + self.current_time22, FolderPath=up.AI_Live_Art_Path,ArtType='MondeVert Podcast with Live Art')
+        Script1 = 'Human Transcript: ' + self.onlyMyWords + '/n' + 'Full Transcript: ' + self.transcript_Final
+        DigitalAssist.NamePoemSavePoem(self, Script1, [], '', 'Shane Donovan - MondeVert CEO',
+                                       title=Title + '_' + self.current_time22, FolderPath=up.AI_Live_Art_Path,
+                                       ArtType='MondeVert Podcast with Live Art')
 
-
-
-    def LiveArt(self , SubjectMatter = 'Random subject of your choice, weirder the better', Title = 'Podcast UnNamed'):
-        #LiveArt1 = DigitalAssist.ChatGPTDA(self, temp=0.5, MakeArt=True, Prompt=(up.MakeArtLive_prompt1), ConfirmBot=False)
-        #ArtPath1 = DigitalAssist.makeArt(self, LiveArt1)
+    def LiveArt(self, SubjectMatter='Random subject of your choice, weirder the better', Title='Podcast UnNamed'):
+        # LiveArt1 = DigitalAssist.ChatGPTDA(self, temp=0.5, MakeArt=True, Prompt=(up.MakeArtLive_prompt1), ConfirmBot=False)
+        # ArtPath1 = DigitalAssist.makeArt(self, LiveArt1)
         ArtPath2 = DigitalAssist.makeArt(self, up.MakeArtLive_prompt2 + ': ' + SubjectMatter)
-        #ArtPaths = [ArtPath1, ArtPath2]
-        ArtPaths = [ ArtPath2]
+        # ArtPaths = [ArtPath1, ArtPath2]
+        ArtPaths = [ArtPath2]
         DigitalAssist.SaveLiveArt(self, ArtPaths, Title)
 
-    def Pick_Random_Lines(self, SetofLines, LineCount = 2):
+    def Pick_Random_Lines(self, SetofLines, LineCount=2):
         Line1 = random.choices(SetofLines)
         Line1 = Line1[0]
         Line2 = Line1
@@ -2819,21 +2663,20 @@ class DigitalAssist():
             continue
         return str(Line1 + Line2)
 
-
-#Main Menu
+    # Main Menu
     def Take_query(self):
         DigitalAssist.Hello(self)
 
         self.Mode = 'Main Menu'
-       # DigitalAssist.Add2Transcript(self,text2Add= ( self.Mode + ':'))
+        # DigitalAssist.Add2Transcript(self,text2Add= ( self.Mode + ':'))
         s2 = True
         while (s2 == True):
             self.Mode = 'Main Menu'
-            DigitalAssist.speak(self,self.Mode)
+            DigitalAssist.speak(self, self.Mode)
             query = DigitalAssist.takeCommand(self).lower()
-            #DigitalAssist.Add2Transcript(self,text2Add=query)
-            if "company dashboard" in query or "open dashboard" in query :
-                DigitalAssist.speak(self,"Opening MondDay Vert's Dasboard, good luck with your work!")
+            # DigitalAssist.Add2Transcript(self,text2Add=query)
+            if "company dashboard" in query or "open dashboard" in query:
+                DigitalAssist.speak(self, "Opening MondDay Vert's Dasboard, good luck with your work!")
 
                 # in the open method we just to give the link
                 # of the website and it automatically open
@@ -2849,7 +2692,8 @@ class DigitalAssist():
                 continue
 
             elif "pay bills" in query or "pay credit cards" in query:
-                DigitalAssist.speak(self,"Bills Suck man, at least you are getting them done, Hope you have a nice day!")
+                DigitalAssist.speak(self,
+                                    "Bills Suck man, at least you are getting them done, Hope you have a nice day!")
 
                 Liberty_Bay_CC = "https://www.myaccountaccess.com/onlineCard/login.do"
                 Home_Depot_CC = 'https://citiretailservices.citibankonline.com/RSnextgen/svc/launch/index.action?siteId=PLCN_HOMEDEPOT#signon'
@@ -2868,20 +2712,25 @@ class DigitalAssist():
                 continue
 
 
-            elif ("chat" in query and "bot" in query) or  ("gpt" in query and "chat" in query) or  ("smart" in query and "assist" in query) or  ("extra" in query and "help" in query) or   ("artificial" in query and "intellig" in query):
+            elif ("chat" in query and "bot" in query) or ("gpt" in query and "chat" in query) or (
+                    "smart" in query and "assist" in query) or ("extra" in query and "help" in query) or (
+                    "artificial" in query and "intellig" in query):
 
                 DigitalAssist.RunChatGPT(self)
-                DigitalAssist.speak(self,"High Tech!")
+                DigitalAssist.speak(self, "High Tech!")
                 # prompt = DigitalAssist.ChatGPTDA(self)
                 continue
 
-            elif ("make" in query and "art" in query) or ("make" in query and "picture" in query) or ("ai" in query and "art" in query) or ("art" in query and "mode" in query) or ("super" in query and "shake" in query and 'art' in query):
+            elif ("make" in query and "art" in query) or ("make" in query and "picture" in query) or (
+                    "ai" in query and "art" in query) or ("art" in query and "mode" in query) or (
+                    "super" in query and "shake" in query and 'art' in query):
 
                 DigitalAssist.speak(self, "High Tech and sheek!")
                 if 'super' in query or 'using' in query or 'extra' in query:
                     if 'poem' in query or 'shake' in query or 'poet' in query:
                         DigitalAssist.makeQuickPoem(self)
-                        prompt = DigitalAssist.ChatGPTDA(self, MakeArt=True, Prompt=('make a prompt for openai  DALL-E program to create a work of art that is based on the following poem. '+'\n'+'\n' + self.Words))
+                        prompt = DigitalAssist.ChatGPTDA(self, MakeArt=True, Prompt=(
+                                    'make a prompt for openai  DALL-E program to create a work of art that is based on the following poem. ' + '\n' + '\n' + self.Words))
                         DigitalAssist.makeArt(self, prompt)
                     else:
                         prompt = DigitalAssist.ChatGPTDA(self, MakeArt=True)
@@ -2899,46 +2748,52 @@ class DigitalAssist():
 
 
             elif "stop" in query or "all set" in query or "quit" in query or "m done" in query or "thank" in query or "peace out" in query:
-                DigitalAssist.speak(self,"Happy to help, Peace out brothah man")
+                DigitalAssist.speak(self, "Happy to help, Peace out brothah man")
                 s2 = False
 
-            elif ("record" in query or "listen up" in query or "can you right" in query or "record mode"  in query  or  "transcribe" in query or "could you write" in query or "transcribe" in query or "can you write" in query) and 'stop' not in query :
-                DigitalAssist.speakSweet(self,"Dictated but not Red Mode Activated")
+            elif (
+                    "record" in query or "listen up" in query or "can you right" in query or "record mode" in query or "transcribe" in query or "could you write" in query or "transcribe" in query or "can you write" in query) and 'stop' not in query:
+                DigitalAssist.speakSweet(self, "Dictated but not Red Mode Activated")
                 DigitalAssist.transcribe(self)
                 continue
 
 
-            elif ( "blog" in query )and ("create" in query or "together" in query or "put"in query or "make"in query ) or ("add" in query and "blog" in query):
-                DigitalAssist.speakSweet(self,"Mon Day Vert is lucky to have a great CEO this is going to be a great post!")
+            elif ("blog" in query) and (
+                    "create" in query or "together" in query or "put" in query or "make" in query) or (
+                    "add" in query and "blog" in query):
+                DigitalAssist.speakSweet(self,
+                                         "Mon Day Vert is lucky to have a great CEO this is going to be a great post!")
                 DigitalAssist.CompileBlog(self)
-                DigitalAssist.speakSweet(self,"Blog Consolidation Complete Shane D")
+                DigitalAssist.speakSweet(self, "Blog Consolidation Complete Shane D")
                 continue
 
-            elif (("consolidate" in query or "compile" in query  or "collect" in query )and ("file" in query or "folder" in query or "list"in query )) or ("add" in query and "master" in query):
-                DigitalAssist.speakSweet(self,"Consolidation in progress")
+            elif (("consolidate" in query or "compile" in query or "collect" in query) and (
+                    "file" in query or "folder" in query or "list" in query)) or ("add" in query and "master" in query):
+                DigitalAssist.speakSweet(self, "Consolidation in progress")
                 DigitalAssist.compileFiles(self)
-                DigitalAssist.speakSweet(self,"Consolidation Complete my dude")
+                DigitalAssist.speakSweet(self, "Consolidation Complete my dude")
                 continue
 
-            elif "make list" in query or " list" in query or "to do" in query or "tracker" in query or "checklist" in query  or  "make a plan" in query or "quick note" in query  or "quick plan" in query or "take note" in query:
-                #DigitalAssist.speak("Sure thing, One moment while I prepare")
+            elif "make list" in query or " list" in query or "to do" in query or "tracker" in query or "checklist" in query or "make a plan" in query or "quick note" in query or "quick plan" in query or "take note" in query:
+                # DigitalAssist.speak("Sure thing, One moment while I prepare")
                 DigitalAssist.makelist(self)
                 continue
 
 
-            elif "poetic" in query or "swoon me" in query or "me a poem" in query  or  "poem" in query or "while I think you" in query or "poetry will help me think" in query or "write me a poem" in query or "we need some inspiration" in query or "some art" in query or "be creative" in query or "inspire me" in query:
+            elif "poetic" in query or "swoon me" in query or "me a poem" in query or "poem" in query or "while I think you" in query or "poetry will help me think" in query or "write me a poem" in query or "we need some inspiration" in query or "some art" in query or "be creative" in query or "inspire me" in query:
                 x22 = s.PoemBot(1, 1, 1, 1, 40, 3)
                 x22.ReloadModel("model.h5")
                 x22.setupdata()
                 self.Words = x22.shakesbot_DA()
-                print (self.Words)
-                DigitalAssist.speakSweet(self,self.Words)
+                print(self.Words)
+                DigitalAssist.speakSweet(self, self.Words)
                 continue
 
 
 
 
-            elif ("play" in query or "script" in query) and ("make" in query or "write" in query or "create" in query or "mode" in query):
+            elif ("play" in query or "script" in query) and (
+                    "make" in query or "write" in query or "create" in query or "mode" in query):
                 # Call for the save file name after listing all of the subjects to the user
                 self.Words = ''
                 self.Correction_Comment = ''
@@ -2946,26 +2801,26 @@ class DigitalAssist():
                 self.Significance = '**AI content attached'
                 self.FileName = 'AI ShakeScript'
                 self.Subject = 'AI ShakeScript'
-                DigitalAssist.speak(self,'I like your style, my man')
+                DigitalAssist.speak(self, 'I like your style, my man')
 
                 DigitalAssist.Make_Script(self)
 
-                DigitalAssist.speakSweet(self,self.Words)
+                DigitalAssist.speakSweet(self, self.Words)
                 s3 = pd.DataFrame()
                 s3['Script'] = [self.Words]
                 s3['Script - Corrected'] = [self.AI_Corrected_Content]
                 s3['Correction Comment'] = [self.Correction_Comment]
-                DigitalAssist.SaveText(self,s3, self.FileName, self.Subject)
+                DigitalAssist.SaveText(self, s3, self.FileName, self.Subject)
                 continue
 
-            elif ("go" in query or 'try' in query or "mode" in query) and ("greek" in query or "myth" in query ):
+            elif ("go" in query or 'try' in query or "mode" in query) and ("greek" in query or "myth" in query):
                 # Call for the save file name after listing all of the subjects to the user
                 self.Words = ''
                 self.Type = 'Greek Script Break'
                 self.Significance = '**AI content attached'
                 self.FileName = 'AI Going Greek'
                 self.Subject = 'AI Going Greek'
-                DigitalAssist.speak(self,'I like your style, my man... Dont eat too much tzatziki!')
+                DigitalAssist.speak(self, 'I like your style, my man... Dont eat too much tzatziki!')
                 self.pb = s.PoemBot(1, 1, 1, 1, 40, 3)
                 self.pb.ReloadModel("model_Greek.h5")
                 self.pb.setupdata()
@@ -2988,16 +2843,16 @@ class DigitalAssist():
                         self.Words += w[i]
                         print(self.Words)
 
-                DigitalAssist.speak(self,self.Words)
+                DigitalAssist.speak(self, self.Words)
                 s3 = pd.DataFrame()
                 s3['Script'] = [self.Words]
-                DigitalAssist.SaveText(self,s3, self.FileName, self.subject)
+                DigitalAssist.SaveText(self, s3, self.FileName, self.subject)
                 continue
 
 
 
             elif "social media" in query or "marketing" in query:
-                DigitalAssist.speak(self,"Will do")
+                DigitalAssist.speak(self, "Will do")
 
                 # in the open method we just to give the link
                 # of the website and it automatically open
@@ -3013,17 +2868,18 @@ class DigitalAssist():
                 continue
 
             elif "open google" in query:
-                DigitalAssist.speak(self,"Opening Google ")
+                DigitalAssist.speak(self, "Opening Google ")
                 url = "http://google.com"
                 DigitalAssist.Open_Web(url)
                 continue
 
 
 
-            elif   (("voice" in query or "person" in query or "bot" in query or "ai" in query) and ( "change" in query or  "update" in query or "switch" in query or "set" in query )):
+            elif (("voice" in query or "person" in query or "bot" in query or "ai" in query) and (
+                    "change" in query or "update" in query or "switch" in query or "set" in query)):
 
                 if "quick" in query or "manual" in query:
-                    DigitalAssist.Setvoices(self, Quick = True)
+                    DigitalAssist.Setvoices(self, Quick=True)
                     print('Quick mode activated')
                 else:
                     DigitalAssist.Setvoices(self)
@@ -3039,35 +2895,33 @@ class DigitalAssist():
 
             # this will exit and terminate the program
             elif "bye" in query:
-                DigitalAssist.speak(self,"Peace Out!")
+                DigitalAssist.speak(self, "Peace Out!")
                 s2 = False
 
             elif "from wikipedia" in query or "wikipedia" in query:
-                DigitalAssist.speak(self,"Checking the wikipedia ")
+                DigitalAssist.speak(self, "Checking the wikipedia ")
                 query = query.replace("wikipedia", "")
                 result = wikipedia.summary(query, sentences=4)
-                DigitalAssist.speak(self,"According to wikipedia")
-                DigitalAssist.speak(self,result)
+                DigitalAssist.speak(self, "According to wikipedia")
+                DigitalAssist.speak(self, result)
 
 
 
-            elif "tell me your name" in query or  "your name" in query or "introduce yourself" in query or "introduce your self" in query:
-                DigitalAssist.speak(self,"I am Big Master Funk the fourth also known as Brick top, AND i AM  Your personal desktop Assistant")
+            elif "tell me your name" in query or "your name" in query or "introduce yourself" in query or "introduce your self" in query:
+                DigitalAssist.speak(self,
+                                    "I am Big Master Funk the fourth also known as Brick top, AND i AM  Your personal desktop Assistant")
 
 
             elif "shut up" in query:
-                DigitalAssist.speak(self,"my bad I am tripping, I will leave you be Shane D")
+                DigitalAssist.speak(self, "my bad I am tripping, I will leave you be Shane D")
                 s2 = False
 
             else:
-                #uk = cs.DA_Unknown_Command()
-                #DigitalAssist.speak(uk)
-                #print(uk)
-                #Event().wait(1)
+                # uk = cs.DA_Unknown_Command()
+                # DigitalAssist.speak(uk)
+                # print(uk)
+                # Event().wait(1)
                 continue
-
-
-
 
     def transcribe(self):
         self.entry = 1
@@ -3079,12 +2933,12 @@ class DigitalAssist():
         DigitalAssist.getsubject(self)
         self.visualList = 'Subject: ' + self.subject + ' \n'
         self.visualList2 = 'Subject*: ' + self.subject + ' \n'
-        DigitalAssist.speak(self,"Please prepare for recording")
+        DigitalAssist.speak(self, "Please prepare for recording")
         print("Please prepare for recording...")
-        while (s2 ==True):
+        while (s2 == True):
             xx = ''
             self.query1 = ''
-            self. new_Query = ''
+            self.new_Query = ''
             self.Type = ''
             self.Significance = ''
             self.Words = ''
@@ -3093,17 +2947,15 @@ class DigitalAssist():
             self.Completed = ''
             print(self.visualList)
             print(self.visualList2)
-            self.query1 = DigitalAssist.transcribe_Build_Query(self,1.44).lower()
+            self.query1 = DigitalAssist.transcribe_Build_Query(self, 1.44).lower()
             self.query1 = self.query1 + '.'
             self.Type = 'Original'
             self.Significance = 'Default'
 
-
-
             if "stop recording" in self.query1 or "m all set" in self.query1 or "end list" in self.query1 or "stop listening" in self.query1 or "save this file" in self.query1 or "save this recording" in self.query1:
                 # Call for the save file name after listing all of the subjects to the user
                 DigitalAssist.getfilename(self)
-                DigitalAssist.SaveText(self,self.transcript, self.FileName, self.subject)
+                DigitalAssist.SaveText(self, self.transcript, self.FileName, self.subject)
                 DigitalAssist.add2Master(self.transcript)
                 s2 = False
                 DigitalAssist.saveTranscript(self)
@@ -3111,17 +2963,20 @@ class DigitalAssist():
                 continue
 
 
-            elif (("brick top" in self.query1 or "bricktop" in self.query1 or "show me" in self.query1 or "extra" in self.query1 or "additional" in self.query1) and ("option" in self.query1 or  "tool" in self.query1)) or ("edit mode" in self.query1) or  ("need to" in self.query1 and "make edit" in self.query1):
+            elif ((
+                          "brick top" in self.query1 or "bricktop" in self.query1 or "show me" in self.query1 or "extra" in self.query1 or "additional" in self.query1) and (
+                          "option" in self.query1 or "tool" in self.query1)) or ("edit mode" in self.query1) or (
+                    "need to" in self.query1 and "make edit" in self.query1):
                 s3 = True
                 while (s3 == True):
-                #this is where you say next steps (This can be a separate function)
+                    # this is where you say next steps (This can be a separate function)
                     query2 = DigitalAssist.transcribe_Build_Query_Pause(self).lower()
                     print(query2)
 
-                    if  "continue" in query2 or "just thinking" in query2 or "yes" in query2 or "chill" in query2 or "just thinking" in query2 or "keep going" in query2:
-                        DigitalAssist.speak(self,'no worries, still here')
+                    if "continue" in query2 or "just thinking" in query2 or "yes" in query2 or "chill" in query2 or "just thinking" in query2 or "keep going" in query2:
+                        DigitalAssist.speak(self, 'no worries, still here')
                         s3 = False
-                        #continue
+                        # continue
 
 
 
@@ -3130,33 +2985,35 @@ class DigitalAssist():
                         # DigitalAssist.SaveText(self.transcript2, self.FileName + 'v2' + self.subject, self.subject)
                         DigitalAssist.getsubject(self)
                         s3 = False
-                        #continue
+                        # continue
 
 
-                    elif  "change" in query2 or "fix" in query2 or "edit" in query2 or "fix that" in query2 or "not quite" in query2 or "review last" in query2 or "back to me" in query2 or "read that back" in query2:
+                    elif "change" in query2 or "fix" in query2 or "edit" in query2 or "fix that" in query2 or "not quite" in query2 or "review last" in query2 or "back to me" in query2 or "read that back" in query2:
                         # Call for the save file name after listing all of the subjects to the user
                         self.Type = 'Edited'
                         self.Significance = 'Review edits'
-                        self.new_Query = DigitalAssist.editentry(self,self.query1)
+                        self.new_Query = DigitalAssist.editentry(self, self.query1)
                         s3 = False
-                        #continue
+                        # continue
 
 
-                    elif   "while I think you" in query2 or "poetry will help me think" in query2 or "write me a poem" in query2 or "we need some inspiration" in query2 or "some art" in query2 or "be creative" in query2 or "inspire me" in query2 or ( "poem" in query2 and  ("write" in query2 or "create" in query2 or "shake" in query2)):
+                    elif "while I think you" in query2 or "poetry will help me think" in query2 or "write me a poem" in query2 or "we need some inspiration" in query2 or "some art" in query2 or "be creative" in query2 or "inspire me" in query2 or (
+                            "poem" in query2 and ("write" in query2 or "create" in query2 or "shake" in query2)):
                         # Call for the save file name after listing all of the subjects to the user
                         self.Type = 'Poetry Break'
                         self.Significance = '**AI content attached'
-                        DigitalAssist.speakSweet(self,'I like your style, Shane you are brilliant and beautiful')
+                        DigitalAssist.speakSweet(self, 'I like your style, Shane you are brilliant and beautiful')
                         x = s.PoemBot(1, 1, 1, 1, 40, 3)
                         x.ReloadModel("model.h5")
                         x.setupdata()
                         self.Words += x.shakesbot_DA()
-                        print (self.Words)
-                        DigitalAssist.speakSweet(self,self.Words)
+                        print(self.Words)
+                        DigitalAssist.speakSweet(self, self.Words)
                         s3 = False
-                        #continue
+                        # continue
 
-                    elif ("chat" in query2 and "bot" in query2) or ("gpt" in query2 and "chat" in query2) or ("smart" in query2 and "assist" in query2) or ("extra" in query2 and "help" in query2):
+                    elif ("chat" in query2 and "bot" in query2) or ("gpt" in query2 and "chat" in query2) or (
+                            "smart" in query2 and "assist" in query2) or ("extra" in query2 and "help" in query2):
                         DigitalAssist.speak(self, "High Tech!")
                         prompt = DigitalAssist.ChatGPTDA(self)
                         self.Type = 'AI Conversation with Chat GPT'
@@ -3164,13 +3021,16 @@ class DigitalAssist():
                         self.Significance = '**AI content attached'
                         continue
 
-                    elif ("make" in query2 and "art" in query2) or ("make" in query2 and "picture" in query2) or ("ai" in query2 and "art" in query2) or ("art" in query2 and "mode" in query2) or ("super" in query2 and "shake" in query2 and 'art' in query2):
+                    elif ("make" in query2 and "art" in query2) or ("make" in query2 and "picture" in query2) or (
+                            "ai" in query2 and "art" in query2) or ("art" in query2 and "mode" in query2) or (
+                            "super" in query2 and "shake" in query2 and 'art' in query2):
 
                         DigitalAssist.speak(self, "High Tech and sheek!")
                         if 'super' in query2 or 'using' in query2 or 'extra' in query2:
                             if 'poem' in query2 or 'shake' in query2 or 'poet' in query2:
                                 DigitalAssist.makeQuickPoem(self)
-                                prompt = DigitalAssist.ChatGPTDA(self, MakeArt=True, Prompt=('Using the poem that follows make a prompt to create a work of art that describes the feelings or the scene that fits the poem. '+'\n'+'\n' + self.Words))
+                                prompt = DigitalAssist.ChatGPTDA(self, MakeArt=True, Prompt=(
+                                            'Using the poem that follows make a prompt to create a work of art that describes the feelings or the scene that fits the poem. ' + '\n' + '\n' + self.Words))
                                 DigitalAssist.makeArt(self, prompt)
                             else:
                                 prompt = DigitalAssist.ChatGPTDA(self, MakeArt=True)
@@ -3180,34 +3040,35 @@ class DigitalAssist():
                             self.Significance = '**AI content Please see image that goes with prompt'
                         else:
 
-                            if 'poem' in query2 or 'shake' in query2  or 'poet' in query2:
+                            if 'poem' in query2 or 'shake' in query2 or 'poet' in query2:
                                 DigitalAssist.makeQuickPoem(self)
                                 DigitalAssist.makeArt(self, self.Words)
                             else:
                                 DigitalAssist.makeArt(self)
                         continue
 
-                    elif ( "play" in query2 or "script" in query2 )and ("make" in query2 or "write" in query2 or "create" in query2 or "mode" in query2 ):
+                    elif ("play" in query2 or "script" in query2) and (
+                            "make" in query2 or "write" in query2 or "create" in query2 or "mode" in query2):
                         # Call for the save file name after listing all of the subjects to the user
                         self.Type = 'AI Script Break'
                         self.Significance = '**AI content attached'
 
-                        DigitalAssist.speak(self,'I like your style, my man')
-
+                        DigitalAssist.speak(self, 'I like your style, my man')
 
                         DigitalAssist.Make_Script(self)
-                        DigitalAssist.speakSweet(self,self.Words)
+                        DigitalAssist.speakSweet(self, self.Words)
 
                         s3 = False
-                        #continue
-                    elif ("go" in query2 or 'try' in query2 or "mode" in query2) and ("greek" in query2 or "myth" in query2):
+                        # continue
+                    elif ("go" in query2 or 'try' in query2 or "mode" in query2) and (
+                            "greek" in query2 or "myth" in query2):
                         # Call for the save file name after listing all of the subjects to the user
                         self.Words = ''
                         self.Type = 'Greek Script Break'
                         self.Significance = '**AI content attached'
                         self.FileName = 'AI Going Greek'
                         self.Subject = 'AI Going Greek'
-                        DigitalAssist.speak(self,'I like your style, my man... Dont eat too much tzatziki!')
+                        DigitalAssist.speak(self, 'I like your style, my man... Dont eat too much tzatziki!')
                         self.pb = s.PoemBot(1, 1, 1, 1, 40, 3)
                         self.pb.ReloadModel("model_Greek.h5")
                         self.pb.setupdata()
@@ -3230,14 +3091,14 @@ class DigitalAssist():
                                 self.Words += w[i]
                                 print(self.Words)
 
-                        DigitalAssist.speak(self,self.Words)
+                        DigitalAssist.speak(self, self.Words)
 
                         continue
                     elif "stop recording" in query2 or "m all set" in query2 or "no thanks" in query2 or "stop recording" in query2 or "save" in query2 or "no" in query2:
-                        #Call for the save file name after listing all of the subjects to the user
+                        # Call for the save file name after listing all of the subjects to the user
                         print(self.subject)
                         DigitalAssist.getfilename(self)
-                        DigitalAssist.SaveText(self,self.transcript, self.FileName, self.subject)
+                        DigitalAssist.SaveText(self, self.transcript, self.FileName, self.subject)
                         DigitalAssist.add2Master(self.transcript)
                         s3 = False
                         s2 = False
@@ -3246,14 +3107,14 @@ class DigitalAssist():
 
                     elif query2 == 'none':
                         zz = 1
-                        #Event().wait(1)
+                        # Event().wait(1)
 
                     else:
                         zz = 1
-                        #Event().wait(1)
+                        # Event().wait(1)
 
             elif self.query1 == 'none':
-                #Event().wait(1)
+                # Event().wait(1)
                 continue
             else:
 
@@ -3263,71 +3124,59 @@ class DigitalAssist():
                 self.visualList2 += str(self.entry) + '). ' + self.AI_Corrected_Text + ' \n'
                 self.entry += 1
 
-            #Do the dataframe stuff here
-
-
-
+            # Do the dataframe stuff here
 
     def makelist(self):
-         self.entry = 1
-         self.transcript2 = pd.DataFrame()
-         #self.transcript = pd.DataFrame()
-         DigitalAssist.createDF(self)
-         self.subject = 'To Do'
-         self.FileName = 'To Do '
-         s2 = True
-         DigitalAssist.getsubject(self)
-         DigitalAssist.speak(self,"Please prepare for recording")
-         print("Please prepare for recording...")
-         self.visualList = ''
-         self.visualList2 = ''
-         self.Type = 'To Do list'
-         self.Significance = 'High'
-         while (s2 == True):
-             self.xx = ''
-             self.query1 = ''
-             self.new_Query = ''
-             self.Words = ''
-             self.Notes = ''
-             self.Added2TextFile = ''
-             self.Completed = ''
-             print(self.visualList)
-             print(self.visualList2)
-             self.query1 = DigitalAssist.transcribe_Build_Query(self,1.3).lower()
-             self.query1 = self.query1 + '.'
+        self.entry = 1
+        self.transcript2 = pd.DataFrame()
+        # self.transcript = pd.DataFrame()
+        DigitalAssist.createDF(self)
+        self.subject = 'To Do'
+        self.FileName = 'To Do '
+        s2 = True
+        DigitalAssist.getsubject(self)
+        DigitalAssist.speak(self, "Please prepare for recording")
+        print("Please prepare for recording...")
+        self.visualList = ''
+        self.visualList2 = ''
+        self.Type = 'To Do list'
+        self.Significance = 'High'
+        while (s2 == True):
+            self.xx = ''
+            self.query1 = ''
+            self.new_Query = ''
+            self.Words = ''
+            self.Notes = ''
+            self.Added2TextFile = ''
+            self.Completed = ''
+            print(self.visualList)
+            print(self.visualList2)
+            self.query1 = DigitalAssist.transcribe_Build_Query(self, 1.3).lower()
+            self.query1 = self.query1 + '.'
 
+            if "stop recording" in self.query1 or "m all set" in self.query1 or "end list" in self.query1 or "stop listening" in self.query1 or "save this file" in self.query1 or "save this recording" in self.query1:
+                # Call for the save file name after listing all of the subjects to the user
+                DigitalAssist.SaveText(self, self.transcript, self.FileName, self.subject)
+                DigitalAssist.add2Master(self.transcript)
+                s2 = False
+                sys.exit()
+                continue
 
+            elif "change subject" in self.query1 or "update subject" in self.query1 or "switch category" in self.query1 or "change category" in self.query1:
+                # transcript2[self.subject] = [str(self.visualList)]
+                # DigitalAssist.SaveText(self.transcript2, self.FileName + 'v2' + self.subject, self.subject)
+                DigitalAssist.getsubject(self)
 
+                continue
+            elif self.query1 == 'none':
+                continue
 
-             if "stop recording" in self.query1 or "m all set" in self.query1 or "end list" in self.query1 or "stop listening" in self.query1 or "save this file" in self.query1 or "save this recording" in self.query1:
-                 # Call for the save file name after listing all of the subjects to the user
-                 DigitalAssist.SaveText(self,self.transcript,self.FileName,self.subject)
-                 DigitalAssist.add2Master(self.transcript)
-                 s2 = False
-                 sys.exit()
-                 continue
-
-             elif "change subject" in self.query1 or "update subject" in self.query1 or "switch category" in self.query1 or"change category" in self.query1:
-                 #transcript2[self.subject] = [str(self.visualList)]
-                 #DigitalAssist.SaveText(self.transcript2, self.FileName + 'v2' + self.subject, self.subject)
-                 DigitalAssist.getsubject(self)
-
-                 continue
-             elif  self.query1 == 'none' :
-                 continue
-
-             else:
-                 self.AI_Corrected_Text = DigitalAssist.cleanText(self, self.query1)
-                 DigitalAssist.adddata2DF(self)
-                 self.visualList += str(self.entry) + '). ' + self.query1 + ' \n'
-                 self.visualList2 += str(self.entry) + '). ' + self.AI_Corrected_Text + ' \n'
-                 self.entry += 1
-
-
-
-
-
-
+            else:
+                self.AI_Corrected_Text = DigitalAssist.cleanText(self, self.query1)
+                DigitalAssist.adddata2DF(self)
+                self.visualList += str(self.entry) + '). ' + self.query1 + ' \n'
+                self.visualList2 += str(self.entry) + '). ' + self.AI_Corrected_Text + ' \n'
+                self.entry += 1
 
 
 if __name__ == '__main__':
@@ -3338,22 +3187,19 @@ if __name__ == '__main__':
     x = DigitalAssist(1)
     x.Take_query()
 
+    # Testing
+    # x.Make_a_ScreenPlay_Testing()
+    # x.Make_a_ScreenPlay()
 
-
-
-    #Testing
-    #x.Make_a_ScreenPlay_Testing()
-    #x.Make_a_ScreenPlay()
-
-    #x.saveTranscript()
+    # x.saveTranscript()
     atexit.register(x.saveTranscript)
 
-   #Turn this back on after issue is understood
+# Turn this back on after issue is understood
 
-    # try:
-    #     x = DigitalAssist(1)
-    #     x.Take_query()
-    #     x.saveTranscript()
-    # except:
-    #     x.saveTranscript()
-    #     atexit.register(x.saveTranscript)
+# try:
+#     x = DigitalAssist(1)
+#     x.Take_query()
+#     x.saveTranscript()
+# except:
+#     x.saveTranscript()
+#     atexit.register(x.saveTranscript)
