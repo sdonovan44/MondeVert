@@ -1,53 +1,29 @@
-
-
-
-import glob
-import datetime
 import pandas as pd
 import wikipedia
 
 global Record
 import sys
 import ShakesBot as s
-import Common_Sayings as cs
 from threading import Event
-import User_Prefs as up
 from gingerit.gingerit import GingerIt
 import threading
 import numpy
-from docx import Document
-import re
+
 # from exceptions import PendingDeprecationWarning
-import requests
-import cloudscraper
-import tensorflow
-import selenium
 
 Record = ''
 import webbrowser
-from fpdf import FPDF
 
-import User_Prefs as up
-import os
-import platform
-import subprocess
+from MondeVert.SHAINE_MonderVert import User_Prefs as up
 
-import requests
 import random
-import string
 import openai
 import pyttsx3
 # Import the speech recognition library
 import speech_recognition as sr
-from dotenv import load_dotenv
-from DoNotCommit import API_Key
+from MondeVert.SHAINE_MonderVert.DoNotCommit import API_Key
 
 import atexit
-
-from docx import Document
-from docx.shared import Inches
-
-import shutil
 
 URL = "..."  # noqa
 API_KEY = "..."

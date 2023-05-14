@@ -1,5 +1,4 @@
 # Import the OpenAI library
-import User_Prefs as up
 import os
 import platform
 import subprocess
@@ -12,7 +11,7 @@ import pyttsx3
 # Import the speech recognition library
 import speech_recognition as sr
 from dotenv import load_dotenv
-from DoNotCommit import API_Key
+from MondeVert.SHAINE_MonderVert.DoNotCommit import API_Key
 # from git import Repo
 #
 # Repo.clone_from('https://gitlab.com/sfoerster/openai', master)

@@ -1,7 +1,5 @@
 import segno
 
-import User_Prefs as up
-
 from segno import helpers
 
 

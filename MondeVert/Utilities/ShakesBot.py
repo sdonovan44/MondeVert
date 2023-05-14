@@ -2,24 +2,14 @@
 
 import pandas as pd
 import datetime
-from numpy.fft import *
-import Common_Sayings
-import User_Prefs
-import DigitalAssistant
-import os
-import sys
 # sys.path.append(r'C:\Users\sdono\OneDrive\Documents\PixRay')
 # import module_of_interest
-from scipy.fftpack import fft
 # import xlsxwriter
 #import rhyme
-import torch.quantization
 import random
 import numpy as np
 import pixray
-import threading
-import User_Prefs as up
-from keras_preprocessing.sequence import pad_sequences
+from MondeVert.SHAINE_MonderVert import User_Prefs as up
 from secrets import randbelow
 
 
@@ -60,11 +50,8 @@ class PoemBot:
 
     def setupdata(self):
 
-        import random
         import numpy as np
-        import pandas as pd
         import tensorflow as tf
-        import datetime
         filepath = tf.keras.utils.get_file('shakespeare.txt',
                                            'https://storage.googleapis.com/download.tensorflow.org/data/shakespeare.txt')
         self.text = open(filepath, 'rb').read().decode(encoding='utf-8')
@@ -92,10 +79,6 @@ class PoemBot:
             y[i, self.char_to_index[self.next_char[i]]] = 1
             # PoemBot.model_Shake()
 
-        import random
-        import numpy as np
-        import tensorflow as tf
-
     def model_Shake(self):
         from tensorflow.keras.models import Sequential
         from tensorflow.keras.optimizers import RMSprop
@@ -114,22 +97,12 @@ class PoemBot:
 
     def learnIMDBwords(self, num_words=10000, sequence_length=300, batch_size=128):
         # New Added 12/16
-        import numpy as np
-        import sklearn
-        from sklearn.model_selection import train_test_split
-        from sklearn.metrics import classification_report, roc_auc_score, confusion_matrix, accuracy_score, f1_score, \
-            roc_curve
+        from sklearn.metrics import classification_report, roc_auc_score, accuracy_score, f1_score
         from sklearn.preprocessing import LabelEncoder
         from keras_preprocessing.sequence import pad_sequences
         from keras.models import Sequential
         from keras.callbacks import ReduceLROnPlateau, EarlyStopping
-        from keras.layers import Activation, Dense, Dropout, Embedding, LSTM
-        import re
-        from IPython.display import display
-        import os
-        import string
-        import time
-        import random
+        from keras.layers import Dense, Embedding, LSTM
         import matplotlib.pyplot as plt
         from tensorflow.keras.datasets import imdb
         self.num_words = num_words
@@ -256,17 +229,12 @@ class PoemBot:
 
 
     def GreekWords(self):
-        from numpy import array
         from pickle import dump
-        from keras.preprocessing.text import Tokenizer
-        from keras.utils import to_categorical
         from keras.models import Sequential
         from keras.layers import Dense
         from keras.layers import LSTM
         from keras.layers import Embedding
-        import tensorflow
         from keras.preprocessing.text import Tokenizer
-        import keras
         from keras.utils import np_utils as kn
         # load document
         in_filename = 'republic_clean.txt'
@@ -398,9 +366,6 @@ class PoemBot:
         return generated
 
     def SaveModel4Later(self, model_Name):
-        from numpy import loadtxt
-        from tensorflow.keras.models import Sequential
-        from tensorflow.keras.layers import Dense
         self.model.save(model_Name)
         print("Saved model to disk")
 
@@ -415,8 +380,6 @@ class PoemBot:
     def ReloadModel(self,model_Name):
         from tensorflow.keras.models import load_model
         import tensorflow
-        import User_Prefs as up
-        from numpy import loadtxt
         # load and evaluate a saved model
         # load model
         self.model = load_model(model_Name)
