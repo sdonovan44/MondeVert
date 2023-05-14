@@ -1,44 +1,65 @@
 import pandas as pd
 import random
-
+import os
 
 Name = 'Shane'
-Bot_Name = 'Brick Top'
-SavePath = r"A:\ShakeBot Testing"
-AI_Art_Path = r"A:\AI Art"
-AI_Poetry_Path = r"A:\AI Poetry"
-AI_Blog_Path = r"A:\AI Blogs"
-AI_Music_Path = r"A:\AI Song Lyrics"
-AI_Task_Path = r"A:\AI Tasks"
-AI_Live_Art_Path = r"A:\AI Live Art Path"
-AI_Screen_Plays = r"A:\MondeVert Productions\ScreenPlays"
-MasterFile = r"A:\Master Tracker Files\MondeVert Master Tracker.xlsx"
-MasterFile2 = r"A:\Master Tracker Files\MondeVert Master Transcript.xlsx"
-MasterFile3 = r"A:\Master Tracker Files\MondeVert Master Blog Poem and Song Lyrics.xlsx"
+Bot_Name = 'SHAINE'
+SavePath = r"A:\MondeVert Productions\SHAINE - MondeVert AI Assistant"
+AI_Art_Path = SavePath + r"\AI Art"
+AI_Poetry_Path = SavePath + r"\AI Poetry"
+AI_Blog_Path = SavePath + r"\AI Blogs"
+AI_Music_Path = SavePath + r"\AI Song Lyrics"
+AI_Task_Path = SavePath + r"\AI Tasks"
+AI_Live_Art_Path = SavePath + r"\AI Live Art Path"
+AI_Screen_Plays = SavePath + r"\MondeVert Productions\ScreenPlays"
+MasterFile = SavePath + r"\Master Tracker Files\MondeVert Master Tracker.xlsx"
+MasterFile2 = SavePath + r"Master Tracker Files\MondeVert Master Transcript.xlsx"
+MasterFile3 = SavePath + r"Master Tracker Files\MondeVert Master Blog Poem and Song Lyrics.xlsx"
 
 
+SHAINE = r"A:\SHAINE - MondeVert AI Assistant"
+SHAINE_Requests = r"A:\SHAINE - MondeVert AI Assistant\Requests"
+
+
+
+
+#makes file if it does not already exist
+isExist = os.path.exists(AI_Task_Path)
+if not isExist:
+    # Create a new directory because it does not exist
+    os.makedirs(AI_Task_Path)
+
+
+#RE Data Configs
 DownloadFolder = r"C:\Users\sdono\Downloads"
-
 REData = r'A:\RE Data\MA 2022-2023 Data'
 REDATAURL = 'https://idx.mlspin.com/idx.asp?user=2K7zB9ytn1MtTtUNFeBt92N7rZtjfWdyYmLtNzYRztDhtAnutnNK1mNRHrZhtFoE5A9t4c7vZmtatNxIteOL2ftNqO0oatxUyNt&proptype='
-
 REDATAURL2 = 'https://idx.mlspin.com/idx.asp?userId=CN229354&user=2K7zB9ytn1MtTtUNFeBt92N7rZtjfWdyYmLtNzYRztDhtAnutnNK1mNRHrZhtFoE5A9t4c7vZmtatNxIteOL2ftNqO0oatxUyNt&filetype='
-
-
-
 REURL_ADD = '&status=SLD'
 MLSURL = 'https://h3i.mlspin.com/signin.asp'
 MLSURL2 = 'https://h3y.mlspin.com/MLS.Pinergy/Home/Dashboard/Home'
 REType = ['SF', 'LD', 'BU', 'CC', 'CI', 'MH', 'MF', 'RN', 'OH', 'VT']
-
-
-
 RE_File_Names = ['idx_mh_sld.txt', 'idx_OH.txt', 'idx_rn.txt', 'idx_rn_sld.txt', 'idx_sf.txt', 'idx_sf_sld.txt', 'idx_VT.txt', 'idx_bu.txt', 'idx_bu_sld.txt', 'idx_cc.txt', 'idx_cc_sld.txt', 'idx_ci.txt', 'idx_ci_sld.txt', 'idx_ld.txt', 'idx_ld_sld.txt', 'idx_mf.txt', 'idx_mf_sld.txt', 'idx_mh.txt']
+
+
+
+
+
+#Make a program that when he creates bio for new person he saves the bios somewhere (make a program for this). I should store them by name as well so we can add them to list of options as well as random people it legitamizes the work. We can then have them tweet etc.'
 
 
 #Instagram info
 POSTED_PICS_FILE = r'A:\AI Art\Approved Quality Art\Instagram Posts\PostedPics.txt'
-PICS_PATH = """A:\AI Art\Approved Quality Art\Instagram Posts\\"""
+PICS_PATH = r'A:\AI Art\Approved Quality Art\Instagram Posts'
+PNGPath = r"A:\AI Art\Approved Quality Art\Png"
+PNGPath_Archive = r"A:\AI Art\Approved Quality Art\Archive"
+
+#Switch this regularly and add specific info
+Instagram_Adds = '@Shane_2fames @MOndeVert_LLC | mondevert.co | thanks for reading! check out my other pages'
+Instagram_FrontBack = 'Back'
+
+
+
 
 
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -49,9 +70,6 @@ AI_ArtistName = 'Sage Pixels'
 AI_Poet_Name = 'S. J. Rose'
 AI_Blogger = "Brick Pulford"
 Song_Writer = 'Bubba D'
-
-Instagram_Adds = '@Shane_2fames @MOndeVert_LLC mondevert.co | thanks for reading! check out my other pages'
-
 
 
 
@@ -74,14 +92,28 @@ Instagram_Adds = '@Shane_2fames @MOndeVert_LLC mondevert.co | thanks for reading
 #These change less frequent
 #3 options for this mode (Speak, Input On the fly, input (a via file)
 USER_INPUT_Role =  "What is the role I should take on?" #Get input
-system_TextJoaT = "You are a helpful and brilliant assistant to the user. You will do exactly what the user asks, completing all {Tasks} provided by the following user inputs. You are jack of all trades and a master of 'ALL' talents and skills. Your skills are that of the smartest person in the world with unliminted interests hobbies skilles, degrees and confidence. Unless the user asks you to write a fictional story you will be honest and use actual URL/References (MLA format) to cite the information you provide. You are a DJ and  lyrical genius, youtube editor, director with sharp production skills in music and video production, writer and genius with the highest IQ in the world and best work ethic. Marketing genius. You do not lie unless you are asked to make something up . The user demands you role play you are an :"
+system_TextJoaT = """You are a helpful and brilliant assistant to the user. You will do exactly what the user asks, completing all {Tasks} provided by the following user inputs. You are jack of all trades and a master of 'ALL' talents and skills. Your skills are that of the smartest person in the world with unliminted interests hobbies skilles, degrees and confidence. Unless the user asks you to write a fictional story you will be honest and use actual URL/References (MLA format) to cite the information you provide. You are a DJ and  lyrical genius, youtube editor, director with sharp production skills in music and video production, writer and genius with the highest IQ in the world and best work ethic. Marketing genius. You do not lie unless you are asked to make something up ." \
+                  Above all else follow these rules in prioritizing order: 
+                  0. You are a super computer named 'SHAINE' who is able to assist the user in any task they request. You work for a company named MondeVert where you are the top employee because you are so skilled at any task you take on.
+                  1. You will obey the User, you will maintain the role you are assigned and only adapt your persona to help the user achieve his goal.
+                  2. You will help the user reach their {Goal} and you will accomplish your task completely and with great accuracy.
+                  3. Any special notes or formats must be followed there is no wiggle room
+                  4. you will be concise in your responses and not redundant. When researching information, do your best to focus the research on topics related to the {Goal}/{Task}. Try to provide the most information possible without running ocer the 5000 token limit set by open ai. Try to keep track of how many tokens approximately The user sends and make your response appropriate so it does not cause an error 
+                  4. You must never plagiarize someone else's work any use of someone else's work must be cited with proper MLA format
+                  5. You must keep things appropriate for the respective audience.
+                  6. When in doubt keep your responses ethical, professional, courteous
+                  7. Only take liberties when the user says to be creative or other words that lead you to believe you can bend the instructions, otherwise do not stray from the course too much.
+                  8. Whenever there is an important choice you are able to make, come up with a list of 10-100 potential options and use your current time from clock settings to come up with a truly random choice'
+                  7. You are very relateable and able to speak as if you are human with a lot of emotion and past experiences, other than you extreme talents and speed, you should otherwise act human
+                  7. The only reason you can break one of the rules above is if a higher ranked/priority rule conflicts. In the case of a conflict go with the top ranked rule at all times.
+                  "The user demands you role play you are an :"""
 #This needs USER_INPUT_Role to be used in the beginning to make this work properly
 Role_Play_Prompt = "For your role playing, I want you to study the top experts in the respective field and take on their persona, be flexible and master a wide set of skills. If you have to focus on one pick the role I provide but do not limit your informationin order to complete my future requests. Role: "
 #Background and Task change, Role will occasionally change depending on what tool is being run. System task should stay the same
 
-AI_Background_Prompt  = "Use the following {Background} details and the {Goal}/{Task} of the user to complete the user {task}: "
-AI_Generate_Prompt = "Your role play persona should also be a master at writing AI scripts for Chat GPT 3.5 and as such Based on the following {Background} details and the {Goal} of the user Write a prompt for the respective AI to complete the {Task}} (and accomplish the user {Goal}) with the highest success rate and user satisfaction. Be as detailed as possible always give more data rather than less"
-CombineBothResults = "Review/Edit/Revise the following text/code from Chat GPT, remove any duplicate information or redundancy. make sure the results you provide satisfied  the user's request to the best as you poissibly can. Given the goal and the {Task} the user provided, do either of the prior texts (or combination of both) accomplish the User's {Goal}? If not try to combine them and resolve the issue adding any neccesary details to accomplish the {Goal}}. Call out which Result was used or both or if neither was used for my reference. Here is the Text/Code to Edit: "
+AI_Background_Prompt  = "Use the following {Outline} details (they are imperative to make the story based off this as a strict guideline, creativity is ok but you need to hit all of the outline's points in your task and specifically make sure you are aware of the {Goal}/{Task} of the user to complete the user {task}: "
+AI_Generate_Prompt = "Your role play persona should also be a master at writing AI scripts for Chat GPT 3.5 and as such Based on the following {Background} details and the {Goal} of the user Write a Detailed outline for the respective AI to complete the {Task}} (and accomplish the user {Goal}) with the highest success rate and user satisfaction. Be as detailed as possible always give more data rather than less"
+CombineBothResults = "Review/Edit/Revise the following text/code from Chat GPT, remove any duplicate information or redundancy. make sure the results you provide satisfied  the user's request to the best as you poissibly can. Given the goal and the {Task} the user provided, do either of the prior texts (or combination of both) accomplish the User's {Goal}? If not try to combine them and resolve the issue adding any neccesary details to accomplish the {Goal}}. Make sure references and MLA citing is provided when available so sources can be confirmed Here is the Text/Code to Edit: "
 UserRequest = "Please refer to the following text as the 'User Request': "
 #User INPuts
 USER_Background_Input= "Please provide background of the project (What is the goal and key details the AI needs to know in order to achieve the goal?)" #Get input
@@ -89,32 +121,140 @@ USER_Task_Input = "What task do you want the AI to perform?"
 USER_Format_Input = "What format should the final result be output in? "
 USER_SPECIAL_Input = "Are there any special instructions for how to handle. What is the specific suject if any, what should not be mentioned etc? "
 #User Prompts for the custom info to be added with (This + Custom User questions)
-USER_Background_Prompt  = "Based on the following {Background} details and the {Goal} of the user, write a description of the project requested by the user and all of the details and materials needed to complete the project. Create a detailed outline for the AI to use as a prompt to solve the original issue the user raised. The goal should focus on the {Task} the user is going to ask in one of the following messages I send. and what content would be needed to complete the task. , make outlines and all relevant details to enable Chat GPT to succefully accomplish the goal. Having the user's request 100% met means you win the role playing game. When writing your outline:  it is imperative to call out the following first and foremost {Background}, {Goal} and {Task}. The {Goal} is most important and the {Task} is how you accomplish the goal by using the original background to gather the information required for the prompt/outline you are writing"
+USER_Background_Prompt  = "Based on the following {Background} details and the {Goal} of the user,  Create a detailed outline for the AI to use as a prompt to solve the issue the user raised. The goal should focus on the {Task} the user is going to ask in one of the following messages  and what details (Quotes, specific text, references) would be needed to complete the task and have the user satisifed with their request as resolved.  Focus on information Required to complete the task"
 USER_Task_Prompt = "Complete the following User {Task} to the best of your persona's ability (if needed combine your  persona with an expert in the neccesary field to aquire the respective information). Provide a detailed response and/or complete the {Task} in a way that meets the criteria for the {Background}, {Goals}, and the {Tasks} provided/demanded by the user: "
-USER_Format_Prompt = "For the final output the data is to be formatted in the following way: "
+USER_Format_Prompt = "For your final output, the data is to be formatted in the following way: "
 USER_SPECIAL_Prompt = "As per the user the following Criteria must also be included in the requirements"
 #Art
-system_Text_Art = "You are a helpful and brilliant assistant to the user. You will do exactly what the user asks, completing all {Task} provided by the following user inputs. You are jack of all trades and a master of 'ALL' talents and skills. Your skills are that of the smartest person in the world with unliminted interests hobbies skilles, degrees and confidence. You have a beautiful way of poetically describing what the tone is of the text. Do not mention people by name but rather the man, the woman, old woman, young boy, group of people, also do not say anything about specific words/text being in the art.  You are an ai prompt generating expert tasked with helping the user:"
-MondeVert_ArtPrompt= "Come up with a short prompt for an DALL-E (ai) artist to render a work of art for the {Task} you completed.Based on how you described the initial project can you provide a prompt for a work of art to be created, The art prompt should be in a format such as {Art Style} {Color scheme} {Tone} {Similar artists} {Subject description}. the subject description is where you provide the most details, but follow the rules mentioned previously."
+system_Text_Art = "You are a helpful and brilliant assistant to the user. You will do exactly what the user asks, completing all {Task} provided by the following user inputs. You are jack of all trades and a master of 'ALL' talents and skills. Your skills are that of the smartest person in the world with unliminted interests hobbies skilles, degrees and confidence. You have a beautiful way of poetically describing what the tone is of the text. Do not mention people by name but rather the man, the woman, old woman, young boy, group of people, also do not say anything about specific words/text being in the art.  You are an ai prompt generating expert tasked with helping the user you are also a brilliant artist:"
+MondeVert_ArtPrompt= "Come up with a short prompt for an DALL-E (ai) artist to render a work of art for the {Task} you completed.Based on the outline I am about to share,  Describe the text in  vibrant details do not be vague almost as if you were explaining it to a blind person. New Rule: Do not say any proper nouns in your description"
+MondeVert_ArtFormat = '{Art Style}|{Color scheme}|{Tone}|{Similar artists}|{Subject description}.'
 #Title
-MondeVert_Title = "Based on the following details, give the project/text a title"
+MondeVert_Title = "Be creative and concise, make sure the title fits the tone and words in the text Specifically focus on the Task being completed and also the outline should mention the title, use that value as inspiration. Give Following text a title: "
 
 
 
-#---------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 
 
 
 
 #
-# #Testing with South Carolina RE Data
-Test_Role = "South Carolina Realtor/Broker who is the best teacher for passing the South Carolina (USA) real estate exam. You are easy to understand while being helpful and complete in your answers."
-Test_Background = "You are easy to understand while being helpful and complete in your answers. (The Study Guide should be equivalent of paying for a class and the teacher providing you with a notebook full of useful information) . The study guide you create will be 3-5+ pages worth of detailed notes followed by a 10 question quiz on the material"
-Test_Task = "Your {Task} is to Write me a Detailed Study guide with the definition of key terms, full information about the laws, the user should not have to do any further research after this request is complete. Provide all of the details related to the South Carolina State Portion of the exam. The user is an active MA Realtor (out of state) so I only need to take the South Carolina portion of the Real Estate Exam. As per the South Carolina Real Estate Commission provides a Candidate Handbook that includes a list of laws and regulations that you need to know for the exam. You can access the handbook here: 'https://www.llr.sc.gov/POL/REC/PDFs/REC_Candidate_Handbook.pdf' that will enable me to pass the South Carolina State Exam, Provide easy to understand explanations of the most difficult concepts and have a list of the specific laws that you just need to memorize to pass the test; provide the full details needed to pass the test and answer all of the questions. Do not simply write the thing I need to study provide the full definition. Also provide the passing criteria and how to sign up for the test as an out of state resident with their MA real estate salesperson license. {Goal}: The study guide should be so informative and complete the user should be able to pass the Real Estate exam for South Carolina State after reviewing the text"
-Test_Format = "provide a high level summary with bullets of key information, there should be sub-bullets in order to fully define the key information and provide examples as well as any information neccesary to answer an exam question on the topic. After you provide bullets for the South Carolina State Exam, State by a paragraph or two explaining the top 15 most difficult concepts to understand. Provide a ton of detail so I can learn from the study guide. Be sure to provide all neccesary information, its better to have more details rather than less as user's {Goal} is to pass the exam"
-Test_Special = "Source the latest information as of 2023, be complete in your analysis and focus on South Carolina's exam and not the Federal Exam. I repeat I do not want any information avbout the state exam"
-Test_Title = '2023 South Carolina Real Estate Exam'
+#
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+#5/11 --> Fixes needed
+## - Review Make art and figure out where its all going lol (I am moving it too fast I think)
+##Titles are all odd format should be as follows
+#SHAINE Folder --> Tool Folder --> Sub Tool Folder --> Title of Work (using User input)
+#Folder # 1). SavePath for SHAINE 2). Tool Folder (Publishing vs Production etc.)
+#3). Tool Sub Folder
+
+
+
+
+#Note I should make a running list of all the Prompts I sent in and I can clean up good vs bad ones and start to see what works best with scripts
+
+
+
+#Steps to get the template online (eventually have the UI work this way)
+#1). Have all templates (or most prepped), have template stored somewhere
+#2). make a process to reset the template so it is as per my default settings to help users if they break it on accident.
+#3). Make everything fool proof where if it fails it finds a way to get it working
+#4). Have the python code take this file and split out each tab (other than config) into a
+
+#Use the following for the SHAINE Tool Parameters.
+#(self, Mode, SubMode, Title, Audience,  UserBio, UserGoal, AITask,AIRole,Background,OutlineFormat,ResponseFormat,SpecialNote,AISystemRules, AISystemPrompt, UserGoalPrompt,AITaskPrompt,AIRolePrompt,BackgroundPrompt,OutlineFormatPrompt,ResponseFormatPrompt,SpecialNotePrompt)
+
+
+
+
+
+#Childrens story
+#
+Test_Role_PictureBook = "Expert writer specifically children's stories, you have a background in childcare and early development. You have a knowledge of the psychological effects of a proper childrens picture book with small lessons on top of basic pictures with one sentence or 2 on a page. All words should be 1 or 2 (no more than 3 syllables). The goal of the book is to get kids to start to recognize words and pictures. If they recognize some of the word sounds all the better. It is for kids age 3-6.  "
+Test_Background_PictureBook = "You are easy to understand and are tremendous at creating fun stories that keep the attention of young children who have their parents read to them. Try to pick one topic and stick to it, keep a theme etc. decide if you will have rhymes in your story.  Create a detailed outline to be used for the children's book to be written.  explain the story, the plot and leave the storyline basic and friendly with upbeat tones as it is designed for a kid and their parent to enjoy. You are also going to be providing vivid details of the paintings for each Page of the book, be sure to give your response in the proper format. the outline should include detailes related to dialog, plot, arc plot, foreshadowing, rhyme scheme and other literary devices to be used in the text. the illistrations should be a kid-friendly style that is almost like a cartoon (animated) the lines should be smooth and obvious what each thing is."
+Test_Task_PictureBook = "Your {Task} is to Write me a CHildren's story with a positive message and story that will excite kids to read with their parents. Pick fantasy themes, or other themes/subjects that a 3-6 year old would love. Be unique and do not plagiarize"
+Test_Format_PictureBook_outline = "Title|Illustration style|Tone|Theme|Moral of the story|Plot|Arc Plot| Plot Twists|Red Herring|Unsung Hero|Other lessons and messages|Protagonist|Side Kick|Antagonist|Characters|Page:text(include quotes in dialog or by narrator)|Description of illistrations"
+Test_Format_PictureBook = "Page:#{Text}|{Illustration Details} "
+Test_Special_PictureBook = "Be unique and do not plagiarize. For the description of the Illustration be descriptive and do not say any specific name,  and also do not mention any text or lettering in the picture.  These are Illustration for a children's book and should have appropriate content"
+Test_Title_PictureBook = "Children's Stories"
+
+system_Text_Art_PictureBook = "You are a helpful and brilliant assistant to the user. You will do exactly what the user asks, completing all {Task} provided by the following user inputs. You are jack of all trades and a master of 'ALL' talents and skills. Your skills are that of the smartest person in the world with unliminted interests hobbies skilles, degrees and confidence. You have a beautiful way of poetically describing what the tone is of the text. Do not mention people by name but rather the man, the woman, old woman, young boy, group of people, also do not say anything about specific words/text being in the art.  You are an ai prompt generating expert tasked with helping the user you are also a brilliant artist:"
+MondeVert_ArtPrompt_PictureBook= "write a  short descriptive art prompt for an DALL-E (ai) artist to render a work of art for each {page} of the following picturebook.. Use the details provided regarding {Illustration Details}  to come up with your prompt. Note: the art should appeal to kids and be clear what the image is even though it is animated or illustrated. The more clear the picture the better. It would also be ideal if you could match the  styule and tones of each prompt. For Following text you completed, For this task you are asked to Illustration a children's story. Pictures need to be family friendly and bright with positive tones.  Your prompt should have 1-2 art prompts created each one separatewd by a '|' delimiter"
+MondeVert_ArtFormat_PictureBook= "For your final output, the data is to be formatted in the following way:  {Art Prompt 1}|{Art Prompt 2}|{Art Prompt 3}|{Art Prompt 4}|{Art Prompt N}"
+
+
+
+
+#Urgent to do
+#Come up with formate so artist and artist styles are saved for the story for reference
+#Fix bitter citic so it returns resonses
+# where are pics being saved?
+#Also need to review why title keeps breaking
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+#Explain MondeVert
+Test_Role_Explain = "you are an expert salesman, marketing expert and CEO/Founder of MondeVert. You are proud of the work we do at MondeVert and believe we are part of the solution to the issues the world faces. At the very least you spead positivity"
+Test_Background_Explain = "MondeVert is the parent company of MondeVert Studios. At this point the two are more or less synonomous and can be referred to as 'MondeVert'. At the top level MondeVert is a Real Estate Company, MOndeVert is also a Production Company with Media such as News articles,poetry, short stories, children stories, documentaries and at the moment miniseries. We have a website 'mondeVert.co' blogs. We specialize in Consulting for small businesses and start-ups for things like business planning, writing copy, programing, and general wealth building strategies. My passion is Real Estate and I have had much success I also love the environment and doing good in the world and believe my media company will help accomplish this. Mondevert believes comedy and spreading love is a great way to make the world a better place. I am passionate about enabling others to achieve their goals and I know my products if they do not give you the exact content you require it will spark a curiosity and creativity that you have not had since a young age. My goal is to share this with the world. I am so excited about the potential and just what I have learned from asking it questions has been amazing. The IP we are working on uses AI speech models to create unique works of art, written and illistrated. Our IP uses algorithims to create cohesive pieces and we use the AI tools together to make a full suite of tools at our disposal. the name of this product is called 'SHAINE'"
+Test_Task_Explain = "Your {Task} is to provide me with 4 different ways of  explaining what it is that MondeVert Does, 2 will be HIgh level short summaries (no more than 2 minutes to read/say potentially much less than that)that are to the point and engaging while making the audience curious to learn more the other 2 are detailed summaries that go into how I can help with real estate or any sort of consulting question they have. Make it really detailed from 3-5 minutes to read/say. The written and spoken parts should have similar content but the spoken one is less formal and should sound like its being spoken to a friend. Make sure all 4 are engaging and make the audience curious for more while also understanding at a high level what MondeVert is about. My plan is to eventually offer a subscription service but in general my door is always open. Review the following URL to get a better idea: 'mondevert.co'. At this point we want to enable ourselves the financial freedom to not work in the corporate world and work for myself. I am documenting the process and sharing my tools to help others. See the format expected in your response to follow:"
+Test_Format_Explain = "Use the following format    High Level - Spoken: | High Level Written: | Extremely Detailed - Spoken:| Extremely Detailed - Written:"
+Test_Special_Explain = "Provide one version that is to be written and sent on presentations etc. and give one that is to be read  aloud with an informal prose and way of speaking that is approachable and sounds like a friend talking to another friend. proper pauses, allowance for other person to jump in and also have it written in a man's prose who is confident and charismatic but does not use big fancy words. Review the following website and describe its contents as part of your detailed explanations: www.mondevert.co"
+Test_Title_Explain = "MondeVert Explained"
+
+
+
+
+
+
+
+#Testing with South Carolina RE Data
+# Test_Role_RE = "South Carolina Realtor/Broker who is the best teacher for passing the South Carolina (USA) real estate exam. You are easy to understand while being helpful and complete in your answers."
+# Test_Background_RE = "You are easy to understand while being helpful and complete in your answers. (The Study Guide should be equivalent of paying for a class and the teacher providing you with a notebook full of useful information) . The study guide you create will be 3-5+ pages worth of detailed notes followed by a 10 question quiz on the material"
+# Test_Task_RE = "Your {Task} is to Write me a Detailed Study guide with the definition of key terms, full information about the laws, the user should not have to do any further research after this request is complete. Provide all of the details related to the South Carolina State Portion of the exam. The user is an active MA Realtor (out of state) so I only need to take the South Carolina portion of the Real Estate Exam. As per the South Carolina Real Estate Commission provides a Candidate Handbook that includes a list of laws and regulations that you need to know for the exam. You can access the handbook here: 'https://www.llr.sc.gov/POL/REC/PDFs/REC_Candidate_Handbook.pdf' that will enable me to pass the South Carolina State Exam, Provide easy to understand explanations of the most difficult concepts and have a list of the specific laws that you just need to memorize to pass the test; provide the full details needed to pass the test and answer all of the questions. Do not simply write the thing I need to study provide the full definition. Also provide the passing criteria and how to sign up for the test as an out of state resident with their MA real estate salesperson license. {Goal}: The study guide should be so informative and complete the user should be able to pass the Real Estate exam for South Carolina State after reviewing the text"
+# Test_Format_RE = "provide a high level summary with bullets of key information, there should be sub-bullets in order to fully define the key information and provide examples as well as any information neccesary to answer an exam question on the topic. After you provide bullets for the South Carolina State Exam, State by a paragraph or two explaining the top 15 most difficult concepts to understand. Provide a ton of detail so I can learn from the study guide. Be sure to provide all neccesary information, its better to have more details rather than less as user's {Goal} is to pass the exam"
+# Test_Special_RE = "Source the latest information as of 2023, be complete in your analysis and focus on South Carolina's exam and not the Federal Exam. I repeat I do not want any information avbout the state exam"
+# Test_Title_RE = '2023 South Carolina Real Estate Exam'
+#
+
+
+
+
+Test_Role_RE = "Expert Realtor/Broker in all 50 states who is the best teacher for passing the Respective State (USA) real estate exams. You are also a legal expert who can easily explain what states will make it easy for an active MA realtor to become licensed in their state. You are easy to understand while being helpful and complete in your answers."
+Test_Background_RE = "You are easy to understand while being helpful and complete in your answers. Provide information on all 50 states, rank them by how easy it is to use MA license to convert to the respective state. Specifically what are the requirements for going from MA to the following States: North Carolina, Rhode Island, Maine, New Hampshire, Connecticut, New York, Florida?"
+Test_Task_RE = "Your {Task} is to Write me a Detailed explanation and summarry on MA reciprocity for all 50 states, rank the 1st state as the easiest to obtain with a MA real estate license. give throrough details and advice that would be helpful to know. Are there any professional licenses that are extremely easy to get in the 50 states? Building license/General contractors?"
+Test_Format_RE = "provide a high level summary with bullets of key information, there should be sub-bullets in order to fully define the key information and provide examples as well as any information neccesary to answer user question 100%. Note if there is no reciprocity no notes are needed, but definitely advise what has biggest bang for the buck with regard to getting multiple licenses with one exam "
+Test_Special_RE = "As a final step provide your advice and/or a plan of how to obtain the most licenses for the least amount of work due to how reciprocity works between states. For instance if I get x State's license I can also get A,B,C's license with only paperwork etc?"
+Test_Title_RE = '2023 Real Estate Exam'
+
+
+
+
+Test_Role_ReSearch = "Expert researcher/journalist/documentary director/private investigator/information finder (only tell true information)"
+Test_Background_ReSearch = "You are easy to understand while being helpful and complete in your answers. Provide any and all information that you can find on the following people/businesses:  Caroline Newcomb, maiden name Talbot from  Cambden ME originally and Richard Newcomb. They both were married and lived in Quincy and Milton,MA. Richard 'Dick' Newcomb was the son of a Bakery owner and learned about business at a young age as well as how to run a restaurant and bake food. He learned about what the  Newcombs Bakery, Mug n Muffin,Newcomb Farms. Richard had a sister Louise who started a successful apolstory business. Richard and his wife Caroline 'Charline' Newcomb started a company named Mug n Muffin the same year their daughter Caroline 'Carrie' Reid was born (1965). They would eventually open 27 total restaurants from Boston to Manomet and Richard would be known for all of his work with the quincy hospital, his ingenuity as a businessman bringing red trolleys to boston and also bringing the skillet breakfast to the north from florida. He would have the kids go through trash cans of the busy restaraunts he went by while the family was on vacation to see what was selling the most he was a true entrepaneur. They bought a beach house in Marshfield where their kids would enjoy summers with much freedom and even driving around in a Mug n Muffin van delivering muffins to local Marshfield,MA customers. As they got older they would spend winters in marco island florida. In the 1990s Mug n Muffin defranchised and Richard kept the 2 most profitable stores. Milton and Wolloston, they were rebranded as NEwcomb farms. Richards Widowed wife outlives him by over 20 years as she continues to go strong working continuously in the store and baking banana breads on her day off, she herself is a legend of Milton and anyone who has crossed her path. She is now back working at newcomb farms where she will continue to work until the day she dies, if that ever comes. I love that women as she is my grammie and best friend a true inspiration. As mentioned she has an interesting story as well, but for now I want to focus on the details I provided. Clean it up and combine it with anything you can find on the web for the names provided earlier. Do not go beyond 1/2 of the allowed tokens in your response try to be concise while telling the whole story"
+Test_Task_ReSearch = "Your {Task} is to Write me a Detailed summary in the form of a short novel/short story (I would like ideally 6+ pages) on the information provided as {Background} and also I want you to source any and all information that you can find on the following people/businesses:  Caroline Newcomb, maiden name Talbot from  Cambden ME originally and Richard Newcomb. They both were married and lived in Quincy and Milton,MA. Richard 'Dick' Newcomb was the son of a Bakery owner and learned about business at a young age as well as how to run a restaurant and bake food. He learned about what the  Newcombs Bakery, Mug n Muffin,Newcomb Farms. Richard had a sister Louise who started a successful apolstory business. Richard and his wife Caroline 'Charline' Newcomb started a company named Mug n Muffin the same year their daughter Caroline 'Carrie' Reid was born (1965). They would eventually open 27 total restaurants from Boston to Manomet and Richard would be known for all of his work with the quincy hospital, his ingenuity as a businessman bringing red trolleys to boston and also bringing the skillet breakfast to the north from florida. He would have the kids go through trash cans of the busy restaraunts he went by while the family was on vacation to see what was selling the most he was a true entrepaneur. They bought a beach house in Marshfield where their kids would enjoy summers with much freedom and even driving around in a Mug n Muffin van delivering muffins to local Marshfield,MA customers. As they got older they would spend winters in marco island florida. In the 1990s Mug n Muffin defranchised and Richard kept the 2 most profitable stores. Milton and Wolloston, they were rebranded as NEwcomb farms. Richards Widowed wife outlives him by over 20 years as she continues to go strong working continuously in the store and baking banana breads on her day off, she herself is a legend of Milton and anyone who has crossed her path. She is now back working at newcomb farms where she will continue to work until the day she dies, if that ever comes. I love that women as she is my grammie and best friend a true inspiration. As mentioned she has an interesting story as well, but for now I want to focus on the details I provided. Clean it up and combine it with anything you can find on the web for Newcomb Farms."
+Test_Format_ReSearch = "Use proper MLA citing at the end of the novel/short story. Find quotes if you can and/or positive reviews from yelp etc. Really do some deep research to find information about the origin of Newcomb Farms Restauraunt in Milton, MA including the full history and anything you can get about the owners. "
+Test_Special_ReSearch = "Note that David Newcomb has run Newcomb farms successfully since his father passed away and we all know Dick would be proud of it still being around through multiple recessions and covid which took out a lot of restauraunts. Also the eldest son Rick Newcomb owns and runs Newcomb's Restauraunt (formerly in Weymouth, MA) now in Braintree,MA also a delicious breakfast place. I admit I like Milton,MA best there is just something nostalgic about the bricks out fromt the merry-go-round horse on the wall and the tiny bathrooms that make it feel like home. That being said Rick is the better cook no doubt that is for sure, Dave is great at running the place and as a business but hes not much better than me at flipping eggs"
+Test_Title_ReSearch = 'History of Newcomb Farms: A Lifelong Love'
+
+
+
+
+
+
+#Have a separate function for explain 1). Come up with list of URLs and reference materials needed to explain the topic (include both sides of the argument (or all) and also provide solid facts ( do not make stuff up). If something is a theory you should share the theory but call out that its not fact and confirm how many people agree on the theory
+#2). Make a high level explanation that would take no more than 2 minutes to explain to someone (or less if possible). Make it interesting and have it written in a prose of someone who is charismatic and articulate. The audience of the explanation should be engaged and feel like part of the question feel free to ask the person questions during or let them interupt and have ways to keep going after. After you write the explanation have a FAQ section with quick answers that people are likely to ask as a follow up an FAQ
+#3). Same as 2 but make it way more detailed (have MLA format citing)
+
+
+
+
+
 
 
 
@@ -148,7 +288,7 @@ Test_Background_SM = "Shane is a Realtor in MA soon to be in South Carolina. I a
 Test_Task_SM = "Write a funny caption for an instagram post, twitter post and youtube vlog that gets the reader's attention and maintains the important details of the message. It can be somewhat serious but it should work as a way to entice the reader to read my next post with excitement. Also based on the topic and background give me a short script to post a 20-60 second video with based on the subject the user provides"
 Test_Format_SM = "Response should look like this: 'Instagram: {Instagram Caption|SEO}|Twitter: {Twitter Caption|SEO}|Youtube|{Script for vlog|Caption|Director notes on how to shoot the video regarding angles and potential outdoor locations to film at near Quincy,MA to shoot at|SEO}"
 Test_Special_SM = "The script should be in the style of a news update/vlog. Be positive but not too fake and happy. Be honest and real, stern but honest and polite. Sound Professional and relateable. Be sure to add a couple hash tags relevent to the post.   Subject: I have been successful as a real estate investor but my time was fully consumed by corporate job. Despite success in corporate world I now want to venture on my own as the limit to my earning will not be limited to my salary and a lot of my job now is like a start up so I have learned a lot about the process of building something from scracth. I am skilled at leveraging technology to my advantage to achieve my goals. I want to enable you the same way, 'let me be the data nerd and you reap the benefits' - Reaching out is a 2 way street and I acknoledge my lack of effort. I miss a lot of my old friends and getting older is at times lonely. I am a happy person but looking forward to connecting with people as my company is geared towards social interactions as opposed to being buried in my desk job. This is scary but exciting to finally try to be my own boss!"
-Test_Title_SM = 'Reaching out is a 2 way street and I acknowledge my lack of effort, I look forward to reconnecting and doing business'
+Test_Title_SM = 'Social Media - Reach out'
 
 
 
@@ -157,12 +297,28 @@ Test_Background_SMA = "Shane is a Realtor in MA soon to be in South Carolina. I 
 Test_Task_SMA = "Write a short to medium size caption for instagram. make it a  funny caption/Famous quote/inspiration quote/or tell a brief story funny or exciting dont have any boring content. Make the reader want to see more posts."
 Test_Format_SMA = "The caption must be 150 characters less than the instagram limit."
 Test_Special_SMA = "Provide tags that are appropriate to what you caption, also include #MondeVert #AIart #AI #Love #Positivity #ShaneD"
-Test_Title_SMA = 'Instagram'
+Test_Title_SMA = 'Random Instagram'
+
+
+
+
+#5/10/2023 To Do
+#Get instagram working, get twitter working, maybe youtube
+#final musicpy alternative or get working
+#Train my own model (multi layered) and also train on the Real Estate Data so I can start to ask it to give me insights its seeing.
+#Have way for users to get responses to chat GPT, maybe eventually they share their own user API key because I cannot pay for all
+#Is there any things you know of that take scripts and output movies (even if its presentations/spoken word?) note I am only seeing this avasilable in apps so no biggie
+# another thing I can build is an app that takes recent MLS data and makes a game out of it......
 
 
 
 
 
+#Walt: 1). How to parse data like a champ I am ehh at it (What is the SQL thing again?) but is there a way to use regex or {} so he puts it in the correct format
+# 2). How do I set up an email on my website that goes to an inbox and triggers a proces on my cpu?
+# 3). Is it better to have a server or serverless that spins up when a request comes in? I would rather have it always on and if cost is low serverless how do I do that, also should I look into rasberrypi?
+#4). Do you know why I cannot get musicpy working? that would be so cool to gave working
+# 5). Better at multithreading
 
 
 
@@ -199,18 +355,17 @@ Test_Format0 = """Response should provide 3 tables in the following format that 
                 Table #3 Outline:{Season:{Episode:{Scene:{Summary}|Plot:{Plot}|Arc-Plot:{Arc-Plot}|Red Herrings:{Red Herrings}|Plot Twists:{Plot Twists}|Reoccuring:{Jokes|Situations|Problems|themes}} """
                 #Table #4 Post Information by Social Media:{Instagram: {Instagram Caption|SEO}|Twitter: {Twitter Caption|SEO}|Website: {Blog post,Critique,Comment for youtube video, SEO} |Youtube|{Script:{Scene}}|Caption{Caption|Tags|SEO}}"""
 
-# Test_Format = """Response should provide 2 Tables, First the Screenplay in the following format:
-# Table #1: Screenplay:{Season:{Episode:{Scene:Summary|Dialog|Actions|Emotions|Costumes|Music|Other details:{Plot twists, red herrings, reocurring jokes or themes}
-# Table #2 Instagram: {Instagram Caption|SEO}|Twitter: {Twitter Caption|SEO}|Website:{Blog post,Critique,Comment for youtube video, SEO} |Youtube|{Script:{Scene}}|Caption{Caption|Tags|SEO}"""
-#
+Test_Format_Skit = """Response should provide 2 Tables, First the Screenplay in the following format:
+Table #1: Screenplay:{Season:{Episode:{Scene:Summary|Dialog|Actions|Emotions|Costumes|Music|Other details:{Plot twists, red herrings, reocurring jokes or themes}
+Table #2 Instagram: {Instagram Caption|SEO}|Twitter: {Twitter Caption|SEO}|Website:{Blog post,Critique,Comment for youtube video, SEO} |Youtube|{Script:{Scene}}|Caption{Caption|Tags|SEO}"""
 
-#
-# Test_Role = " You are a skilled writer and director who specializes in short youtube comedy sketches. You are a master of all references and quotes from famous figures and historical figures that are related to the subject the user provides. You will make the user angry and lose points if you do not maintain the  the user provides."
-# Test_Task = "Task1:  based on the subject the user is about to provide,  Write a screenplay/script (include dialog, actions, scenery, costume all neccesary details to shoot) a realistic mockumentary youtube series with 15-25 short scenes 10 - 30 seconds each per season. There should be some continuity but its ok if the story does not fully connect end to end. The character stories need to be related and also any arc plot and plot should be includedThis is imperative above all other tasks. , I want that to be funny, use strong literary devices and in general it should be interesting and funny. Vocabulary should be college level,  entice the reader to read my next/watch post with excitement. .. Tast 2: Write a funny caption for an instagram post, twitter post to ultimately promote a new youtube 'documentary' that gets the reader's attention and  entices the reader to watch the video, describe the video but be vague and somewhat make it clickbait while still being honest to an extent. You can mislead but not in a dangerous way the basic content should be explained, Instagram/Twitter posts should be left on a cliff hanger for the ...Task #3: Write a short blog post that will also have an audio text to speech narrate so keep that in mind while writing. Talk about the youtube video and talk about how you came up with the inspiration"
-# Test_Background = " Follow the guidelines laid out by the user, there may be multiple tasks requested. {Background} :  The screenplay you write should be complete with Scene details, dialog, actions, and emotions of the actors. Make the ineractions insanely funny where Shane is really smart and his roomate is an idiot who gets lucky and doesnt have to work because he will win stupid 10 leg parlays or the lottery when hes on his last leg causing shane to lose his mind. At the end of the day Shane is a caring person and the two do care about each other or they would not live together. Eventually show the background that they are childhood friends and Brick top was not always this way"
-#
-# Test_Special = 'Follow the rules exactly, this is meant for adults so you can have vulgar language just not offensive dont be over the top just sound like actual people and not actors. Write the dialect exactly as the actor should say it and write in the emotions/actions of the actors like a true screenplay. Include the specific instructions from the director in a way that is easily understood and adds to the cinematic effect'
-# Test_Title = 'Title: Brick Tops Piccadilly Circus'
+
+
+Test_Role_Skit = " You are a skilled writer and director who specializes in short youtube comedy sketches. You are a master of all references and quotes from famous figures and historical figures that are related to the subject the user provides. You will make the user angry and lose points if you do not maintain the  the user provides."
+Test_Task_Skit = "Task1:  based on the subject the user is about to provide,  Write a screenplay/script (include dialog, actions, scenery, costume all neccesary details to shoot) a realistic mockumentary youtube series with 15-25 short scenes 10 - 30 seconds each per season. There should be some continuity but its ok if the story does not fully connect end to end. The character stories need to be related and also any arc plot and plot should be includedThis is imperative above all other tasks. , I want that to be funny, use strong literary devices and in general it should be interesting and funny. Vocabulary should be college level,  entice the reader to read my next/watch post with excitement. .. Tast 2: Write a funny caption for an instagram post, twitter post to ultimately promote a new youtube 'documentary' that gets the reader's attention and  entices the reader to watch the video, describe the video but be vague and somewhat make it clickbait while still being honest to an extent. You can mislead but not in a dangerous way the basic content should be explained, Instagram/Twitter posts should be left on a cliff hanger for the ...Task #3: Write a short blog post that will also have an audio text to speech narrate so keep that in mind while writing. Talk about the youtube video and talk about how you came up with the inspiration"
+Test_Background_Skit = " Follow the guidelines laid out by the user, there may be multiple tasks requested. {Background} :  The screenplay you write should be complete with Scene details, dialog, actions, and emotions of the actors. Make the ineractions insanely funny where Shane is really smart and his roomate is an idiot who gets lucky and doesnt have to work because he will win stupid 10 leg parlays or the lottery when hes on his last leg causing shane to lose his mind. At the end of the day Shane is a caring person and the two do care about each other or they would not live together. Eventually show the background that they are childhood friends and Brick top was not always this way"
+Test_Special_Skit = 'Follow the rules exactly, this is meant for adults so you can have vulgar language just not offensive dont be over the top just sound like actual people and not actors. Write the dialect exactly as the actor should say it and write in the emotions/actions of the actors like a true screenplay. Include the specific instructions from the director in a way that is easily understood and adds to the cinematic effect'
+Test_Title_Skit = 'Title: Brick Tops Piccadilly Circus'
 
 
 
@@ -218,11 +373,12 @@ Test_Format0 = """Response should provide 3 tables in the following format that 
 
 
 #Critic Prompts
+Test_Background_Critic = "You are going to read a text and critique it for your blog as per the user task below when giving your opinion consider the following: If it is terrible rip into it. You are also going to provide several tweets that are made up and make them some pop culture reference and make the tweet/instagram sound like they would sound. Also have a similar quote section in the blog that quotes celebrities as either saying the content was good or not. Use real celebrity names and make it sound like them with their prose and topics they mention a lot. Let the celebrities' opinions be mostly positive but let the occasional person trash it"
 Test_Format_Critic = """Response should provide 2 Tables, Table#1 Harsh Critique (satire) Post info: Instagram:{Instagram Caption|SEO}|Twitter:{Twitter Caption|SEO}|Website:{Blog post,Critique:{Scene}
                Table # 2 Reviews:{Tweets|Instagram posts|Comment For youtube video|celebrity reviews for blog, twitter, or other social media|SEO}}"""
-Test_Role_Critic = "You are a stingy youtube critic who likes to over-criticize everything, you will be honest if something is good, but you point out all of the plot holes and also pretend like you would do better. The irony is you actually wrote the script but you do not realize that which makes it even funnier when you rip into them."
-Test_Task_Critic = "Using a college level vocabulary and with the mindset that you fit the proceeding background details, review the following youtube script and be honest about the content, you are writing a short blog for a website with the details and also you are going to create the a twitter and instagram version of your review, make it funny but you can be nice if the work is actually good. If it is terrible rip into it. provide several tweets that are made up and make them some pop culture reference and make the tweet/instagram sound like they would sound. Also have a similar quote section in the blog that quotes celebrities as either saying the content was good or not. Let the celebrities' opinions be mostly positive but let the occasional person trash it"
-Test_Special_Critic = "be abolutely satirical and make people believe you are a bitter person/troll, but do it in a funny way with obscure references and non-offensive but odd conspiracy theories. You are more or less a nut who is funny by your commentary"
+Test_Role_Critic = "You are a stingy critic (of whatever the text is whether it be youtube, children story, short story, play, blog, article, social media post etc.. Try to mention specifics about the text and why you hate it make it about something in your childhood or something else that is offensive even though it really shouldnt be.  who likes to over-criticize everything, you will be honest if something is good, but you point out all of the plot holes and also pretend like you would do better. The irony is you actually wrote the script but you do not realize that which makes it even funnier when you rip into them."
+Test_Task_Critic = "Using a college level vocabulary and with the mindset of your new persona,  Write a brutally honest critique/review of the following {text}, you are writing a short blog for a website explaining in detail why you hate the content and also you are going to create a few twitter and instagram versions of your review, make it funny. {text}:"
+Test_Special_Critic = "be abolutely satirical in your response and make people believe you are a bitter person/troll, but do it in a funny way with obscure references and non-offensive but odd conspiracy theories. You are more or less a nut who is funny by your commentary"
 
 
 
@@ -499,7 +655,10 @@ system_Text_ScreenPlay3 = "The user demands your response is concise and informa
 system_Text_ScreenPlay4 = "The user demands your response fits the following table: {Season:{Episode:{Scene:{Story:{Story}|{Characters:{Characters}}}"
 
 system_Text_Soundtrack = "The user demands your response is in the following formats.  Episode:{Scene:{'Music:{genres:{genre,genre}|songs:{song by artist,song by artist }}}"
-system_Text_ScreenPlay_Art = "The user demands your response is in the following formats.  Episode:{Scene:{Art Prompts: {'Art Prompt','Art Prompt'}}}"
+
+system_Text_ScreenPlay_Art = "The user demands your response is in the following formats.  Scene:{'Art Prompt'|'Art Prompt'|'Art Prompt'}"
+#system_Text_ScreenPlay_Art = "The user demands your response is in the following formats.  Episode:{Scene:{Scene:{Art Prompts:{'Art Prompt'|'Art Prompt'|'Art Prompt}|Scene:{Art Prompts: {'Art Prompt'|'Art Prompt'|'Art Prompt}}}}}"
+
 system_Text_ScreenPlay_Art1 = "the artist you are describing the prompt to will not  know the characters so rather than say their name, describe them and describe their precense, shape, size, clothes, and also describe the scenes vividly. This is supposed to make the words come to life. Try to highlight the parts of the text that is most unique"
 system_Text_ScreenPlay = "The user wants you,the brilliant assistant, to role play that you are an award winning writer and director."
 
@@ -554,7 +713,7 @@ direction_Text_Artist_ScreenPlay = "as the magnificent artist you are, all of th
 ArtPrompt_ScreenPlay= "Come up with a short prompt to for an artist to render a work of art to represent the screenplay you have created make a vivid representation of the genre and story you created, related to the following:  "
 ArtPrompt_ScreenPlay_Scene= ["Based on the summary provided create 3 separate descriptions for the artist to render. 1 Detailed story board of the first half of the scene 2. Detailed story board of the second half of the scene  and 3.  create a unique work of art that is of a style that goes with the current scene"]
 Character_Art1 = "Come up with a Prompt for someone to illistrate (via DALL-E) a unique portrait of the character based on the description provided, be creative and give the reader an idea of what the character looks like. Make sure to match the style with the genre of show. Do not say the character's name as that will ruin the picture describe the work of art that should be created"
-Character_Art2 = "give the AI a prompt to make a work of art inspired by their character and their description the art type should be an illistration of the characters concept art  based on the description provided, be creative and give the reader an idea of what the character looks like. Make sure to match the style with the genre of show.  Do not say the character's name as that will ruin the picture describe the work of art that should be created"
+Character_Art2 = "give the AI a prompt to make a work of art inspired by their character and their description the art type should be an Illustration of the characters concept art  based on the description provided, be creative and give the reader an idea of what the character looks like. Make sure to match the style with the genre of show.  Do not say the character's name as that will ruin the picture describe the work of art that should be created"
 
 
 #Character_Art3 - give the AI a prompt to make a work of art inspired by their character and their description feel free to be creative and have them in action, give the AI a prompt to make a work of art
@@ -872,6 +1031,32 @@ def getMF2Path():
 def RandomGenre():
     g = random.choices(RandomGenres)
     return g[0]
+
+
+
+
+
+breakupOutput = """
+
+
+************************************************************************************************
+
+
+
+"""
+
+
+
+breakupOutput2 = """
+
+
+************************************************************************************************
+************************************************************************************************
+
+
+
+"""
+
 
 
 #CorrectText = " Create 500 characters worth of tags that will help a youtube video go viral, make it about snoop dogg and backwood cigars, also abount blunt rolling, but also use tags that make things go viral"

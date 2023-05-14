@@ -2,7 +2,7 @@
 
 # Press Shift+F10 to execute it or replace it with your code.
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-
+import threading
 import pyodbc
 import glob
 import pandas as pd
@@ -266,11 +266,49 @@ class MLSBot:
                 print('confirmed All Files Downloaded')
 
 
+
+
+
+    def MultiThread(self,Functions ,Args1 = ''):
+
+        thread_list = []
+        print("Start")
+        Args = [up.RE_File_Names]
+        for x in Args:
+            t = threading.Thread(target=Functions, args = x)
+            thread_list.append(t)
+
+
+
+        Count1 = 0
+        # Starts threads
+        for thread in thread_list:
+
+            time.sleep(3)
+            thread.start()
+            Count1 = Count1+1
+            print(Count1)
+            print("New Thread Started")
+
+        # This blocks the calling thread until the thread whose join() method is called is terminated.
+        # From http://docs.python.org/2/library/threading.html#thread-objects
+        for thread in thread_list:
+            thread.join()
+
+    # Demonstrates that the main process waited for threads to complete
+        print ( "Done")
+
+
+
+
     def getMLSData(self):
-        MLSBot.SignINMLS(self)
+        #MLSBot.SignINMLS(self)
         print("Signed into MLS")
         #MLSBot.DownloadFiles(self,RETypes = ['SF'])
-        MLSBot.DownloadFiles(self)
+        Functions = [MLSBot.DownloadFiles]
+
+        MLSBot.MultiThread(self,Functions)
+        #MLSBot.DownloadFiles(self)
         #MLSBot.DownloadFiles(self)
         time.sleep(280)
         MLSBot.CheckForMissingFiles(self)
@@ -432,6 +470,9 @@ class c_bulk_insert:
 
 
 
+
+#For Sold we can have full list and dedupe, for active just latest file
+
     def AddNewData(self, conn,  db_table_nm):
 
         columns = pd.DataFrame()
@@ -455,6 +496,8 @@ class c_bulk_insert:
             colList.append(colfix2)
             ColumnList = ColumnList +  "[" + colfix2+"]" +   ' varchar(MAX),'
             self.groupby =  self.groupby + '[' + colfix2 + "],"
+
+
 
         if self.db_table_nm[-3:] == 'sld':
             Status = 'Sold'
@@ -599,3 +642,14 @@ if __name__ == '__main__':
 
     print(ErrorMessage)
 
+
+
+#First take all of the
+
+with open(outfilename, 'wb') as outfile:
+    for filename in glob.glob('*.txt'):
+        if filename == outfilename:
+            # don't want to copy the output into the output
+            continue
+        with open(filename, 'rb') as readfile:
+            shutil.copyfileobj(readfile, outfile)

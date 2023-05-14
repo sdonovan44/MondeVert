@@ -43,6 +43,7 @@ import atexit
 from docx import Document
 from docx.shared import Inches
 
+import threading
 import shutil
 
 import smtplib
@@ -99,6 +100,44 @@ API_KEY = "..."
 
 
 
+# def MultiThread2(Args):
+#     command_array = Args
+#     number_of_commands = len(command_array)
+#     def run_the_command(index):
+#         exec (command_array[index])
+#
+#     threads = []
+#     for i in range(number_of_commands):
+#         try:
+#             t = threading.Thread(target=run_the_command, args=(i,))
+#             t.start()
+#             threads.append(t)
+#
+#         except:
+#             print('Error unable to pull the value from the ARGs parameter')
+#
+
+def MultiThread(self, Functions, Args):
+    thread_list = []
+    print("Start")
+    print(Args)
+
+    t = threading.Thread(target=Functions, args=(Args))
+    thread_list.append(t)
+
+    # Starts threads
+    for thread in thread_list:
+        print("New Thread Started")
+        thread.start()
+
+
+    # This blocks the calling thread until the thread whose join() method is called is terminated.
+    # From http://docs.python.org/2/library/threading.html#thread-objects
+    for thread in thread_list:
+        thread.join()
+
+    # Demonstrates that the main process waited for threads to complete
+    print("Done")
 
 
 def send_email_w_attachment_outlook(to, subject, body, filename):
@@ -194,6 +233,7 @@ class MondeVert():
         self.Correction_Comment = ''
         self.AI_Corrected_Content = ''
         self.SilentMode = False
+        self.Mode = 'SHAINE booted up'
         global xVoice
         global voice_set
         voice_set = self.voice
@@ -342,7 +382,7 @@ class MondeVert():
 
         current_time1 = datetime.datetime.now()
         current_time2 = current_time1.strftime('%m-%d-%Y_%H.%M.%S')
-        Filename = 'MondeVert Assistant'
+        Filename = 'SHAINE Transcript v1'
         Filename = '\\' + Filename + "_"
         f2 = up.getPath()
         SavePath1 = f2
@@ -381,7 +421,14 @@ class MondeVert():
         # MondeVert.speak(self,'Error Saving')
         # print ('Error Saving')
 
-    def cleanText(self, text):
+
+    #2 options for better transcribe tool 1). Make my own where it transcribes the whole thing (this is probably best), I can have a multithread to print or output either way the live text so I can see what I am saying and it will make a rough correction on the fly.
+    #Have the ability to kick off certain processes like sending emails, scheduling meetings. Post instagram (auto or manual (basic or advance), Have the ability to run the entire tool by voice activation, further you can decide if its fully on the fly by talking to AI or if you want to direct it to certain inputs and pick a file for another. Outline mode, explain mode etc.)
+    #if we can run everything, keep recording and outputting the Text to speech I think we are in a sweet spot for the actual AI. There should be a noice supression piece eventually to remove ambient noise.
+    # you should be able to train model so it recognize your voice over other sounds (this tech exists 100% see siri alexa teams somehow etc.)
+    #Ask walt about how to get better sounding voice models for text to speech?? Look up model how to train your voice to be used
+
+    def cleanText(self, text, SHAINE_Clean = False):
         # result = ''
         parser = GingerIt()
         try:
@@ -409,12 +456,34 @@ class MondeVert():
                 self.Correction_Comment += 'No Corrections Needed.'
 
 
+
         except:
-            print('Text was not properly cleaned: ' + text)
+            print('Text was not properly cleaned by GingerIT: ' + text)
             # print(text)
             rr = text
             self.Correction_Comment += 'No Corrections Needed (Caused an error and did not return anything).'
-            return rr
+
+        # print('Sending Text to SHAINE to clean it up ' + text)
+        # if(SHAINE_Clean ==True):
+        #     try:
+        #         if int(len(text)) <= 4999:
+        #             # print(len(text))
+        #             result = pd.DataFrame(parser.parse(text))
+        #             # result.drop_duplicates()
+        #         else:
+        #             result = pd.DataFrame('', '', '')
+        #             self.Notes = 'Text is Large so may need to review the parts that may have been cut by mistake'
+        #             for i in range(0, (len(text) // 5000) + 1):
+        #                 texttemp = text[0 + (5000 * i):4999 + (5000 * i)]
+        #                 if len(texttemp) > 0:
+        #                     print("Current SubSet of Text being cleaned by SHAINE: " + texttemp)
+        #                     #This is where I use
+        #                     #result11 = pd.DataFrame(parser.parse(text))
+        #                     result1 = [result1 + texttemp]
+        #             result = pd.DataFrame(result1, columns='result')
+        #     except:
+        #
+        #         return rr
 
         return rr
 
@@ -496,99 +565,89 @@ class MondeVert():
         # creating a new excel file and save the data
         df3.to_excel(f2, index=False)
 
-    def CompileBlog(self):
-        f2 = up.getMFPath()
-        df2 = pd.read_excel(f2)
-        df2 = df2.loc[df2['Type/Marker'] != 'To Do list']
-        df2.sort_values(by=['Date', 'Subject'], ascending=False)
-        # need to add more stuff here for if it has notes or other tags etc
-        for i in range(0, len(df2)):
-            if df2['Priority'].loc[i] == '**AI content attached':
-                df2['Combined'] = df2['AI_Corrected_Text'] + '\\n' + '\\n' + 'Note: AI Generated content: ' + df2[
-                    'AI_Content']
+    def ChatGPTDA(self, temp=0.5, MakeArt=False, Prompt='', UseArtPrompt=False, ConfirmBot=True):
+        MondeVert.Add2Transcript(self, ' \n')
+        Prior_Mode = self.Mode
+        self.Mode = 'Chat GPT Mode'
+        self.message = ''
+        MondeVert.Add2Transcript(self, text2Add=(Prior_Mode + ' - ' + self.Mode + ':'))
+        MondeVert.Add2Transcript(self, ' \n')
+        prompt = ''
+        self.promptB = False
+        # Import the OpenAI library
+        # Set up the OpenAI API client :
+        openai.api_key = API_Key
+        # Record the audio
+        MondeVert.speak(self, " Chat GPT is running!", voice=4)
+
+        if UseArtPrompt == True:
+            MakeArtPrompt = "Provide me with a prompt to share with artificial inteligence that will create a unique and visually pleasing work of art. "
+        else:
+            MakeArtPrompt = ''
+
+        if Prompt == '':
+            sStop1 = False
+        else:
+            sStop1 = True
+
+        sStop = False
+        # check if the reply contains 'yes'
+        while sStop == False:
+            # Record the audio
+
+            MondeVert.Add2Transcript(self, MakeArtPrompt)
+
+            # engine.runAndWait()
+            if sStop1 == True:
+                prompt = MakeArtPrompt + Prompt
+                print(prompt)
             else:
-                df2['Combined'] = df2['AI_Corrected_Text'] + '\\n' + '\\n'
+                prompt = MakeArtPrompt + MondeVert.getUserResponse(self, pause=1.44)
+                if ('STOP' in prompt.upper() and (
+                        'LISTEN' in prompt.upper())) or 'QUIT' == prompt.upper() or ' QUIT ' == prompt.upper() or (
+                        'END' in prompt.upper() and ('CONVERSA' in prompt.upper())):
+                    sStop = True
+                    # print ('Its supposed to quit here')
+                    continue
 
-        df2['Combined_Edit'] = MondeVert.cleanText(self, str(df2['Combined']))
+            # Generate text
+            completions = openai.Completion.create(
+                engine="text-davinci-003",
+                prompt=prompt,
+                max_tokens=2444,
+                n=1,
+                stop=None,
+                temperature=temp,
+            )
+            self.message = completions.choices[0].text
+            print(self.message)
 
-        text1 = df2['Combined'].str.cat(sep='\\n \n')
-        text2 = df2['Combined_Edit'].str.cat(sep='\n \n')
-        text3 = MondeVert.cleanText(self, str(df2['text1']))
-        text4 = MondeVert.cleanText(self, str(df2['text2']))
-
-        topics = df2['Subject'].str.cat(sep='\n \n')
-        notes = df2['Note'].str.cat(sep='\n \n')
-        StartDate = df2['Date'].aggregate(['min']).strftime('%m-%d-%Y')
-        End1Date = df2['Date'].aggregate(['min']).strftime('%m-%d-%Y')
-
-        current_time2 = datetime.datetime.now().strftime('%m-%d-%Y')
-        document = Document()
-        document.add_heading(
-            'MondeVert Blog --> ' + current_time2 + '\n' + 'Topics: ' + topics + 'Notes: ' + notes + ' ' + StartDate + 'to' + End1Date,
-            level=1)
-        document.add_paragraph(text1)
-        document.save('MondeVert Blog (Raw) --> ' + current_time2 + '.docx')
-
-        document = Document(text2)
-        document.add_heading(
-            'MondeVert Blog --> ' + current_time2 + '\n' + 'Topics: ' + topics + 'Notes: ' + notes + ' ' + StartDate + 'to' + End1Date,
-            level=1)
-        document.add_paragraph()
-        document.save('MondeVert Blog (Polished) --> ' + current_time2 + '.docx')
-
-        document = Document(text3)
-        document.add_heading(
-            'MondeVert Blog --> ' + current_time2 + '\n' + 'Topics: ' + topics + 'Notes: ' + notes + ' ' + StartDate + 'to' + End1Date,
-            level=1)
-        document.add_paragraph()
-        document.save('MondeVert Blog (Polished2) --> ' + current_time2 + '.docx')
-
-        document = Document(text4)
-        document.add_heading(
-            'MondeVert Blog --> ' + current_time2 + '\n' + 'Topics: ' + topics + 'Notes: ' + notes + ' ' + StartDate + 'to' + End1Date,
-            level=1)
-        document.add_paragraph()
-        document.save('MondeVert Blog (Polished3) --> ' + current_time2 + '.docx')
-
-    def compileFiles(self):
-        f1 = up.getPath()
-        files = glob.glob(f1 + '*.xlsx')
-        tempDF = ''
-        tempDF2 = ''
-        df1 = pd.DataFrame()
-        for fp in files:
-            df1 = pd.DataFrame(pd.read_excel(fp))
-            df1.drop_duplicates()
-            r = len(df1.index)
-            # print(r)
-
-            for x in df1.columns:
-                if x == 'Original_Text':
-                    xs = 'Original_Text'
-                elif x == 'Original_Wording':
-                    xs = 'Original_Wording'
+            if MakeArt == False and (
+                    'MAKE' in prompt.upper() or 'ART' in prompt.upper()) and 'PROMPT' in prompt.upper() and sStop1 == False:
+                MondeVert.ConfirmBOT(self, self.message)
+                if self.promptB == True:
+                    MondeVert.makeArt(self, self.message)
+                    continue
                 else:
-                    xx2 = ''
+                    continue
 
-            for i in range(r):
-                x = str(df1.loc[i, xs])
-
-                try:
-                    tempDF = MondeVert.cleanText(self, x)
-
-                except:
-                    xx2 = ''
-                    # print('Error - Review somewhere')
-                    # print(len(x))
-                    # print(x)
-                    # print('End of Error Details')
+            if MakeArt == True or sStop1 == True:
+                if ConfirmBot == True:
+                    MondeVert.ConfirmBOT(self, self.message)
                 else:
-                    df1.loc[i, 'AI_Corrected_Text'] = tempDF
-                    df1.loc[i, 'AI_Correction_Comment'] = self.Correction_Comment
-            MondeVert.add2Master(df1)
-            del df1
+                    MondeVert.speakSweet(self, self.message)
+                    self.promptB = True
 
+                if self.promptB == True:
+                    sStop = True
+                    continue
+                else:
 
+                    continue
+            else:
+                MondeVert.speakSweet(self, self.message)
+
+        return self.message
 
     ############################################################################################################################################################################################################################
     ############################################################################################################################################################################################################################
@@ -756,6 +815,8 @@ class MondeVert():
         if os.path.isfile(os.path.join(up.AI_Art_Path, '\'', fname)):
             fname = fname.split(".")[0] + f".{''.join(random.choice(string.ascii_letters) for x in range(5))}.png"
 
+
+        fname_only = fname
         fname = os.path.join(up.AI_Art_Path, fname)
         print(f"Filename: {fname}")
         with open(fname, 'wb') as f:
@@ -773,6 +834,11 @@ class MondeVert():
             os.startfile(fname)
         else:  # linux variants
             subprocess.call(('xdg-open', fname))
+
+        #this line saves the
+        #IP.png2JPG(fname, up.PNGPath,fname_only, up.PNGPath_Archive, Del = False )
+
+
 
         return fname
 
@@ -888,7 +954,7 @@ class MondeVert():
             up.system_Text + up.RolePlay_SongArtist + "AI Created a Persona shown as the Artist Bio Above" + up.Song_prompt + up.ArtPrompt_SongArtist]
         ArtistPoetInfo = 'Lyrics Written By: ' + up.Song_Writer + '      (' + 'Artwork by: ' + up.AI_ArtistName + ')'
         MondeVert.NamePoemSavePoem(self, prompt, ArtPaths, Prompts_Used, ArtistPoetInfo, title=Title,
-                                       FolderPath=up.AI_Music_Path + '\\' + Mode, ArtType='Song Lyrics' + Mode)
+                                       FolderPath=up.AI_Music_Path + '\\' + Mode, Mode='Song Lyrics' + Mode)
 
     def Make_a_SongRR(self, System = up.system_Text, Role= up.RolePlay_SongArtist, Background=up.ArtistBio_SongArtist, Task = up.Song_Prompt_SongArtists,Special=up.Samples_SongArtists, Format='', Mode='Random Song'):
         ArtPaths = []
@@ -922,7 +988,7 @@ class MondeVert():
         Artist_Bio = response.choices[0].message.content
 
         # print('Artist_Bio: ' + Artist_Bio)
-        print('************************************************************************************************')
+        print(up.breakupOutput2)
 
         Song1 = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
@@ -1003,56 +1069,10 @@ class MondeVert():
 
         DJMondeVert = response.choices[0].message.content
 
-        print('************************************************************************************************')
-        print('************************************************************************************************')
-        print('************************************************************************************************')
+        print(up.breakupOutput2)
 
         MondeVert.speak(self, "DJ MondeVert Work complete yo")
-        data = """Artist_Bio: """ + Artist_Bio + """:                                                                                      
-
-        *************************************************
-        *************************************************
-
-
-        Potential Samples: """ + Samples2 + """
-
-
-        *************************************************
-        *************************************************
-
-
-        Title: """ + Title + """
-
-
-
-        *************************************************
-        *************************************************
-
-
-
-        Song: """ + Song + """ 
-
-
-        *************************************************
-        *************************************************
-
-
-
-
-        Song 2.0: """ + ReWrite + """
-
-
-        *************************************************
-        *************************************************
-
-
-
-
-        DJMondeVert: """ + DJMondeVert + """
-        *************************************************
-        *************************************************
-
-        """
+        data = """Artist_Bio: """ + Artist_Bio + ": " + print(up.breakupOutput2) + """ Potential Samples: """ + Samples2  + print(up.breakupOutput2) +  """Title: """ + Title + + print(up.breakupOutput2) + """Song: """ + Song + + print(up.breakupOutput2) +"""Song 2.0: """ + ReWrite + print(up.breakupOutput2) + """DJMondeVert: """ + DJMondeVert
 
         print(data)
 
@@ -1112,45 +1132,57 @@ class MondeVert():
             up.system_Text + up.RolePlay_SongArtist + "AI Created a Persona shown as the Artist Bio Above" + up.Song_prompt + up.ArtPrompt_SongArtist]
         ArtistPoetInfo = 'Lyrics Written By: ' + up.Song_Writer + '      (' + 'Artwork by: ' + up.AI_ArtistName + ')'
         MondeVert.NamePoemSavePoem(self, prompt, ArtPaths, Prompts_Used, ArtistPoetInfo, title=Title,
-                                       FolderPath=up.AI_Music_Path + '\\' + Mode, ArtType='Song Lyrics' + Mode)
+                                       FolderPath=up.AI_Music_Path + '\\' + Mode, Mode='Song Lyrics' + Mode)
 
         # MondeVert.speak(self, ReWrite )
     def MondeVertAuto(self, Mode='AutoSocial', Role = '', System = ''):
         if Mode == 'AutoSocial':
             Caption = MondeVert.MondeVertTask(self, System=up.system_TextJoaT, Role=up.Test_Role_SMA, Background=up.Test_Background_SMA,Task=up.Test_Task_SMA, Special=up.Test_Special_SMA, Format=up.Test_Format_SMA, Title = up.Test_Title_SMA,Mode='AutoSocial')
         return Caption + up.Instagram_Adds
-    def MondeVertMenu(self, Mode='Basic', Role = '', System = ''):
+    def MondeVertMenu_up(self, Mode='Basic', Role = '', System = ''):
+        self.Mode = Mode
 
         if Mode == 'ScreenPlay':
-                    MondeVert.Make_a_ScreenPlay(self,System = up.system_Text_ScreenPlay0, Mode='ScreenPlay')
+            MondeVert.Make_a_ScreenPlay(self,System = up.system_Text_ScreenPlay0, Mode='ScreenPlay')
         elif Mode == 'Music':
-            MondeVert.Make_a_ScreenPlay(self,System = up.system_TextRR, Mode='Make_a_SongRR')
+            MondeVert.Make_a_SongRR(self,System = up.system_TextRR, Mode='Music')
         elif Mode == 'Skit':
-            MondeVert.MondeVertTask(self,System = up.system_TextJoaT,Role=up.Test_Role, Background=up.Test_Background, Task = up.Test_Task,Special=up.Test_Special, Format=up.Test_Format, Mode='Skit')
+            MondeVert.MondeVertTask(self,System = up.system_TextJoaT,Role=up.Test_Role_Skit, Background=up.Test_Background_Skit, Task = up.Test_Task_Skit,Special=up.Test_Special_Skit, Format=up.Test_Format_Skit, Mode='Skit')
         elif Mode == 'Basic':
-            MondeVert.MondeVertTask(self,System = up.system_TextJoaT,Role=up.Test_Role, Background=up.Test_Background, Task = up.Test_Task,Special=up.Test_Special, Format=up.Test_Format, Mode='Basic', Logic_AI=.5)
+            MondeVert.MondeVertTask(self,System = up.system_TextJoaT,Role=up.Test_Role_Explain, Background=up.Test_Background_Explain, Task = up.Test_Task_Explain,Special=up.Test_Special_Explain, Format=up.Test_Format_Explain,Title = up.Test_Title_Explain, Mode='Basic', Logic_AI=.5)
         elif Mode == 'Advance':
-            MondeVert.MondeVertTask(self,System = up.system_TextJoaT,Role=up.Test_Role, Background=up.Test_Background, Task = up.Test_Task, Special=up.Test_Special, Format=up.Test_Format, Mode='Advance')
+            MondeVert.MondeVertTask(self,System = up.system_TextJoaT,Role=up.Test_Role_Explain, Background=up.Test_Background_Explain, Task = up.Test_Task_Explain, Special=up.Test_Special_Explain, Format=up.Test_Format_Explain, Mode='Advance')
         elif Mode == 'Interview':
-            MondeVert.MondeVertTask(self,System = up.system_TextJoaT,Role=up.Test_Role, Background=up.Test_Background, Task = up.Test_Task,Special=up.Test_Special, Format=up.Test_Format, Mode='Interview')
+            MondeVert.MondeVertTask(self,System = up.system_TextJoaT,Role=up.Test_Role_Explain, Background=up.Test_Background_Explain, Task = up.Test_Task_Explain,Special=up.Test_Special_Explain, Format=up.Test_Format_Explain, Mode='Interview')
         elif Mode == 'Social':
-            MondeVert.MondeVertTask(self, System=up.system_TextJoaT, Role=up.Test_Role, Background=up.Test_Background_SM,Task=up.Test_Task_SM, Special=up.Test_Special_SM, Format=up.Test_Format_SM, Mode='Social')
+            MondeVert.MondeVertTask(self, System=up.system_TextJoaT, Role=up.Test_Role_SM, Background=up.Test_Background_SM,Task=up.Test_Task_SM, Special=up.Test_Special_SM, Format=up.Test_Format_SM, Mode='Social')
+        elif Mode == 'RealEstate':
+            MondeVert.MondeVertTask(self, System=up.system_TextJoaT, Role=up.Test_Role_RE,Background=up.Test_Background_RE, Task=up.Test_Task_RE, Special=up.Test_Special_RE,Format=up.Test_Format_RE, Mode='RealEstate')
+        elif Mode == 'PictureBook':
+            MondeVert.MondeVertTask(self, System=up.system_TextJoaT, Role=up.Test_Role_PictureBook,Background=up.Test_Background_PictureBook, Task=up.Test_Task_PictureBook, Special=up.Test_Special_PictureBook,Format=up.Test_Format_PictureBook, Mode='PictureBook', ArtPrompt= up.MondeVert_ArtPrompt,ArtFormat = up.MondeVert_ArtFormat, AdvanceArtPrompt = up.MondeVert_ArtPrompt_PictureBook , AdvanceArtFormat= up.MondeVert_ArtFormat_PictureBook)
+
+        elif Mode == 'ReSearch':
+            MondeVert.MondeVertTask(self, System=up.system_TextJoaT, Role=up.Test_Role_ReSearch,Background=up.Test_Background_ReSearch, Task=up.Test_Task_ReSearch, Special=up.Test_Special_ReSearch,Format=up.Test_Format_ReSearch, Mode='Research')
+
         elif Mode == 'Book':
             MondeVert.Make_a_ScreenPlay(self, Mode='ScreenPlay')
-        elif Mode == 'Series':
-            MondeVert.Series(self, Mode='Series', Episodes= 10, Seasons = 1, Audience = 'Kids')
+        # elif Mode == 'Series':
+        #     MondeVert.Series(self, Mode='Series', Episodes= 10, Seasons = 1, Audience = 'Kids')
+
+        #atexit.register(MondeVert.saveTranscript(self))
 
 
 
 
-
-
-
-
-    def MondeVertTask(self, System = '', Role='', Background='', Task='',FinalOutput='Text with proper MLA formatting, do not provide made up information only facts (unless user asks for fiction)',
-                      Special='', Title='', Mode='Basic', Logic_AI=0, skit = False,Format = '', Review_Critic = False):
+    def MondeVertTask(self, System = '', Role='', Background='', Task='',Special='', Title='', Mode='Basic', Logic_AI=0,Format = '',  SavePath = up.AI_Task_Path, ArtPrompt= up.MondeVert_ArtPrompt,ArtFormat = up.MondeVert_ArtFormat, AdvanceArtPrompt = up.MondeVert_ArtPrompt_PictureBook , AdvanceArtFormat= up.MondeVert_ArtFormat_PictureBook, ART_System = up.system_Text_Art):
         ArtPaths = []
         openai.api_key = API_Key
+        Art_PromptCharoo = ''
+        Art_PromptCharo = ''
+        Art_PromptForDALLE = ''
+
+        Titleo = Title
+
         if Logic_AI == 0:
             crazy = round((randbelow(520000) + 170000) / 100000, 0)
             crazy = crazy / 10
@@ -1168,6 +1200,7 @@ class MondeVert():
         current_time2 = current_time1.strftime('%m-%d-%Y_%H.%M.%S')
         # f2 = FolderPath
         f2 = up.SavePath
+        f2 = SavePath
         SavePath1 = f2
 
 
@@ -1178,9 +1211,6 @@ class MondeVert():
         AIPrompt = 'N/A not ready to test this yet'
         Result_Combine = 'N/A not ready to test this yet'
         Bitter_Critic = 'N/A not ready to test this yet'
-        Title = up.Test_Title
-
-
 
 
         Task2 = up.Test_Task_Critic
@@ -1189,270 +1219,426 @@ class MondeVert():
         Role2 = up.Test_Role_Critic
 
         Format0 = up.Test_Format0
-
+        KillSwitch = 0
 
         Format_f = Format
         if Mode =='skit':
             Format_f = Format0
 
         if Title != '':
-            Background = Title + up.Test_Background
-        else:
-            Background = up.Test_Background
+            Background = Title + Background
 
-        # This is for the result when you ask AI to summarize the project
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": up.system_TextJoaT + Role},
-                {"role": "user", "content": up.Role_Play_Prompt + Role},
-                {"role": "user", "content": up.USER_Format_Prompt + Format_f},
-                {"role": "user", "content": up.USER_SPECIAL_Prompt + Special},
-                {"role": "user", "content": up.USER_Background_Prompt + Background}
-            ], temperature=crazy
-        )
+        tempFormat = Format
+        if Mode == 'PictureBook':
+            Format = up.Test_Format_PictureBook_outline
 
-        Project_Description = response.choices[0].message.content
+        while KillSwitch < 6:
+            KeepGoing = False
+            while KeepGoing ==False and KillSwitch < 6:
+                try:# This is for the result when you ask AI to summarize the project
+                    response = openai.ChatCompletion.create(
+                        model="gpt-3.5-turbo",
+                        messages=[
+                            {"role": "system", "content": up.system_TextJoaT + Role},
+                            {"role": "user", "content": up.Role_Play_Prompt + Role},
+                            {"role": "user", "content": up.USER_Format_Prompt + Format_f},
+                            {"role": "user", "content": up.USER_SPECIAL_Prompt + Special},
+                            {"role": "user", "content": up.USER_Background_Prompt + Background}
+                        ], temperature=crazy
+                    )
 
-        if Title != '':
-            Project_Description = Title + Project_Description
-        else:
-            Project_Description = Project_Description
+                    Project_Description = response.choices[0].message.content
 
-        print('************************************************************************************************')
+                    if Title != '':
+                        Project_Description = Title + Project_Description
+                    else:
+                        Project_Description = Project_Description
 
-        # This is for the result if you let the AI describe project and details and then make the response
-        Result1 = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": up.system_TextJoaT + Role},
-                {"role": "user", "content": up.Role_Play_Prompt + Role},
-                {"role": "user", "content": up.USER_Format_Prompt + Format},
-                {"role": "user", "content": up.USER_SPECIAL_Prompt + Special},
-                {"role": "user", "content": up.AI_Background_Prompt + Project_Description},
-                {"role": "user", "content": up.USER_Task_Prompt + Task},
-            ]
-            , temperature=crazy
-        )
-        Result = Result1.choices[0].message.content
+                    KeepGoing = True
 
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": up.system_TextJoaT + Role},
-                {"role": "user", "content": up.Role_Play_Prompt + Role},
-                # {"role": "user", "content": up.USER_Format_Prompt + Format},
-                {"role": "user", "content": up.USER_SPECIAL_Prompt + Special},
-                {"role": "user", "content": up.AI_Background_Prompt + Project_Description},
-                {"role": "user", "content": up.USER_Task_Prompt + Task},
-            ], temperature=crazy
-        )
+                except:
+                    print('1). Error ChatGPT failed, trying to rerun prompt now.... if this happens too many times we will kill the script')
+                    KillSwitch +=1
+                    continue
 
-        AIPrompt = response.choices[0].message.content
+                Format = tempFormat
 
-        # print('Artist_Bio: ' + Artist_Bio)
-        print('************************************************************************************************')
+                print('************************************************************************************************')
 
-        Result1 = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": up.system_TextJoaT + Role},
-                {"role": "user", "content": up.Role_Play_Prompt + Role},
-                {"role": "user", "content": up.USER_Format_Prompt + Format},
-                {"role": "user", "content": up.USER_SPECIAL_Prompt + Special},
-                {"role": "user", "content": up.AI_Background_Prompt + Project_Description},
-                {"role": "user", "content": up.USER_Task_Prompt + Task},
-            ]
-            , temperature=crazy
-        )
-        Result_AI = Result1.choices[0].message.content
+            KeepGoing = False
+            while KeepGoing == False and KillSwitch < 6:
+                try:
+                    # This is for the result if you let the AI describe project and details and then make the response
+                    response = openai.ChatCompletion.create(
+                        model="gpt-3.5-turbo",
+                        messages=[
+                            {"role": "system", "content": up.system_TextJoaT + Role},
+                            {"role": "user", "content": up.Role_Play_Prompt + Role},
+                            {"role": "user", "content": up.USER_Format_Prompt + Format},
+                            {"role": "user", "content": up.USER_SPECIAL_Prompt + Special},
+                            {"role": "user", "content": up.AI_Background_Prompt + Project_Description},
+                            {"role": "user", "content": up.USER_Task_Prompt + Task},
+                        ]
+                        , temperature=crazy
+                    )
+                    Result = response.choices[0].message.content
 
-        print('************************************************************************************************')
+                    KeepGoing = True
+                except:
+                    print('2). Error ChatGPT failed, trying to rerun prompt now.... if this happens too many times we will kill the script')
+                    KillSwitch += 1
+                    continue
 
-        try:
-            Result2 = openai.ChatCompletion.create(
-                model="gpt-3.5-turbo",
-                messages=[
-                    {"role": "system", "content": up.system_TextJoaT + Role},
-                    {"role": "user", "content": up.Role_Play_Prompt + Role},
-                    {"role": "user", "content": up.UserRequest + Format + Special + Project_Description + Task},
-                    # {"role": "user", "content": up.USER_SPECIAL_Prompt + Special},
-                    {"role": "user", "content": up.AI_Background_Prompt + Project_Description},
-                    {"role": "user",
-                     "content": up.CombineBothResults + "Result 1: " + Result + "Result 2: " + Result_AI},
-                    {"role": "user", "content": up.USER_Task_Prompt + Task},
-                ]
-                , temperature=crazy
-            )
-            Result_Combine = Result1.choices[0].message.content
+            #
+            # KeepGoing = False
+            # while KeepGoing == False and KillSwitch < 6:
+            #     try:
+            #
+            #         response = openai.ChatCompletion.create(
+            #             model="gpt-3.5-turbo",
+            #             messages=[
+            #                 {"role": "system", "content": up.system_TextJoaT + Role},
+            #                 {"role": "user", "content": up.Role_Play_Prompt + Role},
+            #                 # {"role": "user", "content": up.USER_Format_Prompt + Format},
+            #                 {"role": "user", "content": up.USER_SPECIAL_Prompt + Special},
+            #                 {"role": "user", "content": up.AI_Background_Prompt + Project_Description},
+            #                 {"role": "user", "content": up.USER_Task_Prompt + Task},
+            #             ], temperature=crazy
+            #         )
+            #
+            #         AIPrompt = response.choices[0].message.content
+            #
+            #
+            #         KeepGoing = True
+            #     except:
+            #         print('3). Error ChatGPT failed, trying to rerun prompt now.... if this happens too many times we will kill the script')
+            #         KillSwitch += 1
+            #         continue
+            #
+            # KeepGoing = False
+            # while KeepGoing == False and KillSwitch < 6:
+            #
+            #     # print('Artist_Bio: ' + Artist_Bio)
+            #     print('************************************************************************************************')
+            #     try:
+            #         response = openai.ChatCompletion.create(
+            #             model="gpt-3.5-turbo",
+            #             messages=[
+            #                 {"role": "system", "content": up.system_TextJoaT + Role},
+            #                 {"role": "user", "content": up.Role_Play_Prompt + Role},
+            #                 {"role": "user", "content": up.USER_Format_Prompt + Format},
+            #                 {"role": "user", "content": up.USER_SPECIAL_Prompt + Special},
+            #                 {"role": "user", "content": up.AI_Background_Prompt + Project_Description},
+            #                 {"role": "user", "content": up.USER_Task_Prompt + Task},
+            #             ]
+            #             , temperature=crazy
+            #         )
+            #         Result_AI = response.choices[0].message.content
+            #
+            #         KeepGoing = True
+            #
+            #     except:
+            #         print('4). Error ChatGPT failed, trying to rerun prompt now.... if this happens too many times we will kill the script')
+            #         KillSwitch += 1
+            #         continue
 
-        except:
+
+                print(up.breakupOutput)
+
+                KillSwitch = 0
+                while KeepGoing == False and KillSwitch < 6:
+                    try:
+                        response = openai.ChatCompletion.create(
+                            model="gpt-3.5-turbo",
+                            messages=[
+                                {"role": "system", "content": up.system_TextJoaT + Role},
+                                {"role": "user", "content": up.Role_Play_Prompt + Role},
+                                {"role": "user", "content": up.UserRequest + Format + Special + Task},
+                                # {"role": "user", "content": up.USER_SPECIAL_Prompt + Special},
+                                {"role": "user", "content": up.AI_Background_Prompt + Project_Description},
+                                {"role": "user",
+                                 "content": up.CombineBothResults + "Result 1: " + Result + "Result 2: " + Result_AI},
+                                #{"role": "user", "content": up.USER_Task_Prompt + Task},
+                            ]
+                            , temperature=crazy
+                        )
+                        Result_Combine = response.choices[0].message.content
+                        KeepGoing = True
+                    except:
+                        print('5). Error ChatGPT failed, trying to rerun prompt now.... if this happens too many times we will kill the script')
+                        #KillSwitch += 1
+
+                        try:
+                            Result2 = openai.ChatCompletion.create(
+                                model="gpt-3.5-turbo",
+                                messages=[
+                                    {"role": "system", "content": up.system_TextJoaT + Role},
+                                    {"role": "user", "content": up.Role_Play_Prompt + Role},
+                                    {"role": "user", "content": up.UserRequest + Format + Special + Task},
+                                    # {"role": "user", "content": up.USER_SPECIAL_Prompt + Special},
+                                    {"role": "user", "content": up.AI_Background_Prompt + Project_Description},
+                                    {"role": "user",
+                                     "content": up.CombineBothResults + "Result 1: " + Result},
+                                    #{"role": "user", "content": up.USER_Task_Prompt + Task},
+                                ]
+                                , temperature=crazy
+                            )
+                            Result_Combine = Result2.choices[0].message.content
+                            print("Only revised v1")
+                            KeepGoing = True
+                        except:
+                            print("could not combine 2 versions")
+                            print( '6). Error ChatGPT failed, trying to rerun prompt now.... if this happens too many times we will kill the script')
+                            KillSwitch += 1
+                            continue
+
+
+
+
+                    # This is funny content where the AI reviews the youtube script
+                KillSwitch =0
+                KeepGoing = False
+                while KeepGoing == False and KillSwitch < 6:
+
+                    try:
+                        if   Mode =='skit' or Mode =='skit'or Mode =='skit'or Mode =='PictureBook':
+                            # Create original details
+                            response = openai.ChatCompletion.create(
+                                model="gpt-3.5-turbo",
+                                messages=[
+                                    {"role": "system", "content": up.system_TextJoaT + Role2},
+                                    {"role": "user", "content": up.Role_Play_Prompt + Role2},
+                                    {"role": "user", "content": up.UserRequest + Format2 + Special2 + Project_Description + Task2 + Title},
+                                    {"role": "user", "content": up.USER_SPECIAL_Prompt + Special2},
+                                    {"role": "user", "content": up.Test_Background_Critic + Result_Combine},
+                                    #{"role": "user", "content": up.USER_Task_Prompt + Task2},
+
+                                ], temperature=crazy
+                            )
+
+                            Bitter_Critic = response.choices[0].message.content
+
+                        KeepGoing = True
+                        continue
+                    except:
+                        print('8). Error ChatGPT failed, trying to rerun prompt now.... if this happens too many times we will kill the script')
+                        KillSwitch += 1
+                        continue
+
+                KillSwitch = 0
+                KeepGoing = False
+                while KeepGoing == False and KillSwitch < 6:
+                    try:
+                        if Title == '':
+                            Title = MondeVert.Get_Title_GPT(self, Project_Description = Project_Description)
+                            KeepGoing = True
+                        else:
+                            KeepGoing =True
+                    except:
+                        try:
+                            Title = MondeVert.Get_Title_GPT(self, Project_Description=Background)
+                            print('First try did not work for title, but went through second time')
+                        except:
+                            print(Mode)
+                            print (Title)
+                            print('7). Error ChatGPT failed, trying to rerun prompt now.... if this happens too many times we will kill the script')
+                            KillSwitch += 1
+                            continue
+
+
             try:
-                Result2 = openai.ChatCompletion.create(
-                    model="gpt-3.5-turbo",
-                    messages=[
-                        {"role": "system", "content": up.system_TextJoaT + Role},
-                        {"role": "user", "content": up.Role_Play_Prompt + Role},
-                        {"role": "user", "content": up.UserRequest + Format + Special + Project_Description + Task},
-                        # {"role": "user", "content": up.USER_SPECIAL_Prompt + Special},
-                        {"role": "user", "content": up.AI_Background_Prompt + Project_Description},
-                        {"role": "user",
-                         "content": up.CombineBothResults + "Result 1: " + Result},
-                        {"role": "user", "content": up.USER_Task_Prompt + Task},
-                    ]
-                    , temperature=crazy
-                )
-                Result_Combine = Result1.choices[0].message.content
-                print("Only revised v1")
+                if Title == '':
+                    Title = MondeVert.ChatGPTDA(self, temp=0.5, MakeArt=True, Prompt=( Titleo+ '"' + Background + '"'),ConfirmBot=False)
+                else:
+                    Title = Mode
             except:
-                print("could not combine 2 versions")
-                dn = 55
-
-        if Title == '':
-            Title = MondeVert.Get_Title_GPT(self)
+                print('could not come up with title review')
 
 
 
-        # This is funny content where the AI reviews the youtube script
-        if   Mode =='skit':
-            # Create original details
-            response = openai.ChatCompletion.create(
-                model="gpt-3.5-turbo",
-                messages=[
-                    {"role": "system", "content": up.system_TextJoaT + Role2},
-                    {"role": "user", "content": up.Role_Play_Prompt + Role2},
-                    {"role": "user", "content": up.UserRequest + Format2 + Special2 + Project_Description + Task2},
-                    {"role": "user", "content": up.USER_SPECIAL_Prompt + Special2},
-                    {"role": "user", "content": up.AI_Background_Prompt + Result_Combine},
-                    {"role": "user", "content": up.USER_Task_Prompt + Task2},
-
-                ], temperature=crazy
-            )
-
-            Bitter_Critic = response.choices[0].message.content
-
-        invalidCharRemoved = re.sub(r"[^a-zA-Z0-9 ]", "", Title)
-        folder = str(invalidCharRemoved)
-        if len(folder) > 44:
-            folder = folder[0:44]
-        Title1 = '\\' + str(invalidCharRemoved) + "_"
-        if len(Title1) > 44:
-            Title1 = Title1[0:44]
-        SavePath2 = SavePath1 + '\\' + folder
-        Title2 = SavePath2 + Title1 + current_time2
+            #this should be a utility
+            invalidCharRemoved = re.sub(r"[^a-zA-Z0-9 ]", "", Title)
+            folder = str(invalidCharRemoved)
+            if len(folder) > 44:
+                folder = folder[0:44]
+            Title1 = '\\' + str(invalidCharRemoved) + "_"
+            if len(Title1) > 44:
+                Title1 = Title1[0:44]
+            SavePath2 = SavePath1 + '\\' + folder
+            Title2 = SavePath2 + Title1 + current_time2
 
 
-        print('************************************************************************************************')
-        print('************************************************************************************************')
-        print('************************************************************************************************')
+            print('************************************************************************************************')
+            print('************************************************************************************************')
+            print('************************************************************************************************')
 
-        MondeVert.speak(self, "MondeVert Project Work complete yo")
-        data = """Project_Description: """ + Project_Description + """:                                                                                      
+            MondeVert.speak(self, "MondeVert Project Work complete yo")
 
-        *************************************************
-        *************************************************
+            data = """Project_Description: """ + Project_Description + up.breakupOutput2 + """Title: """ + Title  +up.breakupOutput2 + """     Result: """ + Result +                up.breakupOutput2 + """Results 2.0 (reworked a second time): """ + Result_Combine +                up.breakupOutput2 + """Bitter_Critic: """ + Bitter_Critic
+            print(data)
 
+            MondeVert.speak(self, "Saving the files round 1")
+            # print(data)
 
-        Title: """ + Title + """
+            data1 = [(data)]
 
+            try:
+                df1 = pd.DataFrame(data1, columns=['Text'])
 
+                filename = Title2
+                MondeVert.SaveCSV(data, filename, SavePath2)
 
-        *************************************************
-        *************************************************
+            except:
+                print('Review Error File did not save ')
+
+            try:
+                send_email_w_attachment_gmail(up.to, up.subject, Project_Description, SavePath2+filename)
+                print("Gmail email sent")
+                send_email_w_attachment_outlook(up.to, up.subject, Project_Description, SavePath2+filename)
+                print("Outlook email sent")
+            except:
+                print('email not send, its possible file was not created')
 
 
 
-        Result: """ + Result + """
+            #Art changes based on mode for now I will switch only when the mode calls for it otherwise default
+            if Mode =='PictureBook':
+                ArtPrompt_Mondevert = ArtPrompt + Result
+                # ArtFormat_Mondevert = ArtPrompt + Result
+            else:
+                ArtPrompt_Mondevert = ArtPrompt + Project_Description
+                # ArtFormat_Mondevert = ArtFormat
+
+            #ArtPrompt_Mondevert0 = up.MondeVert_ArtFormat
+
+            MondeVert.speak(self, "Making the art, painting yo picture")
+
+            crazyArt = crazy
+            crazyArt = .4
+            try:
+                Art_PromptForDALLE = MondeVert.GPTArt(self, crazy, prompt=AIPrompt, Plot=ArtPrompt_Mondevert,ArtFormat=ArtFormat,sys_prompt=ART_System)
+            except:
+                Art_PromptForDALLE = 'Make a work of art based on the following text:' + Result
+
+            # Art_Prompt1 = openai.ChatCompletion.create(
+            #     model="gpt-3.5-turbo",
+            #     messages=[
+            #         {"role": "system", "content": up.system_Text_Art},
+            #         {"role": "user", "content": ArtPrompt_Mondevert},
+            #         {"role": "user", "content": ArtFormat},
+            #     ], temperature=crazyArt
+            # )
+            #
+            # Art_PromptForDALLE = Art_Prompt1.choices[0].message.content
+            print("Work of Art Inspiration:" + Art_PromptForDALLE)
+
+            try:
+                ArtPath2 = MondeVert.makeArt(self, Art_PromptForDALLE)
+                ArtPaths.append(ArtPath2)
+
+            except:
+                ArtPath2 = ''
+
+            MondeVert.speak(self, "Saving the files round 2")
+
+            try:
+                if '|' in Art_PromptForDALLE:
+                    Art_PromptForDALLE_Simple = Art_PromptForDALLE.split('|')
+                else:
+                    Art_PromptForDALLE_Simple = Art_PromptForDALLE.replace("Subject:", "|")
+                    Art_PromptForDALLE_Simple = Art_PromptForDALLE.replace("Subject", "|")
+
+                Art_PromptForDALLE_Simple = Art_PromptForDALLE_Simple[:-1]
+
+            except:
+                print('Error did not Properly split the list')
 
 
 
-        *************************************************
-        *************************************************
+            if Mode == 'PictureBook' or Mode == 'script':
+                try:
+                    Art_PromptCharo = MondeVert.GPTArt(self, crazy, prompt = AdvanceArtPrompt , Plot =   c, ArtFormat = AdvanceArtFormat,
+                                                  sys_prompt=up.system_Text_Art_PictureBook)
+
+
+                except:
+                    print('Error Trying to make original Painting')
+                    Art_PromptCharo = 'Make a work of art based on the following text:' + Art_PromptForDALLE
+
+                Art_PromptCharoo = Art_PromptCharo
+                # ArtPrompt_Mondevert = + Result
+                # ArtPrompt_Mondevert = ArtFormatAdvance + Result
+
+                try:
+                    if '|' in Art_PromptCharo:
+                        Art_PromptCharo = Art_PromptCharo.split('|')
+                    else:
+                        Art_PromptCharo = Art_PromptCharo.replace("Page:", "|")
+                        Art_PromptCharo = Art_PromptCharo.replace("Page", "|")
+
+
+                    if '|' in Art_PromptCharo:
+                        Art_PromptCharo = Art_PromptCharo.split('|')
+                    else:
+                        Art_PromptCharo = Art_PromptCharo.replace(":", "|")
+                        Art_PromptCharo = Art_PromptCharo.split('|')
+
+                    # Test_Skel1 = Result.replace("Page:", "#")
+                    # Test_Skel1 = Test_Skel1.replace("Page", "#")
+
+                    print('Art_PromptCharo')
+                    print(Art_PromptCharo)
 
 
 
-        AIPrompt: """ + AIPrompt + """
+                except:
+                    print('Could not properly split out the string for multiple illistrations')
+
+
+                KillSwitch =0
+                KeepGoing = False
+                while KeepGoing == False and KillSwitch < 6:
+                    try:
+                        Characters = []
+                        x = len(Art_PromptCharo)
+                        for c in range(0, x):
+                            # print(c)
+                            Characters.append(Art_PromptCharo[c])
+
+                        print('Characters')
+                        print(Characters)
+
+                        for c in Characters:
+                            print(' ')
+                            print('-------------------------------------------')
+                            print('-------------------------------------------')
+                            print("Character: " + Art_PromptForDALLE + c)
+                            print('-------------------------------------------')
+                            #print("Character Art1: " + up.Character_Art1 + c)
+                            ArtPath2 = MondeVert.makeArt(self, Art_PromptForDALLE + c)
+                            ArtPaths.append(ArtPath2)
+                            print(ArtPath2)
+
+
+                    except:
+                        print('Error Trying to create multiple paintings')
+                        KillSwitch += 1
+                    KeepGoing = True
 
 
 
-        *************************************************
-        *************************************************
+            Art_PromptCharo
+
+            prompt = data + "Work of Art Inspiration(s):" + Art_PromptForDALLE + "     Work of Art Inspiration(scene by scene):"+ Art_PromptCharoo
+            Prompts_Used = [
+                up.system_Text + up.RolePlay_SongArtist + "AI Created a Persona shown as the Artist Bio Above" + up.Song_prompt + up.ArtPrompt_SongArtist]
+            ArtistPoetInfo = 'Lyrics Written By: ' + up.Song_Writer + '      (' + 'Artwork by: ' + up.AI_ArtistName + ')'
+            MondeVert.NamePoemSavePoem(self, prompt, ArtPaths, Prompts_Used, ArtistPoetInfo, title=Title,
+                                           FolderPath=SavePath1+'\\' + Mode, Mode= Mode)
+            KillSwitch = 7
 
 
 
-        Result_AI: """ + Result_AI + """
-
-
-
-        *************************************************
-        *************************************************
-
-
-
-        Result_Combine: """ + Result_Combine + """
-
-
-
-        *************************************************
-        *************************************************
-
-
-
-        Bitter_Critic: """ + Bitter_Critic
-
-        print(data)
-
-        MondeVert.speak(self, "Saving the files round 1")
-        # print(data)
-
-        data1 = [(data)]
-
-        try:
-            df1 = pd.DataFrame(data1, columns=['Text'])
-
-            filename = Title2
-            MondeVert.SaveCSV(data, filename, SavePath2)
-
-        except:
-            print('Review Error File did not save ')
-
-        try:
-            send_email_w_attachment_gmail(up.to, up.subject, Project_Description, filename)
-            print("Gmail email sent")
-            send_email_w_attachment_outlook(up.to, up.subject, Project_Description, filename)
-            print("Outlook email sent")
-        except:
-            print('email not send, its possible file was not created')
-
-        MondeVert.speak(self, "Making the art, painting yo picture")
-        Art_Prompt1 = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": up.system_Text_Art},
-                {"role": "user", "content": up.MondeVert_ArtPrompt + Project_Description},
-            ], temperature=crazy
-        )
-
-        Art_Prompt = Art_Prompt1.choices[0].message.content
-        print("Work of Art Inspiration:" + Art_Prompt)
-
-        try:
-            ArtPath2 = MondeVert.makeArt(self, Art_Prompt)
-            ArtPaths.append(ArtPath2)
-
-        except:
-            ArtPath2 = ''
-
-        MondeVert.speak(self, "Saving the files round 2")
-
-
-
-        prompt = data + "Work of Art Inspiration:" + Art_Prompt
-        Prompts_Used = [
-            up.system_Text + up.RolePlay_SongArtist + "AI Created a Persona shown as the Artist Bio Above" + up.Song_prompt + up.ArtPrompt_SongArtist]
-        ArtistPoetInfo = 'Lyrics Written By: ' + up.Song_Writer + '      (' + 'Artwork by: ' + up.AI_ArtistName + ')'
-        MondeVert.NamePoemSavePoem(self, prompt, ArtPaths, Prompts_Used, ArtistPoetInfo, title=Title,
-                                       FolderPath=up.AI_Music_Path + '\\' + Mode, ArtType='Song Lyrics' + Mode)
 
     def GPTSummary(self, crazy='', prompt=up.GPT_Summary, Plot='',
                    sys_prompt=up.system_Text_ScreenPlay0 + up.system_Text_ScreenPlay3):
@@ -1488,7 +1674,7 @@ class MondeVert():
     # Twist is they end up being underground and when humans are dealing with global warming we break in and accidentally become slaves.
     #   eventually we try to become a unified people as they realize we made the same mistakes as them
     #    #Write the MetaVerse Elon Musk Story -- This is going to be a video game too(like pokemon)
-    def GPTArt(self, crazy='', prompt=up.ArtPrompt_ScreenPlay + up.direction_Text_Artist_ScreenPlay, Plot='',
+    def GPTArt(self, crazy='', prompt=up.ArtPrompt_ScreenPlay , Plot='Pick a random subject and medium go wild and make it exciting, beautiful and shocking' ,ArtFormat = up.MondeVert_ArtFormat,
                sys_prompt=up.system_Text_Artist_ScreenPlay):
         openai.api_key = API_Key
 
@@ -1496,7 +1682,8 @@ class MondeVert():
             model="gpt-3.5-turbo",
             messages=[
                 {"role": "system", "content": sys_prompt},
-                {"role": "user", "content": prompt + Plot}
+                {"role": "user", "content":  prompt + Plot},
+                {"role": "user", "content": ArtFormat}
             ], temperature=crazy
         )
 
@@ -1627,12 +1814,13 @@ class MondeVert():
         for i in range(0, Episode_Count):
             Episode_Direction = Direction_ScreenPlay[i]
 
-            if i == 1:
-                Add_IN = up.RedHerring_ScreenPlay
-            elif i == 2:
-                Add_IN = up.UnsungHero + up.Twist_ScreenPlay
-            elif i == 3:
-                Add_IN = up.Mystery_Character_Past + up.VillanOrigin
+            Add_IN = ''
+            # if i == 1:
+            #     Add_IN = up.RedHerring_ScreenPlay
+            # elif i == 2:
+            #     Add_IN = up.UnsungHero + up.Twist_ScreenPlay
+            # elif i == 3:
+            #     Add_IN = up.Mystery_Character_Past + up.VillanOrigin
 
             # Prior to writing an episode we should create the outline for the episode based on
 
@@ -1718,7 +1906,6 @@ class MondeVert():
                     ##--------------------Dialog----------
                     {"role": "system", "content": up.Dialog_ScreenPlay}
                 ], temperature=crazy)
-
             ScreenPlay0 = Song1.choices[0].message.content
             ScreenPlay.append(ScreenPlay0)
 
@@ -1751,15 +1938,16 @@ class MondeVert():
         folder = str(invalidCharRemoved)
         if len(folder) > 44:
             folder = folder[0:44]
-        Title1 = '\\' + str(invalidCharRemoved) + "_"
+        Title1 = r"\\" +  str(invalidCharRemoved) + "_"
+        Title11 =  str(invalidCharRemoved) + "_"
         if len(Title1) > 44:
             Title1 = Title1[0:44]
-        SavePath2 = SavePath1 + '\\' + folder
+        SavePath2 = SavePath1 + r"\\"+ folder
 
-        filename1.append('Screen Play - ' + Title1)
-        filename1.append('Details_Outline - ' + Title1)
-        filename1.append('OutlineNext2_Ref - ' + Title1)
-        filename1.append('Summaries - ' + Title1)
+        filename1.append('Screen Play - ' + Title11)
+        filename1.append('Details_Outline - ' + Title11)
+        filename1.append('OutlineNext2_Ref - ' + Title11)
+        filename1.append('Summaries - ' + Title11)
 
         print('Review the filnames:')
         print(filename)
@@ -1773,7 +1961,7 @@ class MondeVert():
             # print(data)
             try:
 
-                MondeVert.SaveCSV(data[x], filename1[x], SavePath2)
+                filename = MondeVert.SaveCSV(data[x], filename1[x], SavePath2)
                 # MondeVert.SaveText(self,df1,'MondeVert Assistant', 'Full Transcript')
 
                 # MondeVert.add2Master2(df1)
@@ -1823,16 +2011,27 @@ class MondeVert():
             print('Skeleton_Story')
             print(Skeleton_Story)
 
-            Test_Skel1 = Skeleton_Story.replace("Characters:", "#")
-            Test_Skel1 = Test_Skel1.replace("Characters", "#")
 
-            print('Test_Skel')
-            print(Test_Skel1)
+            if '|' in Skeleton_Story:
+                Test_Skel = Skeleton_Story.split('|')
+            else:
+                Test_Skel = Skeleton_Story.replace("Characters:", "|")
+                Test_Skel = Test_Skel.replace("Characters", "|")
+                Test_Skel = Test_Skel.split('|')
 
-            Test_Skel = Test_Skel1.split('#')
+
+
+
             print('Test_Skel')
             print(Test_Skel)
+
+            # Test_Skel = Test_Skel.split('')
+            # print('Test_Skel')
+            # print(Test_Skel)
             Details = Test_Skel[0]
+
+
+
 
             Characters = []
             x = len(Test_Skel)
@@ -1851,10 +2050,10 @@ class MondeVert():
                 # print("Character: " + c)
                 print('-------------------------------------------')
                 print("Character Art1: " + up.Character_Art1 + c)
-                Art_PromptChar = MondeVert.GPTArt(self, crazy, up.Character_Art2 + c, Skeleton_Story)
+                Art_PromptChar = MondeVert.GPTArt(self, crazy, up.Character_Art2 + c, Plot = Skeleton_Story)
 
                 print("Character Art2: " + up.Character_Art2 + c)
-                Art_PromptChar2 = MondeVert.GPTArt(self, crazy, up.Character_Art2 + c, Skeleton_Story)
+                Art_PromptChar2 = MondeVert.GPTArt(self, crazy, up.Character_Art2 + c, Plot = Skeleton_Story)
 
             try:
                 MondeVert.speak(self, Art_PromptChar)
@@ -1879,8 +2078,7 @@ class MondeVert():
             print("Art prompts ")
 
             try:
-                Art_Prompt = MondeVert.GPTArt(self, crazy,
-                                                  up.direction_Text_Artist_ScreenPlay + up.ArtPrompt_ScreenPlay,
+                Art_Prompt = MondeVert.GPTArt(self, crazy,up.direction_Text_Artist_ScreenPlay + up.ArtPrompt_ScreenPlay,
                                                   Skeleton_Story,
                                                   sys_prompt=up.system_Text_Artist_ScreenPlay + up.system_Text_ScreenPlay_Art1)
                 MondeVert.speak(self, Art_Prompt)
@@ -1910,10 +2108,19 @@ class MondeVert():
 
                 try:
 
-                    Test_Skel1 = Skeleton_Story.replace("Art Prompts:", "")
-                    Test_Skel1 = Test_Skel1.replace("Art Prompts", "#")
+                    # Test_Skel1 = Skeleton_Story.replace("Art Prompts:", "")
+                    # Test_Skel1 = Test_Skel1.replace("Art Prompts", "#")
                     # ''
-                    Test_Skel = Art_Prompt1.split('#')
+
+                    if '|' in Skeleton_Story:
+                        Test_Skel = Skeleton_Story.split('|')
+                    else:
+                        Test_Skel = Skeleton_Story.replace("Art Prompt:", "|")
+                        Test_Skel = Test_Skel.replace("Art Prompt", "|")
+                        Test_Skel = Test_Skel.split('|')
+
+
+                    #Test_Skel = Art_Prompt1.split('#')
 
                     Art_Prompts_pre = []
                     Art_Prompts = []
@@ -1955,15 +2162,20 @@ class MondeVert():
         if len(Title) > 45:
             Title = Title[0:45]
 
-        prompt = " 90s Summer Preview: " + Summary_Summer_90s + " Details:" + Skeleton_Story + 'Summary: ' + Plot + "Work of Art Inspiration:" + Art_Prompt + "      Song:" + ScreenPlay
+        ArtPrompt_Combined = ''
+
+        for f in Art_Prompt:
+                ArtPrompt_Combined +=f
+
+        prompt = " 90s Summer Preview: " + Summary_Summer_90s + " Details:" + Skeleton_Story + 'Summary: ' + Plot + "Work of Art Inspiration:" + ArtPrompt_Combined + "      Song:" + ScreenPlay
         Prompts_Used = [
             up.system_Text + up.RolePlay_SongArtist + "AI Created a Persona shown as the Artist Bio Above" + up.Song_prompt + up.ArtPrompt_SongArtist]
         ArtistPoetInfo = 'Lyrics Written By: ' + up.Song_Writer + '      (' + 'Artwork by: ' + up.AI_ArtistName + ')'
         MondeVert.NamePoemSavePoem(self, prompt, ArtPaths, Prompts_Used, ArtistPoetInfo, title=Title,
-                                       FolderPath=up.AI_Screen_Plays + '\\' + Mode, ArtType='Screen Play' + Mode)
+                                       FolderPath=up.AI_Screen_Plays + '\\' + Mode, Mode='Screen Play' + Mode)
 
-    def Add2MasterLyrics(self, current_time2, ArtType, title, ArtistPoetInfo, poem, Tag, SavePath2, Prompts):
-        data = [(current_time2, ArtType, title, ArtistPoetInfo, poem, Tag, SavePath2, Prompts)]
+    def Add2MasterLyrics(self, current_time2, Mode, title, ArtistPoetInfo, poem, Tag, SavePath2, Prompts):
+        data = [(current_time2, Mode, title, ArtistPoetInfo, poem, Tag, SavePath2, Prompts)]
         df = pd.DataFrame(data, columns=['Date_Time_Added', 'Art_Type', 'Title', 'Poet_Artist_Info', 'Poem_Song_Lyrics',
                                          'Quality', 'Folder_Path', 'Prompts_Used'])
         MondeVert.add2Master3(df)
@@ -2026,18 +2238,18 @@ class MondeVert():
         except:
             print('Review Error File did not save ')
 
+        return Title2
 
 
 
-
-    def Get_Title_GPT(self,  Text, Role,mood = '', bio = '', crazy = .5):
+    def Get_Title_GPT(self,  Text, Role = '',mood = '', bio = '', crazy = .5):
 
         # Create original details
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[
                 {"role": "system", "content": up.system_TextJoaT},
-                {"role": "user", "content": up.Role_Play_Prompt + Role},
+                #{"role": "user", "content": up.Role_Play_Prompt + Role},
                 {"role": "user", "content": up.MondeVert_Title + Text}
 
             ], temperature=crazy
@@ -2051,30 +2263,34 @@ class MondeVert():
         return Title
 
     def NamePoemSavePoem(self, poem, ArtPaths, Prompts_Used, ArtistPoetInfo, title='', FolderPath=up.AI_Poetry_Path,
-                         ArtType='Poem'):
+                         Mode='Poem'):
         dfPrompts = ''
         Tag = ''
-        if ArtType == 'Poem':
+        if Mode == 'Poem':
             title_p = up.Poem_Title_Prompt
         else:
             title_p = up.Song_Title_Prompt
+        try:
+            if title == '':
+                Title = MondeVert.Get_Title_GPT(self,  Text= poem )
+            else:
+                Title = title
 
-        if title == '':
-            Title = MondeVert.Get_Title_GPT(self,  text= poem )
-        else:
-            Title = title
+        except:
+            print('error could not get title')
+
 
         current_time1 = datetime.datetime.now()
         current_time2 = current_time1.strftime('%m-%d-%Y_%H.%M.%S')
         f2 = FolderPath
         SavePath1 = f2
         invalidCharRemoved = re.sub(r"[^a-zA-Z0-9 ]", "", Title)
-        folder = str(invalidCharRemoved)
+        folder = str(re.sub(r"[^a-zA-Z0-9 ]", "", Mode))
         if len(folder) > 44:
             folder = folder[0:44]
         Title1 = '\\' + str(invalidCharRemoved) + "_"
-        if len(Title1) > 44:
-            Title1 = Title1[0:44]
+        if len(Title1) > 60:
+            Title1 = Title1[0:60]
         SavePath2 = SavePath1 + '\\' + folder
         Title2 = SavePath2 + Title1 + current_time2
 
@@ -2097,7 +2313,7 @@ class MondeVert():
 #Adds to master files and also creates its own CSV file
 
 
-        data = [(Title, ArtistPoetInfo, poem, FolderPath, ArtType, Tag)]
+        data = [(Title, ArtistPoetInfo, poem, FolderPath, Mode, Tag)]
         # print(data)
         try:
             df1 = pd.DataFrame(data, columns=['Title', 'Artist Info', 'ScreenPlay', 'FolderPath', 'Category',
@@ -2105,7 +2321,7 @@ class MondeVert():
             print(df1)
             print(Title2)
             df1.to_csv(Title2 + '.txt')
-            MondeVert.Add2MasterLyrics(self, current_time2, ArtType, title, ArtistPoetInfo, poem, Tag, SavePath2,                                           dfPrompts)
+            MondeVert.Add2MasterLyrics(self, current_time2, Mode, title, ArtistPoetInfo, poem, Tag, SavePath2,dfPrompts)
             # MondeVert.SaveText(self,df1,'MondeVert Assistant', 'Full Transcript')
             try:
                 MondeVert.add2Master2(df1)
@@ -2116,44 +2332,50 @@ class MondeVert():
             print('Review Error')
 
 
-#Word Doc Creation below, not quite what I need so I do text file too above
-        document = Document()
-        document.add_heading(Title, 0)
-        document.add_heading(ArtistPoetInfo, 1)
-        p = document.add_paragraph()
-        r = p.add_run()
-        # r.add_text(ArtistPoetInfo)
-        p = document.add_paragraph()
-        r = p.add_run()
-        r.add_text(poem)
-        p = document.add_paragraph()
-        r = p.add_run()
-        image_counter = 0
-        for i in ArtPaths:
-            image_counter += 1
-            r.add_picture(i)
-            original = i
-            target = SavePath2 + Title1 + str(image_counter) + current_time2 + '.png'
-            shutil.copyfile(original, target)
 
-        document.add_heading('AI Prompts used: ', 7)
+            try:
+    #Word Doc Creation below, not quite what I need so I do text file too above
+                document = Document()
+                document.add_heading(Title, 0)
+                document.add_heading(ArtistPoetInfo, 1)
+                p = document.add_paragraph()
+                r = p.add_run()
+                # r.add_text(ArtistPoetInfo)
+                p = document.add_paragraph()
+                r = p.add_run()
+                r.add_text(poem)
+                p = document.add_paragraph()
+                r = p.add_run()
+                image_counter = 0
+                for i in ArtPaths:
+                    image_counter += 1
+                    r.add_picture(i)
+                    original = i
+                    target = SavePath2 + Title1 + str(image_counter) + current_time2 + '.png'
+                    shutil.copyfile(original, target)
 
-        for i in Prompts_Used:
-            p = document.add_paragraph()
-            r = p.add_run()
-            r.add_text(i)
-            dfPrompts += i + '|'
-        document.save(Title2 + '_Details.docx')
 
-        document2 = Document()
-        document2.add_heading(Title, 0)
-        document2.add_heading(ArtistPoetInfo, 1)
+                    IP.png2JPG(original, up.PNGPath, Title1, up.PNGPath_Archive, Del=False)
 
-        p = document2.add_paragraph()
-        r = p.add_run()
-        r.add_text(poem)
-        document2.save(Title2 + '.docx')
+                document.add_heading('AI Prompts used: ', 7)
 
+                for i in Prompts_Used:
+                    p = document.add_paragraph()
+                    r = p.add_run()
+                    r.add_text(i)
+                    dfPrompts += i + '|'
+                document.save(Title2 + '_Details.docx')
+
+                document2 = Document()
+                document2.add_heading(Title, 0)
+                document2.add_heading(ArtistPoetInfo, 1)
+
+                p = document2.add_paragraph()
+                r = p.add_run()
+                r.add_text(poem)
+                document2.save(Title2 + '.docx')
+            except:
+                print('Error saving word doc')
     # Blog Make Art Live mode
 
 
@@ -2201,70 +2423,125 @@ class MondeVert():
 
 
 
-    def MultiThread(self,Functions,Args):
-
-        thread_list = []
-        print("Start")
-
-        t = threading.Thread(target=MondeVert.MondeVertMenu, args=(Args))
-        thread_list.append(t)
 
 
 
 
-        # Starts threads
-        for thread in thread_list:
-            thread.start()
-            print("New Thread Started")
+# def run_the_command(index, command_array):
+#     try:
+#         command_array = ...
+#         number_of_commands = len(command_array)
+#
+#         exec
+#         command_array[index]
+#     except:
+#         print('Error but powering through it')
 
-        # This blocks the calling thread until the thread whose join() method is called is terminated.
-        # From http://docs.python.org/2/library/threading.html#thread-objects
-        for thread in thread_list:
-            thread.join()
-
-    # Demonstrates that the main process waited for threads to complete
-        print ( "Done")
+#
+# def run_the_command(index):
+#     exec
+#     command_array[index]
 
 
+#def SHAINEBootUP(Functions, Args = ['Basic'], MultiT = False, PostInsta = False):
+def SHAINEBootUP(Args = 'Basic'):
+
+
+        try:
+            x = MondeVert()
+            x.MondeVertMenu_up(Mode = Args)
+        except:
+            print('Error unable to pull the value from the ARGs parameter')
 
 if __name__ == '__main__':
     # main method for executing
     # the functions
     Record = ''
 
-    x = MondeVert()
-
-    Args = ['Basic','Social','']
-
-    Functions = [x.MondeVertMenu(),x.MondeVertMenu(),IP.upload_pictures()]
-    x.MultiThread(Functions,Args)
 
 
-    # x.MondeVertMenu(Mode='Basic')
+
+
+
+    args = ['Basic', 'ReSearch']
+
+    # args = [x.MondeVertMenu_up(Mode= 'PictureBook'),x.MondeVertMenu_up(Mode= 'PictureBook'),x.MondeVertMenu_up(Mode= 'ScreenPlay'), x.MondeVertMenu_up(Mode= 'Music'), x.MondeVertMenu_up(Mode= 'ReSearch'),x.MondeVertMenu_up(Mode= 'Basic') ]
+    #SHAINEBootUP(Args=args, MultiT=True)
+    #SHAINEBootUP(Functions=SHAINEBootUP,Args = [], MultiT=True)
+
+    # command_array = Args
+    number_of_commands = len(args)
+
+    threads = []
+    for i in range(number_of_commands):
+        ArgX = args[i]
+        #Dummy line
+        i2 = 1
+
+        if i2 == 1:
+        #try:
+
+            print("Start Thread " + str(i))
+            t = threading.Thread(target=SHAINEBootUP, args = (ArgX,)).start()
+            threads.append(t)
+
+        # except:
+        #     print('Error - Could not start new thread')
+
+ # Wait for all of them to finish
+    for t in threads:
+        t.join()
+    print("Job Complete!")
+
+    x1 = MondeVert()
+    x1.speak("Job Complete!")
+
     #
-    # x.MondeVertMenu(Mode='Social')
     #
-    # IP.upload_pictures()
-
-
-    #x.MondeVertMenu(Role=up.Test_Role, Background=up.Test_Background, Special=up.Test_Special, Format=up.Test_Format, Mode='Music')
-
-    # x.MondeVertMenu(Role=up.Test_Role, Background=up.Test_Background, Special=up.Test_Special, Format=up.Test_Format, Mode='Skit')
-    # x.MondeVertMenu(Role=up.Test_Role, Background=up.Test_Background, Special=up.Test_Special, Format=up.Test_Format, Mode='Book')
-    # x.MondeVertMenu(Role=up.Test_Role, Background=up.Test_Background, Special=up.Test_Special, Format=up.Test_Format, Mode='Series')
     #
-    # x.MondeVertMenu(Role=up.Test_Role, Background=up.Test_Background, Special=up.Test_Special, Format=up.Test_Format, Mode='Art')
-    # x.MondeVertMenu(Role=up.Test_Role, Background=up.Test_Background, Special=up.Test_Special, Format=up.Test_Format, Mode='Advance')
+    # rList = ['r1,r2,r3,r4,r5,r6,r7,r8,r9,r10']
+    #
+    #
+    #
+    #
+    #
+    #
+    # args = []
+    # rMode = ['PictureBook','ReSearch']
+    #
+    # # rLen = len(rMode)
+    # # countR = 0
+    # # for r in rList:
+    # #     if countR<rLen:
+    # #         countR +=1
+    # #         r = MondeVert()
+    # #         args.append(r.MondeVertMenu_up(Mode=rMode[countR]))
+    # #
+    #
+    # x1 = MondeVert()
+    # x2 = MondeVert()
+    # x3 = MondeVert()
+    # args = [x1.MondeVertMenu_up(Mode= 'PictureBook'), x2.MondeVertMenu_up(Mode= 'ReSearch'),x3.MondeVertMenu_up(Mode= 'Basic') ]
+    #
+    #
+    #
+    # # args = [x.MondeVertMenu_up(Mode= 'PictureBook'),x.MondeVertMenu_up(Mode= 'PictureBook'),x.MondeVertMenu_up(Mode= 'ScreenPlay'), x.MondeVertMenu_up(Mode= 'Music'), x.MondeVertMenu_up(Mode= 'ReSearch'),x.MondeVertMenu_up(Mode= 'Basic') ]
+    # SHAINEBootUP(Args =args , MultiT=True)
+    #
+    # Functions = [MondeVertMenu_up, MondeVertMenu_up,
+    #         x3.MondeVertMenu_up]
 
 
+
+
+# IP.upload_pictures()
     #Image1 = x.animate(image= r"A:\AI Art\DALLE_please_create_an_art_piece_that_showcases_a_luxurious_and_modern_real_estate_property_The_property_should_have_a_stunning_view_and_be_surroun.png", Prompt = "Add a Stick Figure with long blonde hair to the following image")
     #Image1 = x.Take_query(image = Image1, Prompt= 'Make a variation where everything is the same but you put the stick figure in a slightly different position')
-
     # Testing
     # x.Make_a_ScreenPlay_Testing()
     # x.Make_a_ScreenPlay()
-
     # x.saveTranscript()
-    atexit.register(x.saveTranscript)
+
+
 
 
