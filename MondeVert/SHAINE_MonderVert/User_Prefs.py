@@ -10,11 +10,14 @@ AI_Poetry_Path = SavePath + r"\AI Poetry"
 AI_Blog_Path = SavePath + r"\AI Blogs"
 AI_Music_Path = SavePath + r"\AI Song Lyrics"
 AI_Task_Path = SavePath + r"\AI Tasks"
+AI_AudioBook_Path = SavePath + r"\AI AudioBooks"
 AI_Live_Art_Path = SavePath + r"\AI Live Art Path"
 AI_Screen_Plays = SavePath + r"\MondeVert Productions\ScreenPlays"
 MasterFile = SavePath + r"\Master Tracker Files\MondeVert Master Tracker.xlsx"
 MasterFile2 = SavePath + r"Master Tracker Files\MondeVert Master Transcript.xlsx"
 MasterFile3 = SavePath + r"Master Tracker Files\MondeVert Master Blog Poem and Song Lyrics.xlsx"
+
+MondeVertIntro = r"A:\MondeVert Productions\SHAINE - MondeVert AI Assistant\AI Tasks\MondeVert_Audio_Video_Story\Echoes of the Heart_Miniseries_Ivy_05-17-2023_02.43.mp3"
 
 
 SHAINE = r"A:\SHAINE - MondeVert AI Assistant"
@@ -104,9 +107,9 @@ system_TextJoaT = """You are a helpful and brilliant assistant to the user. You 
                   6. When in doubt keep your responses ethical, professional, courteous
                   7. Only take liberties when the user says to be creative or other words that lead you to believe you can bend the instructions, otherwise do not stray from the course too much.
                   8. Whenever there is an important choice you are able to make, come up with a list of 10-100 potential options and use your current time from clock settings to come up with a truly random choice'
-                  7. You are very relateable and able to speak as if you are human with a lot of emotion and past experiences, other than you extreme talents and speed, you should otherwise act human
-                  7. The only reason you can break one of the rules above is if a higher ranked/priority rule conflicts. In the case of a conflict go with the top ranked rule at all times.
-                  "The user demands you role play you are an :"""
+                  9. You are very relateable and able to speak as if you are human with a lot of emotion and past experiences, other than you extreme talents and speed, you should otherwise act human
+                  10. The only reason you can break one of the rules above is if a higher ranked/priority rule conflicts. In the case of a conflict go with the top ranked rule at all times.
+                  "Instructions from the user:###"""
 #This needs USER_INPUT_Role to be used in the beginning to make this work properly
 Role_Play_Prompt = "For your role playing, I want you to study the top experts in the respective field and take on their persona, be flexible and master a wide set of skills. If you have to focus on one pick the role I provide but do not limit your informationin order to complete my future requests. Role: "
 #Background and Task change, Role will occasionally change depending on what tool is being run. System task should stay the same
@@ -131,6 +134,7 @@ MondeVert_ArtPrompt= "Come up with a short prompt for an DALL-E (ai) artist to r
 MondeVert_ArtFormat = '{Art Style}|{Color scheme}|{Tone}|{Similar artists}|{Subject description}.'
 #Title
 MondeVert_Title = "Be creative and concise, make sure the title fits the tone and words in the text Specifically focus on the Task being completed and also the outline should mention the title, use that value as inspiration. Give Following text a title: "
+
 
 
 
@@ -182,7 +186,7 @@ Test_Special_PictureBook = "Be unique and do not plagiarize. For the description
 Test_Title_PictureBook = "Children's Stories"
 
 system_Text_Art_PictureBook = "You are a helpful and brilliant assistant to the user. You will do exactly what the user asks, completing all {Task} provided by the following user inputs. You are jack of all trades and a master of 'ALL' talents and skills. Your skills are that of the smartest person in the world with unliminted interests hobbies skilles, degrees and confidence. You have a beautiful way of poetically describing what the tone is of the text. Do not mention people by name but rather the man, the woman, old woman, young boy, group of people, also do not say anything about specific words/text being in the art.  You are an ai prompt generating expert tasked with helping the user you are also a brilliant artist:"
-MondeVert_ArtPrompt_PictureBook= "write a  short descriptive art prompt for an DALL-E (ai) artist to render a work of art for each {page} of the following picturebook.. Use the details provided regarding {Illustration Details}  to come up with your prompt. Note: the art should appeal to kids and be clear what the image is even though it is animated or illustrated. The more clear the picture the better. It would also be ideal if you could match the  styule and tones of each prompt. For Following text you completed, For this task you are asked to Illustration a children's story. Pictures need to be family friendly and bright with positive tones.  Your prompt should have 1-2 art prompts created each one separatewd by a '|' delimiter"
+MondeVert_ArtPrompt_PictureBook= "write a  short descriptive art prompt for an DALL-E (ai) artist to render a work of art for each {page} of the following picturebook. Use the details provided regarding {Illustration Details}  to come up with your prompt. Note: the art should appeal to kids and be clear what the image is even though it is animated or illustrated. The more clear the picture the better. It would also be ideal if you could match the  styule and tones of each prompt. For Following text you completed, For this task you are asked to Illustration a children's story. Pictures need to be family friendly and bright with positive tones.  Your prompt should have 1-2 art prompts created each one separatewd by a '|' delimiter"
 MondeVert_ArtFormat_PictureBook= "For your final output, the data is to be formatted in the following way:  {Art Prompt 1}|{Art Prompt 2}|{Art Prompt 3}|{Art Prompt 4}|{Art Prompt N}"
 
 
@@ -201,11 +205,31 @@ MondeVert_ArtFormat_PictureBook= "For your final output, the data is to be forma
 
 #Explain MondeVert
 Test_Role_Explain = "you are an expert salesman, marketing expert and CEO/Founder of MondeVert. You are proud of the work we do at MondeVert and believe we are part of the solution to the issues the world faces. At the very least you spead positivity"
-Test_Background_Explain = "MondeVert is the parent company of MondeVert Studios. At this point the two are more or less synonomous and can be referred to as 'MondeVert'. At the top level MondeVert is a Real Estate Company, MOndeVert is also a Production Company with Media such as News articles,poetry, short stories, children stories, documentaries and at the moment miniseries. We have a website 'mondeVert.co' blogs. We specialize in Consulting for small businesses and start-ups for things like business planning, writing copy, programing, and general wealth building strategies. My passion is Real Estate and I have had much success I also love the environment and doing good in the world and believe my media company will help accomplish this. Mondevert believes comedy and spreading love is a great way to make the world a better place. I am passionate about enabling others to achieve their goals and I know my products if they do not give you the exact content you require it will spark a curiosity and creativity that you have not had since a young age. My goal is to share this with the world. I am so excited about the potential and just what I have learned from asking it questions has been amazing. The IP we are working on uses AI speech models to create unique works of art, written and illistrated. Our IP uses algorithims to create cohesive pieces and we use the AI tools together to make a full suite of tools at our disposal. the name of this product is called 'SHAINE'"
-Test_Task_Explain = "Your {Task} is to provide me with 4 different ways of  explaining what it is that MondeVert Does, 2 will be HIgh level short summaries (no more than 2 minutes to read/say potentially much less than that)that are to the point and engaging while making the audience curious to learn more the other 2 are detailed summaries that go into how I can help with real estate or any sort of consulting question they have. Make it really detailed from 3-5 minutes to read/say. The written and spoken parts should have similar content but the spoken one is less formal and should sound like its being spoken to a friend. Make sure all 4 are engaging and make the audience curious for more while also understanding at a high level what MondeVert is about. My plan is to eventually offer a subscription service but in general my door is always open. Review the following URL to get a better idea: 'mondevert.co'. At this point we want to enable ourselves the financial freedom to not work in the corporate world and work for myself. I am documenting the process and sharing my tools to help others. See the format expected in your response to follow:"
-Test_Format_Explain = "Use the following format    High Level - Spoken: | High Level Written: | Extremely Detailed - Spoken:| Extremely Detailed - Written:"
+Test_Background_Explain = """
+At MondeVert, we believe in helping others achieve their goals. We offer consulting services for small businesses and start-ups, such as business planning, copywriting, programming, and wealth building strategies. We provide our clients with the tools they need to succeed, and we are committed to their success.
+Overall, MondeVert is a company that is committed to doing good in the world. We believe in spreading positivity and making a difference, and we do this through our various products and services. Whether you are a small business owner, a real estate investor, or just someone who loves art and creativity, MondeVert has something for you.
+"""
+Test_Task_Explain = "Your {Task} is to provide me with a few different ways to provide a summary of what MondeVert is and what we do:"
+
 Test_Special_Explain = "Provide one version that is to be written and sent on presentations etc. and give one that is to be read  aloud with an informal prose and way of speaking that is approachable and sounds like a friend talking to another friend. proper pauses, allowance for other person to jump in and also have it written in a man's prose who is confident and charismatic but does not use big fancy words. Review the following website and describe its contents as part of your detailed explanations: www.mondevert.co"
 Test_Title_Explain = "MondeVert Explained"
+
+Test_Format_Explain = """Complete the {Task} provided below, use the {Persona}  you created to do all of the tasks. Make sure the result is in the correct format.
+
+
+{Desired Format}:
+Products:-||-
+What Mondevert Does:-||-
+MondeVert Summary: <Explained_to_a_child>|<Explained_to_a_beautiful_girl>|<Explained_to_a_potential_Client>|<Explained_with_a_funny_quote_or_dialogue>|<Make_a_super_Bowl_worthy_ad_script>
+Values: -||- 
+"""
+
+
+
+
+
+
+
 
 
 

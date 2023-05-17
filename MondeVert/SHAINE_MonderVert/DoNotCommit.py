@@ -1,11 +1,12 @@
-API_Key = "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"
+API_Key = "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"
 MLSUSer = "cn229354"
 MLSPW = "Don0$h44$$"
 
 Inst_username = 'mondevert_llc'  # Enter your username here
 Inst_password = 'Don0$h44'  # Enter your password here
 
-
+aws_access_key_id = 'AKIAQAKWR42E5VWD4SOV'
+aws_secret_access_key = 'mz6gQ1ItkgbAYucYxfPhVWnQnShcp08n6KF0cuan'
 #Email info
 to = "sdonovan@mondevert.co; sdonovan@wesleyan.edu; Savetheworld@mondevert.co"
 

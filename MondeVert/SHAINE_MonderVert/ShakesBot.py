@@ -237,7 +237,7 @@ class PoemBot:
         from keras.preprocessing.text import Tokenizer
         from keras.utils import np_utils as kn
         # load document
-        in_filename = 'republic_clean.txt'
+        in_filename = '../Utilities/republic_clean.txt'
         doc = PoemBot.load_doc(self, in_filename)
         print(doc[:200])
 
@@ -260,11 +260,11 @@ class PoemBot:
         print('Total Sequences: %d' % len(sequences))
 
         # save sequences to file
-        out_filename = 'republic_sequences.txt'
+        out_filename = '../Utilities/republic_sequences.txt'
         PoemBot.save_doc(self,sequences, out_filename)
 
         # load
-        in_filename = 'republic_sequences.txt'
+        in_filename = '../Utilities/republic_sequences.txt'
         doc = PoemBot.load_doc(self,in_filename)
         lines = doc.split('\n')
 
@@ -300,7 +300,7 @@ class PoemBot:
         self.model.fit(X, y, batch_size=128, epochs=44)
 
         PoemBot.SaveModel4Later(self,'model_Greek.h5')
-        dump(tokenizer, open('tokenizer.pkl', 'wb'))
+        dump(tokenizer, open('../Utilities/tokenizer.pkl', 'wb'))
 
 
     def generateGreek(self):
@@ -313,16 +313,16 @@ class PoemBot:
 
 
         # load cleaned text sequences
-        in_filename = 'republic_sequences.txt'
+        in_filename = '../Utilities/republic_sequences.txt'
         doc = PoemBot.load_doc (self,in_filename)
         lines = doc.split('\n')
         seq_length = len(lines[0].split()) - 1
 
         # load the model
-        model = load_model('model_Greek.h5')
+        model = load_model('../Utilities/model_Greek.h5')
 
         # load the tokenizer
-        tokenizer = load(open('tokenizer.pkl', 'rb'))
+        tokenizer = load(open('../Utilities/tokenizer.pkl', 'rb'))
         #tokenizer = open('tokenizer.pkl', 'rb')
 
         # select a seed text

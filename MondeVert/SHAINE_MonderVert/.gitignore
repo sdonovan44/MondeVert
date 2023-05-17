@@ -1,3 +1,10 @@
+*.yaml
+*.ckpt
+*.pt
+*.idea
+
+
+
 # Python
 __pycache__/
 
@@ -11,7 +18,7 @@ checkpoints/
 .vscode/
 
 # Operations
-outputs/
+Utilities/outputs/
 inputs/
 steps/
 
@@ -23,7 +30,8 @@ taming-transformers
 output.png
 steps.mp4
 com.txt
-MondeVert/Utilities/Not used for now/DoNotCommtiSecrets
+DoNotCommtiSecrets.txt
+../SHAINE_MonderVert/DoNotCommit.py
 
 # Cog
 .cog

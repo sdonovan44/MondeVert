@@ -3,7 +3,6 @@ import wikipedia
 
 global Record
 import sys
-import ShakesBot as s
 from threading import Event
 from gingerit.gingerit import GingerIt
 import threading
@@ -14,7 +13,7 @@ import numpy
 Record = ''
 import webbrowser
 
-from MondeVert.SHAINE_MonderVert import User_Prefs as up
+from MondeVert.SHAINE_MonderVert import User_Prefs as up, ShakesBot as s
 
 import random
 import openai
