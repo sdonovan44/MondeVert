@@ -13,14 +13,15 @@ import numpy
 Record = ''
 import webbrowser
 
-from MondeVert.SHAINE_MonderVert import User_Prefs as up, ShakesBot as s
+from MondeVert.SHAINE_MonderVert.Utilities import ShakesBot as s
+from MondeVert.SHAINE_MonderVert.SHAINE_WIZARD_PROMPTS import User_Prefs as up
 
 import random
 import openai
 import pyttsx3
 # Import the speech recognition library
 import speech_recognition as sr
-from MondeVert.SHAINE_MonderVert.DoNotCommit import API_Key
+from MondeVert.SHAINE_MonderVert.Utilities.DoNotCommit import API_Key
 
 import atexit
 

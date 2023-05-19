@@ -5,29 +5,19 @@ import pandas as pd
 import wikipedia
 global Record
 import sys
-import random
 from secrets import randbelow
-import ShakesBot as s
-import Common_Sayings as cs
+from MondeVert.SHAINE_MonderVert.Utilities import ShakesBot as s, DoNotCommit as DNC
+from MondeVert.SHAINE_MonderVert.SHAINE_WIZARD_PROMPTS import Common_Sayings as cs, User_Prefs as up
 from threading import Event
-import User_Prefs as up
 from gingerit.gingerit import GingerIt
 import threading
 import numpy
-from docx import Document
 import re
 #from exceptions import PendingDeprecationWarning
-import requests
-import cloudscraper
-import tensorflow
-import selenium
 
 Record = ''
 import webbrowser
-from fpdf import FPDF
 
-import User_Prefs as up
-import os
 import platform
 import subprocess
 
@@ -39,13 +29,11 @@ import pyttsx3
 # Import the speech recognition library
 import speech_recognition as sr
 from dotenv import load_dotenv
-from DoNotCommit import API_Key
-import DoNotCommit  as DNC
+from MondeVert.SHAINE_MonderVert.Utilities.DoNotCommit import API_Key
 
 import atexit
 
 from docx import Document
-from docx.shared import Inches
 
 import shutil
 

@@ -4,7 +4,9 @@ import threading
 import time
 
 from glob import glob
-from MondeVert.SHAINE_MonderVert import ChatGPT as GPT, DoNotCommit as DNC, User_Prefs as up
+from MondeVert.SHAINE_MonderVert import SHAINE as GPT
+from MondeVert.SHAINE_MonderVert.Utilities import DoNotCommit as DNC
+from MondeVert.SHAINE_MonderVert.SHAINE_WIZARD_PROMPTS import User_Prefs as up
 
 sys.path.append(os.path.join(sys.path[0], "../../"))
 from instabot import Bot, utils
