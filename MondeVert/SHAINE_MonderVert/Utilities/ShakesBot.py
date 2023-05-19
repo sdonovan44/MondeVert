@@ -8,7 +8,7 @@ import datetime
 #import rhyme
 import random
 import numpy as np
-import pixray
+from Start_Up_Origin_Code import pixray
 from MondeVert.SHAINE_MonderVert.SHAINE_WIZARD_PROMPTS import User_Prefs as up
 from secrets import randbelow
 
