@@ -120,7 +120,7 @@ def SaveCSV(Text, Title, SavePath):
     Check_Folder_Exists(SavePath)
 
 
-    Text1 = ('Time: ' + str(current_time) + '| Title:' + Title+'| Text:' + Text)
+    Text1 = 'Time: ' + str(current_time) + '| Title:' + Title+'| Text:' + Text
 
     Data1 = [(Text1)]
 
@@ -128,7 +128,7 @@ def SaveCSV(Text, Title, SavePath):
     try:
         df1 = pd.DataFrame(data=Data1)
         df1.to_csv(Title2)
-        print(Title2)
+        print(Title1 + ' - File Saved in the following location: ' + Title2)
     except:
         print('Review Error File did not save ')
     try:
@@ -138,6 +138,8 @@ def SaveCSV(Text, Title, SavePath):
 
     except:
         print('Review  did not save to master df2 file ')
+
+
 
     return Title2
 
@@ -607,14 +609,16 @@ def NamePoemSavePoem(self, poem, ArtPaths, Prompts_Used, ArtistPoetInfo, title='
 
         try:
             df1 = pd.DataFrame(Text, columns=["TEXT"])
-            print(df1)
-            print(Title2)
-            df1.to_csv(Title2 + '.txt')
+
+            SaveCSV(Text = Text, Title= Title , SavePath=SavePath)
+            # print(df1)
+            # print(Title2)
+            # df1.to_csv(Title2 + '.txt')
             Add2MasterLyrics(self, current_time, Mode, title, ArtistPoetInfo, poem, Tag, SavePath,dfPrompts)
             # MondeVert_IP.SaveText(self,df1,'MondeVert_IP Assistant', 'Full Transcript')
             try:
-                add2Master2(df1)
-
+                #add2Master2(df1)
+                dn = True
             except:
                 print('Did not add to master, error')
         except:

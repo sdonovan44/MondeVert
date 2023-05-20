@@ -668,11 +668,11 @@ class MondeVert():
         Text1 = 'Original Prompt: ' + prompt + 'Path to Photo: ' +fname
         MondeVert.Add2Transcript(self,Text1)
 
-        data = ([Text1])
-        df1 = pd.DataFrame(data = data)
+        # data = ([Text1])
+        # df1 = pd.DataFrame(data = data)
         fnameText = fname_only
-        cu.SaveCSV(Title = fnameText, SavePath=SavePath)
-        cu.add2Master2(self, Text1)
+        cu.SaveCSV(Text = Text1,Title = fnameText, SavePath=SavePath)
+        #cu.add2Master2(self, Text1)
         return fname
 
     # Define a function that sends a message to ChatGPT
@@ -789,7 +789,7 @@ class MondeVert():
         cu.NamePoemSavePoem(self, prompt, ArtPaths, Prompts_Used, ArtistPoetInfo, title=Title,
                                        SavePath=SavePath, Mode='Song Lyrics' + Mode)
 
-    def Make_a_SongRR(self, System = up.system_Text, Role= up.RolePlay_SongArtist, Background=up.ArtistBio_SongArtist, Task = up.Song_Prompt_SongArtists,Special=up.Samples_SongArtists, Format='', Mode='Random Song'):
+    def Make_a_SongRR(self,SavePath = up.AI_Music_Path, System = up.system_Text, Role= up.RolePlay_SongArtist, Background=up.ArtistBio_SongArtist, Task = up.Song_Prompt_SongArtists,Special=up.Samples_SongArtists, Format='', Mode='Random Song'):
         ArtPaths = []
         openai.api_key = API_Key
         SavePath = up.AI_Music_Path
@@ -861,8 +861,9 @@ class MondeVert():
         if len(Title1) > 44:
             Title1 = Title1[0:44]
 
+        Title1 = Title1 + self.current_time
         SavePath = SavePath + '\\' + folder
-        Title2 = SavePath + Title1 + self.current_time
+        Title2 = SavePath + Title1
 
         cu.Check_Folder_Exists(SavePath)
 
@@ -912,29 +913,31 @@ class MondeVert():
         print(up.breakupOutput2)
 
         #MondeVert.speak(self, "DJ MondeVert Work complete yo")
-        data = """Artist_Bio: """ + Artist_Bio + ": " + print(up.breakupOutput2) + """ Potential Samples: """ + Samples2  + print(up.breakupOutput2) +  """Title: """ + Title + print(up.breakupOutput2) + """Song: """ + Song +  print(up.breakupOutput2) +"""Song 2.0: """ + ReWrite + print(up.breakupOutput2) + """DJMondeVert: """ + DJMondeVert
+        data_final = """Artist_Bio: """ + Artist_Bio + ": " + (up.breakupOutput2) + """ Potential Samples: """ + Samples2  + (up.breakupOutput2) +  """Title: """ + Title + (up.breakupOutput2) + """Song: """ + Song +  (up.breakupOutput2) +"""Song 2.0: """ + ReWrite + (up.breakupOutput2) + """DJMondeVert: """ + DJMondeVert
 
-        print(data)
+        print(data_final)
 
         #MondeVert.speak(self, "Saving the files round 1")
         # print(data)
 
-        data = [(self.current_time, data)]
-        print(data)
+        #data = [(self.current_time + '_' + data_final)]
+        Text = ("Create Date: " + self.current_time + '_Results: ' + data_final)
+        #print(data)
         try:
-            df1 = pd.DataFrame(data, columns=["TimeStamp", "Transcript"])
+            #df1 = pd.DataFrame(data)
             # print(df1)
             # print(Title2)
-            filename = Title2
-            cu.SaveCSV(data, filename, SavePath)
+
+            filename = cu.SaveCSV( Title= Title1, SavePath=SavePath,Text=Text)
 
             # MondeVert.SaveText(self,df1,'MondeVert Assistant', 'Full Transcript')
-            cu.add2Master2(df1)
+
         except:
             print('Review Error File did not save ')
 
         try:
-            cu.send_email_w_attachment_gmail(up.to, up.subject, Song, filename)
+            cu.send_email_w_attachment_gmail(body= Song, filename=filename)
+            cu.send_email_w_attachment_outlook(body=Song, filename=filename)
         except:
             print('email not send, its possible file was not created')
 
@@ -967,9 +970,8 @@ class MondeVert():
             ArtPath2 = ''
 
         #MondeVert.speak(self, "Saving the files round 2")
-        prompt = data + "Work of Art Inspiration:" + Art_Prompt
-        Prompts_Used = [
-            up.system_Text + up.RolePlay_SongArtist + "AI Created a Persona shown as the Artist Bio Above" + up.Song_prompt + up.ArtPrompt_SongArtist]
+        prompt = data_final + "Work of Art Inspiration:" + str(Art_Prompt)
+        Prompts_Used = [str(self.UserPromptsCount)+ ' User Inputs: ' + self.UserPrompts]
         ArtistPoetInfo = 'Lyrics Written By: ' + up.Song_Writer + '      (' + 'Artwork by: ' + up.AI_ArtistName + ')'
         cu.NamePoemSavePoem(self, prompt, ArtPaths, Prompts_Used, ArtistPoetInfo, title=Title,
                                        SavePath=SavePath, Mode='Song Lyrics' + Mode)
@@ -1506,7 +1508,7 @@ class MondeVert():
 
         Text2Add = 'Story Outline: '+ up.breakupOutput +  Outline_Main +  up.breakupOutput2 + up.breakupOutput + 'All Episodes Outline: ' + up.breakupOutput + Outline_ALL_Episodes + up.breakupOutput2 + up.breakupOutput + 'Characters: '+ up.breakupOutput +  Characters +  up.breakupOutput2 + up.breakupOutput+ 'Writer Persona: '+ up.breakupOutput +  Writer_Persona +up.breakupOutput2 + up.breakupOutput+ 'Writer Persona Summary: ' + up.breakupOutput + Writer_Persona_Summary +up.breakupOutput2 + up.breakupOutput+ 'Artist Persona: ' + up.breakupOutput + Artist_Persona +up.breakupOutput2 + up.breakupOutput+ 'Character Description - Main: ' + up.breakupOutput + self.Character_Art_Prompts_Main +up.breakupOutput2 + up.breakupOutput+ 'Character Description - Minor: ' + up.breakupOutput + self.Character_Art_Prompts_Minor
         FileName_Details_Pre = FileName + '_PreProduction'
-        cu.SaveCSV(Text2Add, FileName_Details_Pre, SavePath)
+        cu.SaveCSV(Text = Text2Add, Title = FileName_Details_Pre, SavePath=SavePath)
 
 
 #Call Outline - Episode by episode
@@ -1529,7 +1531,7 @@ class MondeVert():
             Episode.append(Episode_Story)
             Text2Add = "MondeVert Presents: " + up.breakupOutput2 + up.breakupOutput +  Episode_Story+ "Outline Details: " + up.breakupOutput2 + up.breakupOutput +  Outline_Episodes_by_episode
             FileName_Episode = FileName+'_EPISODE_' + str(episode_num)
-            cu.SaveCSV(Text2Add, FileName_Episode, SavePath)
+            cu.SaveCSV(Text=Text2Add,Title= FileName_Episode,SavePath= SavePath)
 
             # print(up.breakupOutput)
             # print('User_Input_AllEpisodes_Episodes_by_episode: ' + User_Input_AllEpisodes_Episodes_by_episode)
@@ -1687,14 +1689,14 @@ class MondeVert():
         cu.SaveText2Audio(Text = self.Character_Art_Prompts_Minor,SavePath=SavePath, FileName=Title + '_Charactors_Minor', Chunk_Limit=213, Voice= Voice, Artist_Persona=Artist_Persona)
 
 
-
-        data1 = [(data)]
+#
+       # data1 = [(data)]
 
         try:
             # df1 = pd.DataFrame(data1, columns=['Text'])
 
 
-            Email_File = cu.SaveCSV(data, FileName, SavePath)
+            Email_File = cu.SaveCSV(Text=data,Title=  FileName, SavePath= SavePath)
 
         except:
             print('Review Error File did not save ')
@@ -1703,9 +1705,9 @@ class MondeVert():
 
 
         try:
-            cu.send_email_w_attachment_gmail(up.to, up.subject, Project_Description, Email_File)
+            cu.send_email_w_attachment_gmail(body=Project_Description, filename=Email_File)
             print("Gmail email sent")
-            cu.send_email_w_attachment_outlook(up.to, up.subject, Project_Description, Email_File)
+            cu.send_email_w_attachment_outlook(body = Project_Description,filename= Email_File)
             print("Outlook email sent")
         except:
             print('email not send, its possible file was not created')
@@ -1730,6 +1732,7 @@ class MondeVert():
         openai.api_key = API_Key
         self.current_time1 = datetime.datetime.now()
         self.current_time = self.current_time1.strftime('%m-%d-%Y_%H.%M')
+        self.SavePath = up.SavePath
 
 
         if Mode == 'ScreenPlay':
@@ -2124,7 +2127,8 @@ class MondeVert():
                     Title1 = Result[8:33]
                     filename = cu.CleanFileName(filename)
                     Title1 = cu.CleanFileName(Title1)
-                CSVLocation = cu.SaveCSV(str(data), Title=filename, SavePath=SavePath)
+                CSVLocation = cu.SaveCSV(Text = str(data), Title=filename, SavePath=SavePath)
+                CSVLocation2 = cu.SaveCSV(Text = str(Result), Title=filename + '_Result Only', SavePath=SavePath)
                 print('CSVLocation')
                 print(CSVLocation)
 
@@ -2701,7 +2705,9 @@ class MondeVert():
             # print(data)
             try:
 
-                filename = cu.SaveCSV(data[x], filename1[x], SavePath)
+                Text = data[x]
+                FName = filename1[x]
+                filename = cu.SaveCSV(Text = Text,Title = FName, SavePath=SavePath)
                 # MondeVert.SaveText(self,df1,'MondeVert Assistant', 'Full Transcript')
 
                 # MondeVert.add2Master2(df1)
@@ -2709,9 +2715,9 @@ class MondeVert():
                 print('Review Error File did not save ')
 
         try:
-            cu.send_email_w_attachment_gmail(up.to, up.subject, Skeleton_Story, filename)
+            cu.send_email_w_attachment_gmail(body =  Skeleton_Story, filename=filename)
             print('Gmail Email Sent ')
-            cu.send_email_w_attachment_outlook(up.to, up.subject, Skeleton_Story, filename)
+            cu.send_email_w_attachment_outlook(body =  Skeleton_Story, filename=filename)
             print('Outlook Email Sent ')
 
         except:
@@ -3055,9 +3061,12 @@ if __name__ == '__main__':
     #args = ['LinkedIn', 'Create_Persona_Writer', 'Resume_Review', 'Basic']
     #args = ['MondeVert_Audio_Video_Story']
     #args = ['Wedding Vows']
-    args = ['PjSpecial', 'PjSpecial', 'MondeVert_Audio_Video_Story',  'PictureBook']
-    #args.append(args)
-    #args.append(args)
+    #args = ['PjSpecial', 'PjSpecial', 'MondeVert_Audio_Video_Story',  'PictureBook']
+
+    args= ['Music']
+
+    args.append(args)
+    args.append(args)
 
 
 
