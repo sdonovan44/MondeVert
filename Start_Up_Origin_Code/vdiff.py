@@ -1,7 +1,7 @@
 # Originally made by Katherine Crowson (https://github.com/crowsonkb, https://twitter.com/RiversHaveWings)
 # The original BigGAN+CLIP method was by https://twitter.com/advadnoun
 
-from DrawingInterface import DrawingInterface
+from Start_Up_Origin_Code.DrawingInterface import DrawingInterface
 
 import sys
 import os
@@ -18,7 +18,7 @@ import math
 
 from omegaconf import OmegaConf
 from taming.models import cond_transformer, vqgan
-from util import wget_file, map_number
+from Start_Up_Origin_Code.util import wget_file, map_number
 
 
 model_urls = {

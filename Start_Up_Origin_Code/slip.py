@@ -16,7 +16,7 @@ all_slip_models =  ["SLIP_VITS16", "SLIP_VITB16", "SLIP_VITL16",
                     "CLIP_VITS16", "CLIP_VITB16", "CLIP_VITL16"]
 
 
-from util import wget_file
+from Start_Up_Origin_Code.util import wget_file
 
 def normalize(img, input_range = None):
     if input_range is None:

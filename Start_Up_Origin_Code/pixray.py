@@ -30,9 +30,9 @@ torch.backends.cudnn.benchmark = False		# NR: True is a bit faster, but can lead
 
 from torch_optimizer import DiffGrad, AdamP
 from perlin_numpy import generate_fractal_noise_2d
-from util import str2bool, get_file_path, emit_filename, split_pipes, parse_unit
+from Start_Up_Origin_Code.util import str2bool, get_file_path, emit_filename, split_pipes, parse_unit
 
-from slip import get_clip_perceptor
+from Start_Up_Origin_Code.slip import get_clip_perceptor
 
 from torchvision.transforms import Compose, Resize, CenterCrop, ToTensor, Normalize, InterpolationMode
 
@@ -48,9 +48,9 @@ import random
 
 from einops import rearrange
 
-from filters.colorlookup import ColorLookup
-from filters.wallpaper import WallpaperFilter
-from filters.tiler import TilerFilter
+from Start_Up_Origin_Code.filters.colorlookup import ColorLookup
+from Start_Up_Origin_Code.filters.wallpaper import WallpaperFilter
+from Start_Up_Origin_Code.filters.tiler import TilerFilter
 
 filters_class_table = {
     "lookup": ColorLookup,
@@ -66,10 +66,10 @@ global_padding_mode = 'reflection'
 global_aspect_width = 1
 global_spot_file = None
 
-from util import palette_from_string, real_glob
+from Start_Up_Origin_Code.util import palette_from_string, real_glob
 
-from vqgan import VqganDrawer
-from vdiff import VdiffDrawer
+from Start_Up_Origin_Code.vqgan import VqganDrawer
+from Start_Up_Origin_Code.vdiff import VdiffDrawer
 
 class_table = {
     "vqgan": VqganDrawer,
@@ -118,15 +118,15 @@ except ImportError:
     # only needed for palette stuff
     pass
 
-from Losses.LossInterface import LossInterface
-from Losses.PaletteLoss import PaletteLoss
-from Losses.SaturationLoss import SaturationLoss
-from Losses.SymmetryLoss import SymmetryLoss
-from Losses.SmoothnessLoss import SmoothnessLoss
-from Losses.EdgeLoss import EdgeLoss
-from Losses.StyleLoss import StyleLoss
-from Losses.ResmemLoss import ResmemLoss
-from Losses.AestheticLoss import AestheticLoss
+from Start_Up_Origin_Code.Losses.LossInterface import LossInterface
+from Start_Up_Origin_Code.Losses.PaletteLoss import PaletteLoss
+from Start_Up_Origin_Code.Losses.SaturationLoss import SaturationLoss
+from Start_Up_Origin_Code.Losses.SymmetryLoss import SymmetryLoss
+from Start_Up_Origin_Code.Losses.SmoothnessLoss import SmoothnessLoss
+from Start_Up_Origin_Code.Losses.EdgeLoss import EdgeLoss
+from Start_Up_Origin_Code.Losses.StyleLoss import StyleLoss
+from Start_Up_Origin_Code.Losses.ResmemLoss import ResmemLoss
+from Start_Up_Origin_Code.Losses.AestheticLoss import AestheticLoss
 
 loss_class_table = {
     "palette": PaletteLoss,

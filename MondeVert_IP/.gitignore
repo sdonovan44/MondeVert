@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+
+# Libraries and Models
+CLIP/
+taming-transformers/
+taming/
+checkpoints/
+
+# Editor
+.vscode/
+
+# Operations
+SHAINE_MonderVert/Testing_Files/Utilities/outputs/
+inputs/
+steps/
+
+# local place dependencies
+CLIP
+taming-transformers
+
+# Files
+output.png
+steps.mp4
+com.txt
+DoNotCommtiSecrets.txt
+../SHAINE_MonderVert/DoNotCommit.py
+
+# Cog
+.cog
