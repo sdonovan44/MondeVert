@@ -108,9 +108,9 @@ def SaveCSV(Text, Title, SavePath):
 
 
     Title1  = CleanFileName(Title)
-    folder = str(Title1)
-    if len(folder) > 44:
-        folder = folder[0:44]
+    # folder = str(Title1)
+    # if len(folder) > 44:
+    #     folder = folder[0:44]
     Title1 = '\\' + str(Title1) + "_"
     if len(Title1) > 44:
         Title1 = Title1[0:44]
@@ -218,15 +218,33 @@ def Split_Audio(Text, SavePath, FileName,FilePath = '', OpeningSound = up.MondeV
     FilePaths = []
     length = len(Text)
     Audio_File_Count= 1
-    SavePath_Chunks = SavePath + r'\Audio Chunks'
+    if 'Audio Chunks' in SavePath:
+        SavePath_Chunks= SavePath
+    else:
+        SavePath_Chunks = SavePath + r'\Audio Chunks'
     Check_Folder_Exists(SavePath)
     Check_Folder_Exists(SavePath_Chunks)
     RunningCheck = 0
     LastPunc = 100
     New_Text_Translated=[]
+    Audio_File_Count = 0
+    Voices = []
+    countl = 0
+
+    TranslateLanguages = []
+    for l in Translate:
+        if l == 'English':
+            v = Voice
+        else:
+            v = SAF.Pick_Voice(Language=l)
+        print(l + 'Voice: ' +v )
+        Voices.append(v)
+        New_Text_Translated.append('Voice: ' + str(Voices[countl]) + '   ' + str(l) + '_Translation: ')
+        countl += 1
 
     while  LastPunc != -1:
         Text_Chunk = Text_New[:Chunk_Limit]
+        Audio_File_Count += 1
         for i in Chunk_Replaces:
             Text_Chunk_Info_only = Text_Chunk.replace(i, Chunk_Delimiter)
 
@@ -239,17 +257,11 @@ def Split_Audio(Text, SavePath, FileName,FilePath = '', OpeningSound = up.MondeV
         # print(LastPunc)
         LastPunc =Text_Chunk_Info_only.rfind(Chunk_Delimiter)
 
-        # print('Last Punc Position')
-        # print(LastPunc)
-        Audio_File_Count = 1
+        print('Last Punc Position')
+        print(LastPunc)
+
         Text_Chunk_Final = Text_New[:LastPunc]
-        Voices = []
-        countl = 0
-        TranslateLanguages = []
-        for l in Translate:
-            Voices.append(SAF.Pick_Voice(Language=l))
-            New_Text_Translated.append('Voice: ' + str(Voices[countl]) + '   '  + str(l) + '_Translation_: ')
-            countl += 1
+
 
         countl = 0
         for l in Translate:
@@ -266,19 +278,20 @@ def Split_Audio(Text, SavePath, FileName,FilePath = '', OpeningSound = up.MondeV
                 tempTranslate = x.Translate(Text = Text_Chunk_Final, Language_Final=l)
                 Translate_Voice = Voices[countl]
                 New_Text_Translated[countl] += tempTranslate
+                translate2 = [l]
                 try:
-                    FilePath = SaveText2Audio(Text=Text_Chunk_Final, SavePath=SavePath_Chunks,
-                                          FileName=FileName + '_Chunk_'+ str(l) + '_' + str(Audio_File_Count),
-                                          Voice=Translate_Voice)
+                    FilePath = SaveText2Audio(Text=tempTranslate, SavePath=SavePath_Chunks,
+                                          FileName=FileName +'_' + l +'_' + Translate_Voice +'_Chunk_'+ str(Audio_File_Count),
+                                          Voice=Translate_Voice, Chunk_Mode=True, FilePath=FilePath, Translate=translate2)
                 except:
                     print('Error could not create audio for this text')
                 try:
-                    ArtPrompt = x.GPTArt2( User_Subject='Create a prompt for an artist to create a work of art based on the following text: '  +tempTranslate, ArtFormat=Artist_Persona + 'adapt the text to a person from a country that speaks: '+ str(l))
+                    ArtPrompt = x.GPTArt2( User_Subject='Create a prompt for an artist to create a work of art based on the following text: '  +tempTranslate, ArtFormat=Artist_Persona )
                 except:
                     ArtPrompt = Artist_Persona + tempTranslate
                     ArtPrompt[:313]
 #+ 'Embrace/depict the cultures around the world that speak '
-
+#+ 'adapt the text to a person from a country that speaks: '+ str(l)
 
                 try:
                     PicPath = x.makeArt(Prompt=ArtPrompt)
@@ -291,7 +304,9 @@ def Split_Audio(Text, SavePath, FileName,FilePath = '', OpeningSound = up.MondeV
                     SaveCSV(SavePath=SavePath, Title= FileName+l, Text=New_Text_Translated[countl])
 
             else:
-                FilePath = SaveText2Audio(Text = Text_Chunk_Final, SavePath = SavePath_Chunks, FileName=FileName + '_Chunk_' +str(Audio_File_Count), Voice = Voice )
+                print('Text_Chunk_Final: ' + str(len(Text_Chunk_Final)))
+                translate2 = [l]
+                FilePath = SaveText2Audio(Text = Text_Chunk_Final, SavePath = SavePath_Chunks, FileName=FileName +'_' + l +'_' + Voice +'_Chunk_' + str(Audio_File_Count), Voice = Voice , Chunk_Mode=True, FilePath=FilePath, Translate=translate2)
                 ArtPrompt = x.GPTArt2(User_Subject='Create a prompt for an artist to create a work of art based on the following text: ' + Text_Chunk_Final)
                 try:
                     PicPath = x.makeArt(Prompt=ArtPrompt)
@@ -304,7 +319,7 @@ def Split_Audio(Text, SavePath, FileName,FilePath = '', OpeningSound = up.MondeV
             FilePaths.append(FilePath)
             Text_Chunks.append(Text_Chunk_Final)
             RunningCheck +=len(Text_Chunk_Final)
-            Audio_File_Count +=1
+
 
             countl += 1
 
@@ -329,33 +344,53 @@ def Split_Audio(Text, SavePath, FileName,FilePath = '', OpeningSound = up.MondeV
 def CleanFileName(Text):
     Text = re.sub(r"[^a-zA-Z0-9 ]", "", Text)
     return Text
-def SaveText2Audio(Text = SAF.Text, SavePath =up.SavePath, FileName="Text2Audio", FilePath = '', Neural='Neural', Mode='Text2Audio', Chunk_Limit = 1500,Voice = random.choices(SAF.Original_List_of_Voices_English)[0], Chunk_Replaces = ['.','?','\n'], Chunk_Delimiter = '!',Artist_Persona = 'embrace the spirit and culture of the following text describe it to be illustrated by an artist'):
-    Voice = CleanFileName(Voice)
+def SaveText2Audio( Translate = sfa.Translation_Languages_Testing,Text = '', SavePath =up.SavePath, FileName="Text2Audio", FilePath = '', Neural='Neural', Mode='Text2Audio', Chunk_Limit = 1500,Voice = random.choices(SAF.Original_List_of_Voices_English)[0], Chunk_Replaces = ['.','?','\n'], Chunk_Delimiter = '!',Artist_Persona = 'embrace the spirit and culture of the following text describe it to be illustrated by an artist', Chunk_Mode = False):
+    #Voice = CleanFileName(Voice)
 
     Check_Folder_Exists(SavePath)
+
+
+    if Chunk_Mode == True:
+        print('Save text to audio for : '+ FileName + ', should be saving to : ' + SavePath)
+        FilePath_m = SavePath + '\\' + FileName + '.mp3'
+    else:
+        if Text == '' and os.path.exists(FilePath) and FilePath != '':
+
+            FilePath_m = FilePath[:-4] + '.mp3'
+            SavePath_index = FilePath.rfind('\\')
+            FStart = (SavePath_index+1)
+            FileName = FilePath[FStart:-4]
+            SavePath = FilePath[:SavePath_index]
+            print('SavePath: ' + SavePath)
+            print('FileName: ' + FileName)
+
+            with open(FilePath) as f:
+                Text = f.read()
+
+        else:
+            FilePath_m = SavePath + '\\' + FileName + '.mp3'
+
 
 
 
     #polly = Session(region_name='eu-west-2').client('polly')
 
+    print(Translate)
 
-
-    if len(str(Text)) >= Chunk_Limit:
-        try:
-            FilePath = Split_Audio(Text = Text,SavePath = SavePath, FileName=FileName, FilePath=FilePath, Chunk_Limit= Chunk_Limit, Voice = Voice, Chunk_Replaces = Chunk_Replaces, Chunk_Delimiter =Chunk_Delimiter, Artist_Persona = Artist_Persona)
-        except:
-            print('Error trying to create audio file try again later')
+    if len(str(Text)) >= Chunk_Limit or (( len(Translate) > 1 or Translate[0] != 'English') and  Chunk_Mode == False):
+        #try:
+        FilePathNew = Split_Audio(Text = Text,SavePath = SavePath, FileName=FileName, FilePath=FilePath_m, Chunk_Limit= Chunk_Limit, Voice = Voice, Chunk_Replaces = Chunk_Replaces, Chunk_Delimiter =Chunk_Delimiter, Artist_Persona = Artist_Persona, Translate=Translate)
+        #except:
+            #print('Error trying to create audio file try again later')
 
     else:
-        FilePaths = ''
-        FileName = FileName + '_' + Voice
-        FilePath1 = 'No File Saved'
-        if FilePath =='':
-            FilePath = SavePath + '\\' + FileName + '.mp3'
-        else:
-            FilePath = FilePath[:-4] + '.mp3'
+        #FilePaths = ''
+
         # print(FilePath)
         # print(len(str(Text)))
+        if Voice not in FileName:
+            FileName = FileName + '_' + Voice
+            FilePath1 = 'No File Saved'
 
         try:
             session = Session(aws_access_key_id=DNC.aws_access_key_id, aws_secret_access_key=DNC.aws_secret_access_key,
@@ -381,7 +416,7 @@ def SaveText2Audio(Text = SAF.Text, SavePath =up.SavePath, FileName="Text2Audio"
             # ensure the close method of the stream object will be called automatically
             # at the end of the with statement's scope.
             with closing(response["AudioStream"]) as stream:
-                output = os.path.join(gettempdir(), FilePath)
+                output = os.path.join(gettempdir(), FilePath_m)
 
 
                 try:
@@ -389,6 +424,7 @@ def SaveText2Audio(Text = SAF.Text, SavePath =up.SavePath, FileName="Text2Audio"
                     with open(output, "wb") as file:
                         file.write(stream.read())
                         #FilePath = FilePath
+                    FilePathNew = FilePath_m
                 except IOError as error:
                     # Could not write to file, exit gracefully
                     print(error)
@@ -410,7 +446,7 @@ def SaveText2Audio(Text = SAF.Text, SavePath =up.SavePath, FileName="Text2Audio"
         #
 
 
-    return FilePath
+    return FilePathNew
 
 
 #
@@ -643,8 +679,12 @@ def NamePoemSavePoem(self, poem, ArtPaths, Prompts_Used, ArtistPoetInfo, title='
                     r.add_picture(i)
                     original = i
                     target = SavePath + Title1 + str(image_counter)  + '.png'
-                    shutil.copyfile(original, target)
 
+
+                    try:
+                        shutil.copyfile(original, target)
+                    except:
+                        dn = 100
                     try:
                         IP.png2JPG(original, up.PNGPath, Title1, up.PNGPath_Archive, Del=False)
 

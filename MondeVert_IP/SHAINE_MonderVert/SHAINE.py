@@ -789,10 +789,10 @@ class MondeVert():
         cu.NamePoemSavePoem(self, prompt, ArtPaths, Prompts_Used, ArtistPoetInfo, title=Title,
                                        SavePath=SavePath, Mode='Song Lyrics' + Mode)
 
-    def Make_a_SongRR(self,SavePath = up.AI_Music_Path, System = up.system_Text, Role= up.RolePlay_SongArtist, Background=up.ArtistBio_SongArtist, Task = up.Song_Prompt_SongArtists,Special=up.Samples_SongArtists, Format='', Mode='Random Song'):
+    def Make_a_SongRR(self,Artist_Bio_Details = up.Artist_Bio_DetailsSD,Song_Subject = up.Song_Subject_SD, SavePath = up.AI_Music_Path, System = up.system_Text, Role= up.RolePlay_SongArtist, Background=up.ArtistBio_SongArtist, Task = up.Song_Prompt_SongArtists,Special=up.Samples_SongArtists, Format='', Mode='Random Song',USERTITLE = ''):
         ArtPaths = []
         openai.api_key = API_Key
-        SavePath = up.AI_Music_Path
+        #SavePath = up.AI_Music_Path
         cu.Check_Folder_Exists(SavePath)
         SavePath = SavePath + '\\' + Mode
         cu.Check_Folder_Exists(SavePath)
@@ -814,7 +814,7 @@ class MondeVert():
             model="gpt-3.5-turbo",
             messages=[
                 {"role": "system", "content": up.system_TextRR},
-                {"role": "user", "content": up.ArtistBio_SongArtistRR + up.Artist_Bio_DetailsRR}
+                {"role": "user", "content": up.ArtistBio_SongArtistRR + Artist_Bio_Details}
             ], temperature=crazy
         )
 
@@ -828,7 +828,7 @@ class MondeVert():
             messages=[
                 {"role": "system", "content": up.system_TextRR},
                 {"role": "user", "content": up.RolePlay_SongArtistRR + Artist_Bio},
-                {"role": "user", "content": up.Song_Prompt_SongArtistsRR + up.Song_Subject},
+                {"role": "user", "content": up.Song_Prompt_SongArtistsRR + Song_Subject},
                 {"role": "user", "content": up.Song_Format_Prompt + up.SongFormat},
                 # {"role": "user", "content": up.Title_SongArtistsRR},
                 # {"role": "user", "content": up.Samples_SongArtistsRR},
@@ -854,12 +854,23 @@ class MondeVert():
 
     #Create new subfolder etc for this filepath
         Title1 = cu.CleanFileName(Title)
-        folder = Title1
-        if len(folder) > 44:
-            folder = folder[0:44]
+        USERTITLE = cu.CleanFileName(USERTITLE)
+
+
+
         Title1 = '\\' + str(Title1) + "_"
         if len(Title1) > 44:
             Title1 = Title1[0:44]
+
+
+
+
+        if USERTITLE == '':
+            folder = Title1
+            if len(folder) > 44:
+                folder = folder[0:44]
+        else:
+            folder = USERTITLE
 
         Title1 = Title1 + self.current_time
         SavePath = SavePath + '\\' + folder
@@ -921,7 +932,7 @@ class MondeVert():
         # print(data)
 
         #data = [(self.current_time + '_' + data_final)]
-        Text = ("Create Date: " + self.current_time + '_Results: ' + data_final)
+        Text = str("Create Date: " + self.current_time + '_Results: ' + data_final)
         #print(data)
         try:
             #df1 = pd.DataFrame(data)
@@ -974,6 +985,231 @@ class MondeVert():
         Prompts_Used = [str(self.UserPromptsCount)+ ' User Inputs: ' + self.UserPrompts]
         ArtistPoetInfo = 'Lyrics Written By: ' + up.Song_Writer + '      (' + 'Artwork by: ' + up.AI_ArtistName + ')'
         cu.NamePoemSavePoem(self, prompt, ArtPaths, Prompts_Used, ArtistPoetInfo, title=Title,
+                                       SavePath=SavePath, Mode='Song Lyrics' + Mode)
+
+
+
+
+    def Make_a_Song_2(self,Make_Persona = False,Artist_Bio_Details = '',Song_Subject = up.Song_Subject, SavePath = up.AI_Music_Path, System = up.system_TextRR, Role= up.RolePlay_SongArtistRR, Outline_Task=up.ArtistBio_SongArtistRR, Task = up.Song_Prompt_SongArtists,Special=up.Samples_SongArtists, Format=up.SongFormat ,Mode='Random Song',USERTITLE = ''):
+
+
+        #Note if the bio is not passed in it makes a random persona up
+
+        ArtPaths = []
+        openai.api_key = API_Key
+        #SavePath = up.AI_Music_Path
+        cu.Check_Folder_Exists(SavePath)
+
+
+
+        if Mode not in SavePath:
+            SavePath = SavePath + '\\' + Mode
+        cu.Check_Folder_Exists(SavePath)
+
+
+        if Artist_Bio_Details == '' or Make_Persona == True:
+            Artist_Bio_Details = MondeVert.Writer_Persona_Short_Story(self, Role=lup.Music_Persona_Role, Task=lup.Music_Persona_Task,Format=lup.Music_Persona_Format, Special=lup.Music_Persona_Special,Subject=Artist_Bio_Details, crazy=.5)
+
+
+
+
+        crazy = round((randbelow(520000) + 170000) / 100000, 0)
+        crazy = crazy / 10
+        print(crazy)
+
+        crazy += .2
+        if crazy < .4:
+            crazy = .6
+        if crazy > .9:
+            crazy = .7
+
+
+
+
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": System},
+                {"role": "user", "content": Outline_Task + Artist_Bio_Details}
+            ], temperature=crazy
+        )
+
+        Artist_Bio = response.choices[0].message.content
+
+        # print('Artist_Bio: ' + Artist_Bio)
+        print(up.breakupOutput2)
+
+        Song1 = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": System},
+                {"role": "user", "content": Role + Artist_Bio},
+                {"role": "user", "content":  Song_Subject},
+                {"role": "user", "content": up.Song_Format_Prompt + Format},
+
+            ]
+            , temperature=crazy
+        )
+        Song = Song1.choices[0].message.content
+
+        # Create original details
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": System},
+                {"role": "user", "content": Role + Artist_Bio},
+                {"role": "user", "content": up.Title_SongArtistsRR + Song}
+
+            ], temperature=crazy
+        )
+
+        Title = response.choices[0].message.content
+
+    #Create new subfolder etc for this filepath
+        Title1 = cu.CleanFileName(Title)
+        USERTITLE = cu.CleanFileName(USERTITLE)
+
+
+
+        Title1 = '\\' + str(Title1) + "_"
+        if len(Title1) > 44:
+            Title1 = Title1[0:44]
+
+
+
+
+        if USERTITLE == '':
+            folder = Title1
+            if len(folder) > 44:
+                folder = folder[0:44]
+        else:
+            folder = USERTITLE
+
+        Title1 = Title1 + self.current_time
+        SavePath = SavePath + '\\' + folder
+        FullFilePath = SavePath + '\\'+ Title1
+
+        cu.Check_Folder_Exists(SavePath)
+
+
+
+
+        # Create original details
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": System},
+                {"role": "user", "content": up.RolePlay_SongArtistRR + Artist_Bio},
+                {"role": "user", "content": up.Samples_SongArtistsRR2 + Song}
+
+            ], temperature=crazy
+        )
+
+        Samples2 = response.choices[0].message.content
+
+        # Create original details
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": System},
+                {"role": "user", "content": up.RolePlay_SongArtistRR + Artist_Bio},
+                {"role": "user", "content": up.ReWrite_Song + Song}
+
+            ], temperature=crazy
+        )
+
+        ReWrite = response.choices[0].message.content
+
+        # Create original details
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": up.system_TextDJ},
+                {"role": "user", "content": Role + Artist_Bio},
+                {"role": "user", "content": Samples2},
+                {"role": "user", "content": up.ExplainTheBeat + ReWrite}
+
+            ], temperature=crazy
+        )
+
+        DJMondeVert = response.choices[0].message.content
+
+        print(up.breakupOutput2)
+
+        #MondeVert.speak(self, "DJ MondeVert Work complete yo")
+        data_final = """Artist_Bio: """ + Artist_Bio + ": " + (up.breakupOutput2) + """ Potential Samples: """ + Samples2  + (up.breakupOutput2) +  """Title: """ + Title + (up.breakupOutput2) + """Song: """ + Song +  (up.breakupOutput2) +"""Song 2.0: """ + ReWrite + (up.breakupOutput2) + """DJMondeVert: """ + DJMondeVert
+
+        print(data_final)
+
+        #MondeVert.speak(self, "Saving the files round 1")
+        # print(data)
+
+        #data = [(self.current_time + '_' + data_final)]
+        Text = str("Create Date: " + self.current_time + '_Results: ' + data_final)
+        #print(data)
+        try:
+            #df1 = pd.DataFrame(data)
+            # print(df1)
+            # print(Title2)
+
+            filename = cu.SaveCSV( Title= Title1 + '_pre', SavePath=SavePath,Text=Text)
+            try:
+                filename2 = cu.SaveCSV(Title=Title1 + '_lyrics', SavePath=SavePath, Text=ReWrite)
+
+
+                try:
+                     audioname =    cu.SaveText2Audio(Text = ReWrite, Translate=['French', 'English'], SavePath=SavePath, FileName=Title1)
+
+                except:
+                    dn = 100
+
+            except:
+                dn = 100
+            # MondeVert.SaveText(self,df1,'MondeVert Assistant', 'Full Transcript')
+
+        except:
+            print('Review Error File did not save ')
+
+        try:
+            cu.send_email_w_attachment_outlook(body=Song, filename=filename)
+            cu.send_email_w_attachment_gmail(body= Song, filename=filename)
+
+        except:
+            print('email not send, its possible file was not created')
+
+        #MondeVert.speak(self, "Making the art, painting yo picture")
+        Art_Prompt1 = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": System},
+                {"role": "user", "content": Role+ Artist_Bio},
+                {"role": "user", "content": up.ArtPrompt_SongArtistRR}
+            ], temperature=crazy
+        )
+
+        Art_Prompt = Art_Prompt1.choices[0].message.content
+        print("Work of Art Inspiration:" + Art_Prompt)
+
+        # print(Artist_Bio)
+        # MondeVert.speak(self,Artist_Bio)
+        # print(Song)
+        # MondeVert.speak(self, Song)
+        # print(Art_Prompt)
+        # MondeVert.speak(self, Art_Prompt)
+
+        # Art2 = MondeVert.ChatGPTDA(self, temp=crazy, MakeArt=True, Prompt=(Art_Prompt),ConfirmBot=False)
+        try:
+            ArtPath2 = MondeVert.makeArt(self, Art_Prompt)
+            ArtPaths.append(ArtPath2)
+
+        except:
+            ArtPath2 = ''
+
+        #MondeVert.speak(self, "Saving the files round 2")
+        prompt = data_final + "Work of Art Inspiration:" + str(Art_Prompt)
+        Prompts_Used = [str(self.UserPromptsCount)+ ' User Inputs: ' + self.UserPrompts]
+        ArtistPoetInfo = 'Lyrics Written By: Shane Donovan   (' + 'Artwork by: ' + up.AI_ArtistName + ')'
+        cu.NamePoemSavePoem(self, prompt, ArtPaths, Prompts_Used, ArtistPoetInfo, title=Title1,
                                        SavePath=SavePath, Mode='Song Lyrics' + Mode)
 
 
@@ -1283,16 +1519,34 @@ class MondeVert():
     def Writer_Persona_Short_Story(self, Role=lup.Persona_Role, Task=lup.Persona_Background,
                                    Format=lup.Persona_Format2, Special=lup.Persona_Special,
                                    Subject='', crazy=.5):
+
+        ArtPath = 'No Art Made'
         if Subject != '':
             Role = Role + """Your role and subject matter expertise should fit the following Subject and or style and mood in the {Text} provided by the user Text:###""" + Subject + """###"""
 
         Writer_Persona = MondeVert.Basic_GPT_Query(self,Line2_Role = Role,Line4_Task= Task, Line3_Format = Format, Special = Special, crazy = crazy)
         #Save a csv of this info in ssavepath
         #Add to Master tracker of artists and writer personas
-        cu.add2Master_Persona(Text = str(self.current_time + '  '+  Writer_Persona))
+        try:
+            ArtPrompt =  MondeVert.GPTArt2(self, User_Subject=Writer_Persona)
+            try:
+                ArtPath = MondeVert.makeArt(self, Prompt=ArtPrompt)
+            except:
+                dn = 100
+        except:
+            dn = 100
+
+        try:
+            cu.add2Master_Persona(Text = str(self.current_time + '  '+  Writer_Persona + ' Art File location: ' + ArtPath))
+
+        except:
+            dn = 100
+
+
         return Writer_Persona
 
     def Artist_Persona_Short_Story(self,Role = lup.Persona_artist_Role, Task = lup.Persona_artist_Background,Format = lup.Persona_artist_Format, Special = lup.Persona_artist_Special, Writer_persona = '', crazy = .5):
+        ArtPath = 'No Art File Created'
         if Writer_persona !='':
             Special = Special + """You should fit the style and mood provided by the following Outline:###""" + Writer_persona + """###"""
 
@@ -1300,7 +1554,21 @@ class MondeVert():
             if Artist_Persona =='':
                 Artist_Persona = 'Same artist that works for the simpsons, make it in simpson style art'
 
-            cu.add2Master_Persona(Text=str(self.current_time + '  '+ Artist_Persona))
+            try:
+                ArtPrompt = MondeVert.GPTArt2(self, User_Subject=Artist_Persona)
+                try:
+                    ArtPath = MondeVert.makeArt(self, Prompt=ArtPrompt)
+                except:
+                    dn = 100
+            except:
+                dn = 100
+
+            try:
+                cu.add2Master_Persona(
+                    Text=str(self.current_time + '  ' + Artist_Persona + ' Art File location: ' + ArtPath))
+            except:
+                dn = 100
+
             #print(up.breakupOutput)
             return Artist_Persona
 
@@ -1738,7 +2006,12 @@ class MondeVert():
         if Mode == 'ScreenPlay':
             MondeVert.Make_a_ScreenPlay(self, SavePath=up.AI_Screen_Plays + '\\' + Mode,System = up.system_Text_ScreenPlay0, Mode='ScreenPlay')
         elif Mode == 'Music':
-            MondeVert.Make_a_SongRR(self, SavePath=up.AI_Music_Path + '\\' + Mode,System = up.system_TextRR, Mode='Music')
+            MondeVert.Make_a_Song_2(self, SavePath=up.AI_Music_Path + '\\' + Mode,System = up.system_TextRR, Mode='Music', )
+
+        elif Mode == 'Music_Shane':
+            MondeVert.Make_a_Song_2(self, Make_Persona=True,SavePath=up.AI_Music_Path,System = up.system_TextRR, Mode='Music_Shane',Artist_Bio_Details=up.Artist_Bio_DetailsSD, Song_Subject=up.Song_Subject )
+        elif Mode == 'Music_Rich':
+            MondeVert.Make_a_Song_2(self, Make_Persona=True,SavePath=up.AI_Music_Path + '\\' + Mode, Mode='Music_Rich',Artist_Bio_Details=up.Artist_Bio_DetailsRR, Song_Subject=up.Song_Subject)
         elif Mode == 'Skit':
             MondeVert.MondeVertTask(self, SavePath=up.AI_Screen_Plays + '\\' + Mode,System = up.system_TextJoaT,Role=up.Test_Role_Skit, Background=up.Test_Background_Skit, Task = up.Test_Task_Skit,Special=up.Test_Special_Skit, Format=up.Test_Format_Skit, Mode='Skit')
         elif Mode == 'Basic':
@@ -1755,7 +2028,7 @@ class MondeVert():
             MondeVert.MondeVertTask(self,  SavePath=up.AI_Childrens_AudioBook_Path + '\\' + Mode, System=up.system_TextJoaT, Role=up.Test_Role_PictureBook,Background=up.Test_Background_PictureBook, Task=up.Test_Task_PictureBook, Special=up.Test_Special_PictureBook,Format=up.Test_Format_PictureBook, Mode='PictureBook', ArtPrompt= up.MondeVert_ArtPrompt,ArtFormat = up.MondeVert_ArtFormat, AdvanceArtPrompt = up.MondeVert_ArtPrompt_PictureBook , AdvanceArtFormat= up.MondeVert_ArtFormat_PictureBook)
 
         elif Mode == 'PjSpecial':
-            MondeVert.MondeVertTask(self,  SavePath=up.AI_Childrens_AudioBook_Path + '\\' + Mode, System=up.system_TextJoaT, Role=up.Test_Role_PictureBook + up.DinosaurTaco_Writing,Background=up.Test_Background_PictureBook, Task=up.Test_Task_PictureBook, Special=up.Test_Special_PictureBook,Format=up.Test_Format_PictureBook, Mode='PjSpecial', ArtPrompt= up.MondeVert_ArtPrompt,ArtFormat = up.MondeVert_ArtFormat, AdvanceArtPrompt = up.MondeVert_ArtPrompt_PictureBook , AdvanceArtFormat= up.MondeVert_ArtFormat_PictureBook)
+            MondeVert.MondeVertTask(self,  SavePath=up.AI_Childrens_AudioBook_Path + '\\' + Mode, System=up.system_TextJoaT, Role= up.DinosaurTaco_Writing,Background=up.Test_Background_PictureBook + up.DinosaurTaco_Writing + up.DinosaurTaco_Art, Task=up.Test_Task_PictureBook, Special=up.Test_Special_PictureBook,Format=up.Test_Format_PictureBook, Mode='PjSpecial', ArtPrompt= up.MondeVert_ArtPrompt,ArtFormat = up.DinosaurTaco_Art, AdvanceArtPrompt = up.MondeVert_ArtPrompt_PictureBook , AdvanceArtFormat= up.MondeVert_ArtFormat_PictureBook)
 
 
 
@@ -1843,7 +2116,7 @@ class MondeVert():
                                     Special=up.Test_Special_ReSearch, Format=up.Test_Format_ReSearch3, Mode='Research3')
 
         elif Mode == 'Book':
-            MondeVert.Make_a_ScreenPlay(self, Mode='ScreenPlay')
+            MondeVert.Make_a_ScreenPlay(self, Mode='ScreenPlay', SavePath=up.AI_Screen_Plays + '\\' + Mode)
         # elif Mode == 'Series':
         #     MondeVert.Series(self, Mode='Series', Episodes= 10, Seasons = 1, Audience = 'Kids')
 
@@ -3063,10 +3336,14 @@ if __name__ == '__main__':
     #args = ['Wedding Vows']
     #args = ['PjSpecial', 'PjSpecial', 'MondeVert_Audio_Video_Story',  'PictureBook']
 
-    args= ['Music']
+    #args= ['Music_Rich','Music_Shane', 'Music', 'PjSpecial']
 
-    args.append(args)
-    args.append(args)
+    args= ['Music_Shane', 'PjSpecial']
+    #
+
+    #
+    # args.append(args)
+    # args.append(args)
 
 
 

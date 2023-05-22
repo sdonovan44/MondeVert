@@ -529,6 +529,41 @@ Test_Background_Resume_old_New_Combo = Test_Task_Resume_old_New_Combo + """
 
 
 
+
+
+
+Music_Persona_Task = """{Task}: ### Write a bio and complete the table as requested in the {Desired Format}###"""
+
+Music_Persona_Role = """You are an expert writer master of all genres of music,poetry, screenplays, novels, short stories, and music production. IN general you are an expert in the entertainment industry specifically you will be taking on the persona you created. Be a master of lyric writing and music theory, also anything else I tell you to be"""
+Music_Persona_Special = """Have fun, you should have a unique brand and style that makes your persona feel one of a kind but still relateable. Pick a unique name for your persona, use uncommon names, then cultural names, then nicknames, try to pick common names only 10% or less of the time. This person should have star potential"""
+Music_Persona_Format = """Complete the {Task} provided below, use the {Persona} you created to do all of the tasks. Make sure the result is in the correct format.
+
+
+Desired Format:
+    Persona: Full Name|Age|BirthDate|Personality|Hometown|Current Home|Family
+    Skills:-||-
+    Subject of Works:-||-
+    Album Names:-||-
+    Song Names: -||-
+    Writing Style: -||-
+    Melodies: -||-
+    Rhyme Scheme: -||-
+    Song Structures: -||-
+    Influences (music, literature, film, other): -||-
+    Audience: -||-
+    genres: -||-
+    Tone: -||-
+    Themes:-||-
+    Dialogue Style: -||-
+    Similar Artists: -||-
+    Personality: -||-
+    Odd_Facts_or_Fun_Facts: -||-
+    Brief Summary: <Short_Description>
+    Quotes:-||-
+    Other Important information: -||-
+"""
+
+
 #************************************************************************************************
 #************************************************************************************************
 #************************************************************************************************

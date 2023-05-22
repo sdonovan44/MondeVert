@@ -25,7 +25,11 @@ Clean_Post_Line4 = " Do not lose the main concepts or ideas, instead clean up th
 
 
 
-SHAINE_User_Inquiry= """
+SHAINE_User_Inquiry = """Perriane I am sorry we can no longer date I think you are a great person and would love to stay friends best of luck in the future"""
+
+
+
+SHAINE_User_Inquiry_OLD2= """
 Tyler, 
 
 I understand that we may not be the closest of friends, but I wanted to reach out to you during this difficult time. 

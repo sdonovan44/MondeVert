@@ -111,7 +111,7 @@ Diego smiles, but inside he feels the weight of his broken dreams. He knows he h
 
 Translation_Languages_All = ['English','French', 'Italian','Spanish','Swahili','Chinese','Japanese','German']
 Translation_Languages_Testing = ['English','French', 'Italian','Spanish']
-Translation_Languages_Testing = ['English','French', 'Italian']
+Translation_Languages_Testing2 = ['English','French', 'Italian']
 
 
 
