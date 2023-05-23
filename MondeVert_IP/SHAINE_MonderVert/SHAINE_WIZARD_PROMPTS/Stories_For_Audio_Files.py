@@ -115,12 +115,12 @@ Translation_Languages_Testing2 = ['English','French', 'Italian']
 
 
 
-French_Voices = ['Gabrielle','Remi','Liam','Lea','Bianca','Lucia','Adriano','Sergio']
+French_Voices = ['Gabrielle','Remi','Liam','Lea']
 Spanish_Portuguese_Voices = ['Lucia','Remi','Adriano','Sergio','Pedro', 'Mia', 'Ines', 'Vitoria','Lupe', 'Camila']
 German_Voices = ['Daniel', 'Hannah', 'Vicki', 'Ola', 'Suvi']
 Japanese_Voices = ['Tomoko', 'Takumi', 'Kazuha']
 Chinese_Voices = ['Hiujin', 'Zhiyu']
-Italian_Voices = ['Lea','Bianca','Lucia','Remi','Adriano','Sergio']
+Italian_Voices = ['Bianca','Adriano']
 
 
 
@@ -135,7 +135,7 @@ def Pick_Voice(Language = 'English'):
     elif Language == 'French':
         Language_Base = French_Voices
     elif Language == 'Italian':
-        Language_Base = Italian_Voices
+        Language_Base = Italian_Voices + Italian_Voices + Italian_Voices + French_Voices
     elif Language == 'Spanish':
         Language_Base = Spanish_Portuguese_Voices
     elif Language == 'Swahili':

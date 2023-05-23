@@ -25,7 +25,7 @@ Clean_Post_Line4 = " Do not lose the main concepts or ideas, instead clean up th
 
 
 
-SHAINE_User_Inquiry = """Perriane I am sorry we can no longer date I think you are a great person and would love to stay friends best of luck in the future"""
+#SHAINE_User_Inquiry = """Perriane I am sorry we can no longer date I think you are a great person and would love to stay friends best of luck in the future"""
 
 
 
@@ -41,7 +41,7 @@ Sincerely,
 Shane
 """
 
-
+SHAINE_User_Inquiry = """I apologize for the confusing explanation, I am a new software company and my use case is expanding quickly. Originally I reached out because I do not have money to afford voice actors and I did not love the voices I was able to use by default on windows. I have since gotten Polly from AWS and this isnt bad, I could really benefit from having the ability to make my own neural voice. I would make my own voice to start and possibly pay a voice actor to  """
 #SHAINE_User_Inquiry= """Hey all, I know I am relatively bad at social media. That being said, I recently decided to try it out full force and spread love and positivity to the world. Help me out and start to support my pages, to start with I would love to get some insights into where I should focus my attention."""
 
 SHAINE_User_Inquiry3 = """What should i focus on for my business next week? Options: Real Estate: study for South Carolina Exam and marketing, SHAINE AI tool Development, Reach out to network and get people to buy-in, Chill-out/Relax?, Make more content?, Publish an official Children's Book?, Hire more Writers/Artists?, Create a content submission  contest for my followers?"""

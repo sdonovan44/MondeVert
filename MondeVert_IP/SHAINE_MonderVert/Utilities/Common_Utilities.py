@@ -216,6 +216,7 @@ def Split_Audio2(Text, SavePath, FileName,FilePath = '', OpeningSound = up.Monde
     Chunk_Limit = Chunk_Limit -10
     Text_Chunks = []
     Text_New = Text
+    SavePath_Pics = SavePath + r'\Art Chunks'
     FilePaths = []
     length = len(Text)
     Audio_File_Count= 1
@@ -225,6 +226,7 @@ def Split_Audio2(Text, SavePath, FileName,FilePath = '', OpeningSound = up.Monde
         SavePath_Chunks = SavePath + r'\Audio Chunks'
     Check_Folder_Exists(SavePath)
     Check_Folder_Exists(SavePath_Chunks)
+    Check_Folder_Exists(SavePath_Pics)
     RunningCheck = 0
     LastPunc = 100
     #New_Text_Translated=[]
@@ -337,6 +339,7 @@ def Split_Audio2(Text, SavePath, FileName,FilePath = '', OpeningSound = up.Monde
                 Text_New = ''
 
 
+            FileName_Chunk = FileName + '_' + l + '_' + Translate_Voice + '_Chunk_' + str(Audio_File_Count)
 
             # print(l)
             # print(countl)
@@ -353,9 +356,10 @@ def Split_Audio2(Text, SavePath, FileName,FilePath = '', OpeningSound = up.Monde
                 New_Text_Translated+= tempTranslate
                 translate2 = [l]
                 try:
+
                     Chunk_Limit_Translate = len(tempTranslate) + 10
                     FilePathc = SaveText2Audio(Text=tempTranslate, SavePath=SavePath_Chunks,
-                                          FileName=FileName +'_' + l +'_' + Translate_Voice +'_Chunk_'+ str(Audio_File_Count),
+                                          FileName=FileName_Chunk,
                                           Voice=Translate_Voice, Chunk_Mode=True, FilePath=FilePath, Translate=Translate, Chunk_Limit=Chunk_Limit_Translate)
                     print('successfully made an audio file in ' + l)
                 except:
@@ -371,8 +375,12 @@ def Split_Audio2(Text, SavePath, FileName,FilePath = '', OpeningSound = up.Monde
                     try:
                         PicPath = x.makeArt(Prompt=ArtPrompt)
                         print('successfully made a work of art in foreign language')
-                        newPicPath = FilePath[:-4] + '.png'
-                        shutil.copy(PicPath,newPicPath)
+                        newPicPath = SavePath_Pics + '\\'+FileName_Chunk + '.png'
+                        try:
+
+                            shutil.copy(PicPath,newPicPath)
+                        except:
+                            dn = 100
                     except:
                         print('Art not made, not an issue for now, maybe down the road')
 
@@ -387,8 +395,11 @@ def Split_Audio2(Text, SavePath, FileName,FilePath = '', OpeningSound = up.Monde
                     ArtPrompt = x.GPTArt2(User_Subject='Create a prompt for an artist to create a work of art based on the following text: ' + Text_Chunk_Final,ArtFormat='Describe the work of art as per the following Artist persona: ' + Artist_Persona )
                     try:
                         PicPath = x.makeArt(Prompt=ArtPrompt)
-                        newPicPath = FilePath[:-4] + '.png'
-                        shutil.copy(PicPath, newPicPath)
+                        newPicPath = SavePath_Pics + '\\' +FileName_Chunk + '.png'
+                        try:
+                            shutil.copy(PicPath, newPicPath)
+                        except:
+                            dn = 100
                     except:
                         print('Art not made, not an issue for now, maybe down the road')
 

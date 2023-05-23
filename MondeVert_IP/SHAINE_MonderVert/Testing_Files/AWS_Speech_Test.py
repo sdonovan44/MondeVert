@@ -45,15 +45,16 @@ audio_File_name = 'King Richard Reid'
 
 # args= ['Music_Rich','Music_Shane', 'Music', 'PjSpecial']
 
-args = ['Music_Shane']
+args = ['Poem']
 
 
 Runs = []
 # Runs.append('Music_Shane')
-Runs.append('Music_Rich')
+Runs.append('Blog_Random')
+Runs.append('Speech')
+Runs.append('PictureBook')
 Runs.append('PjSpecial')
-Runs.append('Monde  Vert_Audio_Video_Story')
-# Runs.append('Music_Shane')
+Runs.append('MondeVert_Audio_Video_Story')
 # Runs.append('PictureBook')
 # Runs.append('MondeVert_Audio_Video_Story')
 # Runs.append('ReSearch3')
@@ -63,7 +64,7 @@ Runs.append('Monde  Vert_Audio_Video_Story')
 for i in Runs:
     x.MondeVertMenu_up(Mode=i)
 
-cu.SaveText2Audio( FilePath = audio_new, Chunk_Limit=313)
+#cu.SaveText2Audio( FilePath = audio_new, Chunk_Limit=313)
 
 #
 
