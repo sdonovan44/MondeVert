@@ -146,6 +146,8 @@ def Pick_Voice(Language = 'English'):
         Language_Base = Japanese_Voices
     elif Language == 'German':
         Language_Base = German_Voices
+    else:
+        Language_Base = Original_List_of_Voices
 
     Voice = random.choices(Language_Base)[0]
 
@@ -153,7 +155,7 @@ def Pick_Voice(Language = 'English'):
 
 
 
-Original_List_of_Voices_English = ['Joanna**','Kendra','Kimberly','Salli','Ruth','Olivia','Kajal','Amy','Emma','Aria','Ayanda','Ivy','Joey','Matthew**','Stephen','Brian','Arthur','Justin','Kevin']
+Original_List_of_Voices_English = ['Joanna','Kendra','Kimberly','Salli','Ruth','Olivia','Kajal','Amy','Emma','Aria','Ayanda','Ivy','Joey','Matthew','Stephen','Brian','Arthur','Justin','Kevin']
 Original_List_of_Voices_ESL= ['Lupe','Hiujin','Zhiyu','Lea','Gabrielle','Bianca','Ida','Ola','Camila','Vitoria/Vitoria','Ines','Lucia','Mia','Hala','Arlet','Laura','Suvi','Vicki','Hannah','Kazuha','Tomoko','Seoyeon','Elin','Pedro','Remi','Liam','Adriano','Thiago','Sergio','Andres','Daniel','Takumi']
 Original_List_of_Voices = ['Joanna','Kendra','Kimberly','Salli','Ruth','Olivia','Kajal','Amy','Emma','Aria','Ayanda','Ivy','Joey','Matthew','Stephen','Brian','Arthur','Justin','Kevin','Lupe','Hiujin','Zhiyu','Lea','Gabrielle','Bianca','Ida','Ola','Camila','Vitoria','Ines','Lucia','Mia','Hala','Arlet','Laura','Suvi','Vicki','Hannah','Kazuha','Tomoko','Seoyeon','Elin','Pedro','Remi','Liam','Adriano','Thiago','Sergio','Andrés','Daniel','Takumi']
 Audio_Voice_Table = """Language and language variants,Rarity Weight (Higher the % means its more likely to be picked),Name/ID,Gender
@@ -170,7 +172,7 @@ English (New Zealand),30%,Aria,Female
 English (South African),30%,Ayanda,Female
 English (US),90%,Ivy,Female (child)
 English (US),90%,Joey,Male
-English (US),90%,Matthew**,Male
+English (US),90%,Matthew,Male
 English (US),90%,Stephen,Male
 English (British),30%,Brian,Male
 English (British),30%,Arthur,Male

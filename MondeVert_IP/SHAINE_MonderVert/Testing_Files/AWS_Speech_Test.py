@@ -31,8 +31,39 @@ audio_new = r"A:\MondeVert Productions\SHAINE - MondeVert AI Assistant\SHAINE_Re
 audio_File_name = 'King Richard Reid'
 #x.Manual_Audio_File(SavePath =up.AI_AudioBook_Path ,FileName=  audio_File_name, Source_FilePath = audio_new)
 
+# args = ['ReSearch3', 'ReSearch',  'ReSearch2']
+# args = ['ReSearch2']
+#
+# args = ['Freelance_Services', 'JobDescription','Resume']
+# args = ['Freelance_Services']
+# args = ['Resume']
 
-cu.SaveText2Audio( FilePath = audio_new)
+# args = ['LinkedIn', 'Create_Persona_Writer', 'Resume_Review', 'Basic']
+# args = ['MondeVert_Audio_Video_Story']
+# args = ['Wedding Vows']
+# args = ['PjSpecial', 'PjSpecial', 'MondeVert_Audio_Video_Story',  'PictureBook']
+
+# args= ['Music_Rich','Music_Shane', 'Music', 'PjSpecial']
+
+args = ['Music_Shane']
+
+
+Runs = []
+# Runs.append('Music_Shane')
+Runs.append('Music_Rich')
+Runs.append('PjSpecial')
+Runs.append('Monde  Vert_Audio_Video_Story')
+# Runs.append('Music_Shane')
+# Runs.append('PictureBook')
+# Runs.append('MondeVert_Audio_Video_Story')
+# Runs.append('ReSearch3')
+# Runs.append('Basic')
+# Runs.append('Wedding Vows')
+
+for i in Runs:
+    x.MondeVertMenu_up(Mode=i)
+
+cu.SaveText2Audio( FilePath = audio_new, Chunk_Limit=313)
 
 #
 

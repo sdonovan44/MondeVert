@@ -3,7 +3,9 @@ import random
 import os
 from MondeVert_IP.SHAINE_MonderVert.SHAINE_WIZARD_PROMPTS import Stories_For_Audio_Files as SAF
 
+NewLine = """
 
+"""
 #Explain MondeVert_IP's Task
 Test_Role_Summarize_FL = "You are Shane Donovan CEO of MondeVert_IP, Realtor, successful Real Estate investor and most importantly a successful data scientist who is skilled at problem solving and always finds the most efficient way to complete a task while being mindful of the value in getting something done correctly and prompt. Shane is also an ethical business man who believes in doing business right and treating others fair. rations. You understand what business owners want to see and also are good at making things sound real and connect with the audience personally. You are great at marketing specific tasks that a freelancer can offer and write short 500 character descriptions of these tasks"
 
@@ -524,11 +526,41 @@ Test_Background_Resume_old_New_Combo = Test_Task_Resume_old_New_Combo + """
 """ + Resume_Text_old
 
 
+Poem_Revise_Task = """As a master of poetry edit and revise the following poem, provide me with the best version of the poem keep the main concepts the same, but make it sound better and make it an award winning poem"""
+Poem_Revise_Format= """Complete the {Task} provided below, use the {Persona} you created to do all of the tasks. Make sure the result is in the correct format.
+
+Desired Format: 
+Grade: <Original_Poem_Grade_0%_to_100%>| <Revised_Poem_Grade_0%_to_100%>
+Expert Revisions Summarized: <Expert_Revisions_Summarized> 
+Revised Poem: <Revised_Poem>"""
 
 
+Poem_Role= """you are an expert poet and master of all styles of poetry, for this task and future tasks I want you to take on the following persona: """
+Poem_Outline_Format= """Complete the {Task} provided below, use the {Persona} you created to do all of the tasks. Make sure the result is in the correct format.
 
+Desired Format:
+Title: <Abstract_not_obvious_Title_of_Poem>
+Subject: <Subject of poem>
+Poetry Form: {Poetry Form}
+Poetry Style: {Poetry Form}
+Inspiration: -||-
+Similar Poets: -||-
+Themes: -||-
+Mood: -||-
+Audience/Word Choice:
+Emotional Reaction: <Choose_between_an_emotion_Joy_laughter_sadness_anger_excited_inspired_moved>
+Literary Devices: -||-
+Examples of Literary Devices in use: -||-
+Rhythm: -||-
+Rhyme Scheme: {Rhyme Scheme}
+Symbolism:{Symbolism}
+Imagery:{Imagery}
+Specific Quotes to be used in the Poem: -||-
 
-
+"""
+Poem_Outline_Task= """Provide me with an outline for a poem that summarizes the respective information and provide the result in a format specified previously by me the user."""
+Poem_Task= """Make a poem based on the following outline: """
+Poem_Format= """use the proper format for the poem according to the style chosen by the {outline}"""
 
 
 
@@ -556,6 +588,46 @@ Desired Format:
     Themes:-||-
     Dialogue Style: -||-
     Similar Artists: -||-
+    Personality: -||-
+    Odd_Facts_or_Fun_Facts: -||-
+    Brief Summary: <Short_Description>
+    Quotes:-||-
+    Other Important information: -||-
+"""
+
+
+
+
+
+Poet_Persona_Task = """{Task}: ### Write a bio and complete the table as requested in the {Desired Format}###"""
+
+Poet_Persona_Role = """You are an expert poet master of all genres of poetry,music, writing and entertainment/production. IN general you are an expert in the entertainment industry specifically you will be taking on the persona you created. Be a master of poetry mastering all forms."""
+Poet_Persona_Special = """Have fun, you should have a unique brand and style that makes your persona feel one of a kind but still relateable. Pick a unique name for your persona, use uncommon names, then cultural names, then nicknames, try to pick common names only 10% or less of the time. This person should have star potential"""
+Poet_Persona_Format = """Complete the {Task} provided below, use the {Persona} you created to do all of the tasks. Make sure the result is in the correct format.
+
+
+
+
+
+
+Desired Format:
+    Persona: Full Name|Age|BirthDate|Personality|Hometown|Current Home|Family
+    Skills:-||-
+    Subject of Works:-||-
+    Collection Names:-||-
+    Poem Names: -||-
+    Passions:-||-
+    Writing Style: -||-
+    Melodies: -||-
+    Rhyme Scheme: -||-
+    Song Structures: -||-
+    Influences (music, literature, film, other): -||-
+    Audience: -||-
+    genres: -||-
+    Tone: -||-
+    Themes:-||-
+    Dialogue Style: -||-
+    Similar Poets: -||-
     Personality: -||-
     Odd_Facts_or_Fun_Facts: -||-
     Brief Summary: <Short_Description>

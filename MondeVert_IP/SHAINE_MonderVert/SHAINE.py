@@ -9,6 +9,7 @@ from MondeVert_IP.SHAINE_MonderVert.SHAINE_WIZARD_PROMPTS import Long_User_Promp
 from threading import Event
 from gingerit.gingerit import GingerIt
 import numpy
+import time
 import re
 #from MondeVert_IP.SHAINE_MonderVert.Testing_Files import AWS_Speech_Test  as AWS
 # from exceptions import PendingDeprecationWarning
@@ -603,61 +604,65 @@ class MondeVert():
             print("Sending to OpenAI...")
             print()
 
-            response = openai.Image.create(
-                prompt=prompt,
-                n=1,
-                size="1024x1024"
-            )
 
-            image_url = response['data'][0]['url']
+            try:
+                response = openai.Image.create(
+                    prompt=prompt,
+                    n=1,
+                    size="1024x1024"
+                )
 
-            print(f"Image URL: {image_url}")
-            print()
+                image_url = response['data'][0]['url']
 
-            # URL of the image to be downloaded is defined as image_url
-            r = requests.get(image_url)  # create HTTP response object
+                print(f"Image URL: {image_url}")
+                print()
 
-            # send a HTTP request to the server and save
-            # the HTTP response in a response object called r
+                # URL of the image to be downloaded is defined as image_url
+                r = requests.get(image_url)  # create HTTP response object
+
+                # send a HTTP request to the server and save
+                # the HTTP response in a response object called r
 
 
-           #Commented out for testing
-            FileName = prompt
-            print('Length of File Name: ' + str(len(FileName)))
-            if len(FileName) >= 150:
-                FileName = FileName[0:150]
+               #Commented out for testing
+                FileName = prompt
                 print('Length of File Name: ' + str(len(FileName)))
+                if len(FileName) >= 150:
+                    FileName = FileName[0:150]
+                    print('Length of File Name: ' + str(len(FileName)))
 
-            FileName = cu.CleanFileName(FileName)
+                FileName = cu.CleanFileName(FileName)
 
-            # fname = f"{''.join([c for c in FileName.strip().replace(' ', '_') if c.isalnum() or c == '_'])}.png"
-            #
-            #
-            #
-            # if os.path.isfile(os.path.join(SavePath, '\'', fname)):
-            #     fname = fname.split(".")[0] + f".{''.join(random.choice(string.ascii_letters) for x in range(5))}.png"
-
-
-            fname_only = FileName
-            #fname = os.path.join(SavePath, '\'',FileName)
-
-            fname = SavePath + '\\' + FileName + '.png'
-            print(f"Filename: {fname}")
-            with open(fname, 'wb') as f:
+                # fname = f"{''.join([c for c in FileName.strip().replace(' ', '_') if c.isalnum() or c == '_'])}.png"
+                #
+                #
+                #
+                # if os.path.isfile(os.path.join(SavePath, '\'', fname)):
+                #     fname = fname.split(".")[0] + f".{''.join(random.choice(string.ascii_letters) for x in range(5))}.png"
 
 
-                f.write(r.content)
+                fname_only = FileName
+                #fname = os.path.join(SavePath, '\'',FileName)
 
-            if OpenFile ==True:
-                if platform.system() == 'Darwin':  # macOS
-                    subprocess.call(('open', fname))
-                elif platform.system() == 'Windows':  # Windows
-                    os.startfile(fname)
-                else:  # linux variants
-                    subprocess.call(('xdg-open', fname))
+                fname = SavePath + '\\' + FileName + '.png'
+                print(f"Filename: {fname}")
+                with open(fname, 'wb') as f:
 
-            #this line saves the
-            #IP.png2JPG(fname, up.PNGPath,fname_only, up.PNGPath_Archive, Del = False )
+
+                    f.write(r.content)
+
+                if OpenFile ==True:
+                    if platform.system() == 'Darwin':  # macOS
+                        subprocess.call(('open', fname))
+                    elif platform.system() == 'Windows':  # Windows
+                        os.startfile(fname)
+                    else:  # linux variants
+                        subprocess.call(('xdg-open', fname))
+
+                #this line saves the
+                #IP.png2JPG(fname, up.PNGPath,fname_only, up.PNGPath_Archive, Del = False )
+            except:
+                fname = 'File not saved error occurred'
 
         except:
             fname = 'File not saved error occurred'
@@ -789,6 +794,213 @@ class MondeVert():
         cu.NamePoemSavePoem(self, prompt, ArtPaths, Prompts_Used, ArtistPoetInfo, title=Title,
                                        SavePath=SavePath, Mode='Song Lyrics' + Mode)
 
+
+
+
+
+    def Make_a_poem(self,USERTITLE= '', Poet_Bio_Details = '', Make_Persona = True, Artist_Persona= '', Poet_Persona = '', Line1_System = up.system_TextJoaT, Line2_Role = lup.Poem_Role, Line3_Format = lup.Poem_Format, Line4_Task =lup.Poem_Task, Line3_Format_outline = lup.Poem_Outline_Format, Line4_Task_outline = lup.Poem_Outline_Task, SavePath = up.AI_Poetry_Path, Mode = 'Poem', crazy = .5):
+        #test
+        dn = 100
+        crazy = round((randbelow(520000) + 170000) / 100000, 0)
+        crazy = crazy / 10
+        print(crazy)
+
+        crazy += .2
+        if crazy < .4:
+            crazy = .6
+        if crazy > .9:
+            crazy = .7
+
+        ArtPaths = []
+        openai.api_key = API_Key
+        # SavePath = up.AI_Music_Path
+        cu.Check_Folder_Exists(SavePath)
+
+        ReWrite = '*Did not create'
+        Poem = '*Did not create'
+        Bitter_critic = '*Did not create'
+        ReWrite = '*Did not create'
+
+
+        if Mode not in SavePath:
+            SavePath = SavePath + '\\' + Mode
+        cu.Check_Folder_Exists(SavePath)
+
+        if Poet_Bio_Details == '' or Make_Persona == True:
+            try:
+                Poet_Bio_Details = MondeVert.Writer_Persona_Short_Story(self, Role=lup.Music_Persona_Role,
+                                                                          Task=lup.Music_Persona_Task,
+                                                                          Format=lup.Music_Persona_Format,
+                                                                          Special=lup.Music_Persona_Special,
+                                                                          Subject=Poet_Bio_Details, crazy=.5)
+            except:
+                if Poet_Bio_Details != '':
+                    Poet_Bio_Details = Poet_Bio_Details
+                else:
+                    Poet_Bio_Details = 'You are a bold new artist make a song that will be a hit and make you a star, be catchy and use expert music theory to make your masterpiece'
+
+
+
+
+
+        #make outline
+
+        Outline = MondeVert.Basic_GPT_Query(self,Line2_Role=Line2_Role + Poet_Bio_Details,Line3_Format=Line3_Format_outline,Line4_Task=Line4_Task_outline)
+        #make poem
+        Poem = MondeVert.Basic_GPT_Query(self, Line2_Role=Line2_Role + Poet_Bio_Details, Line3_Format=Line3_Format,
+                                            Line4_Task=Line4_Task )
+        #Edit poem
+        Revised_Poem = MondeVert.Basic_GPT_Query(self, Line2_Role=Line2_Role + Poet_Bio_Details, Line3_Format=Line3_Format, Line4_Task=Line4_Task)
+
+
+
+
+        if Revised_Poem =='':
+            Revised_Poem ='No Revision done, this work was too perfect'
+
+        try:
+            if len(Revised_Poem) > 150:
+                Lyrics = Revised_Poem
+            else:
+                Lyrics = Poem
+
+            Lyrics1 = Lyrics
+        except:
+            Lyrics = Poem
+
+        try:
+            Title = MondeVert.Quick_Title(self,Text=Lyrics)
+
+
+            Title = Title.replace("The Title:", "")
+            Title = Title.replace("Title:", "")
+            Title = Title.replace("The Title", "")
+            Title = Title.replace("Title", "")
+
+        except:
+            Title = Mode + '_' + self.current_time
+        dn = 100
+
+    # Create new subfolder etc for this filepath
+
+
+        Title1 = cu.CleanFileName(Title)
+        USERTITLE = cu.CleanFileName(USERTITLE)
+
+        Title1 = '\\' + str(Title1)
+        # if len(Title1) > 44:
+        #     Title1 = Title1[0:44]
+
+
+        if USERTITLE == '':
+            folder = Title1
+            if len(folder) > 44:
+                folder = folder[0:44]
+        else:
+            folder = USERTITLE
+
+        # Title1 = Title1 + self.current_time
+        SavePath = SavePath + '\\' + folder
+        FullFilePath = SavePath + '\\' + Title1
+
+        cu.Check_Folder_Exists(SavePath)
+
+#Run Bitter Critic
+        Bitter_Critic = MondeVert.Basic_GPT_Query(self, Line2_Role=up.Test_Role_Critic , Line3_Format=up.Test_Format_Critic,
+                                         Line4_Task=up.Test_Task_Critic + Lyrics, Special=up.Test_Special_Critic)
+
+        if Bitter_Critic =='':
+            Bitter_Critic ='No Critique done, this work was too amateur'
+        #make artist person
+
+
+
+        #summarize art style
+        #Save Files including word document
+        #Make art specific for the poem
+        #make audio for Italian, Spanish, French, English
+
+        print(up.breakupOutput2)
+
+        # MondeVert.speak(self, "DJ MondeVert Work complete yo")
+        data_final = """Poet_Bio: """ + Poet_Bio_Details + """Poem Details: """ + Outline + ": " + (
+            up.breakupOutput2) +  + """Title: """ + Title + (
+                         up.breakupOutput2) + """Poem: """ + Poem + (up.breakupOutput2) + """Poem 2.0: """ + Revised_Poem + """Bitter Critic: """ + Bitter_Critic
+
+        print(data_final)
+
+        # MondeVert.speak(self, "Saving the files round 1")
+        # print(data)
+
+        # data = [(self.current_time + '_' + data_final)]
+        Text = str("Create Date: " + self.current_time + '_Results: ' + data_final)
+
+        # print(data)
+        try:
+            # df1 = pd.DataFrame(data)
+            # print(df1)
+            # print(Title2)
+
+            filename = cu.SaveCSV(Title=Title1 + '_pre', SavePath=SavePath, Text=Text)
+            try:
+                filename2 = cu.SaveCSV(Title=Title1 + '_lyrics', SavePath=SavePath, Text=Lyrics)
+
+            except:
+                dn = 100
+        except:
+            print('Review Error File did not save ')
+
+
+        try:
+            try:
+                Art_persona = MondeVert.Artist_Persona_Short_Story(Writer_persona=Poet_Bio_Details)
+                Art_Details = MondeVert.summarize_art_style_for_short_story(writer_persona=Poet_Bio_Details,
+                                                                            outline=Lyrics,
+                                                                            Artist_Persona=Art_persona)  # , Format='Make a concise summary of an art style and artist to make a work of art like. Also provide the colors used, themes, moods, and tones.')
+
+            except:
+                Art_Details = Poet_Bio_Details
+                dn = 100
+
+            newline = """\n"""
+            newline2 = """\\n"""
+            audioname = cu.SaveText2Audio(Text=Lyrics, Translate=['French', 'English', 'Spanish', 'Italian', 'Swahili'], SavePath=SavePath,
+                                          FileName=Title1, Chunk_Replaces=['.', ')', ':', '?',newline,newline2], Chunk_Limit=1333,
+                                          Artist_Persona=Art_Details)
+            test = 100
+        except:
+            dn = 100
+
+
+
+        try:
+            cu.send_email_w_attachment_outlook(body=Lyrics, filename=filename)
+            cu.send_email_w_attachment_gmail(body=Lyrics, filename=filename)
+
+        except:
+            print('email not send, its possible file was not created')
+
+        Art_Prompt = MondeVert.GPTArt2(self, prompt=up.ArtPrompt_SongArtistRR, User_Subject=Line2_Role + Poet_Bio_Details, ArtFormat=Art_Details)
+        print("Work of Art Inspiration:" + Art_Prompt)
+
+
+        try:
+            ArtPath2 = MondeVert.makeArt(self, Art_Prompt)
+            ArtPaths.append(ArtPath2)
+
+        except:
+            ArtPath2 = ''
+
+        # MondeVert.speak(self, "Saving the files round 2")
+        prompt = data_final + "Work of Art Inspiration:" + str(Art_Prompt)
+        Prompts_Used = [str(self.UserPromptsCount) + ' User Inputs: ' + self.UserPrompts]
+        ArtistPoetInfo = 'Lyrics Written By: Shane Donovan   (' + 'Artwork by: ' + up.AI_ArtistName + ')'
+        cu.NamePoemSavePoem(self, prompt, ArtPaths, Prompts_Used, ArtistPoetInfo, title=Title1,
+                            SavePath=SavePath, Mode= Mode)
+
+
+
+
     def Make_a_SongRR(self,Artist_Bio_Details = up.Artist_Bio_DetailsSD,Song_Subject = up.Song_Subject_SD, SavePath = up.AI_Music_Path, System = up.system_Text, Role= up.RolePlay_SongArtist, Background=up.ArtistBio_SongArtist, Task = up.Song_Prompt_SongArtists,Special=up.Samples_SongArtists, Format='', Mode='Random Song',USERTITLE = ''):
         ArtPaths = []
         openai.api_key = API_Key
@@ -852,6 +1064,10 @@ class MondeVert():
 
         Title = response.choices[0].message.content
 
+        Title = Title.replace("The Title:", "")
+        Title = Title.replace("Title:", "")
+        Title = Title.replace("The Title", "")
+        Title = Title.replace("Title", "")
     #Create new subfolder etc for this filepath
         Title1 = cu.CleanFileName(Title)
         USERTITLE = cu.CleanFileName(USERTITLE)
@@ -859,8 +1075,8 @@ class MondeVert():
 
 
         Title1 = '\\' + str(Title1) + "_"
-        if len(Title1) > 44:
-            Title1 = Title1[0:44]
+        # if len(Title1) > 44:
+        #     Title1 = Title1[0:44]
 
 
 
@@ -1000,7 +1216,11 @@ class MondeVert():
         #SavePath = up.AI_Music_Path
         cu.Check_Folder_Exists(SavePath)
 
-
+        ReWrite = '*Did not create'
+        Song = '*Did not create'
+        Bitter_critic = '*Did not create'
+        ReWrite = '*Did not create'
+        DJMondeVert = '*Did not create'
 
         if Mode not in SavePath:
             SavePath = SavePath + '\\' + Mode
@@ -1008,10 +1228,15 @@ class MondeVert():
 
 
         if Artist_Bio_Details == '' or Make_Persona == True:
-            Artist_Bio_Details = MondeVert.Writer_Persona_Short_Story(self, Role=lup.Music_Persona_Role, Task=lup.Music_Persona_Task,Format=lup.Music_Persona_Format, Special=lup.Music_Persona_Special,Subject=Artist_Bio_Details, crazy=.5)
+            try:
+                Artist_Bio_Details = MondeVert.Writer_Persona_Short_Story(self, Role=lup.Music_Persona_Role, Task=lup.Music_Persona_Task,Format=lup.Music_Persona_Format, Special=lup.Music_Persona_Special,Subject=Artist_Bio_Details, crazy=.5)
+            except:
+                if Artist_Bio_Details!='':
+                    Artist_Bio_Details = Artist_Bio_Details
+                else:
+                    Artist_Bio_Details = 'You are a bold new artist make a song that will be a hit and make you a star, be catchy and use expert music theory to make your masterpiece'
 
-
-
+        Artist_Bio = Artist_Bio_Details
 
         crazy = round((randbelow(520000) + 170000) / 100000, 0)
         crazy = crazy / 10
@@ -1024,46 +1249,62 @@ class MondeVert():
             crazy = .7
 
 
+        #
+        # try:
+        #     response = openai.ChatCompletion.create(
+        #         model="gpt-3.5-turbo",
+        #         messages=[
+        #             {"role": "system", "content": System},
+        #             {"role": "user", "content": Outline_Task + Artist_Bio_Details}
+        #         ], temperature=crazy
+        #     )
+        #
+        #     Artist_Bio = response.choices[0].message.content
+        # except:
+        #     dn = 100
 
-
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": System},
-                {"role": "user", "content": Outline_Task + Artist_Bio_Details}
-            ], temperature=crazy
-        )
-
-        Artist_Bio = response.choices[0].message.content
 
         # print('Artist_Bio: ' + Artist_Bio)
         print(up.breakupOutput2)
+        try:
+            Song1 = openai.ChatCompletion.create(
+                model="gpt-3.5-turbo",
+                messages=[
+                    {"role": "system", "content": System},
+                    {"role": "user", "content": Role + Artist_Bio},
+                    {"role": "user", "content":  Song_Subject},
+                    {"role": "user", "content": up.Song_Format_Prompt + Format},
 
-        Song1 = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": System},
-                {"role": "user", "content": Role + Artist_Bio},
-                {"role": "user", "content":  Song_Subject},
-                {"role": "user", "content": up.Song_Format_Prompt + Format},
+                ]
+                , temperature=crazy
+            )
+            Song = Song1.choices[0].message.content
 
-            ]
-            , temperature=crazy
-        )
-        Song = Song1.choices[0].message.content
+        except:
+            dn = 100
+        try:
+            # Create original details
+            response = openai.ChatCompletion.create(
+                model="gpt-3.5-turbo",
+                messages=[
+                    {"role": "system", "content": System},
+                    {"role": "user", "content": Role + Artist_Bio},
+                    {"role": "user", "content": up.Title_SongArtistsRR + Song}
 
-        # Create original details
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": System},
-                {"role": "user", "content": Role + Artist_Bio},
-                {"role": "user", "content": up.Title_SongArtistsRR + Song}
+                ], temperature=crazy
+            )
 
-            ], temperature=crazy
-        )
+            Title = response.choices[0].message.content
 
-        Title = response.choices[0].message.content
+            Title = Title.replace("The Title:", "")
+            Title = Title.replace("Title:", "")
+            Title = Title.replace("The Title", "")
+            Title = Title.replace("Title", "")
+
+        except:
+            Title = Mode  + '_'+ self.current_time
+            dn = 100
+
 
     #Create new subfolder etc for this filepath
         Title1 = cu.CleanFileName(Title)
@@ -1071,9 +1312,9 @@ class MondeVert():
 
 
 
-        Title1 = '\\' + str(Title1) + "_"
-        if len(Title1) > 44:
-            Title1 = Title1[0:44]
+        Title1 = '\\' + str(Title1)
+        # if len(Title1) > 44:
+        #     Title1 = Title1[0:44]
 
 
 
@@ -1085,7 +1326,7 @@ class MondeVert():
         else:
             folder = USERTITLE
 
-        Title1 = Title1 + self.current_time
+        #Title1 = Title1 + self.current_time
         SavePath = SavePath + '\\' + folder
         FullFilePath = SavePath + '\\'+ Title1
 
@@ -1093,51 +1334,84 @@ class MondeVert():
 
 
 
+        try:
+            # Create original details
+            response = openai.ChatCompletion.create(
+                model="gpt-3.5-turbo",
+                messages=[
+                    {"role": "system", "content": System},
+                    {"role": "user", "content": up.RolePlay_SongArtistRR + Artist_Bio},
+                    {"role": "user", "content": up.Samples_SongArtistsRR2 + Song}
+
+                ], temperature=crazy
+            )
+
+            Samples2 = response.choices[0].message.content
+        except:
+            dn = 100
+
+        try:
+            # Create original details
+            response = openai.ChatCompletion.create(
+                model="gpt-3.5-turbo",
+                messages=[
+                    {"role": "system", "content": System},
+                    {"role": "user", "content": up.RolePlay_SongArtistRR + Artist_Bio},
+                    {"role": "user", "content": up.ReWrite_Song + Song}
+
+                ], temperature=crazy
+            )
+
+            ReWrite = response.choices[0].message.content
+            Song_trim = ReWrite[:1600]
+        except:
+            dn = 100
+
 
         # Create original details
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": System},
-                {"role": "user", "content": up.RolePlay_SongArtistRR + Artist_Bio},
-                {"role": "user", "content": up.Samples_SongArtistsRR2 + Song}
+        try:
+            response = openai.ChatCompletion.create(
+                model="gpt-3.5-turbo",
+                messages=[
+                    {"role": "system", "content": up.system_TextDJ},
+                    {"role": "user", "content": Role + Artist_Bio},
+                    {"role": "user", "content": Samples2},
+                    {"role": "user", "content": up.ExplainTheBeat + Song_trim}
 
-            ], temperature=crazy
-        )
+                ], temperature=crazy
+            )
 
-        Samples2 = response.choices[0].message.content
-
-        # Create original details
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": System},
-                {"role": "user", "content": up.RolePlay_SongArtistRR + Artist_Bio},
-                {"role": "user", "content": up.ReWrite_Song + Song}
-
-            ], temperature=crazy
-        )
-
-        ReWrite = response.choices[0].message.content
-
-        # Create original details
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": up.system_TextDJ},
-                {"role": "user", "content": Role + Artist_Bio},
-                {"role": "user", "content": Samples2},
-                {"role": "user", "content": up.ExplainTheBeat + ReWrite}
-
-            ], temperature=crazy
-        )
-
-        DJMondeVert = response.choices[0].message.content
-
+            DJMondeVert = response.choices[0].message.content
+        except:
+            dn=100
         print(up.breakupOutput2)
 
+        # Run Bitter Critic
+
+        try:
+            if len(ReWrite) > 300:
+                Lyrics = ReWrite
+            else:
+                Lyrics = Song
+
+            Lyrics1 = Lyrics
+        except:
+            Lyrics = Song
+
+        Bitter_Critic = ''
+        try:
+            Bitter_Critic = MondeVert.Basic_GPT_Query(self, Line2_Role=up.Test_Role_Critic,
+                                                  Line3_Format=up.Test_Format_Critic,
+                                                  Line4_Task=up.Test_Task_Critic + Lyrics,
+                                                  Special=up.Test_Special_Critic)
+        except:
+            dn = 100
+        if Bitter_Critic == '':
+            Bitter_Critic = 'No Critique done, this work was too amateur'
+
+
         #MondeVert.speak(self, "DJ MondeVert Work complete yo")
-        data_final = """Artist_Bio: """ + Artist_Bio + ": " + (up.breakupOutput2) + """ Potential Samples: """ + Samples2  + (up.breakupOutput2) +  """Title: """ + Title + (up.breakupOutput2) + """Song: """ + Song +  (up.breakupOutput2) +"""Song 2.0: """ + ReWrite + (up.breakupOutput2) + """DJMondeVert: """ + DJMondeVert
+        data_final = """Artist_Bio: """ + Artist_Bio_Details +"""Song Details: """ + Artist_Bio + ": " + (up.breakupOutput2) + """ Potential Samples: """ + Samples2  + (up.breakupOutput2) +  """Title: """ + Title + (up.breakupOutput2) + """Song: """ + Song +  (up.breakupOutput2) +"""Song 2.0: """ + ReWrite + (up.breakupOutput2) + """DJMondeVert: """ + DJMondeVert + """Bitter Critic: """ + Bitter_Critic
 
         print(data_final)
 
@@ -1146,6 +1420,9 @@ class MondeVert():
 
         #data = [(self.current_time + '_' + data_final)]
         Text = str("Create Date: " + self.current_time + '_Results: ' + data_final)
+
+
+
         #print(data)
         try:
             #df1 = pd.DataFrame(data)
@@ -1156,19 +1433,53 @@ class MondeVert():
             try:
                 filename2 = cu.SaveCSV(Title=Title1 + '_lyrics', SavePath=SavePath, Text=ReWrite)
 
-
-                try:
-                     audioname =    cu.SaveText2Audio(Text = ReWrite, Translate=['French', 'English'], SavePath=SavePath, FileName=Title1)
-
-                except:
-                    dn = 100
-
             except:
                 dn = 100
-            # MondeVert.SaveText(self,df1,'MondeVert Assistant', 'Full Transcript')
-
         except:
             print('Review Error File did not save ')
+
+
+
+
+        try:
+            try:
+                Art_persona = MondeVert.Artist_Persona_Short_Story(Writer_persona=Artist_Bio_Details)
+                Art_Details = MondeVert.summarize_art_style_for_short_story(writer_persona=Artist_Bio_Details,outline=Lyrics,Artist_Persona=Art_persona) #, Format='Make a concise summary of an art style and artist to make a work of art like. Also provide the colors used, themes, moods, and tones.')
+
+            except:
+                Art_Details= Artist_Bio
+                dn = 100
+        #     CleanLyrics = cu.CleanLyrics4audio(text=Lyrics)
+        #     if CleanLyrics !='':
+        #         Lyrics = CleanLyrics
+        #     print("CleanLyrics 1: " + lup.NewLine+ Lyrics)
+        # except:
+        #     dn = 100
+        #
+        # try:
+        #     CleanLyrics = cu.CleanLyrics4audio(text=CleanLyrics, Chunk_Delimiter_left='(',Chunk_Delimiter_right=')')
+        #     if CleanLyrics != '':
+        #         Lyrics = CleanLyrics
+        #     print("CleanLyrics 2: " + lup.NewLine + Lyrics)
+        # except:
+        #     dn = 100
+        # try:
+        #     if len(Lyrics) > len(Lyrics1):
+        #         Lyrics= Lyrics1
+            newline = """\n"""
+            newline2 = """\\n"""
+            audioname = cu.SaveText2Audio(Text=Lyrics, Translate=['French', 'English', 'Swahili'], SavePath=SavePath,
+                                          FileName=Title1, Chunk_Replaces=['.', ')', ':', '?', newline, newline2],
+                                          Chunk_Limit=1333,
+                                          Artist_Persona=Art_Details)
+            test = 100
+        except:
+            dn = 100
+
+
+            # MondeVert.SaveText(self,df1,'MondeVert Assistant', 'Full Transcript')
+
+
 
         try:
             cu.send_email_w_attachment_outlook(body=Song, filename=filename)
@@ -1177,17 +1488,9 @@ class MondeVert():
         except:
             print('email not send, its possible file was not created')
 
-        #MondeVert.speak(self, "Making the art, painting yo picture")
-        Art_Prompt1 = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": System},
-                {"role": "user", "content": Role+ Artist_Bio},
-                {"role": "user", "content": up.ArtPrompt_SongArtistRR}
-            ], temperature=crazy
-        )
 
-        Art_Prompt = Art_Prompt1.choices[0].message.content
+
+        Art_Prompt = MondeVert.GPTArt2(self,prompt = up.ArtPrompt_SongArtistRR, User_Subject=Role + Artist_Bio)
         print("Work of Art Inspiration:" + Art_Prompt)
 
         # print(Artist_Bio)
@@ -1227,7 +1530,7 @@ class MondeVert():
             # if Vows == '':
             #     Vows = ' '
             Text2Add = Couple  #+ Vows
-            FileName = FileName + '_' + self.current_time
+            #FileName = FileName + '_' + self.current_time
             cu.SaveCSV(Text = Text2Add, FileName= FileName, SavePath=SavePath)
             cu.SaveText2Audio(Text = Text2Add, FileName= FileName, SavePath=SavePath)
         except:
@@ -1251,9 +1554,9 @@ class MondeVert():
 
         ItalianVoice = cu.CleanFileName(ItalianVoice)
 
-        FilePathnew = Source_FilePath[:-4] + '_' +str(self.current_time) + '.mp3'
-        FilePathnew2 = Source_FilePath[:-4]  + ItalianVoice + '_' + str(self.current_time) + '_Italian.mp3'
-        FilePathnew3 = Source_FilePath[:-4] + Voice_fix + '_' + str(self.current_time) + '_Italian.mp3'
+        FilePathnew = Source_FilePath[:-4]  + '.mp3'
+        FilePathnew2 = Source_FilePath[:-4]  + ItalianVoice +  '_Italian.mp3'
+        FilePathnew3 = Source_FilePath[:-4] + Voice_fix +  '_Italian.mp3'
         FileName2 = FileName+'_Italian'
 
         LastPunc = Source_FilePath.rfind("\\")
@@ -1300,7 +1603,7 @@ class MondeVert():
         except:
             print('Did not translate to italian')
 
-        FilePathnew= Source_FilePath[:-4] + '_'+Voice_fix + '_'+ self.current_time +  '.mp3'
+        FilePathnew= Source_FilePath[:-4] + '_'+Voice_fix + '.mp3'
         NewTempPath = cu.SaveText2Audio(Text, SavePath=SavePath,  FilePath=FilePathnew, Voice = Voice_fix, FileName=FileName)
         print(NewTempPath)
         try:
@@ -1522,7 +1825,7 @@ class MondeVert():
 
         ArtPath = 'No Art Made'
         if Subject != '':
-            Role = Role + """Your role and subject matter expertise should fit the following Subject and or style and mood in the {Text} provided by the user Text:###""" + Subject + """###"""
+            Role = Role + """Your role/persona and subject matter expertise should fit the following Subject and or style and mood in the {Text} provided by the user Text:###""" + Subject + """###"""
 
         Writer_Persona = MondeVert.Basic_GPT_Query(self,Line2_Role = Role,Line4_Task= Task, Line3_Format = Format, Special = Special, crazy = crazy)
         #Save a csv of this info in ssavepath
@@ -1602,7 +1905,10 @@ class MondeVert():
                     , temperature=crazy
                 )
                 Title = response.choices[0].message.content
-
+                Title = Title.replace("The Title:", "")
+                Title = Title.replace("Title:", "")
+                Title = Title.replace("The Title", "")
+                Title = Title.replace("Title", "")
                 KeepGoing = True
             except:
                 print(' Error ChatGPT failed, trying to rerun prompt now.... if this happens too many times we will kill the script')
@@ -1610,6 +1916,10 @@ class MondeVert():
                 if KillSwitch == 9:
                     print('could not create a writer persona, redoing it now')
                     Title = 'Unknown title - Too many errors'
+                    Title = Title.replace("The Title:", "")
+                    Title = Title.replace("Title:", "")
+                    Title = Title.replace("The Title", "")
+                    Title = Title.replace("Title", "")
                 continue
         return Title
 
@@ -1766,12 +2076,17 @@ class MondeVert():
             Title = MondeVert.Quick_Title(self, Outline_Main)
         except:
             Title = 'MondeVert_SHAINE_Confidential_AudioBook'
+
+        Title = Title.replace("The Title:", "")
+        Title = Title.replace("Title:", "")
+        Title = Title.replace("The Title", "")
+        Title = Title.replace("Title", "")
         Title1 = cu.CleanFileName(Title)
-        FileName = Title1 + self.current_time
+        FileName = Title1
         SavePath = SavePath + '\\' + Title1
         cu.Check_Folder_Exists(SavePath)
-        FileName_Char_Main = Title1 + '_Main Characters_' + self.current_time
-        FileName_Char_Minor = Title1 + '_Minor Characters_' + self.current_time
+        FileName_Char_Main = Title1 + '_Main Characters_'
+        FileName_Char_Minor = Title1 + '_Minor Characters_'
         # Call Character art prompt
 
         Text2Add = 'Story Outline: '+ up.breakupOutput +  Outline_Main +  up.breakupOutput2 + up.breakupOutput + 'All Episodes Outline: ' + up.breakupOutput + Outline_ALL_Episodes + up.breakupOutput2 + up.breakupOutput + 'Characters: '+ up.breakupOutput +  Characters +  up.breakupOutput2 + up.breakupOutput+ 'Writer Persona: '+ up.breakupOutput +  Writer_Persona +up.breakupOutput2 + up.breakupOutput+ 'Writer Persona Summary: ' + up.breakupOutput + Writer_Persona_Summary +up.breakupOutput2 + up.breakupOutput+ 'Artist Persona: ' + up.breakupOutput + Artist_Persona +up.breakupOutput2 + up.breakupOutput+ 'Character Description - Main: ' + up.breakupOutput + self.Character_Art_Prompts_Main +up.breakupOutput2 + up.breakupOutput+ 'Character Description - Minor: ' + up.breakupOutput + self.Character_Art_Prompts_Minor
@@ -1922,7 +2237,7 @@ class MondeVert():
 
         try:
             for i in range (1,Episode_Count+1):
-                FileName_Audio = Title + '_Episode_' + i + self.current_time
+                FileName_Audio = Title + '_Episode_' + i
                 Voice = random.choices(SAF.Original_List_of_Voices_English[0])
                 cu.SaveText2Audio(SavePath=SavePath, FileName=FileName_Audio, Voice=Voice, Neural='Neural', Mode='AUDIOBOOK', Chunk_Limit=1444)
         except:
@@ -2005,6 +2320,10 @@ class MondeVert():
 
         if Mode == 'ScreenPlay':
             MondeVert.Make_a_ScreenPlay(self, SavePath=up.AI_Screen_Plays + '\\' + Mode,System = up.system_Text_ScreenPlay0, Mode='ScreenPlay')
+
+        elif Mode == 'Poem':
+            MondeVert.Make_a_poem(self, SavePath=up.AI_Poetry_Path + '\\' + Mode, System=up.system_TextJoaT, Mode='Poetry')
+
         elif Mode == 'Music':
             MondeVert.Make_a_Song_2(self, SavePath=up.AI_Music_Path + '\\' + Mode,System = up.system_TextRR, Mode='Music', )
 
@@ -2357,6 +2676,11 @@ class MondeVert():
                 print('could not come up with title review')
                 Title = Mode
 
+            Title = Title.replace("The Title:", "")
+            Title = Title.replace("Title:", "")
+            Title = Title.replace("The Title", "")
+            Title = Title.replace("Title", "")
+
 
             #if Mode =='PictureBook':
                 # SavePath1= up.AI_Childrens_AudioBook_Path
@@ -2367,8 +2691,8 @@ class MondeVert():
             if len(folder) > 44:
                 folder = folder[0:44]
             Title1 = '\\' + str(Title1) + "_"
-            if len(Title1) > 44:
-                Title1 = Title1[0:44]
+            # if len(Title1) > 44:
+            #     Title1 = Title1[0:44]
             SavePath = SavePath + '\\' + folder
 
 
@@ -2412,7 +2736,7 @@ class MondeVert():
 
                         Artist_Persona = MondeVert.Artist_Persona_Short_Story(self,Writer_persona=Writer_Persona + Project_Description)
 
-
+                        MondeVert.summarize_art_style_for_short_story(self,Artist_Persona=Artist_Persona,Writer_Persona=Writer_Persona,outline=Project_Description)
 
                         #MondeVert.Manual_Audio_File(CSVLocation, SavePath=SavePath, FileName=filename)
                         try:
@@ -2678,19 +3002,28 @@ class MondeVert():
                User_Subject='Pick a random subject and medium go wild and make it exciting, beautiful and shocking',
                ArtFormat=sms.ArtPrompt_Clean_Social_Media_Post_Line3,
                sys_prompt=sms.ArtPrompt_Sys):
-        openai.api_key = API_Key
 
-        Art_Prompt1 = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": sys_prompt},
-                {"role": "user", "content": prompt + User_Subject},
-                {"role": "user", "content": ArtFormat}
-            ], temperature=crazy
-        )
+        keepgoing = True
+        while keepgoing == True:
+            try:
 
-        GPTARTPROMPT = Art_Prompt1.choices[0].message.content
-        return GPTARTPROMPT
+                Art_Prompt1 = openai.ChatCompletion.create(
+            model = "gpt-3.5-turbo",
+            messages = [
+                           {"role": "system", "content": sys_prompt},
+                           {"role": "user", "content": prompt + User_Subject},
+                           {"role": "user", "content": ArtFormat}
+                       ], temperature = crazy
+                )
+
+                GPTARTPROMPT = Art_Prompt1.choices[0].message.content
+                keepgoing == False
+
+            except:
+                print('GPT error waiting 13 seconds and trying again...')
+
+                time.sleep(13)
+            return GPTARTPROMPT
 
     def GPTArt(self, crazy=.5, prompt=up.ArtPrompt_ScreenPlay ,SavePath = up.AI_Screen_Plays, Plot='Pick a random subject and medium go wild and make it exciting, beautiful and shocking' ,ArtFormat = up.MondeVert_ArtFormat,
                sys_prompt=up.system_Text_Artist_ScreenPlay):
@@ -2946,8 +3279,10 @@ class MondeVert():
             Outline_Next2_Ref2 += Outline_Next2
 
         Title = MondeVert.Get_Title_GPT(self,Plot)
-
-
+        Title = Title.replace("The Title:", "")
+        Title = Title.replace("Title:", "")
+        Title = Title.replace("The Title", "")
+        Title = Title.replace("Title", "")
         # f2 = FolderPath
 
 
@@ -2957,8 +3292,8 @@ class MondeVert():
             folder = folder[0:44]
         Title1 = r"\\" +  str(Title1) + "_"
         Title11 =  str(Title1) + "_"
-        if len(Title1) > 44:
-            Title1 = Title1[0:44]
+        # if len(Title1) > 44:
+        #     Title1 = Title1[0:44]
         SavePath = SavePath + r"\\"+ folder
 
         filename1.append('Screen Play - ' + Title11)
@@ -3338,7 +3673,7 @@ if __name__ == '__main__':
 
     #args= ['Music_Rich','Music_Shane', 'Music', 'PjSpecial']
 
-    args= ['Music_Shane', 'PjSpecial']
+    args= ['Music_Shane']
     #
 
     #
