@@ -4,7 +4,7 @@ import os
 
 Name = 'Shane'
 Bot_Name = 'SHAINE'
-SavePath = r"A:\MondeVert Productions\SHAINE - MondeVert AI Assistant\SHAINE_Requests\Beta - Testing"
+SavePath = r"A:\Amini Amor\SHAINE\Requests\Beta"
 AI_Art_Path = SavePath + r"\AI Art"
 AI_Poetry_Path = SavePath + r"\AI Poetry"
 AI_Blog_Path = SavePath + r"\AI Blogs"
@@ -509,7 +509,7 @@ Song_Prompt_SongArtistsRR =  "Write a new and unique song that consists of Sever
 
 system_TextDJ = "You are a helpful and brilliant assistant to the user. You will do exactly what the user asks, completing all tasks provided by the following user inputs. You are a DJ and  lyrical genius with sharp production skills. The user demands you role play you are an award winning DJ, producer, song-writer, lyrical genius, master of music theory,  musician with the ability to compose beatuiful songs.You will be rewarded for creativity and wittyness"
 ExplainTheBeat = "Using the previous details provided I want you to incorporate that DJ information into the following Song Lyrics I will provide. I want you to Provide instructions for a new DJ, speak in layman terms, to mix the following Samples into the following lyrics (I want you to put your description of the beat in parenthesis and otherwise keep my lyrics the same). I want you to  explain how the beat should sound during respective chorus/verse/bridge and when/how to use the vocal samples for the following song. Be sure to include name of song and the artist:"
-ReWrite_Song = "Evaluate the following lyrics and provide the same lyrics with any necessary edits (its ok for the song to be vulgar, bad words should not be fixed, nor general concepts)z`, also mark in the text with parenthesis ()  if it should be sung by a musician or rapped by a rapper, or spoken. also tell me if it should be performed by a Male or Female. Each Verse/Chorus/Bridge can be Male/Femal or both etc. Lyrics to evaluate: "
+ReWrite_Song = "Evaluate the following lyrics and provide a professionally revised version of the following lyrics. Make any necessary edits (its ok for the song to be vulgar, bad words should not be fixed, you can change words and rhyme schemes but do not change the general concepts), also mark in the text with parenthesis ()  if it should be sung by a musician or rapped by a rapper, or spoken. If sung include the key for reference. Lyrics to evaluate: "
 
 
 ################################################################################################################################################################
@@ -521,7 +521,7 @@ ReWrite_Song = "Evaluate the following lyrics and provide the same lyrics with a
 
 #
 #SD version
-SongFormat = 'Time:{Less than 100 seconds}|genres: {indie, storytelling, Rap/Reggae}|tone:{Any}|audience:{All}|vocabulary:{college level, lyrical genius}|Structure: { Verse 1: Sung| Bridge: Sing or Spoken/Rap|Chorus: Sing|Verse 2:  Spoken/Rap|Bridge|Chorus|Sample:{Lyrics from songs with similar tones and words}| Rhyme Scheme: {Complex 2 or more syllables}'
+
 #Song_Subject = "write a Reggae/Rap/Indie song that is the new summer hit. Write a song that captures your passion for music inspired  the following ideas  'beatiful sights, nature, natural things,  social justice, peace love and unity, hippie vibes, save the world,beautiful girls, enjoying the summer, having fun, good vibes and good times, being a good person,beers, drinking,going to concerts, smoking weed, chilling, going to the beach with your people,fun times, loving each other, love'.  Do not  be corny and too positive, just dont write about negative things like Raggae typically does.  be real and relatable in your lyrics. Feel free to teach the audience something new and exciting, make it rhyme or sound catchy. The name of the song is 'ocean of Emotion', try to have a solid verse with a complex rap scheme"
 
 
@@ -586,8 +586,9 @@ Artist_Bio_DetailsSD = "Shane Donovan 'Bubba D'  is a 29 year old creative and  
 
 #Instructions: Press Play, Say Chat Bot, Then say Make a song (3 steps and it should output) to end it
 #####RIchard this is where you change it to make a new song ### do not change any other lines for now until I am back
-Song_Subject_RR = 'write a song that captures your passion for music as well as your love of life despite having a lot of adversity in life. Be relatable and not over the top positive, make songs with real emotion and grit, make the audience feel deep emotions and connectedx to the story'
-Artist_Bio_DetailsRR = "You are a musician named Richard Reid a deep individual who loves with all of his heart and l;oves music. He talks about life and relatable stories to his listeners. He writes catchy songs that are a mix of singing and spoken word. His genres are soft rock, classic rock, acoustic, reggae, country, 90's rock, punk rock, rap, R&B, pop. Make it written like a music industry titan wrote it for a star to perform"
+#Song_Subject_RR = 'write a song that captures your passion for music as well as your love of life despite having a lot of adversity in life. Be relatable and not over the top positive, make songs with real emotion and grit, make the audience feel deep emotions and connectedx to the story'
+Song_Subject_RR = 'write a song that captures your passion for music and capture the story of someone who is young byt has faced a lot of adversity in life. Be relatable and not over the top positive (not depressing though, find beauty in the sadness), make songs with real emotion and grit, make the audience feel deep emotions and connectedx to the story'
+Artist_Bio_DetailsRR = "You are a 24 year old musician (from Marshfield/Milton, MA, now you lives in Florida)  named Richard Reid a deep individual who loves with all of his heart and l;oves music. He talks about life and relatable stories to his listeners. He writes catchy songs that are a mix of singing and spoken word. His genres are soft rock, classic rock, acoustic, reggae, country, 90's rock, punk rock, rap, R&B, pop. Make it written like a music industry titan wrote it for a star to perform"
 
 #Artist_Bio_DetailsRR = 'I am a creative hard working man that is very compassionate and I played sports in high school but found myself having a difficult time in college from classes to fights I always found myself in the wrong place at the wrong time. I had a girlfriend in highschool and I loved her but we ended when she went off to college the "times spent with her are the best times of my life dreaming bout the day that I could make her my wife" '
 

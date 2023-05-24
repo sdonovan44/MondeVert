@@ -642,13 +642,14 @@ Desired Format:
 
 
 
-Poem_Revise_Task = """As a master of poetry edit and revise the following poem, provide me with the best version of the poem keep the main concepts the same, but make it sound better and make it an award winning poem"""
-Poem_Revise_Format= """Complete the {Task} provided below, use the {Persona} you created to do all of the tasks. Make sure the result is in the correct format.
+Poem_Revise_Task = """As a master of poetry edit and rewrite the following poem, provide me with the best version of the poem keep the main concepts the same, but make it sound better and make it an award winning poem. Poem: """
+Poem_Revise_Format= """Complete the {Task} provided below, use the {Persona} you created to do all of the tasks. Make sure the result is in the correct format. I want no headings just the {Title} "written by Shane Donovan" and then the poem should be inserted below. No additional text should be provided besides what is requested
 
 Desired Format: 
-Grade: <Original_Poem_Grade_0%_to_100%>| <Revised_Poem_Grade_0%_to_100%>
-Expert Revisions Summarized: <Expert_Revisions_Summarized> 
-Revised Poem: <Revised_Poem>"""
+{Title} "written by Shane Donovan"
+
+{Poem}
+"""
 
 
 Poem_Role= """you are an expert poet and master of all styles of poetry, for this task and future tasks I want you to take on the following persona: """
@@ -674,8 +675,8 @@ Imagery:{Imagery}
 Specific Quotes to be used in the Poem: -||-
 
 """
-Poem_Outline_Task= """using the persona you are role playing as, Provide me with an outline for a poem that summarizes the respective information and provide the result in a format specified previously by me the user."""
-Poem_Task= """Make a poem based on the following outline: """
+Poem_Outline_Task= """using the persona you are role playing as, Provide me with the neccesary informationI would need to write a new poem. Summarize the respective information in a specified format."""
+Poem_Task= """Write a poem based on the following outline: """
 Poem_Format= """use the proper format for the poem according to the style chosen by the {outline}"""
 
 
@@ -757,8 +758,41 @@ Desired Format:
     Quotes:-||-
     Other Important information: -||-
 """
+#************************************************************************************************
+
+Song_Role = """You are an expert writer master of all genres of music,poetry, screenplays, novels, short stories, and music production. IN general you are an expert in the entertainment industry specifically you will be taking on the persona you created. Be a master of lyric writing and music theory, also anything else I tell you to be"""
+Song_Outline_Task= """using the persona you are role playing as, Provide me with an outline for a song that summarizes the respective information and provide the result in a format specified previously by me the user."""
+Song_Task= """Write an original hit song based on the following outline: """
+
+Song_Format = """Verse:{Lyrics}
+              Bridge:{Lyrics}
+              Chorus:{Lyrics}
+              Verse:{Lyrics}
+              """
+Song_Outline_Format = """Complete the {Task} provided below, use the {Persona} you created to do all of the tasks. Make sure the result is in the correct format.
 
 
+Desired Format:
+    Time:{Less than 100 seconds}
+    genres: -||-
+    Tone: -||-
+    Themes:-||-
+    Audience: -||-
+    vocabulary:
+    Song Name: -||-
+    Album Name:-||-
+    Subject of Works:-||-
+    Melodies: -||-
+    Song Styles: -||-
+    Rhyme Scheme: -||-
+    Song Structures: -||-
+    Similar Artists: -||-
+    Brief Summary of Song/Story/Poem: <Short_Description>
+    Influences (music, literature, film, other): -||-
+    Original Quotes to use in the song:Verse:{Sample Lyrics}|Chorus:{Sample Lyrics}|Bridge/Pre-Chorus:{Sample Lyrics}
+    Samples to use in the song (<Including_Song_Name_and_Artist_Name>): -||-
+    Other Important information: -||-
+"""
 
 
 #************************************************************************************************

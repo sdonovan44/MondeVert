@@ -7,7 +7,13 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.application import MIMEApplication
 from email.header import Header
 import smtplib
-
+import smtplib
+import email.mime.multipart
+import email.mime.text
+import email.mime.base
+import os
+import FFProbe
+import FFProbe.utility
 import random
 from MondeVert_IP.SHAINE_MonderVert import Instagram_Posts as IP
 from MondeVert_IP.SHAINE_MonderVert.SHAINE_WIZARD_PROMPTS import Long_User_Prompts as lup
@@ -102,25 +108,63 @@ def add2Master2(df1):
 
 
 
+def CheckFileLength(SavePath,Title1,current_time_f, FileType):
+    isExist = True
+    Title2 = SavePath + '\\' + Title1 + current_time_f + FileType
+    Add_Dupe_File = 0
+
+    while len(Title2) > 250:
+        if len(SavePath) >= 240 and len(Title2) > 250:
+            Title2 = SavePath + '\\' + 'BU' + FileType
+
+        elif len(Title2) > 250:
+            TitleLen = len(Title2)
+            TrimNum = round(TitleLen * .1) + 1
+            Title2 = SavePath + '\\' + Title1[TrimNum:] + current_time_f + FileType
+
+    while isExist == True:
+
+        isExist = os.path.exists(Title2)
+        if isExist == True:
+            Add_Dupe_File += 1
+            Title2 = Title2[:-4] + '_' + Add_Dupe_File + FileType
+
+    return Title2
+
+def SaveCSV(Text, Title, SavePath, AddTimeStamp = True, FileType = '.txt'):
 
 
-def SaveCSV(Text, Title, SavePath):
+    if AddTimeStamp==True:
+        Text1 = 'Time: ' + str(current_time) + '| Title:' + Title+'| Text:' + Text
+        current_time_f = '_' + str(current_time)
+    else:
+        Text1 = Text
+        current_time_f = ''
 
 
     Title1  = CleanFileName(Title)
+    Title2 = CheckFileLength(SavePath=SavePath,Title1=Title1, current_time_f=current_time_f,FileType=FileType)
     # folder = str(Title1)
     # if len(folder) > 44:
     #     folder = folder[0:44]
-    Title1 = '\\' + str(Title1) + "_"
-    # if len(Title1) > 44:
-    #     Title1 = Title1[0:44]
 
-    Title2 = SavePath + Title1  +'_'+current_time  +  '.txt'
+
+
+
+
+    Title1 =  str(Title1)
+
+
+
+
+
 
     Check_Folder_Exists(SavePath)
 
 
-    Text1 = 'Time: ' + str(current_time) + '| Title:' + Title+'| Text:' + Text
+
+
+
 
     Data1 = [(Text1)]
 
@@ -211,19 +255,20 @@ def Combine_Splitsof_audio(AudioFiles_ordered,FilePath, SavePath = up.SavePath,O
 
 
 
-def Split_Audio2(Text, SavePath, FileName,FilePath = '', OpeningSound = up.MondeVertIntro, Chunk_Limit = 1500, Voice = random.choices(SAF.Original_List_of_Voices_English)[0], Translate = sfa.Translation_Languages_Testing, Chunk_Replaces = ['.','?'], Chunk_Delimiter = '!',Artist_Persona = 'embrace the spirit and culture of the following text describe it to be illustrated by an artist'):
+def Split_Audio2(Text, SavePath, FileName,FilePath = '', OpeningSound = up.MondeVertIntro, Chunk_Limit = 1500, Voice = random.choices(SAF.Original_List_of_Voices_English)[0], Translate = sfa.Translation_Languages_Testing, Chunk_Replaces = ['.','?'], Chunk_Delimiter = '!',Artist_Persona = 'embrace the spirit and culture of the following text describe it to be illustrated by an artist',Origin_Language = 'English'):
     Length_Text = len(Text)
     Chunk_Limit = Chunk_Limit -10
     Text_Chunks = []
+    Translate_Folder = r'\Translated'
     Text_New = Text
-    SavePath_Pics = SavePath + r'\Art Chunks'
+    SavePath_Pics = SavePath + r'\SHAINE - Art'
     FilePaths = []
     length = len(Text)
     Audio_File_Count= 1
     if 'Audio Chunks' in SavePath:
         SavePath_Chunks= SavePath
     else:
-        SavePath_Chunks = SavePath + r'\Audio Chunks'
+        SavePath_Chunks = SavePath + r'\SHAINE - Audio'
     Check_Folder_Exists(SavePath)
     Check_Folder_Exists(SavePath_Chunks)
     Check_Folder_Exists(SavePath_Pics)
@@ -240,7 +285,7 @@ def Split_Audio2(Text, SavePath, FileName,FilePath = '', OpeningSound = up.Monde
         Audio_File_Count = 0
         New_Text_Translated = ''
         Text_New = Text
-        if l == 'English':
+        if l == Origin_Language:
             v = Voice
         else:
             v = SAF.Pick_Voice(Language=l)
@@ -339,8 +384,9 @@ def Split_Audio2(Text, SavePath, FileName,FilePath = '', OpeningSound = up.Monde
                 Text_New = ''
 
 
-            FileName_Chunk = FileName + '_' + l + '_' + Translate_Voice + '_Chunk_' + str(Audio_File_Count)
-
+            FileName_Chunk = FileName + '_' + l + '_' + v + '_Chunk_' + str(Audio_File_Count)
+            print(FileName_Chunk)
+            print(SavePath_Pics)
             # print(l)
             # print(countl)
             # print(Voices[countl])
@@ -349,16 +395,16 @@ def Split_Audio2(Text, SavePath, FileName,FilePath = '', OpeningSound = up.Monde
 
             #print(Text_Chunk_Final)
             x = GPT.MondeVert()
-            if l != 'English':
+            if l != Origin_Language:
 
-                tempTranslate = x.Translate(Text = Text_Chunk_Final, Language_Final=l)
+                tempTranslate = x.Translate(Text = Text_Chunk_Final, Language_Final=l, Origin_Language=Origin_Language)
                 Translate_Voice = v
                 New_Text_Translated+= tempTranslate
                 translate2 = [l]
                 try:
 
                     Chunk_Limit_Translate = len(tempTranslate) + 10
-                    FilePathc = SaveText2Audio(Text=tempTranslate, SavePath=SavePath_Chunks,
+                    FilePathc = SaveText2Audio(Text=tempTranslate, SavePath=SavePath_Chunks+Translate_Folder,
                                           FileName=FileName_Chunk,
                                           Voice=Translate_Voice, Chunk_Mode=True, FilePath=FilePath, Translate=Translate, Chunk_Limit=Chunk_Limit_Translate)
                     print('successfully made an audio file in ' + l)
@@ -408,7 +454,7 @@ def Split_Audio2(Text, SavePath, FileName,FilePath = '', OpeningSound = up.Monde
             Text_Chunks.append(Text_Chunk_Final)
             RunningCheck +=len(Text_Chunk_Final)
             if l != 'English':
-                SaveCSV(SavePath=SavePath, Title=FileName + l + '_Translate', Text=New_Text_Translated)
+                SaveCSV(SavePath=SavePath+Translate_Folder, Title=FileName +'_' +  l + '_Translated', Text=New_Text_Translated)
 
 
 
@@ -998,93 +1044,153 @@ def MultiThread(self, Functions, Args):
     print("Done")
 
 
-def send_email_w_attachment_outlook(to, subject, body, filename):
-    sender = DNC.OutlookEmail
-    receivers = to
-    #smtp
-    smtpHost = 'smtp.office365.com'
-    smtpPort = 587
-    password = DNC.Outlookpassword
-    subject = "outlook email test"
-    # Add the From: and To: headers at the start!
-    message = ("From: %s\r\nTo: %s\r\nSubject: %s\r\n\r\n"
-           % (sender, ", ".join(receivers), subject))
-    message += """This is a test e-mail message."""
-    print (message)
+
+def send_email_no_attachment_outlook( password = DNC.Outlookpassword, sender = DNC.OutlookEmail, body= DNC.subject + current_time, filename = [up.MasterFilePersona], to= DNC.to, subject= DNC.subject + current_time, smtpHost = 'smtp.office365.com', smtpPort = 587):
     try:
-        smtpObj = smtplib.SMTP(smtpHost, smtpPort)
-        #smtpObj.set_debuglevel(1)
-        smtpObj.ehlo()
-        smtpObj.starttls()
-        smtpObj.ehlo()
-        smtpObj.login(sender,password)
-        smtpObj.sendmail(sender, receivers, message)
-        smtpObj.quit()
-        print ("Successfully sent email")
+
+    #smtp
+
+        # Add the From: and To: headers at the start!
+        message = ("From: %s\r\nTo: %s\r\nSubject: %s\r\n\r\n"
+               % (sender, ", ".join(to), subject))
+        message += """Sent by SHAINE - MondeVert"""
+        print (message)
+        try:
+            smtpObj = smtplib.SMTP(smtpHost, smtpPort)
+            #smtpObj.set_debuglevel(1)
+            smtpObj.ehlo()
+            smtpObj.starttls()
+            smtpObj.ehlo()
+            smtpObj.login(sender,password)
+            smtpObj.sendmail(sender, to, message)
+            smtpObj.quit()
+            print ("Successfully sent email")
+        except:
+            print ("Error: unable to send email")
     except:
-        print ("Error: unable to send email")
+        print("Error: unable to send email")
 
-
-def send_email_w_attachment_gmail(to, subject, body, filename):
+def send_email_w_attachment_gmail(sender = DNC.gmail_user, password = DNC.gmail_pass, body= DNC.subject + current_time, filename = [up.MasterFilePersona], to= DNC.to, subject= DNC.subject + current_time,fType = "txt"):
     # create message object
-    to = 'sdonovan@mondevert.co'#; RichardDX44@gmail.com'
-    subject = 'New Song for Rich'
-    message = MIMEMultipart()
-    # add in header
-    message['From'] = Header(up.user)
-    message['To'] = Header(to)
-    message['Subject'] = Header(subject)
-    # attach message body as MIMEText
-    message.attach(MIMEText(body, 'plain', 'utf-8'))
+    #to = 'sdonovan@mondevert.co'#; RichardDX44@gmail.com'
+    try:
 
-    # locate and attach desired attachments
+        message = MIMEMultipart()
+        # add in header
+        message['From'] = Header(sender)
+        message['To'] = Header(to)
+        message['Subject'] = Header(subject)
+        # attach message body as MIMEText
+        message.attach(MIMEText(body, 'plain', 'utf-8'))
 
-    for n in filename:
-        att_name = os.path.basename(filename[n])
-        _f = open(filename[n], 'rb')
-        att = MIMEApplication(_f.read(), _subtype="txt")
-        _f.close()
-        att.add_header('Content-Disposition', 'attachment', filename=att_name)
-        message.attach(att)
+        # locate and attach desired attachments
 
-    # setup email server
-    server = smtplib.SMTP_SSL(DNC.host, DNC.port)
-    server.login(DNC.gmail_user, DNC.gmail_pass)
+        for n in filename:
+            att_name = os.path.basename(filename[n])
+            _f = open(filename[n], 'rb')
+            att = MIMEApplication(_f.read(), _subtype=fType)
+            _f.close()
+            att.add_header('Content-Disposition', 'attachment', filename=att_name)
+            message.attach(att)
 
-    # send email and quit server
-    server.sendmail(DNC.user, to, message.as_string())
-    server.quit()
+        # setup email server
+        server = smtplib.SMTP_SSL(DNC.host, DNC.port)
+        server.login(sender, password)
+
+        # send email and quit server
+        server.sendmail(sender, to, message.as_string())
+        server.quit()
+    except:
+        print("Error: unable to send email")
 
 
-def send_email_no_attachment_gmail(to, subject, body):
+def send_email_no_attachment_gmail(sender = DNC.gmail_user, password = DNC.gmail_pass, body= DNC.subject + current_time, filename = [up.MasterFilePersona], to= DNC.to, subject= DNC.subject + current_time,fType = "txt"):
     # create message object
-    to = 'sdonovan@mondevert.co'
-    subject = 'New Song for Rich'
+    #to = 'sdonovan@mondevert.co'#; RichardDX44@gmail.com'
+    try:
 
-    message = MIMEMultipart()
+        message = MIMEMultipart()
+        # add in header
+        message['From'] = Header(sender)
+        message['To'] = Header(to)
+        message['Subject'] = Header(subject)
 
-    # add in header
-    message['From'] = Header(up.user)
-    message['To'] = Header(to)
-    message['Subject'] = Header(subject)
+        # attach message body as MIMEText
+        message.attach(MIMEText(body, 'plain', 'utf-8'))
 
-    # attach message body as MIMEText
-    message.attach(MIMEText(body, 'plain', 'utf-8'))
+        # setup email server
+        server = smtplib.SMTP_SSL(DNC.host, DNC.port)
+        server.login(sender, password)
 
-    # setup email server
-    server = smtplib.SMTP_SSL(DNC.host, DNC.port)
-    server.login(DNC.user, DNC.gmail_pass)
+        # send email and quit server
+        server.sendmail(sender, to, message.as_string())
+        server.quit()
+    except:
+        print("Error: unable to send email")
 
-    # send email and quit server
-    server.sendmail(DNC.user, to, message.as_string())
-    server.quit()
+# !/usr/bin/python
+def send_email_w_attachment_outlook( password = DNC.Outlookpassword, sender = DNC.OutlookEmail, body= DNC.subject + current_time, filename = [up.MasterFilePersona], to= DNC.to, subject= DNC.subject + current_time, server_host = 'smtp.office365.com', server_port = 587,contype = 'application/octet-stream'):
 
+    # set sender email and password
 
+    try:
+        # set receivers
+        receivers = to
+        # set attachment file
 
+        # set outlook smtp server host and port
 
+        # create email text content
+        # create MIMEMultipart object
+        main_msg = email.mime.multipart.MIMEMultipart()
+        # create a MIMEText object, it is the text content of email
+        text_msg = email.mime.text.MIMEText(body)
+        # add MIMEText object to MIMEMultipart object
+        main_msg.attach(text_msg)
+        # create MIMEBase object
 
+        maintype, subtype = contype.split('/', 1)
+        # read attachment content
+        for f in filename:
+            data = open(f, 'rb')
+            file_msg = email.mime.base.MIMEBase(maintype, subtype)
+            file_msg.set_payload(data.read())
+            data.close()
+            # file_msg is content of attachment
+            email.encoders.encode_base64(file_msg)
+            # attachment header
+            basename = os.path.basename(f)
+            file_msg.add_header('Content-Disposition',
+                                'attachment', filename=basename)
+        # add attachment to MIMEMultipart object
+        main_msg.attach(file_msg)
+        # set email format
+        main_msg['From'] = sender
+        main_msg['To'] = ", ".join(receivers)
+        main_msg['Subject'] = "This attachment sent from SHAINE - MondeVert"
+        main_msg['Date'] = email.utils.formatdate()
+        # full content of email
+        fullText = main_msg.as_string()
+        # send email by outlook smtp
+        server = smtplib.SMTP(server_host, server_port)
+        try:
+            server.ehlo()
+            server.starttls()
+            server.ehlo()
+            server.login(sender, password)
 
+            server.sendmail(sender, receivers, fullText)
+            print("Successfully sent email")
+        except:
+            print("Error: unable to send email")
+        finally:
+            server.quit()
 
+    except:
+        print("Error: unable to send email")
+#
+# import SMTPException
+# import smtplib.SMTPException
 
 def CutUP_long_String_to_list(self, Text, SavePath, FileName, Art_Style_details,Key_Words = ['Characters','Character', 'Page', 'Illustration Details'], Key_Char = ':',Delimiter = '|', crazy = .5):
     dummy =1

@@ -806,7 +806,7 @@ class MondeVert():
 
 
 
-    def Make_a_poem(self,Chunk_Limit = 700, USERTITLE= '', Poet_Bio_Details = '', Make_Persona = True, Artist_Persona= '', Poet_Persona = '', Line1_System = up.system_TextJoaT, Line2_Role = lup.Poem_Role, Line3_Format = lup.Poem_Format, Line4_Task =lup.Poem_Task, Line3_Format_outline = lup.Poem_Outline_Format, Line4_Task_outline = lup.Poem_Outline_Task,SavePath=up.AI_Poetry_Path , Mode = 'Poem', crazy = .5, Persona_Role= lup.Poet_Persona_Role, Persona_Task= lup.Poet_Persona_Task, Persona_Format= lup.Poet_Persona_Format, Persona_Special= lup.Poet_Persona_Special, Revise_Task = lup.Poem_Revise_Task, Revise_Format = lup.Poem_Revise_Format):
+    def Make_a_poem(self,Chunk_Limit = 700, USERTITLE= '', Poet_Bio_Details = '', Make_Persona = True, Artist_Persona= '', Poet_Persona = '', Line1_System = up.system_TextJoaT, Line2_Role = lup.Poem_Role, Line3_Format = lup.Poem_Format, Line4_Task =lup.Poem_Task, Line3_Format_outline = lup.Poem_Outline_Format, Line4_Task_outline = lup.Poem_Outline_Task,SavePath=up.AI_Poetry_Path , Mode = 'Poem', crazy = .5, Persona_Role= lup.Poet_Persona_Role, Persona_Task= lup.Poet_Persona_Task, Persona_Format= lup.Poet_Persona_Format, Persona_Special= lup.Poet_Persona_Special, Revise_Task = lup.Poem_Revise_Task, Revise_Format = lup.Poem_Revise_Format, Translate = SAF.Translation_Languages_Testing):
         #test
         dn = 100
         crazy = round((randbelow(520000) + 170000) / 100000, 0)
@@ -856,8 +856,11 @@ class MondeVert():
                                             Line4_Task=Line4_Task +Outline)
 
         #Edit poem
-        Revised_Poem = MondeVert.Basic_GPT_Query(self, Line2_Role=Line2_Role + Poet_Bio_Details, Line3_Format=Revise_Format, Line4_Task=Revise_Task + Poem)
-
+        if Poem != '':
+            Revised_Poem = MondeVert.Basic_GPT_Query(self, Line2_Role=Line2_Role + Poet_Bio_Details, Line3_Format=Revise_Format, Line4_Task=Revise_Task + Poem)
+        else:
+            Revised_Poem = MondeVert.Basic_GPT_Query(self, Line2_Role=Line2_Role + Poet_Bio_Details, Line3_Format=Line3_Format,
+                                            Line4_Task=Line4_Task +Outline)
 
 
 
@@ -893,24 +896,35 @@ class MondeVert():
         Title1 = cu.CleanFileName(Title)
         USERTITLE = cu.CleanFileName(USERTITLE)
 
-        Title1 = '\\' + str(Title1)
+        Title1 =  str(Title1)
         # if len(Title1) > 44:
         #     Title1 = Title1[0:44]
 
-
         if USERTITLE == '':
             folder = Title1
-            if len(folder) > 44:
-                folder = folder[0:44]
         else:
             folder = USERTITLE
+
+            if len(SavePath + '\\' + folder) > 200:
+                if len(folder) > 40:
+                    folder = folder[0:40]
 
         # Title1 = Title1 + self.current_time
         SavePath = SavePath + '\\' + folder
         FullFilePath = SavePath + '\\' + Title1
+        SavePath_Details = SavePath + '\\' + 'SHAINE - Details'
+        SavePath_Pics = SavePath + r'\SHAINE Art'
 
         cu.Check_Folder_Exists(SavePath)
+        cu.Check_Folder_Exists(SavePath_Details)
+        cu.Check_Folder_Exists(SavePath_Pics)
 
+        originalFilepath = self.PersonaArtPath
+        PicNewPath = SavePath_Pics +'\\' + Title1 + '_Persona Pic.png'
+        try:
+            shutil.copyfile(originalFilepath, PicNewPath)
+        except:
+            dn = 100
 #Run Bitter Critic
         Bitter_Critic = MondeVert.Basic_GPT_Query(self, Line2_Role=up.Test_Role_Critic , Line3_Format=up.Test_Format_Critic,
                                          Line4_Task=up.Test_Task_Critic + Lyrics, Special=up.Test_Special_Critic)
@@ -930,9 +944,8 @@ class MondeVert():
 
         # MondeVert.speak(self, "DJ MondeVert Work complete yo")
         try:
-            data_final = """Poet_Bio: """ + Poet_Bio_Details + """Poem Details: """ + Outline + ": " + (
-            up.breakupOutput2) +  """Title: """ + Title + (
-                         up.breakupOutput2) + """Poem: """ + Poem + (up.breakupOutput2) + """Poem 2.0: """ + Revised_Poem + """Bitter Critic: """ + Bitter_Critic
+            data_final = """Poet_Bio: """ + Poet_Bio_Details + (up.breakupOutput2)  + """Poem Details: """ + Outline  + (up.breakupOutput2) +  """Title: """ + Title + (
+                         up.breakupOutput2) + """Poem: """ + Poem + (up.breakupOutput2) + """Poem 2.0: """ + Revised_Poem +  (up.breakupOutput2) +"""Bitter Critic: """ + Bitter_Critic
 
         except:
             data_final= """Poem: """ + Poem + """Poem 2.0: """ + Revised_Poem
@@ -950,9 +963,9 @@ class MondeVert():
             # print(df1)
             # print(Title2)
 
-            filename = cu.SaveCSV(Title=Title1 + '_pre', SavePath=SavePath, Text=Text)
+            filename = cu.SaveCSV(Title=Title1 + '_PreProduction', SavePath=SavePath_Details, Text=Text)
             try:
-                filename2 = cu.SaveCSV(Title=Title1 , SavePath=SavePath, Text=Lyrics)
+                filename2 = cu.SaveCSV(Title=Title1 , SavePath=SavePath, Text=Lyrics, AddTimeStamp= False)
 
             except:
                 dn = 100
@@ -963,9 +976,18 @@ class MondeVert():
         try:
             try:
                 Art_persona = MondeVert.Artist_Persona_Short_Story(Writer_persona=Poet_Bio_Details)
-                Art_Details = MondeVert.summarize_art_style_for_short_story(writer_persona=Poet_Bio_Details,
-                                                                            outline=Lyrics,
-                                                                            Artist_Persona=Art_persona)  # , Format='Make a concise summary of an art style and artist to make a work of art like. Also provide the colors used, themes, moods, and tones.')
+                try:
+                    Art_Details = MondeVert.summarize_art_style_for_short_story(writer_persona=Poet_Bio_Details,
+                                                                            outline=Lyrics,Artist_Persona=Art_persona)  # , Format='Make a concise summary of an art style and artist to make a work of art like. Also provide the colors used, themes, moods, and tones.')
+                except:
+                    Dn = 100
+
+                originalFilepath = self.PersonaArtPath2
+                PicNewPath = SavePath_Pics + '_' + Title1 + '_Artist Pic.png'
+                try:
+                    shutil.copyfile(originalFilepath, PicNewPath)
+                except:
+                    dn = 100
 
             except:
                 Art_Details = Poet_Bio_Details
@@ -973,7 +995,7 @@ class MondeVert():
 
             newline = """\n"""
             newline2 = """\\n"""
-            audioname = cu.SaveText2Audio(Text=Lyrics, Translate=[ 'English',  'Swahili'], SavePath=SavePath,
+            audioname = cu.SaveText2Audio(Text=Lyrics, Translate=Translate, SavePath=SavePath,
                                           FileName=Title1, Chunk_Replaces=['.', ')', ':', '?',newline,newline2], Chunk_Limit=Chunk_Limit,
                                           Artist_Persona=Art_Details )
             test = 100
@@ -983,8 +1005,14 @@ class MondeVert():
 
 
         try:
-            cu.send_email_w_attachment_outlook(body=Lyrics, filename=filename)
-            cu.send_email_w_attachment_gmail(body=Lyrics, filename=filename)
+
+
+            cu.send_email_no_attachment_gmail(body=Lyrics)
+            cu.send_email_no_attachment_outlook(body=Lyrics)
+
+            cu.send_email_w_attachment_outlook(body=Lyrics, filename=[PicNewPath])
+            cu.send_email_w_attachment_gmail(body=Lyrics, filename=[PicNewPath], fType='png')
+
 
         except:
             print('email not send, its possible file was not created')
@@ -996,6 +1024,12 @@ class MondeVert():
         try:
             ArtPath2 = MondeVert.makeArt(self, Art_Prompt)
             ArtPaths.append(ArtPath2)
+            originalFilepath = ArtPath2
+            PicNewPath = SavePath_Pics + '\\' + Title1 + '_Project Pic.png'
+            try:
+                shutil.copyfile(originalFilepath, PicNewPath)
+            except:
+                dn = 100
 
         except:
             ArtPath2 = ''
@@ -1004,8 +1038,8 @@ class MondeVert():
         prompt = data_final + "Work of Art Inspiration:" + str(Art_Prompt) + 'Artist Info: ' + Art_Details + up.breakupOutput2 +  Artist_Persona
         Prompts_Used = [str(self.UserPromptsCount) + ' User Inputs: ' + self.UserPrompts]
         ArtistPoetInfo = 'Lyrics Written By: Shane Donovan   (' + 'Artwork by: ' + up.AI_ArtistName + ')'
-        cu.NamePoemSavePoem(self, prompt, ArtPaths, Prompts_Used, ArtistPoetInfo, title=Title1 + '_Details',
-                            SavePath=SavePath, Mode= Mode)
+        cu.NamePoemSavePoem(self, prompt, ArtPaths, Prompts_Used, ArtistPoetInfo, title=Title1 + '_Final',
+                            SavePath=SavePath_Details, Mode= Mode)
 
 
 
@@ -1083,23 +1117,22 @@ class MondeVert():
 
 
 
-        Title1 = '\\' + str(Title1) + "_"
+        Title1 =  str(Title1)
         # if len(Title1) > 44:
         #     Title1 = Title1[0:44]
 
-
-
-
         if USERTITLE == '':
             folder = Title1
-            if len(folder) > 44:
-                folder = folder[0:44]
         else:
             folder = USERTITLE
 
+            if len(SavePath + '\\' + folder) > 200:
+                if len(folder) > 40:
+                    folder = folder[0:40]
+
         Title1 = Title1 + self.current_time
         SavePath = SavePath + '\\' + folder
-        Title2 = SavePath + Title1
+        Title2 = SavePath + '\\'  +  Title1
 
         cu.Check_Folder_Exists(SavePath)
 
@@ -1172,8 +1205,13 @@ class MondeVert():
             print('Review Error File did not save ')
 
         try:
-            cu.send_email_w_attachment_gmail(body= Song, filename=filename)
-            cu.send_email_w_attachment_outlook(body=Song, filename=filename)
+
+            cu.send_email_no_attachment_gmail(body=Song)
+            cu.send_email_no_attachment_outlook(body=Song)
+
+            cu.send_email_w_attachment_outlook(body=Song, filename=[filename])
+            cu.send_email_w_attachment_gmail(body=Song, filename=[filename], fType='txt')
+
         except:
             print('email not send, its possible file was not created')
 
@@ -1215,7 +1253,7 @@ class MondeVert():
 
 
 
-    def Make_a_Song_2(self,Make_Persona = False,Artist_Bio_Details = '',Song_Subject = up.Song_Subject, SavePath = up.AI_Music_Path, System = up.system_TextRR, Role= up.RolePlay_SongArtistRR, Outline_Task=up.ArtistBio_SongArtistRR, Task = up.Song_Prompt_SongArtists,Special=up.Samples_SongArtists, Format=up.SongFormat ,Mode='Random Song',USERTITLE = ''):
+    def Make_a_Song_2(self,Make_Persona = False,Artist_Bio_Details = '',Song_Subject = up.Song_Subject, SavePath = up.AI_Music_Path, System = up.system_TextRR, Role= lup.Song_Role, Outline_Task=up.ArtistBio_SongArtistRR, Task = up.Song_Prompt_SongArtists,Special=up.Samples_SongArtists, Format=lup.Song_Format ,Mode='Random Song',USERTITLE = '', Chunk_Limit = 1333, Translate = SAF.Translation_Languages_Testing4, Line3_Format_outline = lup.Song_Outline_Format, Line4_Task_Outline= lup.Song_Outline_Task):
 
 
         #Note if the bio is not passed in it makes a random persona up
@@ -1225,11 +1263,12 @@ class MondeVert():
         #SavePath = up.AI_Music_Path
         cu.Check_Folder_Exists(SavePath)
 
-        ReWrite = '*Did not create'
+        Outline = '*Did not create'
         Song = '*Did not create'
         Bitter_critic = '*Did not create'
         ReWrite = '*Did not create'
         DJMondeVert = '*Did not create'
+
 
         if Mode not in SavePath:
             SavePath = SavePath + '\\' + Mode
@@ -1257,89 +1296,14 @@ class MondeVert():
         if crazy > .9:
             crazy = .7
 
+        Outline = MondeVert.Basic_GPT_Query(self, Line2_Role=Role + Artist_Bio_Details,
+                                            Line3_Format=Line3_Format_outline, Line4_Task=Line4_Task_Outline, crazy=crazy)
 
-        #
-        # try:
-        #     response = openai.ChatCompletion.create(
-        #         model="gpt-3.5-turbo",
-        #         messages=[
-        #             {"role": "system", "content": System},
-        #             {"role": "user", "content": Outline_Task + Artist_Bio_Details}
-        #         ], temperature=crazy
-        #     )
-        #
-        #     Artist_Bio = response.choices[0].message.content
-        # except:
-        #     dn = 100
-
-
-        # print('Artist_Bio: ' + Artist_Bio)
-        print(up.breakupOutput2)
         try:
-            Song1 = openai.ChatCompletion.create(
-                model="gpt-3.5-turbo",
-                messages=[
-                    {"role": "system", "content": System},
-                    {"role": "user", "content": Role + Artist_Bio},
-                    {"role": "user", "content":  Song_Subject},
-                    {"role": "user", "content": up.Song_Format_Prompt + Format},
-
-                ]
-                , temperature=crazy
-            )
-            Song = Song1.choices[0].message.content
-
+            Song = MondeVert.Basic_GPT_Query(self, Line2_Role=Role + Artist_Bio_Details, Line3_Format=Format,
+                                                Line4_Task=Task +Outline)
         except:
             dn = 100
-        try:
-            # Create original details
-            response = openai.ChatCompletion.create(
-                model="gpt-3.5-turbo",
-                messages=[
-                    {"role": "system", "content": System},
-                    {"role": "user", "content": Role + Artist_Bio},
-                    {"role": "user", "content": up.Title_SongArtistsRR + Song}
-
-                ], temperature=crazy
-            )
-
-            Title = response.choices[0].message.content
-
-            Title = Title.replace("The Title:", "")
-            Title = Title.replace("Title:", "")
-            Title = Title.replace("The Title", "")
-            Title = Title.replace("Title", "")
-
-        except:
-            Title = Mode  + '_'+ self.current_time
-            dn = 100
-
-
-    #Create new subfolder etc for this filepath
-        Title1 = cu.CleanFileName(Title)
-        USERTITLE = cu.CleanFileName(USERTITLE)
-
-
-
-        Title1 = '\\' + str(Title1)
-        # if len(Title1) > 44:
-        #     Title1 = Title1[0:44]
-
-
-
-
-        if USERTITLE == '':
-            folder = Title1
-            if len(folder) > 44:
-                folder = folder[0:44]
-        else:
-            folder = USERTITLE
-
-        #Title1 = Title1 + self.current_time
-        SavePath = SavePath + '\\' + folder
-        FullFilePath = SavePath + '\\'+ Title1
-
-        cu.Check_Folder_Exists(SavePath)
 
 
 
@@ -1349,7 +1313,7 @@ class MondeVert():
                 model="gpt-3.5-turbo",
                 messages=[
                     {"role": "system", "content": System},
-                    {"role": "user", "content": up.RolePlay_SongArtistRR + Artist_Bio},
+                    {"role": "user", "content": Role + Artist_Bio},
                     {"role": "user", "content": up.Samples_SongArtistsRR2 + Song}
 
                 ], temperature=crazy
@@ -1365,7 +1329,7 @@ class MondeVert():
                 model="gpt-3.5-turbo",
                 messages=[
                     {"role": "system", "content": System},
-                    {"role": "user", "content": up.RolePlay_SongArtistRR + Artist_Bio},
+                    {"role": "user", "content": Role + Artist_Bio},
                     {"role": "user", "content": up.ReWrite_Song + Song}
 
                 ], temperature=crazy
@@ -1383,7 +1347,7 @@ class MondeVert():
                 model="gpt-3.5-turbo",
                 messages=[
                     {"role": "system", "content": up.system_TextDJ},
-                    {"role": "user", "content": Role + Artist_Bio},
+                    {"role": "user", "content": Role + Artist_Bio_Details},
                     {"role": "user", "content": Samples2},
                     {"role": "user", "content": up.ExplainTheBeat + Song_trim}
 
@@ -1407,7 +1371,53 @@ class MondeVert():
         except:
             Lyrics = Song
 
+        try:
+            Title = MondeVert.Quick_Title(self,Text='Make an abstract and concise title that draws in the audience for the following lyrics/song: ' + Lyrics)
+
+            Title = Title.replace("The Title:", "")
+            Title = Title.replace("Title:", "")
+            Title = Title.replace("The Title", "")
+            Title = Title.replace("Title", "")
+
+        except:
+            Title = Mode + '_' + self.current_time
+
+            # Create new subfolder etc for this filepath
+        Title1 = cu.CleanFileName(Title)
+        USERTITLE = cu.CleanFileName(USERTITLE)
+
+        Title1 = str(Title1)
+        # if len(Title1) > 44:
+        #     Title1 = Title1[0:44]
+
+        if USERTITLE == '':
+            folder = Title1
+        else:
+            folder = USERTITLE
+
+            if len(SavePath + '\\'+folder)>200:
+                if len(folder) > 40:
+                    folder = folder[0:40]
+
+
+        SavePath = SavePath + '\\' + folder
+        FullFilePath = SavePath + '\\' + Title1
+        SavePath_Details = SavePath + '\\' + 'SHAINE - Details'
+        SavePath_Pics = SavePath + r'\SHAINE Art'
+
+        cu.Check_Folder_Exists(SavePath)
+        cu.Check_Folder_Exists(SavePath_Details)
+        cu.Check_Folder_Exists(SavePath_Pics)
+
+        originalFilepath = self.PersonaArtPath
+        PicNewPath = SavePath_Pics + '\\' + Title1 + '_Persona Pic.png'
+        try:
+            shutil.copyfile(originalFilepath, PicNewPath)
+        except:
+            dn = 100
+
         Bitter_Critic = ''
+
         try:
             Bitter_Critic = MondeVert.Basic_GPT_Query(self, Line2_Role=up.Test_Role_Critic,
                                                   Line3_Format=up.Test_Format_Critic,
@@ -1420,8 +1430,10 @@ class MondeVert():
 
 
         #MondeVert.speak(self, "DJ MondeVert Work complete yo")
-        data_final = """Artist_Bio: """ + Artist_Bio_Details +"""Song Details: """ + Artist_Bio + ": " + (up.breakupOutput2) + """ Potential Samples: """ + Samples2  + (up.breakupOutput2) +  """Title: """ + Title + (up.breakupOutput2) + """Song: """ + Song +  (up.breakupOutput2) +"""Song 2.0: """ + ReWrite + (up.breakupOutput2) + """DJMondeVert: """ + DJMondeVert + """Bitter Critic: """ + Bitter_Critic
-
+        try:
+            data_final = """Artist_Bio: """ + Artist_Bio_Details +"""Song Details: """ + Outline + ": " + (up.breakupOutput2) + """ Potential Samples: """ + Samples2  + (up.breakupOutput2) +  """Title: """ + Title + (up.breakupOutput2) + """Song: """ + Song +  (up.breakupOutput2) +"""Song 2.0: """ + ReWrite + (up.breakupOutput2) + """DJMondeVert: """ + DJMondeVert + """Bitter Critic: """ + Bitter_Critic
+        except:
+            data_final = """Title: """ + Title +  """                                Song: """ + Song  +"""                         Song 2.0: """ + ReWrite
         print(data_final)
 
         #MondeVert.speak(self, "Saving the files round 1")
@@ -1434,52 +1446,45 @@ class MondeVert():
 
         #print(data)
         try:
-            #df1 = pd.DataFrame(data)
+            # df1 = pd.DataFrame(data)
             # print(df1)
             # print(Title2)
 
-            filename = cu.SaveCSV( Title= Title1 + '_pre', SavePath=SavePath,Text=Text)
+            filename = cu.SaveCSV(Title=Title1 + '_PreProduction', SavePath=SavePath_Details, Text=Text)
             try:
-                filename2 = cu.SaveCSV(Title=Title1 + '_lyrics', SavePath=SavePath, Text=ReWrite)
+                filename2 = cu.SaveCSV(Title=Title1, SavePath=SavePath, Text=Lyrics, AddTimeStamp=False)
 
             except:
                 dn = 100
         except:
             print('Review Error File did not save ')
 
-
-
-
         try:
             try:
                 Art_persona = MondeVert.Artist_Persona_Short_Story(Writer_persona=Artist_Bio_Details)
-                Art_Details = MondeVert.summarize_art_style_for_short_story(writer_persona=Artist_Bio_Details,outline=Lyrics,Artist_Persona=Art_persona) #, Format='Make a concise summary of an art style and artist to make a work of art like. Also provide the colors used, themes, moods, and tones.')
+                try:
+                    Art_Details = MondeVert.summarize_art_style_for_short_story(writer_persona=Artist_Bio_Details,
+                                                                                outline=Lyrics,
+                                                                                Artist_Persona=Art_persona)  # , Format='Make a concise summary of an art style and artist to make a work of art like. Also provide the colors used, themes, moods, and tones.')
+                except:
+                    Dn = 100
+
+                originalFilepath = self.PersonaArtPath2
+                PicNewPath = SavePath_Pics + '_' + Title1 + '_Artist Pic.png'
+                try:
+                    shutil.copyfile(originalFilepath, PicNewPath)
+                except:
+                    dn = 100
 
             except:
-                Art_Details= Artist_Bio
+                Art_Details = Artist_Bio_Details
                 dn = 100
-        #     CleanLyrics = cu.CleanLyrics4audio(text=Lyrics)
-        #     if CleanLyrics !='':
-        #         Lyrics = CleanLyrics
-        #     print("CleanLyrics 1: " + lup.NewLine+ Lyrics)
-        # except:
-        #     dn = 100
-        #
-        # try:
-        #     CleanLyrics = cu.CleanLyrics4audio(text=CleanLyrics, Chunk_Delimiter_left='(',Chunk_Delimiter_right=')')
-        #     if CleanLyrics != '':
-        #         Lyrics = CleanLyrics
-        #     print("CleanLyrics 2: " + lup.NewLine + Lyrics)
-        # except:
-        #     dn = 100
-        # try:
-        #     if len(Lyrics) > len(Lyrics1):
-        #         Lyrics= Lyrics1
+
             newline = """\n"""
             newline2 = """\\n"""
-            audioname = cu.SaveText2Audio(Text=Lyrics, Translate=['French', 'English', 'Swahili'], SavePath=SavePath,
+            audioname = cu.SaveText2Audio(Text=Lyrics, Translate=Translate, SavePath=SavePath,
                                           FileName=Title1, Chunk_Replaces=['.', ')', ':', '?', newline, newline2],
-                                          Chunk_Limit=1333,
+                                          Chunk_Limit=Chunk_Limit,
                                           Artist_Persona=Art_Details)
             test = 100
         except:
@@ -1491,8 +1496,11 @@ class MondeVert():
 
 
         try:
-            cu.send_email_w_attachment_outlook(body=Song, filename=filename)
-            cu.send_email_w_attachment_gmail(body= Song, filename=filename)
+            cu.send_email_no_attachment_gmail(body=Lyrics)
+            cu.send_email_no_attachment_outlook(body=Lyrics)
+
+            cu.send_email_w_attachment_outlook(body=Lyrics, filename=[PicNewPath])
+            cu.send_email_w_attachment_gmail(body= Lyrics, filename=[PicNewPath],fType='png')
 
         except:
             print('email not send, its possible file was not created')
@@ -1843,6 +1851,7 @@ class MondeVert():
             ArtPrompt =  MondeVert.GPTArt2(self, User_Subject=Writer_Persona)
             try:
                 ArtPath = MondeVert.makeArt(self, Prompt=ArtPrompt)
+                self.PersonaArtPath = ArtPath
             except:
                 dn = 100
         except:
@@ -1870,6 +1879,7 @@ class MondeVert():
                 ArtPrompt = MondeVert.GPTArt2(self, User_Subject=Artist_Persona)
                 try:
                     ArtPath = MondeVert.makeArt(self, Prompt=ArtPrompt)
+                    self.PersonaArtPath2 = ArtPath
                 except:
                     dn = 100
             except:
@@ -2297,9 +2307,11 @@ class MondeVert():
 
 
         try:
-            cu.send_email_w_attachment_gmail(body=Project_Description, filename=Email_File)
-            print("Gmail email sent")
-            cu.send_email_w_attachment_outlook(body = Project_Description,filename= Email_File)
+            cu.send_email_no_attachment_gmail(body=AudioBook_Text)
+            cu.send_email_no_attachment_outlook(body=AudioBook_Text)
+
+            cu.send_email_w_attachment_outlook(body=AudioBook_Text, filename=[Email_File])
+            cu.send_email_w_attachment_gmail(body=AudioBook_Text, filename=[Email_File],fType='txt')
             print("Outlook email sent")
         except:
             print('email not send, its possible file was not created')
@@ -2714,7 +2726,7 @@ class MondeVert():
             folder = Title1
             if len(folder) > 44:
                 folder = folder[0:44]
-            Title1 = '\\' + str(Title1) + "_"
+            Title1 =  str(Title1)
             # if len(Title1) > 44:
             #     Title1 = Title1[0:44]
             SavePath = SavePath + '\\' + folder
@@ -2790,9 +2802,12 @@ class MondeVert():
                 print('Review Error File did not save ')
 
             try:
-                cu.send_email_w_attachment_gmail( body=Project_Description, filename=CSVLocation)
+                cu.send_email_no_attachment_gmail(body=Project_Description)
+                cu.send_email_no_attachment_outlook(body=Project_Description)
+
+                cu.send_email_w_attachment_outlook(body=Project_Description, filename=[CSVLocation])
+                cu.send_email_w_attachment_gmail(body=Project_Description, filename=[CSVLocation], fType='txt')
                 print("Gmail email sent")
-                cu.send_email_w_attachment_outlook( body= Project_Description,  filename=CSVLocation)
                 print("Outlook email sent")
             except:
                 print('email not send, its possible file was not created')
@@ -3337,7 +3352,7 @@ class MondeVert():
         data.append([Outline_Details])
         data.append([Outline_Next2_Ref2])
         data.append([Plot])
-
+        filenames = []
         for x in range(0, 4):
             # print(data)
             try:
@@ -3346,15 +3361,20 @@ class MondeVert():
                 FName = filename1[x]
                 filename = cu.SaveCSV(Text = Text,Title = FName, SavePath=SavePath)
                 # MondeVert.SaveText(self,df1,'MondeVert Assistant', 'Full Transcript')
-
+                filenames.append(filename)
                 # MondeVert.add2Master2(df1)
             except:
                 print('Review Error File did not save ')
 
         try:
-            cu.send_email_w_attachment_gmail(body =  Skeleton_Story, filename=filename)
-            print('Gmail Email Sent ')
-            cu.send_email_w_attachment_outlook(body =  Skeleton_Story, filename=filename)
+
+            cu.send_email_no_attachment_gmail(body=Skeleton_Story)
+            cu.send_email_no_attachment_outlook(body=Skeleton_Story)
+
+            cu.send_email_w_attachment_outlook(body=Skeleton_Story, filename=filenames)
+            cu.send_email_w_attachment_gmail(body=Skeleton_Story, filename=filenames, fType='txt')
+
+
             print('Outlook Email Sent ')
 
         except:
@@ -3702,8 +3722,8 @@ if __name__ == '__main__':
 
     #args= ['Music_Rich','Music_Shane', 'Music', 'PjSpecial']
 
-    #args= ['Poem']
-    args = ['Speech']
+    args= ['Poem']
+    #args = ['Music_Rich']
     #
 
     #
