@@ -12,8 +12,8 @@ import email.mime.multipart
 import email.mime.text
 import email.mime.base
 import os
-import FFProbe
-import FFProbe.utility
+# import FFProbe
+# import FFProbe.utility
 import random
 from MondeVert_IP.SHAINE_MonderVert import Instagram_Posts as IP
 from MondeVert_IP.SHAINE_MonderVert.SHAINE_WIZARD_PROMPTS import Long_User_Prompts as lup
@@ -127,7 +127,7 @@ def CheckFileLength(SavePath,Title1,current_time_f, FileType):
         isExist = os.path.exists(Title2)
         if isExist == True:
             Add_Dupe_File += 1
-            Title2 = Title2[:-4] + '_' + Add_Dupe_File + FileType
+            Title2 = Title2[:-4] + '_' + str(Add_Dupe_File) + FileType
 
     return Title2
 
@@ -143,7 +143,9 @@ def SaveCSV(Text, Title, SavePath, AddTimeStamp = True, FileType = '.txt'):
 
 
     Title1  = CleanFileName(Title)
-    Title2 = CheckFileLength(SavePath=SavePath,Title1=Title1, current_time_f=current_time_f,FileType=FileType)
+    Title2 = SavePath + '\\' + Title1 + '_' + current_time_f + FileType
+    if len(Title2) > 250 :
+        Title2 = CheckFileLength(SavePath=SavePath,Title1=Title1, current_time_f=current_time_f,FileType=FileType)
     # folder = str(Title1)
     # if len(folder) > 44:
     #     folder = folder[0:44]
@@ -195,17 +197,18 @@ def SaveCSV(Text, Title, SavePath, AddTimeStamp = True, FileType = '.txt'):
 # section of the AWS credentials file (~/.aws/credentials).
 
 from pydub import AudioSegment
-def Combine_Splitsof_audio(AudioFiles_ordered,FilePath, SavePath = up.SavePath,Opening_Sound = up.MondeVertIntro, Voice = random.choices(SAF.Original_List_of_Voices_English)[0]):
+def Combine_Splitsof_audio(AudioFiles_ordered,FilePath,FileName = 'SHAINE - Audio Combined', SavePath = up.SavePath + 'r/Orphan Audio Files',Opening_Sound = up.MondeVertIntro, Voice = random.choices(SAF.Original_List_of_Voices_English)[0]):
     Check_Folder_Exists(SavePath)
     Merged_Audio = Opening_Sound
-
+    FilePath_merge = SavePath + '\\' + FileName + '.mp3'
     counter = 1
     len_Audio = len(AudioFiles_ordered)
     for x in range (0,len_Audio):
         if x ==0:
             #print(Opening_Sound)
-            Opening = AudioSegment.from_mp3(Opening_Sound)
-            Merged_Audio = Opening
+            #Opening = AudioSegment.from_mp3(Opening_Sound)
+            sound2add = AudioSegment.from_mp3(AudioFiles_ordered[x])
+            Merged_Audio = sound2add
 
         else:
             sound2add = AudioSegment.from_mp3(AudioFiles_ordered[x])
@@ -213,12 +216,12 @@ def Combine_Splitsof_audio(AudioFiles_ordered,FilePath, SavePath = up.SavePath,O
 
     try:
     # simple export
-         FilePath = Merged_Audio.export(FilePath, format="mp3")
+         FilePath_new = Merged_Audio.export(FilePath_merge, format="mp3")
     except:
          print('could not save file audio file')
     #     FilePath = 'No File Saved'
 
-    return FilePath
+    return FilePath_merge
 
 #on character list Have Narrator Scene (stern and manly) and then you have preferred Narrators to choose from (to do all other narrations)
 #Split on Space and :
@@ -262,7 +265,7 @@ def Split_Audio2(Text, SavePath, FileName,FilePath = '', OpeningSound = up.Monde
     Translate_Folder = r'\Translated'
     Text_New = Text
     SavePath_Pics = SavePath + r'\SHAINE - Art'
-    FilePaths = []
+
     length = len(Text)
     Audio_File_Count= 1
     if 'Audio Chunks' in SavePath:
@@ -280,8 +283,11 @@ def Split_Audio2(Text, SavePath, FileName,FilePath = '', OpeningSound = up.Monde
     countl = 0
     print('All Languages to translate')
     print(Translate)
+    x = GPT.MondeVert()
     TranslateLanguages = []
     for l in Translate:
+
+        FilePaths = []
         Audio_File_Count = 0
         New_Text_Translated = ''
         Text_New = Text
@@ -292,7 +298,7 @@ def Split_Audio2(Text, SavePath, FileName,FilePath = '', OpeningSound = up.Monde
 
         Voices.append(v)
         #New_Text_Translated.append('Voice: ' + str(Voices[countl]) + '   ' + str(l) + '_Translation: ')
-
+        FileName_Language_Voice = FileName + '_' + l + '_' + v
         countl = 0
         LastPunc = Chunk_Limit
         while  LastPunc != -1 and len(Text_New)> 0:
@@ -383,7 +389,7 @@ def Split_Audio2(Text, SavePath, FileName,FilePath = '', OpeningSound = up.Monde
                 Text_Chunk_Final = Text_New
                 Text_New = ''
 
-
+            FileName_Language_Voice = FileName + '_' + l + '_' + v
             FileName_Chunk = FileName + '_' + l + '_' + v + '_Chunk_' + str(Audio_File_Count)
             print(FileName_Chunk)
             print(SavePath_Pics)
@@ -394,7 +400,7 @@ def Split_Audio2(Text, SavePath, FileName,FilePath = '', OpeningSound = up.Monde
             New_Text_Translated_Temp = ''
 
             #print(Text_Chunk_Final)
-            x = GPT.MondeVert()
+
             if l != Origin_Language:
 
                 tempTranslate = x.Translate(Text = Text_Chunk_Final, Language_Final=l, Origin_Language=Origin_Language)
@@ -407,6 +413,7 @@ def Split_Audio2(Text, SavePath, FileName,FilePath = '', OpeningSound = up.Monde
                     FilePathc = SaveText2Audio(Text=tempTranslate, SavePath=SavePath_Chunks+Translate_Folder,
                                           FileName=FileName_Chunk,
                                           Voice=Translate_Voice, Chunk_Mode=True, FilePath=FilePath, Translate=Translate, Chunk_Limit=Chunk_Limit_Translate)
+                    FilePaths.append(FilePathc)
                     print('successfully made an audio file in ' + l)
                 except:
                     print('Error could not create audio for this text')
@@ -436,7 +443,7 @@ def Split_Audio2(Text, SavePath, FileName,FilePath = '', OpeningSound = up.Monde
                 print('Text_Chunk_Final: ' + str(len(Text_Chunk_Final)))
                 translate2 = [l]
                 FilePathc = SaveText2Audio(Text = Text_Chunk_Final, SavePath = SavePath_Chunks, FileName=FileName +'_' + l +'_' + Voice +'_Chunk_' + str(Audio_File_Count), Voice = v , Chunk_Mode=True, FilePath=FilePath, Translate=[l], Chunk_Delimiter=Chunk_Delimiter,Chunk_Replaces=Chunk_Replaces,Chunk_Limit=Chunk_Limit + 10 ,Artist_Persona=Artist_Persona)
-
+                FilePaths.append(FilePathc)
                 if len(Text_Chunk_Final)>44:
                     ArtPrompt = x.GPTArt2(User_Subject='Create a prompt for an artist to create a work of art based on the following text: ' + Text_Chunk_Final,ArtFormat='Describe the work of art as per the following Artist persona: ' + Artist_Persona )
                     try:
@@ -450,24 +457,26 @@ def Split_Audio2(Text, SavePath, FileName,FilePath = '', OpeningSound = up.Monde
                         print('Art not made, not an issue for now, maybe down the road')
 
 
-            FilePaths.append(FilePath)
+
             Text_Chunks.append(Text_Chunk_Final)
-            RunningCheck +=len(Text_Chunk_Final)
-            if l != 'English':
-                SaveCSV(SavePath=SavePath+Translate_Folder, Title=FileName +'_' +  l + '_Translated', Text=New_Text_Translated)
+        #RunningCheck +=len(Text_Chunk_Final)
+        if l != Origin_Language:
+            SaveCSV(SavePath=SavePath+Translate_Folder, Title=FileName +'_' +  l + '_Translated', Text=New_Text_Translated)
+            SavePath_temp = SavePath+Translate_Folder
+        else:
+            SavePath_temp = SavePath
 
-
-
-        FilePath2 = FilePaths[0]
+        #FilePath2 = FilePaths[0]
 
             #print(Text_New)
             #print(len(Text_New))
-    # try:
-    #     FilePath2 = Combine_Splitsof_audio(AudioFiles_ordered = FilePaths, FilePath=FilePath,SavePath= SavePath)
-    # except:
-    #     FilePath2 = FilePaths[0]
+        try:
 
-        print('Error COuld not parse files together, see chunks for now')
+            FilePath2 = Combine_Splitsof_audio(AudioFiles_ordered = FilePaths, FilePath=FilePath,SavePath= SavePath_temp, FileName= FileName_Language_Voice, Voice = v)
+        except:
+            FilePath2 = FilePaths[0]
+
+            #print('Error Could not parse files together, see chunks for now')
     return FilePath2
 #
 #

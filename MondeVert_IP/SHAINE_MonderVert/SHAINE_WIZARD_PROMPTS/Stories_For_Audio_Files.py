@@ -118,7 +118,7 @@ Translation_Languages_Testing5 = ['English','French', 'Swahili']
 
 
 French_Voices = ['Gabrielle','Remi','Liam','Lea']
-Spanish_Portuguese_Voices = ['Lucia','Remi','Adriano','Sergio','Pedro', 'Mia', 'Ines', 'Vitoria','Lupe', 'Camila']
+Spanish_Portuguese_Voices = ['Lucia','Sergio','Pedro', 'Mia', 'Ines', 'Vitoria','Lupe', 'Camila']
 German_Voices = ['Daniel', 'Hannah', 'Vicki', 'Ola', 'Suvi']
 Japanese_Voices = ['Tomoko', 'Takumi', 'Kazuha']
 Chinese_Voices = ['Hiujin', 'Zhiyu']
@@ -130,6 +130,10 @@ Translate_Sys = 'You must translate the text I provide in my conversation I will
 Translate_Line2 = "You are a master translator and children's writer able to take an english text and translate to [ "
 Translate_Line4 = "Translate the following Text: ["
 Translate_Line3 = "The text being translated is a [short story], use appropriate words that are descriptive and accurate translations, try to translate the meaning more than the actual word for word translation so the respective language sounds like someone speaking and not just reading."
+
+Original_List_of_Voices_English = ['Joanna','Kendra','Kimberly','Salli','Ruth','Olivia','Kajal','Amy','Emma','Aria','Ayanda','Ivy','Joey','Matthew','Stephen','Brian','Arthur','Justin','Kevin']
+Original_List_of_Voices_ESL= ['Lupe','Hiujin','Zhiyu','Lea','Gabrielle','Bianca','Ida','Ola','Camila','Vitoria/Vitoria','Ines','Lucia','Mia','Hala','Arlet','Laura','Suvi','Vicki','Hannah','Kazuha','Tomoko','Seoyeon','Elin','Pedro','Remi','Liam','Adriano','Thiago','Sergio','Andres','Daniel','Takumi']
+Original_List_of_Voices = ['Joanna','Kendra','Kimberly','Salli','Ruth','Olivia','Kajal','Amy','Emma','Aria','Ayanda','Ivy','Joey','Matthew','Stephen','Brian','Arthur','Justin','Kevin','Lupe','Hiujin','Zhiyu','Lea','Gabrielle','Bianca','Ida','Ola','Camila','Vitoria','Ines','Lucia','Mia','Hala','Arlet','Laura','Suvi','Vicki','Hannah','Kazuha','Tomoko','Seoyeon','Elin','Pedro','Remi','Liam','Adriano','Thiago','Sergio','Andrés','Daniel','Takumi']
 
 def Pick_Voice(Language = 'English'):
     if Language == 'English':
@@ -157,9 +161,6 @@ def Pick_Voice(Language = 'English'):
 
 
 
-Original_List_of_Voices_English = ['Joanna','Kendra','Kimberly','Salli','Ruth','Olivia','Kajal','Amy','Emma','Aria','Ayanda','Ivy','Joey','Matthew','Stephen','Brian','Arthur','Justin','Kevin']
-Original_List_of_Voices_ESL= ['Lupe','Hiujin','Zhiyu','Lea','Gabrielle','Bianca','Ida','Ola','Camila','Vitoria/Vitoria','Ines','Lucia','Mia','Hala','Arlet','Laura','Suvi','Vicki','Hannah','Kazuha','Tomoko','Seoyeon','Elin','Pedro','Remi','Liam','Adriano','Thiago','Sergio','Andres','Daniel','Takumi']
-Original_List_of_Voices = ['Joanna','Kendra','Kimberly','Salli','Ruth','Olivia','Kajal','Amy','Emma','Aria','Ayanda','Ivy','Joey','Matthew','Stephen','Brian','Arthur','Justin','Kevin','Lupe','Hiujin','Zhiyu','Lea','Gabrielle','Bianca','Ida','Ola','Camila','Vitoria','Ines','Lucia','Mia','Hala','Arlet','Laura','Suvi','Vicki','Hannah','Kazuha','Tomoko','Seoyeon','Elin','Pedro','Remi','Liam','Adriano','Thiago','Sergio','Andrés','Daniel','Takumi']
 Audio_Voice_Table = """Language and language variants,Rarity Weight (Higher the % means its more likely to be picked),Name/ID,Gender
 English (US),90%,Joanna,Female
 English (US),90%,Kendra,Female

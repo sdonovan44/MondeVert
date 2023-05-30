@@ -27,7 +27,7 @@ Text:###""" + Text + """###"""
 #x.Manual_Audio_File(SavePath = r'A:\MondeVert_IP Productions\SHAINE - MondeVert_IP AI Assistant\AI Tasks\MondeVert_Audio_Video_Story',FileName= 'Echoes of the Heart', FilePath = r"A:\MondeVert_IP Productions\SHAINE - MondeVert_IP AI Assistant\AI Tasks\MondeVert_Audio_Video_Story\Echoes of the Heart_Miniseries.txt")
 #x.Manual_Audio_File(Text_override = SFA.MondeVert_Promo)
 #MondeVert_Promo
-audio_new = r"A:\MondeVert Productions\SHAINE - MondeVert AI Assistant\SHAINE_Requests\Beta - Testing\AI AudioBooks\AI_Childrens_AudioBook_Path\PjSpecial\PjSpecial05-21-2023_20.16\PjSpecial052120232016\PjSpecial052120232016Result Only_.txt"
+audio_new = r"A:\Amini Amor\SHAINE\Requests\Beta\AI Poetry\Shane_Poem\Warrior Spirit A Poem of Perseverance and T\Warrior Spirit.txt"
 audio_File_name = 'King Richard Reid'
 #x.Manual_Audio_File(SavePath =up.AI_AudioBook_Path ,FileName=  audio_File_name, Source_FilePath = audio_new)
 
@@ -61,10 +61,10 @@ Runs.append('MondeVert_Audio_Video_Story')
 # Runs.append('Basic')
 # Runs.append('Wedding Vows')
 
-for i in Runs:
-    x.MondeVertMenu_up(Mode=i)
+# for i in Runs:
+#     x.MondeVertMenu_up(Mode=i)
 
-#cu.SaveText2Audio( FilePath = audio_new, Chunk_Limit=313)
+cu.SaveText2Audio( FilePath = audio_new, Chunk_Limit=333)
 
 #
 
@@ -87,6 +87,6 @@ for i in Runs:
 # '''
 #
 #
-# #cu.SaveText2Audio(Text= text,FilePath=r"A:\MondeVert Productions\SHAINE - MondeVert AI Assistant\SHAINE_Requests\Beta - Testing\AI AudioBooks\AI AudioBooks\Zara's Garden.mp3", Chunk_Limit=213 )
-#
-# x.MondeVertMenu_up(Mode = 'Social_Media_Clean_Post')
+#cu.SaveText2Audio(FilePath=r"A:\Amini Amor\SHAINE\Requests\Beta\AI Blogs\Blog_Random\Prioritizing Mental Health in Communities of Color\Prioritizing Mental Health in Communities of Color.txt", Chunk_Limit=1333 )
+
+#x.MondeVertMenu_up(Mode = 'Social_Media_Clean_Post')

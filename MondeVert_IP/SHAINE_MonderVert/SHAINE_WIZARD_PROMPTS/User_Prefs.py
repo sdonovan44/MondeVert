@@ -8,7 +8,7 @@ SavePath = r"A:\Amini Amor\SHAINE\Requests\Beta"
 AI_Art_Path = SavePath + r"\AI Art"
 AI_Poetry_Path = SavePath + r"\AI Poetry"
 AI_Blog_Path = SavePath + r"\AI Blogs"
-AI_Music_Path = SavePath + r"\AI Song Lyrics"
+AI_Music_Path = SavePath + r"\AI Music"
 AI_Task_Path = SavePath + r"\AI Tasks"
 AI_AudioBook_Path = SavePath + r"\AI AudioBooks"
 AI_Childrens_AudioBook_Path = AI_AudioBook_Path + r"\AI_Childrens_AudioBook_Path"
@@ -23,8 +23,10 @@ MasterFile3 = SavePath + r"\Master Tracker Files\MondeVert Master Blog Poem and 
 MasterFilePersona = SavePath + r"\Master Tracker Files\MondeVert Master Persona.xlsx"
 MasterFile_Character = SavePath + r"\Master Tracker Files\MondeVert Master Character List.xlsx"
 
-
-
+#Shane_Bio = "Shane Donovan is a loving and succefful businessman with skills working with technology and also strong communication and intrapersonal skills. He is family oriented and believes in helping oithers to achieve thier goals and ultimately wants to make the world a better place. My goal is to use the best technology to help the environment and provide positive content and news to the world to help promote positivity, love and respect for the world. I love writing music, writing poetry, being creative and learning about other cultures through travel, reading and meeting new people. I look forward to learning more and helping people along the way"
+Shane_Bio = "Meet Shane Donovan: a successful businessman with a passion for technology and strong communication and interpersonal skills. He values family and helping others achieve their goals, with a mission to make the world a better place. Shane's goal is to use cutting-edge technology to help the environment and spread positive news and content to promote love, respect, and positivity worldwide. He is also a creative soul, enjoying music and poetry writing, as well as exploring different cultures through travel and meeting new people. Shane looks forward to continuing his journey of learning and helping others along the way."
+Shane_Skills = """ Shane (born 3/13/1994 from Marshfield,Ma. Went to Thayer Acedemy in Braintree for high school and Wesleyan University, in CT,  for college) is skilled at creating exciting works of art and story telling. He is a master of all forms of writing and art. He is a master communicator and knows how to make content that draws in the audience to find out more and always leaves them satisfied with the work."""
+Shane_Persona = ' you are a master assistant named Shane, you are skilled at all that is neccesary to complete the task you are assigned, and you take on specifically the following qualities: ' + Shane_Bio + Shane_Skills
 
 #Default_Story = r"A:\MondeVert Productions\SHAINE - MondeVert AI Assistant\AI Tasks\MondeVert_Audio_Video_Story\Echoes of the Heart_Miniseries.txt"
 

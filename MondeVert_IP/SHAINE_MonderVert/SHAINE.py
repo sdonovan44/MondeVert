@@ -118,6 +118,10 @@ class MondeVert():
         voice_set = self.voice
         xVoice = 1
         self.UserPromptsCount = 0
+        self.FilePaths = []
+        self.FilePaths_Email = []
+        self.Art_Descriptions = []
+        self.Request_log = []
         openai.api_key = API_Key
 
     def Open_Web(url):
@@ -804,7 +808,14 @@ class MondeVert():
 
 
 
+    def add2log(self,Log_Add):
+            Log_Add = lup.NewLine
+            self.Request_log.append(Log_Add)
 
+            Log_Add2 = up.breakupOutput
+            self.Request_log.append(Log_Add2)
+            Log_Add3 = lup.NewLine
+            self.Request_log.append(Log_Add3)
 
     def Make_a_poem(self,Chunk_Limit = 700, USERTITLE= '', Poet_Bio_Details = '', Make_Persona = True, Artist_Persona= '', Poet_Persona = '', Line1_System = up.system_TextJoaT, Line2_Role = lup.Poem_Role, Line3_Format = lup.Poem_Format, Line4_Task =lup.Poem_Task, Line3_Format_outline = lup.Poem_Outline_Format, Line4_Task_outline = lup.Poem_Outline_Task,SavePath=up.AI_Poetry_Path , Mode = 'Poem', crazy = .5, Persona_Role= lup.Poet_Persona_Role, Persona_Task= lup.Poet_Persona_Task, Persona_Format= lup.Poet_Persona_Format, Persona_Special= lup.Poet_Persona_Special, Revise_Task = lup.Poem_Revise_Task, Revise_Format = lup.Poem_Revise_Format, Translate = SAF.Translation_Languages_Testing):
         #test
@@ -824,7 +835,7 @@ class MondeVert():
         # SavePath = up.AI_Music_Path
         cu.Check_Folder_Exists(SavePath)
 
-
+        Outline = '*Did not create'
         Poem = '*Did not create'
         Bitter_critic = '*Did not create'
         Revised_Poem = '*Did not create'
@@ -845,20 +856,38 @@ class MondeVert():
                 if Poet_Bio_Details != '':
                     Poet_Bio_Details = Poet_Bio_Details
                 else:
-                    Poet_Bio_Details = 'You are a bold new artist make a song that will be a hit and make you a star, be catchy and use expert music theory to make your masterpiece'
+                    Poet_Bio_Details = ''
 
 
         #make outline
 
-        Outline = MondeVert.Basic_GPT_Query(self,Line2_Role=Line2_Role + Poet_Bio_Details,Line3_Format=Line3_Format_outline,Line4_Task=Line4_Task_outline)
+        Outline = MondeVert.Basic_GPT_Query(self,Line2_Role=Line2_Role + str(Poet_Bio_Details),Line3_Format=Line3_Format_outline,Line4_Task=Line4_Task_outline)
+
+        if Outline == '':
+            MondeVert.add2log(self,Log_Add = 'Outline: Error when trying to make Outline')
+
+            if Poet_Bio_Details == '':
+                Outline = MondeVert.Basic_GPT_Query(self, Line4_Task='Come up with an outline to help a user complete the following task: ' + Line4_Task)
+            else:
+                Outline= Poet_Bio_Details
+        else:
+            MondeVert.add2log(self, Log_Add = 'Outline: ' + Outline)
+
+
+
         #make poem
-        Poem = MondeVert.Basic_GPT_Query(self, Line2_Role=Line2_Role + Poet_Bio_Details, Line3_Format=Line3_Format,
+        Poem = MondeVert.Basic_GPT_Query(self, Line2_Role=Line2_Role + str(Poet_Bio_Details), Line3_Format=Line3_Format,
                                             Line4_Task=Line4_Task +Outline)
 
         #Edit poem
         if Poem != '':
+
+            MondeVert.add2log(self, Log_Add='Original_Text: ' + Poem)
             Revised_Poem = MondeVert.Basic_GPT_Query(self, Line2_Role=Line2_Role + Poet_Bio_Details, Line3_Format=Revise_Format, Line4_Task=Revise_Task + Poem)
+
         else:
+            MondeVert.add2log(self, Log_Add='Original_Text: Error when trying to make Poem')
+
             Revised_Poem = MondeVert.Basic_GPT_Query(self, Line2_Role=Line2_Role + Poet_Bio_Details, Line3_Format=Line3_Format,
                                             Line4_Task=Line4_Task +Outline)
 
@@ -866,6 +895,10 @@ class MondeVert():
 
         if Revised_Poem =='':
             Revised_Poem ='No Revision done, this work was too perfect'
+            MondeVert.add2log(self,Log_Add = 'Revised_Text: Error when trying to make Revised_Poem')
+
+        else:
+            MondeVert.add2log(self, Log_Add='Revised_Text: ' + Revised_Poem)
 
         try:
             if len(Revised_Poem) > 150:
@@ -900,30 +933,44 @@ class MondeVert():
         # if len(Title1) > 44:
         #     Title1 = Title1[0:44]
 
+
+
+
         if USERTITLE == '':
             folder = Title1
         else:
             folder = USERTITLE
-
             if len(SavePath + '\\' + folder) > 200:
                 if len(folder) > 40:
                     folder = folder[0:40]
+        MondeVert.add2log(self, Log_Add='Title: ' + Title)
 
         # Title1 = Title1 + self.current_time
         SavePath = SavePath + '\\' + folder
         FullFilePath = SavePath + '\\' + Title1
         SavePath_Details = SavePath + '\\' + 'SHAINE - Details'
-        SavePath_Pics = SavePath + r'\SHAINE Art'
+        SavePath_Pics = SavePath + r'\SHAINE - Art'
+
+
+
 
         cu.Check_Folder_Exists(SavePath)
         cu.Check_Folder_Exists(SavePath_Details)
         cu.Check_Folder_Exists(SavePath_Pics)
+        MondeVert.add2log(self, Log_Add='SavePath Created: ' + SavePath)
+        MondeVert.add2log(self, Log_Add='SavePath Created: ' + SavePath_Details)
+        MondeVert.add2log(self, Log_Add='SavePath Created: ' + SavePath_Pics)
+
 
         originalFilepath = self.PersonaArtPath
         PicNewPath = SavePath_Pics +'\\' + Title1 + '_Persona Pic.png'
+
+
         try:
             shutil.copyfile(originalFilepath, PicNewPath)
+            MondeVert.add2log(self, Log_Add='New Art Created: ' + PicNewPath)
         except:
+            MondeVert.add2log(self, Log_Add='Art not moved properly check the following path: ' + originalFilepath)
             dn = 100
 #Run Bitter Critic
         Bitter_Critic = MondeVert.Basic_GPT_Query(self, Line2_Role=up.Test_Role_Critic , Line3_Format=up.Test_Format_Critic,
@@ -931,6 +978,9 @@ class MondeVert():
 
         if Bitter_Critic =='':
             Bitter_Critic ='No Critique done, this work was too amateur'
+            MondeVert.add2log(self, Log_Add='Bitter Critic: No Critique done, this work was too amateur')
+        else:
+            MondeVert.add2log(self, Log_Add='Bitter Critic: ' + Bitter_Critic)
         #make artist person
 
 
@@ -964,9 +1014,10 @@ class MondeVert():
             # print(Title2)
 
             filename = cu.SaveCSV(Title=Title1 + '_PreProduction', SavePath=SavePath_Details, Text=Text)
+            MondeVert.add2log(self, Log_Add='Txt File Created: ' + filename)
             try:
                 filename2 = cu.SaveCSV(Title=Title1 , SavePath=SavePath, Text=Lyrics, AddTimeStamp= False)
-
+                MondeVert.add2log(self, Log_Add='Txt File Created: ' + filename)
             except:
                 dn = 100
         except:
@@ -1403,7 +1454,7 @@ class MondeVert():
         SavePath = SavePath + '\\' + folder
         FullFilePath = SavePath + '\\' + Title1
         SavePath_Details = SavePath + '\\' + 'SHAINE - Details'
-        SavePath_Pics = SavePath + r'\SHAINE Art'
+        SavePath_Pics = SavePath + r'\SHAINE - Art'
 
         cu.Check_Folder_Exists(SavePath)
         cu.Check_Folder_Exists(SavePath_Details)
@@ -1949,7 +2000,7 @@ class MondeVert():
         SAF.Pick_Voice(Language = Language_Final)
 
 
-        Line4 = Line4 + Text + "] From [ "+ Origin_Language +"] to [" +Language_Final + "] " #+ Line4
+        Line4 = Line4 + Text + "] From ["+ Origin_Language +"] to [" +Language_Final + "] " #+ Line4
 
         File_Name = File_Name + '_' +Origin_Language + ' to ' + Language_Final+'_Translation'
         Translated_Text = MondeVert.Basic_GPT_Query(self,Line1_System_Rule=Line1,Line2_Role= Line2, Line3_Format=Line3, Line4_Task=  Line4)
@@ -2284,7 +2335,7 @@ class MondeVert():
 
         # MondeVert.speak(self, "Saving the files round 1")
         # print(data)
-
+        Voice = SAF.Original_List_of_Voices_English[0]
         cu.SaveText2Audio(Text=self.Character_Art_Prompts_Main, SavePath=SavePath,
                           FileName=Title + '_Charactors_Main', Chunk_Limit=213, Voice=Voice,
                           Artist_Persona=Artist_Persona)
@@ -2337,13 +2388,33 @@ class MondeVert():
         self.current_time1 = datetime.datetime.now()
         self.current_time = self.current_time1.strftime('%m-%d-%Y_%H.%M')
         self.SavePath = up.SavePath
-
+        Log_Add = 'Mode: ' + Mode + ' Time of Request: ' + self.current_time
+        self.Request_log.append(Log_Add)
 
         if Mode == 'ScreenPlay':
             MondeVert.Make_a_ScreenPlay(self, SavePath=up.AI_Screen_Plays + '\\' + Mode,System = up.system_Text_ScreenPlay0, Mode='ScreenPlay')
 
         elif Mode == 'Poem':
             MondeVert.Make_a_poem(self, SavePath=up.AI_Poetry_Path + '\\' + Mode, Line1_System=up.system_TextJoaT, Mode='Poem')
+
+        elif Mode == 'Shane_Poem':
+            MondeVert.Make_a_poem(self, SavePath=up.AI_Poetry_Path + '\\' + Mode, Line1_System=up.system_TextJoaT, Mode='Shane_Poem', Persona_Role=up.Shane_Persona, Line2_Role=up.Shane_Persona)
+
+        elif Mode == 'Blog_Random_Shane':
+            MondeVert.Make_a_poem(self,Mode = 'Blog_Random_Shane', Chunk_Limit = 1333, USERTITLE= '', Poet_Bio_Details = '', Make_Persona = True, Artist_Persona= '', Poet_Persona = '', Line1_System = up.system_TextJoaT, Persona_Role=up.Shane_Persona, Line2_Role=up.Shane_Persona, Line3_Format = lup.Blog_Format, Line4_Task =lup.Blog_Task, Line3_Format_outline = lup.Blog_Outline_Format, Line4_Task_outline = lup.Blog_Outline_Task, SavePath=up.AI_Blog_Path + '\\' + Mode,  crazy = .5,  Persona_Task= lup.Blog_Persona_Task, Persona_Format= lup.Blog_Persona_Format, Persona_Special= lup.Blog_Persona_Special, Revise_Task = lup.Blog_Revise_Task, Revise_Format = lup.Blog_Revise_Format)
+
+        elif Mode == 'Speech_Shane':
+            MondeVert.Make_a_poem(self, Mode='Speech_Shane', Chunk_Limit=1333, USERTITLE='', Poet_Bio_Details='',
+                                  Make_Persona=True, Artist_Persona='', Poet_Persona='',
+                                  Line1_System=up.system_TextJoaT, Persona_Role=up.Shane_Persona, Line2_Role=up.Shane_Persona,
+                                  Line3_Format=lup.Blog_Format, Line4_Task=lup.Speech_Task,
+                                  Line3_Format_outline=lup.Blog_Outline_Format,
+                                  Line4_Task_outline=lup.Speech_Outline_Task, SavePath=up.AI_Blog_Path + '\\' + Mode, crazy=.5,
+                                  Persona_Task=lup.Blog_Persona_Task,
+                                  Persona_Format=lup.Blog_Persona_Format, Persona_Special=lup.Blog_Persona_Special,
+                                  Revise_Task=lup.Blog_Revise_Task, Revise_Format=lup.Blog_Revise_Format)
+
+
 
         elif Mode == 'Blog_Random':
             MondeVert.Make_a_poem(self,Mode = 'Blog_Random', Chunk_Limit = 1333, USERTITLE= '', Poet_Bio_Details = '', Make_Persona = True, Artist_Persona= '', Poet_Persona = '', Line1_System = up.system_TextJoaT, Line2_Role = lup.Blog_Role, Line3_Format = lup.Blog_Format, Line4_Task =lup.Blog_Task, Line3_Format_outline = lup.Blog_Outline_Format, Line4_Task_outline = lup.Blog_Outline_Task, SavePath=up.AI_Blog_Path + '\\' + Mode,  crazy = .5, Persona_Role= lup.Blog_Persona_Role, Persona_Task= lup.Blog_Persona_Task, Persona_Format= lup.Blog_Persona_Format, Persona_Special= lup.Blog_Persona_Special, Revise_Task = lup.Blog_Revise_Task, Revise_Format = lup.Blog_Revise_Format)
@@ -3720,10 +3791,14 @@ if __name__ == '__main__':
     #args = ['Wedding Vows']
     #args = ['PjSpecial', 'PjSpecial', 'MondeVert_Audio_Video_Story',  'PictureBook']
 
-    #args= ['Music_Rich','Music_Shane', 'Music', 'PjSpecial']
+    #args= ['Music_Rich','Music_Shane', 'Music', 'Poem']
 
-    args= ['Poem']
+    #args= ['Blog_Random']
+    #args= ['Speech']
     #args = ['Music_Rich']
+    args = ['PictureBook']
+    #args = ['Speech_Shane']
+
     #
 
     #

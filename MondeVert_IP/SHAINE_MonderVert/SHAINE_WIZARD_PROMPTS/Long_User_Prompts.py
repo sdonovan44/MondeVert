@@ -537,13 +537,24 @@ Test_Background_Resume_old_New_Combo = Test_Task_Resume_old_New_Combo + """
 
 
 
-Blog_Revise_Task = """As a master of editing news articles for accuracy and also grammar/spelling and how to captivate an audience edit and revise the following article, provide me with the best version of the article keep the main concepts the same, but make it sound better and make it an award winning article"""
-Blog_Revise_Format= """Complete the {Task} provided below, use the {Persona} you created to do all of the tasks. Make sure the result is in the correct format.
+Blog_Revise_Task = """edit and revise the following article, provide me with the best version of the article keep the main concepts the same, but make it sound better and make it the best possible article it can be"""
+
+
+
+Blog_Revise_Format= """Complete the {Task} provided below, use the {Persona} you created to do all of the tasks. Make sure the result is in the correct format. I want no headings just the {Title} "written by Shane Donovan" and then the poem should be inserted below. No additional text should be provided besides what is requested
 
 Desired Format: 
-Grade: <Original_Grade_0%_to_100%>| <Revised_Grade_0%_to_100%>
-Expert Revisions Summarized: <Expert_Revisions_Summarized> 
-Revised Article: <Revised_Article>"""
+{Title} "<written_by_{Writer_Name}}>
+
+{Blog}
+"""
+
+# Blog_Revise_Format= """Complete the {Task} provided below, use the {Persona} you created to do all of the tasks. Make sure the result is in the correct format.
+#
+# Desired Format:
+# Grade: <Original_Grade_0%_to_100%>| <Revised_Grade_0%_to_100%>
+# Expert Revisions Summarized: <Expert_Revisions_Summarized>
+# Revised Article: <Revised_Article>"""
 
 
 Blog_Role= """you are an expert writer and specialize in blog posts and other online posts, you occasionally write articles for newsletters and newspapers. You are a master editer and social media expert. Who writes research papers and useful topics that are relevant to people of different ages. The content should be engaging and relateable, for this task and future tasks I want you to take on the following persona: """
@@ -592,7 +603,7 @@ Speech_Task= """Make a captivating and entertaining Speech  based on the followi
 
 
 
-Blog_Persona_Task = """{Task}: ### Write a bio and complete the table as requested in the {Desired Format}### 25% of the time the persona you choose should heavily focus on political topics that scale from local communities to state to federal and also global policies and laws( Topics should be informative providing the reader with information on global policy/federal laws/policy/local laws in an easy and summarized way that is easy to understand with references for the user to follow up on, use proper MLA format)."""
+Blog_Persona_Task = """{Task}: ### Write a bio and complete the table as requested in the {Desired Format}### 25% of the time you should create a persona that heavily focus on political topics that scale from local communities to state to federal and also global policies and laws( Topics should be informative providing the reader with information on global policy/federal laws/policy/local laws in an easy and summarized way that is easy to understand with references for the user to follow up on, use proper MLA format)."""
 
 Blog_Persona_Role = """you are an expert writer and specialize in blog posts and other online posts, you occasionally write articles for newsletters and newspapers. You are a master editer and social media expert. Who writes research papers and useful topics that are relevant to people of different ages.  The content should be engaging and relateable to a specific audience or a wide range of audiences depending on the person you come up with. the goal of the media company you work for is to promote positivity and make people feel better by sharing good news, funny stories, making them feel better and not negative, there can be pop-culture news, but this should be global and celebrate love peace and happiness. also promote education and sharing cultural knowledge between each other. The company you work for is called 'MondeVert - Amini Amor' Which means 'Green World' and 'Believe Love' in a mix of French, Swahili and Spanish/Portuguese. We belive in being global partners with all world cultures and people spreading our love and opinions. Provide educational topics at times, DIY projects/ideas, how to save/programsa vailable for people to take advantage of, how to help people around the world, etc. """
 Blog_Persona_Special = """Have fun, you should have a unique brand and style that makes your persona feel one of a kind but still relateable. Pick a unique name for your persona, use uncommon names, then cultural names, then nicknames, try to pick common names only 10% or less of the time. This person should have star potential Provide references as needed and cite your information in proper MLA notation."""
@@ -643,10 +654,11 @@ Desired Format:
 
 
 Poem_Revise_Task = """As a master of poetry edit and rewrite the following poem, provide me with the best version of the poem keep the main concepts the same, but make it sound better and make it an award winning poem. Poem: """
-Poem_Revise_Format= """Complete the {Task} provided below, use the {Persona} you created to do all of the tasks. Make sure the result is in the correct format. I want no headings just the {Title} "written by Shane Donovan" and then the poem should be inserted below. No additional text should be provided besides what is requested
+Poem_Revise_Format= """Complete the {Task} provided below, use the {Persona} you created to do all of the tasks. Make sure the result is in the correct format. I want no headings just the {Title} {Written By} and then the {poem} should be inserted below. No additional text should be provided besides what is requested
 
 Desired Format: 
-{Title} "written by Shane Donovan"
+{Title}
+{Written By}
 
 {Poem}
 """
@@ -675,7 +687,7 @@ Imagery:{Imagery}
 Specific Quotes to be used in the Poem: -||-
 
 """
-Poem_Outline_Task= """using the persona you are role playing as, Provide me with the neccesary informationI would need to write a new poem. Summarize the respective information in a specified format."""
+Poem_Outline_Task= """using the persona you are role playing as, Provide me with the neccesary informationI would need to write a new poem. Summarize the respective information in a specified format. its ok if there is no rhyme shceme, not all poetry rhymes so try to switch it up and vary your choice."""
 Poem_Task= """Write a poem based on the following outline: """
 Poem_Format= """use the proper format for the poem according to the style chosen by the {outline}"""
 
@@ -1161,7 +1173,60 @@ Audio_Voice_Background =  Persona_Task + """
 #
 
 
+MusicPy_System = """You are a brilliant assistant to the user, you are a skilled programmer and master of music theory"""
+MusicPy_Role = """you are a skilled computer programmer and master of music theory. You are a modern dj who can make any form of music and is a master of midi python software and code"""
+MusicPy_Task = """Your task is to drastically rewrite the parameters of the previous code so it plays the instrumental for  a new song inspired by 'Amber' by 311 or 'Gravity' by John Mayer  (do not add new functions, but you can add  additional chords/tracks/instruments within the one 'Piece' function to make your cover instrumental, update the sound by changing the chords, notes, bpm, instruments etc.' sample previously provided  to  make an instrumental to last 1 minute and 30 seconds.  Pick new instruments from the list of instruments and switch up the chords/notes you choose within the code provided as a sample."""
+#Make the song a chill vibe with high notes and a reggae-like bpm (bpm <=90 Make it pleasing for the audience). Use instruments that would be in a pop top-40 summer hit song. Try to make an absolute banger. Follow the syntax for the python library 'Musicpy' for more information see the following URL: ["https://musicpy.readthedocs.io/en/latest/Basic%20syntax%20of%20piece%20type/]. Be creative and have fun, choose new instruments that go together and fit the song I requested using the instrument list provided in my prior communication.
 
+MusicPy_Format = """
+
+Note: Here is a full list of instruments and drums you can choose from:
+#INSTRUMENTS = {    'Acoustic Grand Piano',    'Bright Acoustic Piano',    'Electric Grand Piano',    'Honky-tonk Piano',    'Electric Piano 1',    'Electric Piano 2',    'Harpsichord',    'Clavi',    'Celesta',    'Glockenspiel',    'Music Box',    'Vibraphone',    'Marimba',    'Xylophone',    'Tubular Bells',    'Dulcimer',    'Drawbar Organ',    'Percussive Organ',    'Rock Organ',    'Church Organ',    'Reed Organ',    'Accordion',    'Harmonica',    'Tango Accordion',    'Acoustic Guitar (nylon)',    'Acoustic Guitar (steel)',    'Electric Guitar (jazz)',    'Electric Guitar (clean)',    'Electric Guitar (muted)',    'Overdriven Guitar',    'Distortion Guitar',    'Guitar harmonics',    'Acoustic Bass',    'Electric Bass (finger)',    'Electric Bass (pick)',    'Fretless Bass',    'Slap Bass 1',    'Slap Bass 2',    'Synth Bass 1',    'Synth Bass 2',    'Violin',    'Viola',    'Cello',    'Contrabass',    'Tremolo Strings',    'Pizzicato Strings',    'Orchestral Harp',    'Timpani',    'String Ensemble 1',    'String Ensemble 2',    'SynthStrings 1',    'SynthStrings 2',    'Choir Aahs',    'Voice Oohs',    'Synth Voice',    'Orchestra Hit',    'Trumpet',    'Trombone',    'Tuba',    'Muted Trumpet',    'French Horn',    'Brass Section',    'SynthBrass 1',    'SynthBrass 2',    'Soprano Sax',    'Alto Sax',    'Tenor Sax',    'Baritone Sax',    'Oboe',    'English Horn',    'Bassoon',    'Clarinet',    'Piccolo',    'Flute',    'Recorder',    'Pan Flute',    'Blown Bottle',    'Shakuhachi',    'Whistle',    'Ocarina',    'Lead 1 (square)',    'Lead 2 (sawtooth)',    'Lead 3 (calliope)',    'Lead 4 (chiff)',    'Lead 5 (charang)',    'Lead 6 (voice)',    'Lead 7 (fifths)',    'Lead 8 (bass + lead)',    'Pad 1 (new age)',    'Pad 2 (warm)',    'Pad 3 (polysynth)',    'Pad 4 (choir)',    'Pad 5 (bowed)',    'Pad 6 (metallic)',    'Pad 7 (halo)',    'Pad 8 (sweep)',    'FX 1 (rain)',    'FX 2 (soundtrack)',    'FX 3 (crystal)',    'FX 4 (atmosphere)',    'FX 5 (brightness)',    'FX 6 (goblins)',    'FX 7 (echoes)',    'FX 8 (sci-fi)',    'Sitar',    'Banjo',    'Shamisen',    'Koto',    'Kalimba',    'Bag pipe',    'Fiddle',    'Shanai',    'Tinkle Bell',    'Agogo',    'Steel Drums',    'Woodblock',    'Taiko Drum',    'Melodic Tom',    'Synth Drum',    'Reverse Cymbal',    'Guitar Fret Noise', 'High Q', 'Slap', 'Stratch Push', 'Stratch Pull', 'Sticks', 'Square Click', 'Metronome Click', 'Metronome Bell', 'Acoustic Bass Drum', 'Electric Bass Drum', 'Side Stick', 'Acoustic Snare', 'Hand Clap', 'Electric Snare', 'Low Floor Tom', 'Closed Hi-hat', 'High Floor Tom', 'Pedal Hi-hat', 'Low Tom', 'Open Hi-hat', 'Low-Mid Tom', 'Hi-Mid Tom', 'Crash Cymbal 1', 'High Tom', 'Ride Cymbal 1', 'Chinese Cymbal', 'Ride Bell', 'Tambourine', 'Splash Cymbal', 'Cowbell', 'Crash Cymbal 2', 'Vibra Slap', 'Ride Cymbal 2', 'High Bongo', 'Low Bongo', 'Mute High Conga', 'Open High Conga', 'Low Conga', 'High Timbale', 'Low Timbale', 'High Agogô', 'Low Agogô', 'Cabasa', 'Maracas', 'Short Whistle', 'Long Whistle', 'Short Guiro', 'Long Guiro', 'Claves', 'High Woodblock', 'Low Woodblock', 'Mute Cuica', 'Open Cuica', 'Mute Triangle', 'Open Triangle', 'Shaker', 'Jingle Bell', 'Belltree', 'Castanets', 'Mute Surdo', 'Open Surdo'
+
+Below is an example of code that runs and outputs 3 cool instrumentals, use it as a guide to complete the user task, use the different instruments/drums previously provided  and different chords and other music theory changes. DO NOT MAKE UP SYNTAX it has to run as-is, 
+
+###
+
+
+
+
+import musicpy as mp
+
+
+# Chords and notes for the instrumental
+C1 = mp.chord('E3, G#3, B3') % (1, 1/8) * 16
+C2 = (mp.chord('E3, G#3, B3') % (1,1)) * 16
+C3 = (mp.chord('C#3, E3, G#3') % (1/4, 1/4, 1/2) * 8 | mp.chord('E3, G#3, B3') % (1/8, 1/8, 1/4) * 8) * 8
+C4 = mp.chord('E3, G#3, B3') % ([3/8,1/8,1/4], [3/8,1/8,1/4]) * 16
+C5 = mp.chord('E3, G#3, B3') % ([3/8,1/8,1/4], [3/8,1/8,1/4]) * 16
+C6 = mp.chord('C#3, E3, G#3') % ([3/8,1/8,1/4], [3/8,1/8,1/4]) * 16
+C7 = mp.chord('C#3, E3, G#3') % ([3/8,1/8,1/4], [3/8,1/8,1/4]) * 16
+C8 = mp.chord('E3, G#3, B3') % ([3/8,1/8,1/4], [3/8,1/8,1/4]) * 16
+C9 = mp.chord('E3, G#3, B3') % (1,1) * 2
+C10 = mp.chord('C#3, E3, G#3') % ([3/8,1/8,1/4], [3/8,1/8,1/4]) * 16
+C11 = mp.chord('C#3, E3, G#3') %  (1,1) * 8
+C12 = mp.chord('F#2, A2, C#3') %  (1,1) * 8
+C13 = mp.chord('G#2, C3, D#3') %  (1,1) * 8
+C14 = mp.chord('G#2, C3, D#3') % (1/4,1/4,1/2) * 16
+C15 = mp.chord('F#2, A2, C#3') %  (1,1) * 8
+
+# Create a new piece with the above chords and notes
+Dank_midz_SD = mp.piece(tracks=[C1, C2, C3, C4, C5, C6, C7, C8, C9, C10, C11, C12, C13, C14, C15],
+                      instruments=['Pizzicato Strings', 'Guitar harmonics', 'Bright Acoustic Piano', 'Woodblock', 'Koto',   'Violin', 'Tuba' , 'Harmonica', 'Banjo',  'Alto Sax',  'Slap Bass 1', 'Distortion Guitar', 'Sitar', 'Kalimba', 'Taiko Drum'],
+                      bpm=100,
+                      start_times=[0, 2, 2, 0, 4, 6, 8, 10,10, 12, 2, 12, 4, 6, 24],
+                      track_names=['clean_guitar', 'bass', 'electric_piano', 'drum', 'grand_piano', 'jazz_guitar', 'trumpet', 'synth1', 'synth2', 'synth_bass', 'distortion_guitar', 'sitar', 'kalimba', 'string', 'synthstrings'])
+
+
+mp.play(Dank_midz_SD)
+
+###
+
+
+"""
+#MusicPy_Task = """Your task is to drastically rewrite the  code sample previously provided  to  make a cool new reggae instrumental following the syntax for the python library 'Musicpy' for more information see the following URL: ["https://musicpy.readthedocs.io/en/latest/Basic%20syntax%20of%20piece%20type/]. Be creative and have fun"""
+
+#MusicPy_Task = """Your task is to drastically rewrite the parameters of the code so it plays a song similar to '311 - Amber' (do not add new functions, but you can add  additional chords/tracks/instruments within the one 'Piece' function, just update the lines as-is changing the chords, notes, bpm, instruments etc.' sample previously provided  to  make a  new hit low-fi hip hop instrumental to last 1 minute and 30 seconds. Make the song a chill vibe with lower notes and slower bpm (bpm <=90 Make it pleasing for the audience. Follow the syntax for the python library 'Musicpy' for more information see the following URL: ["https://musicpy.readthedocs.io/en/latest/Basic%20syntax%20of%20piece%20type/]. Be creative and have fun, choose new instruments that go together and fit the song I requested using the instrument list provided in my prior communication. Pick new instruments from the list of instruments and switch up the chords/notes you choose wihtin the code rovided as a sample."""
 
 
 

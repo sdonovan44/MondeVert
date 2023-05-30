@@ -19,11 +19,25 @@ Clean_Post_Line4 = " Do not lose the main concepts or ideas, instead clean up th
 
 
 
+SHAINE_User_Inquiry ="""The broadcast was provided by Amini Amor in association with MondeVert. Thanks for listening/watching please like and subscribe. We appreciate your support!  """
+
+Del ="""Developed and provided technical support for MondeVert.co, my personal website that promotes positivity and supports sustainable projects
+
+I am also developing a Digital Assistant utilizing neural speech technology with the capability of writing unique content (translated to multiple languages via OpenAI) to promote global inclusion and help people get access to endless stories via YouTube and other platforms. This is new but I am quite proud of this.
+
+In my career I have always added value quickly and showed my worth as proven by my various promotions received during my time at both HarbourVest and State Street"""
 
 
 
+xSHAINE_User_Inquiry = """Meet Shane Donovan: a successful businessman with a passion for technology and strong communication and interpersonal skills. He values family and helping others achieve their goals, with a mission to make the world a better place. Shane's goal is to use cutting-edge technology to help the environment and spread positive news and content to promote love, respect, and positivity worldwide. He is also a creative soul, enjoying music and poetry writing, as well as exploring different cultures through travel and meeting new people. Shane looks forward to continuing his journey of learning and helping others along the way. Shane (born 3/13/1994 from Marshfield,Ma. Went to Thayer Acedemy in Braintree for high school and Wesleyan University, in CT,  for college) is skilled at creating exciting works of art and story telling. He is a master of all forms of writing and art. He is a master communicator and knows how to make content that draws in the audience to find out more and always leaves them satisfied with the work."""
 
+SHAINE_User_Inquiry6 = """I have recently been creating various forms of media (poetry, blog posts, audiobooks, instructional videos), one of my company MondeVert's (mondevert.co) biggest goals is to be affordable and available to all people accross the globe so we need to keep costs down. I am proud to say that we are able to create all of our unique works in multiple languages ranging from Spanish, Italian, French, Swahili, Portuguese and other, we look forward to being able to provide all of our works in an audio form to help those without the ability to read or watch a video.  I have 0 budget at the moment for voice actors but a ton of content I need to convert from text to audio, no offense but I am not a fan of the the limited voice options available on Windows by default (text to Speech).
 
+That being said, I have recently acquired Polly software from AWS which has been helpful, but I would love to have the ability to create my own neural voice to use for my original videos and audio books (eventually my digital assistant I am working on mostly for personal use). 
+
+Currently, I am working on developing digital assistance that is fluent in multiple languages.
+
+Thank you for your time and consideration."""
 
 #SHAINE_User_Inquiry = """Perriane I am sorry we can no longer date I think you are a great person and would love to stay friends best of luck in the future"""
 
@@ -41,7 +55,7 @@ Sincerely,
 Shane
 """
 
-SHAINE_User_Inquiry = """I apologize for the confusing explanation, I am a new software company and my use case is expanding quickly. Originally I reached out because I do not have money to afford voice actors and I did not love the voices I was able to use by default on windows. I have since gotten Polly from AWS and this isnt bad, I could really benefit from having the ability to make my own neural voice. I would make my own voice to start and possibly pay a voice actor to  """
+
 #SHAINE_User_Inquiry= """Hey all, I know I am relatively bad at social media. That being said, I recently decided to try it out full force and spread love and positivity to the world. Help me out and start to support my pages, to start with I would love to get some insights into where I should focus my attention."""
 
 SHAINE_User_Inquiry3 = """What should i focus on for my business next week? Options: Real Estate: study for South Carolina Exam and marketing, SHAINE AI tool Development, Reach out to network and get people to buy-in, Chill-out/Relax?, Make more content?, Publish an official Children's Book?, Hire more Writers/Artists?, Create a content submission  contest for my followers?"""
