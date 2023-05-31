@@ -2,14 +2,10 @@ from selenium import webdriver
 import time
 import random
 import threading
-driver = webdriver.Chrome()
-driver.maximize_window()
-
-x = 1
-
+import selenium.webdriver.support.ui as ui
 
 URLS = ["https://mondevert.co","https://www.patreon.com/posts/83767084", "https://www.patreon.com/MondeVert", "https://mondevert.co/real-estate","https://mondevert.co/blog", "https://twitter.com/MondeVert_LLC", "https://www.twitch.tv/mondevert", "https://www.instagram.com/mondevert_llc/","https://mondevert.co/f/quitting-cable-101"]
-Videos = ["https://www.youtube.com/watch?v=9AaJyR2p1f0&t=2s","https://www.youtube.com/watch?v=aMh6zwY42tU","https://www.youtube.com/watch?v=e4gZYpoLQE4","https://www.youtube.com/watch?v=1vDkj086Z5A","https://www.youtube.com/watch?v=IbuTiY4ddyI","https://www.youtube.com/watch?v=SiMSEBIbVSQ","https://www.youtube.com/watch?v=5mnehrwT7B0","https://www.twitch.tv/videos/1729768705","https://www.twitch.tv/videos/1729768705","https://www.twitch.tv/videos/1729770920"]
+Videos = ["https://www.youtube.com/watch?v=9AaJyR2p1f0&t=2s","https://www.youtube.com/watch?v=aMh6zwY42tU","https://www.youtube.com/watch?v=e4gZYpoLQE4","https://www.youtube.com/watch?v=1vDkj086Z5A","https://www.youtube.com/watch?v=IbuTiY4ddyI","https://www.youtube.com/watch?v=SiMSEBIbVSQ","https://www.youtube.com/watch?v=5mnehrwT7B0"]
 
 NUmRuns = 250
 
@@ -43,13 +39,37 @@ def MultiThread( Functions, Args1=[]):
 
 
 def OneView(URLSleep = 13,URL= random.choices(URLS)[0], VIDEO = random.choices(Videos)[0], Video_SLeep = 250 ):
-
-
     if VIDEO == "https://www.youtube.com/watch?v=9AaJyR2p1f0&t=11s" or VIDEO == "https://www.youtube.com/watch?v=1vDkj086Z5A&t=13s":
         Video_SLeep = 633
 
+    VIDEO = random.choices(Videos)[0]
+    print(VIDEO)
+    VIDEO = VIDEO +  "/rel=0&autoplay=1"
+    print(VIDEO)
+    URL = random.choices(URLS)[0]
+
+
+    driver = webdriver.Chrome()
+    driver.maximize_window()
+
+    x = 1
+
     newnum = Video_SLeep + 15
     driver.get(VIDEO)
+    time.sleep(3)
+    wait = ui.WebDriverWait(driver, 15)
+    try:
+        # cookieConsentBootstrapModal
+        wait.until(lambda driver: driver.find_element_by_xpath(
+            '//*[@id="movie_player"]/div[5]/button'))
+        # WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.id, "cookieConsentBootstrapModal"))).click()
+        login_box = driver.find_element_by_xpath('//*[@id="movie_player"]/div[5]/button')
+        login_box.click()
+    except:
+        print('No Cookie Window')
+        time.sleep(3)
+
+
     num = random.randint(Video_SLeep,newnum )
     time.sleep(num)
 
@@ -57,7 +77,7 @@ def OneView(URLSleep = 13,URL= random.choices(URLS)[0], VIDEO = random.choices(V
     num = random.randint(URLSleep, URLSleep + 5)
     time.sleep(num)
 
-
+    driver.close()
 
       # driver.get("https://www.twitch.tv/videos/1724476050")
       # num = random.randint(13, 25)
@@ -76,7 +96,7 @@ def OneView(URLSleep = 13,URL= random.choices(URLS)[0], VIDEO = random.choices(V
 
 
 
-def Youtube_Views(NumRuns = 100, NumThreads = 5, URL = URLS, Video = Videos):
+def Youtube_Views(NumRuns = 100, NumThreads = 7, URL = URLS, Video = Videos, Waitnum = 250):
     Functions = []
     args = []
     for x in range (0,NumThreads):
@@ -98,3 +118,10 @@ def Youtube_Views(NumRuns = 100, NumThreads = 5, URL = URLS, Video = Videos):
                 print("Start Thread " + str(i))
                 t = threading.Thread(target=OneView, args=(ArgX,)).start()
                 threads.append(t)
+                time.sleep(10)
+
+        num = random.randint(Waitnum, Waitnum + 30)
+        time.sleep(num)
+
+
+Youtube_Views()
