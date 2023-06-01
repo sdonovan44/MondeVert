@@ -27,7 +27,7 @@ Text:###""" + Text + """###"""
 #x.Manual_Audio_File(SavePath = r'A:\MondeVert_IP Productions\SHAINE - MondeVert_IP AI Assistant\AI Tasks\MondeVert_Audio_Video_Story',FileName= 'Echoes of the Heart', FilePath = r"A:\MondeVert_IP Productions\SHAINE - MondeVert_IP AI Assistant\AI Tasks\MondeVert_Audio_Video_Story\Echoes of the Heart_Miniseries.txt")
 #x.Manual_Audio_File(Text_override = SFA.MondeVert_Promo)
 #MondeVert_Promo
-audio_new = r"A:\Amini Amor\SHAINE\Requests\Beta\AI Poetry\Shane_Poem\Warrior Spirit A Poem of Perseverance and T\Warrior Spirit.txt"
+audio_new = r"A:\Amini Amor\SHAINE\Marketing\End of Broadcast_Amini Amor short 2.txt"
 audio_File_name = 'King Richard Reid'
 #x.Manual_Audio_File(SavePath =up.AI_AudioBook_Path ,FileName=  audio_File_name, Source_FilePath = audio_new)
 

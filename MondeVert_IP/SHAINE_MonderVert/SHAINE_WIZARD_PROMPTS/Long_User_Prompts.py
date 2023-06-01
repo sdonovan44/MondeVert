@@ -811,6 +811,7 @@ Desired Format:
 #************************************************************************************************
 #************************************************************************************************
 
+#Persona_Task_PictureBook = """{Task}: ### Write a bio and complete the table as requested in the {Desired Format}###"""
 
 
 Persona_Task = """{Task}: ### Write a bio and complete the table as requested in the {Desired Format}###"""

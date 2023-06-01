@@ -19,7 +19,27 @@ Clean_Post_Line4 = " Do not lose the main concepts or ideas, instead clean up th
 
 
 
-SHAINE_User_Inquiry ="""The broadcast was provided by Amini Amor in association with MondeVert. Thanks for listening/watching please like and subscribe. We appreciate your support!  """
+SHAINE_User_Inquiry = """Amini Amor in partnership with MondeVert, we sincerely appreciate your support"""
+
+
+Testers="""My Name is Shane Donovan, I started MondeVert as a way for me to build my brand and explore different ideas and topics I am passionate about such as: Real Estate, Data, Environmental Sustainability, Repurposing various items for resale. I will ultimately use this website to document my journey and hopefully provide some useful information for those reading along!
+
+I love learning about ways to help the earth, it is going to take more than one thing to solve the challenges humanity faces with global climate change; but over time, small steps will lead to real progress. 
+
+I have my real estate license and am interested in increasing my wealth via investing in real estate so I can fully pursue my passion (Leaving a positive impact on the world). I currently am working for SUCCESS! Real Estate ( www.successrealestate.com ). *All opinions and statements on this website are my own and do not reflect the idea's of SUCCESS! Real Estate, this website represents my own research and opinions.
+
+It is important to understand what worked for me may not work for everyone. I  hope you can learn from my experiences and I would love to learn from you as well. 
+
+If you have any questions how to create a website, start an online store or form an LLC, please subscribe/reach out, I encourage communication as I would love to help others reach their goals! Together we can make a better world! If you are interested in me representing you as a Realtor or if you have any Real Estate Questions I would love to assist, please see the following Page for more Details: https://mondevert.co/real-estate
+
+
+
+Thank you for being part of MondeVert and supporting what I believe in. I encourage everyone to reach out and ask questions I would love to engage the community and learn more about the great people who give me their valuable time and attention. 
+
+"""
+
+
+trest = """The broadcast was provided by Amini Amor in association with MondeVert. Thanks for listening/watching please like and subscribe. We appreciate your support!  """
 
 Del ="""Developed and provided technical support for MondeVert.co, my personal website that promotes positivity and supports sustainable projects
 

@@ -5,7 +5,7 @@ import threading
 import selenium.webdriver.support.ui as ui
 
 URLS = ["https://mondevert.co","https://www.patreon.com/posts/83767084", "https://www.patreon.com/MondeVert", "https://mondevert.co/real-estate","https://mondevert.co/blog", "https://twitter.com/MondeVert_LLC", "https://www.twitch.tv/mondevert", "https://www.instagram.com/mondevert_llc/","https://mondevert.co/f/quitting-cable-101"]
-Videos = ["https://www.youtube.com/watch?v=9AaJyR2p1f0&t=2s","https://www.youtube.com/watch?v=aMh6zwY42tU","https://www.youtube.com/watch?v=e4gZYpoLQE4","https://www.youtube.com/watch?v=1vDkj086Z5A","https://www.youtube.com/watch?v=IbuTiY4ddyI","https://www.youtube.com/watch?v=SiMSEBIbVSQ","https://www.youtube.com/watch?v=5mnehrwT7B0"]
+Videos = ["https://www.youtube.com/watch?v=03S7XEYog4o","https://www.youtube.com/watch?v=fUkVzsdYMu4","https://www.youtube.com/watch?v=3MG1Yo3hrn0","https://www.youtube.com/watch?v=eet6evxJKp8","https://youtu.be/eet6evxJKp8","https://www.youtube.com/watch?v=9AaJyR2p1f0&list=PLNxJ03peh1QJWom4pbtjdwrCmSKuq-4J4","https://www.youtube.com/watch?v=9AaJyR2p1f0&list=PLNxJ03peh1QLn6_1Dl23mO8FUnU_hBmgF","https://www.youtube.com/watch?v=1vDkj086Z5A&list=PLcLmIX5-4L0aPUyVuy4ewZG4Nut_GNEg9","https://www.youtube.com/watch?v=1vDkj086Z5A&list=PLcLmIX5-4L0ZH2cW1RbsVFpJw1oIa2qeX","","https://www.youtube.com/watch?v=9AaJyR2p1f0&t=2s","https://www.youtube.com/watch?v=aMh6zwY42tU","https://www.youtube.com/watch?v=e4gZYpoLQE4","https://www.youtube.com/watch?v=1vDkj086Z5A","https://www.youtube.com/watch?v=IbuTiY4ddyI","https://www.youtube.com/watch?v=SiMSEBIbVSQ","https://www.youtube.com/watch?v=5mnehrwT7B0"]
 
 NUmRuns = 250
 
@@ -41,11 +41,15 @@ def MultiThread( Functions, Args1=[]):
 def OneView(URLSleep = 13,URL= random.choices(URLS)[0], VIDEO = random.choices(Videos)[0], Video_SLeep = 250 ):
     if VIDEO == "https://www.youtube.com/watch?v=9AaJyR2p1f0&t=11s" or VIDEO == "https://www.youtube.com/watch?v=1vDkj086Z5A&t=13s":
         Video_SLeep = 633
+    elif  VIDEO == "https://www.youtube.com/watch?v=9AaJyR2p1f0&list=PLNxJ03peh1QJWom4pbtjdwrCmSKuq-4J4" or VIDEO == "https://www.youtube.com/watch?v=9AaJyR2p1f0&list=PLNxJ03peh1QLn6_1Dl23mO8FUnU_hBmgF" or  VIDEO == "https://www.youtube.com/watch?v=1vDkj086Z5A&list=PLcLmIX5-4L0aPUyVuy4ewZG4Nut_GNEg9" or VIDEO == "https://www.youtube.com/watch?v=1vDkj086Z5A&list=PLcLmIX5-4L0ZH2cW1RbsVFpJw1oIa2qeX":
+        Video_SLeep = 800
+
+
 
     VIDEO = random.choices(Videos)[0]
-    print(VIDEO)
-    VIDEO = VIDEO +  "/rel=0&autoplay=1"
-    print(VIDEO)
+    # print(VIDEO)
+    # VIDEO = VIDEO +  "/rel=0&autoplay=1"
+    # print(VIDEO)
     URL = random.choices(URLS)[0]
 
 
@@ -96,7 +100,7 @@ def OneView(URLSleep = 13,URL= random.choices(URLS)[0], VIDEO = random.choices(V
 
 
 
-def Youtube_Views(NumRuns = 100, NumThreads = 7, URL = URLS, Video = Videos, Waitnum = 250):
+def Youtube_Views(NumRuns = 113, NumThreads = 8, URL = URLS, Video = Videos, Waitnum = 280):
     Functions = []
     args = []
     for x in range (0,NumThreads):

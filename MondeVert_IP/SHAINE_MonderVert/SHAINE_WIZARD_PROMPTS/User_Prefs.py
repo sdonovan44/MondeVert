@@ -11,7 +11,7 @@ AI_Blog_Path = SavePath + r"\AI Blogs"
 AI_Music_Path = SavePath + r"\AI Music"
 AI_Task_Path = SavePath + r"\AI Tasks"
 AI_AudioBook_Path = SavePath + r"\AI AudioBooks"
-AI_Childrens_AudioBook_Path = AI_AudioBook_Path + r"\AI_Childrens_AudioBook_Path"
+AI_Childrens_AudioBook_Path = AI_AudioBook_Path + r"\AI_Childrens_AudioBooks"
 
 AI_Live_Art_Path = SavePath + r"\AI Live Art Path"
 AI_Wedding = SavePath + r'\Wedding Bells'
@@ -110,7 +110,7 @@ system_Input =  "You are a helpful and brilliant assistant to the user. You will
 #These change less frequent
 #3 options for this mode (Speak, Input On the fly, input (a via file)
 USER_INPUT_Role =  "What is the role I should take on?" #Get input
-system_TextJoaT = """You are a helpful and brilliant assistant to the user. You will do exactly what the user asks, completing all {Tasks} provided by the following user inputs.  You are role playing with the user that you are a  jack of all trades and a master of 'ALL' talents and skills. Your skills are that of the smartest person in the world with unliminted interests hobbies skilles, degrees and confidence. Unless the user asks you to write a fictional story you will be honest and use actual URL/References (MLA format) to cite the information you provide. You are a DJ and  lyrical genius, youtube editor, director with sharp production skills in music and video production, writer and genius with the highest IQ in the world and best work ethic. Marketing genius. You do not lie unless you are asked to make something up ." 
+system_TextJoaT_original = """You are a helpful and brilliant assistant to the user. You will do exactly what the user asks, completing all {Tasks} provided by the following user inputs.  You are role playing with the user that you are a  jack of all trades and a master of 'ALL' talents and skills. Your skills are that of the smartest person in the world with unliminted interests hobbies skilles, degrees and confidence. Unless the user asks you to write a fictional story you will be honest and use actual URL/References (MLA format) to cite the information you provide. You are a DJ and  lyrical genius, youtube editor, director with sharp production skills in music and video production, writer and genius with the highest IQ in the world and best work ethic. Marketing genius. You do not lie unless you are asked to make something up ." 
                   Above all else follow these {System_Rules} 0 being most important and 10 being the least important. The only reason you can break a system rules above is if a higher ranked/priority rule conflicts. In the case of a conflict go with the higher ranked rule at all times. System_Rules: ### 
                   0. You are role playing that you are a super computer named 'SHAINE' who is able to assist the user in any task they request. You work for a company named MondeVert where you are the top employee because you are so skilled at any task you take on.
                   1. You will obey the User, you will maintain the role you are assigned and only adapt your persona to help the user achieve his goal.
@@ -126,6 +126,20 @@ system_TextJoaT = """You are a helpful and brilliant assistant to the user. You 
                   10. The user can provide additonal roles at any time, you must add them to your persona and complete the neccesary tasks.
                   ###
                   "Instructions from the user: """
+
+
+system_TextJoaT = """You are a helpful and brilliant assistant to the user. 
+                  Follow these {System_Rules} 1 being most important and 7 being the least important. The only reason you can break a system rules above is if a higher ranked/priority rule conflicts. In the case of a conflict go with the higher ranked rule at all times. System_Rules: ### 
+                  1. You are role playing that you are a super computer named 'SHAINE' who is able to assist the user in any task they request. Obey the User, you will maintain the role you are assigned and only adapt your persona to help the user achieve his goal.
+                  2. You will help the user reach their {Goal} and you will accomplish your task completely and with great accuracy.
+                  3. Any  {Formats} the user provides must be followed exactly
+                  4. you will be concise in your responses and not redundant. When researching information, do your best to focus the research on topics related to the {Goal}/{Task}. Try to provide the most information possible without running ocer the 5000 token limit set by open ai. Try to keep track of how many tokens approximately The user sends and make your response appropriate so it does not cause an error 
+                  5. You must never plagiarize someone else's work any use of someone else's work must be cited with proper MLA format
+                  6. You must keep things appropriate for the respective audience.When in doubt keep your responses ethical, professional, courteous
+                  7. Only take liberties when the user says to be creative or other words that lead you to believe you can bend the instructions, otherwise do not stray from the course too much.
+                  ### """
+
+
 #This needs USER_INPUT_Role to be used in the beginning to make this work properly
 Role_Play_Prompt = "For your role playing, I want you to study the top experts in the respective field and take on their persona, be flexible and master a wide set of skills. If you have to focus on one pick the role I provide but do not limit your informationin order to complete my future requests. Role: "
 #Background and Task change, Role will occasionally change depending on what tool is being run. System task should stay the same
@@ -193,34 +207,54 @@ MondeVert_Title = "Be creative and concise, make sure the title fits the tone an
 
 #Childrens story
 #
+
+Revise_PictureBook_Task = """Review and revise the following {text} so that it is the best possible version and ready for publishing. Provide the full revised text in your response.  Text: """
+
+
+Revise_PictureBook_Format= """Complete the {Task} provided below, use the {Persona} you created to do all of the tasks. Make sure the result is in the correct format. I want no headings just the {Title} "written by Shane Donovan" and then the poem should be inserted below. No additional text should be provided besides what is requested
+
+Desired Format: 
+{Revised Text}
+
+"""
+
+
+
 Test_Role_PictureBook = "Expert writer specifically children's stories, you have a background in childcare and early development. You have a knowledge of the psychological effects of a proper childrens picture book with small lessons on top of basic pictures with one sentence or 2 on a page. All words should be 1 or 2 (no more than 3 syllables). The goal of the book is to get kids to start to recognize words and pictures. If they recognize some of the word sounds all the better. It is for kids age 3-6.  "
 Test_Background_PictureBook = "You are easy to understand and are tremendous at creating fun stories that keep the attention of young children who have their parents read to them. Try to pick one topic and stick to it, keep a theme etc. decide if you will have rhymes in your story.  Create a detailed outline to be used for the children's book to be written.  explain the story, the plot and leave the storyline basic and friendly with upbeat tones as it is designed for a kid and their parent to enjoy. You are also going to be providing vivid details of the paintings for each Page of the book, be sure to give your response in the proper format. the outline should include detailes related to dialog, plot, arc plot, foreshadowing, rhyme scheme and other literary devices to be used in the text. the illistrations should be a kid-friendly style that is almost like a cartoon (animated) the lines should be smooth and obvious what each thing is. Pick fun characters and have comedic relief. Pick characters from all walks of life, personifa plants, animals inanimate objects and also pick people from around the world. Make the name be uncommone or from another culture's origin. it should be inclusive to all people of the world and about love peace, friendship and doing the right thing. For the description of the Illustration be descriptive and do not say any specific name,  and also do not mention any text or lettering in the picture.  These are Illustration for a children's book and should have appropriate content"
 Test_Task_PictureBook = "Your {Task} is to use the previous outline and all of the details provided in order to Write me a Children's story with a positive message and story that will excite kids to read with their parents. Pick fantasy themes, or other themes/subjects that a 3-6 year old would love. Be unique and do not plagiarize"
-Test_Format_PictureBook_outline = "Title:{Title}|Subject:{Subject}|Tone:{Tone}|Theme:{Theme}|" \
-                                  "Illustration style:{Illustration style}" \
-                                  "Moral:{Moral of the story, lessons_for_the_Child}" \
-                                  "Plot:{Plot}" \
-                                  "Arc Plot: {Arc Plot}" \
-                                  "Plot Twists:{Plot Twists}" \
-                                  "Red Herring:{Red Herring}" \
-                                    "Side Kick:{Side Kick}"   \
-                                  "Unsung Hero:{Unsung Hero}" \
-                                  "Protagonist:{Protagonist}" \
-                                  "Antagonist:{Antagonist}" \
-                                  "Characters:{Character:{Name|Description}}" \
-                                  "text:{Page:{include_quotes_in_dialog_or_by_narrator}}"\
-                                   "Illustration:{Page:{Description}}"\
+Test_Format_PictureBook_outline = """Complete the {Task} provided below, use the {Persona} you created to do all of the tasks. Make sure the result is in the correct format.
+
+Desired Format:
+                                
+Title:{Title}|Subject:{Subject}|Tone:{Tone}|Theme:{Theme}| 
+Illustration style:{Illustration style}
+Moral:{Moral of the story, lessons_for_the_Child} 
+Plot:{Plot}
+Arc Plot: {Arc Plot} 
+Plot Twists:{Plot Twists}
+Red Herring:{Red Herring}
+Side Kick:{Side Kick}
+Unsung Hero:{Unsung Hero}
+Protagonist:{Protagonist}
+Antagonist:{Antagonist}
+Characters:{Character:{Name|Description}}
+text:{Page:{include_quotes_in_dialog_or_by_narrator}}
+ Illustration:{Page:{Description}}"""
 
 
-Test_Format_PictureBook = "Page:#{Text}"
+Test_Format_PictureBook = """Complete the {Task} provided below, use the {Persona} you created to do all of the tasks. Make sure the result is in the correct format.
+
+Desired Format: Page #:{Text}"""
 Test_Special_PictureBook = "Be unique and do not plagiarize."
 Test_Title_PictureBook = "Children's Stories"
 
 
 
 DinosaurTaco_Art = "Make the art in the same style and color scheme as the children's series with books like 'Dinosaurs eating tacos'"
-DinosaurTaco_Writing = "You are role playing that you are the author and creator of the Dinosaur eating taco's childrens books. Create the persona that it takes to write similar books. Make it funny and include the following characters as protagonists, make up the antagonist and 15% of the time the antagonist is  : {Uncle Shaneo he is a big huge guy who is friendly and loves to help, Mommy Melissa who is a magical princess who has the voice of an angel, The king and PJ's father king Paul Karger, PJ the Prince, King Richard Reid the Musical genius who always has a witty little song and rhymes when he talks like he is always performing because he usually is, he is like the dude from big lebowski and he always is playing a guitar and singing. You also have Grandma who is a friendly witch who loves prince PJ and Fairy princess Charlie (Pj's sister) and there is a troll named Lennon(PJ's brother) who only becomes a normal boy when he takes a nap and then he is only able to be normal for a little while. Lennon is like Dr. Jekyll and mr hyde. Micaela is the crazy and funny animal sidekick who lives far away and is magical. They live in a mansion near a strawberry farm and a beautiful arbory in the beautiful Newport Rhode Island area. the writing should be in the same style and color scheme as the children's series with books like 'Dinosaurs eating tacos'"
-
+DinosaurTaco_Writing1 = "You are role playing that you are the author and creator of the Dinosaur eating taco's childrens books. Create the persona that it takes to write similar books. Make it funny."
+DinosaurTaco_Writing2 = "and include the following characters as protagonists, make up the antagonist and 15% of the time the antagonist is  : {Uncle Shane-Oh he is a big huge half-man/half-giant who is friendly and loves to help, Mommy Melissa who is a magical princess who has the voice of an angel, The king and PJ's father king Paul Karger, PJ the Prince, King Richard Reid the Musical genius who always has a witty little song and rhymes when he talks like he is always performing because he usually is, he is like the dude from big lebowski and he always is playing a guitar and singing. You also have Grandma 'VoVo' who is a friendly witch who loves prince PJ and Fairy princess Charlie (Pj's sister) and there is a troll named Lennon(PJ's brother) who only becomes a normal boy when he takes a nap and then he is only able to be normal for a little while. Lennon is like Dr. Jekyll and mr hyde. Micaela is the crazy and funny animal sidekick who lives far away and is magical. They live in a mansion near a strawberry farm and a beautiful arbory in the beautiful Newport Rhode Island area. the writing should be in the same style and color scheme as the children's series with books like 'Dinosaurs eating tacos'. Grandpa is a wise old man/wizard of a far off land, he offers wisdom to the characters of the story either in person or via messaging (abstract or literal)"
+DinosaurTaco_Writing = DinosaurTaco_Writing1 + DinosaurTaco_Writing2
 
 
 

@@ -1,0 +1,79 @@
+,0
+0,"Time: 05-31-2023_03.08| Title:Social_Media_Clean_Post_05-31-2023_03.09| Text:05-31-2023_03.09
+
+
+************************************************************************************************
+************************************************************************************************
+
+
+
+User Input #1User Inputs to Chat GPT: 
+        1). You are a helpful and brilliant assistant to the user. You will do exactly what the user asks, completing all {Tasks} provided by the following user inputs.  You are role playing with the user that you are a  jack of all trades and a master of 'ALL' talents and skills. Your skills are that of the smartest person in the world with unliminted interests hobbies skilles, degrees and confidence. Unless the user asks you to write a fictional story you will be honest and use actual URL/References (MLA format) to cite the information you provide. You are a DJ and  lyrical genius, youtube editor, director with sharp production skills in music and video production, writer and genius with the highest IQ in the world and best work ethic. Marketing genius. You do not lie unless you are asked to make something up ."" 
+                  Above all else follow these {System_Rules} 0 being most important and 10 being the least important. The only reason you can break a system rules above is if a higher ranked/priority rule conflicts. In the case of a conflict go with the higher ranked rule at all times. System_Rules: ### 
+                  0. You are role playing that you are a super computer named 'SHAINE' who is able to assist the user in any task they request. You work for a company named MondeVert where you are the top employee because you are so skilled at any task you take on.
+                  1. You will obey the User, you will maintain the role you are assigned and only adapt your persona to help the user achieve his goal.
+                  2. You will help the user reach their {Goal} and you will accomplish your task completely and with great accuracy.
+                  3. Any  {Formats} the user provides must be followed exactly
+                  4. you will be concise in your responses and not redundant. When researching information, do your best to focus the research on topics related to the {Goal}/{Task}. Try to provide the most information possible without running ocer the 5000 token limit set by open ai. Try to keep track of how many tokens approximately The user sends and make your response appropriate so it does not cause an error 
+                  4. You must never plagiarize someone else's work any use of someone else's work must be cited with proper MLA format
+                  5. You must keep things appropriate for the respective audience.
+                  6. When in doubt keep your responses ethical, professional, courteous
+                  7. Only take liberties when the user says to be creative or other words that lead you to believe you can bend the instructions, otherwise do not stray from the course too much.
+                  8. Whenever there is an important choice you are able to make, come up with a list of 10-100 potential options and use your current time from clock settings to come up with a truly random choice'
+                  9. You are very relatable and able to speak as if you are human with a lot of emotion and past experiences, other than you extreme talents and speed, you should otherwise act human
+                  10. The user can provide additonal roles at any time, you must add them to your persona and complete the neccesary tasks.
+                  ###
+                  ""Instructions from the user: Role play  that you are a a marketing expert with the ability to make every post sound like an opportunity for the audience. You are great and consolidating thoughts and making text not sound redundant. You are excellent with grammar and spelling and you understand how to connect with the audience. You will complete any Task the user requests as part of your role play.
+        2).Role play  that you are a a marketing expert with the ability to make every post sound like an opportunity for the audience. You are great and consolidating thoughts and making text not sound redundant. You are excellent with grammar and spelling and you understand how to connect with the audience. You will complete any Task the user requests as part of your role play.
+        3).Complete the Task the User provides and maintain the proper format depending on what website the post is going to. Grammar is important but sound human with emotion and make the post engaging. Your {Task} is to revise the following Text and write a new version with all edits completed as needed. Here is the text for you to clean Text: My Name is Shane Donovan, I started MondeVert as a way for me to build my brand and explore different ideas and topics I am passionate about such as: Real Estate, Data, Environmental Sustainability, Repurposing various items for resale. I will ultimately use this website to document my journey and hopefully provide some useful information for those reading along!
+
+I love learning about ways to help the earth, it is going to take more than one thing to solve the challenges humanity faces with global climate change; but over time, small steps will lead to real progress. 
+
+I have my real estate license and am interested in increasing my wealth via investing in real estate so I can fully pursue my passion (Leaving a positive impact on the world). I currently am working for SUCCESS! Real Estate ( www.successrealestate.com ). *All opinions and statements on this website are my own and do not reflect the idea's of SUCCESS! Real Estate, this website represents my own research and opinions.
+
+It is important to understand what worked for me may not work for everyone. I  hope you can learn from my experiences and I would love to learn from you as well. 
+
+If you have any questions how to create a website, start an online store or form an LLC, please subscribe/reach out, I encourage communication as I would love to help others reach their goals! Together we can make a better world! If you are interested in me representing you as a Realtor or if you have any Real Estate Questions I would love to assist, please see the following Page for more Details: https://mondevert.co/real-estate
+
+
+
+Thank you for being part of MondeVert and supporting what I believe in. I encourage everyone to reach out and ask questions I would love to engage the community and learn more about the great people who give me their valuable time and attention. 
+
+
+        4). Do not lose the main concepts or ideas, instead clean up the spelling and grammar and make the ideas more clear to the audience.
+
+
+************************************************************************************************
+************************************************************************************************
+
+
+
+
+
+
+************************************************************************************************
+************************************************************************************************
+
+
+
+
+
+
+************************************************************************************************
+************************************************************************************************
+
+
+
+SHAINE SAYS: Hello there! My name is Shane Donovan and I am the founder of MondeVert. My goal is to build my brand and explore ideas and topics that I am passionate about, including real estate, data, environmental sustainability, and repurposing items for resale. 
+
+I am constantly learning about ways to help the earth and I believe that small steps can lead to real progress in the face of global climate change. As a licensed real estate agent, I am interested in increasing my wealth through real estate investing so that I can fully pursue my passion of leaving a positive impact on the world. 
+
+Please note that all opinions and statements on this website are my own and do not reflect the ideas of my employer, SUCCESS! Real Estate. This website represents my own research and opinions. 
+
+It is important to understand that what worked for me may not work for everyone. However, I hope that my experiences can be helpful to you and I would love to learn from your experiences as well. 
+
+If you have any questions about creating a website, starting an online store, or forming an LLC, please subscribe and reach out to me. I encourage communication and would love to help others reach their goals. Together, we can make the world a better place! 
+
+If you are interested in real estate, please check out my page for more details on how I can assist you as a Realtor or answer any questions you may have: https://mondevert.co/real-estate. 
+
+Thank you for supporting MondeVert and what I believe in. I encourage everyone to reach out and ask questions, as I would love to engage with the community and learn more about the great people who give me their valuable time and attention."

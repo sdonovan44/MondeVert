@@ -145,13 +145,15 @@ def Pick_Voice(Language = 'English'):
     elif Language == 'Spanish':
         Language_Base = Spanish_Portuguese_Voices
     elif Language == 'Swahili':
-        Language_Base = French_Voices
+        Language_Base = French_Voices + Original_List_of_Voices_English
     elif Language == 'Chinese':
         Language_Base = Chinese_Voices
     elif Language == 'Japanese':
         Language_Base = Japanese_Voices
     elif Language == 'German':
         Language_Base = German_Voices
+    elif Language == 'Portuguese':
+        Language_Base = Spanish_Portuguese_Voices
     else:
         Language_Base = Original_List_of_Voices
 

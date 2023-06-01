@@ -880,7 +880,7 @@ class MondeVert():
                                             Line4_Task=Line4_Task +Outline)
 
         #Edit poem
-        if Poem != '':
+        if Poem != '*Did not create':
 
             MondeVert.add2log(self, Log_Add='Original_Text: ' + Poem)
             Revised_Poem = MondeVert.Basic_GPT_Query(self, Line2_Role=Line2_Role + Poet_Bio_Details, Line3_Format=Revise_Format, Line4_Task=Revise_Task + Poem)
@@ -893,7 +893,7 @@ class MondeVert():
 
 
 
-        if Revised_Poem =='':
+        if Revised_Poem =='*Did not create':
             Revised_Poem ='No Revision done, this work was too perfect'
             MondeVert.add2log(self,Log_Add = 'Revised_Text: Error when trying to make Revised_Poem')
 
@@ -2401,7 +2401,47 @@ class MondeVert():
             MondeVert.Make_a_poem(self, SavePath=up.AI_Poetry_Path + '\\' + Mode, Line1_System=up.system_TextJoaT, Mode='Shane_Poem', Persona_Role=up.Shane_Persona, Line2_Role=up.Shane_Persona)
 
         elif Mode == 'Blog_Random_Shane':
-            MondeVert.Make_a_poem(self,Mode = 'Blog_Random_Shane', Chunk_Limit = 1333, USERTITLE= '', Poet_Bio_Details = '', Make_Persona = True, Artist_Persona= '', Poet_Persona = '', Line1_System = up.system_TextJoaT, Persona_Role=up.Shane_Persona, Line2_Role=up.Shane_Persona, Line3_Format = lup.Blog_Format, Line4_Task =lup.Blog_Task, Line3_Format_outline = lup.Blog_Outline_Format, Line4_Task_outline = lup.Blog_Outline_Task, SavePath=up.AI_Blog_Path + '\\' + Mode,  crazy = .5,  Persona_Task= lup.Blog_Persona_Task, Persona_Format= lup.Blog_Persona_Format, Persona_Special= lup.Blog_Persona_Special, Revise_Task = lup.Blog_Revise_Task, Revise_Format = lup.Blog_Revise_Format)
+            MondeVert.Make_a_poem(self,Mode = 'Blog_Random_Shane', Chunk_Limit = 1333, USERTITLE= '', Poet_Bio_Details = '', Make_Persona = True, Artist_Persona= '', Poet_Persona = '', Line1_System = up.system_TextJoaT, Persona_Role=up.Shane_Persona, Line2_Role=up.Shane_Persona, Line3_Format = lup.Blog_Format, Line4_Task =lup.Blog_Task, Line3_Format_outline = lup.Blog_Outline_Format, Line4_Task_outline = lup.Blog_Outline_Task, SavePath=up.AI_Blog_Path + '\\' + Mode,  crazy = .6,  Persona_Task= lup.Blog_Persona_Task, Persona_Format= lup.Blog_Persona_Format, Persona_Special= lup.Blog_Persona_Special, Revise_Task = lup.Blog_Revise_Task, Revise_Format = lup.Blog_Revise_Format)
+
+
+
+        elif Mode == 'PictureBook_PJSpecial':
+            MondeVert.Make_a_poem(self,Mode = 'PictureBook_PJSpecial', Chunk_Limit = 333, USERTITLE= '', Poet_Bio_Details = '', Make_Persona = True, Artist_Persona=  up.DinosaurTaco_Art, Poet_Persona = up.Shane_Persona + up.DinosaurTaco_Writing + up.DinosaurTaco_Art, Line1_System = up.system_TextJoaT, Persona_Role=up.Shane_Persona + up.DinosaurTaco_Writing + up.DinosaurTaco_Art, Line2_Role=up.Shane_Persona + up.DinosaurTaco_Writing + up.DinosaurTaco_Art,Line3_Format = up.Test_Format_PictureBook, Line4_Task =up.Test_Task_PictureBook, Line3_Format_outline = up.Test_Format_PictureBook_outline, Line4_Task_outline = up.Test_Background_PictureBook, SavePath=up.AI_Childrens_AudioBook_Path + '\\' + Mode,  crazy = .6,  Persona_Task= lup.Persona_Task, Persona_Format= lup.Persona_Format2, Persona_Special= lup.Persona_Special, Revise_Task = up.Revise_PictureBook_Task, Revise_Format = up.Revise_PictureBook_Format)
+
+
+        elif Mode == 'PictureBook_2':
+            MondeVert.Make_a_poem(self,Mode = 'PictureBook_PJSpecial', Chunk_Limit = 333, USERTITLE= '', Poet_Bio_Details = '', Make_Persona = True, Artist_Persona=  up.DinosaurTaco_Art, Poet_Persona = up.Shane_Persona + up.DinosaurTaco_Writing1 , Line1_System = up.system_TextJoaT, Persona_Role=up.Shane_Persona + up.DinosaurTaco_Writing1, Line2_Role=up.Shane_Persona + up.DinosaurTaco_Writing + up.DinosaurTaco_Art,Line3_Format = up.Test_Format_PictureBook, Line4_Task =up.Test_Task_PictureBook, Line3_Format_outline = up.Test_Format_PictureBook_outline, Line4_Task_outline = up.Test_Background_PictureBook, SavePath=up.AI_Childrens_AudioBook_Path + '\\' + Mode,  crazy = .6,  Persona_Task= lup.Persona_Task, Persona_Format= lup.Persona_Format2, Persona_Special= lup.Persona_Special, Revise_Task = up.Revise_PictureBook_Task, Revise_Format = up.Revise_PictureBook_Format)
+
+
+        elif Mode == 'PictureBook_Shane':
+            MondeVert.Make_a_poem(self,Mode = 'PictureBook_Shane', Chunk_Limit = 333, USERTITLE= '', Poet_Bio_Details = '', Make_Persona = True, Artist_Persona= 'You are illustrating a childrens book, you should be skilled at making kid friendly pictures with basic backgrounds and the focus on the action. Make the lines clean and almost like a disney animation', Poet_Persona = up.Shane_Persona, Line1_System = up.system_TextJoaT, Persona_Role=up.Shane_Persona + "Remember you are a children's author so keep your content and language appropriate for your audience", Line2_Role=up.Shane_Persona + "Remember you are a children's author so keep your content and language appropriate for your audience", Line3_Format = up.Test_Format_PictureBook, Line4_Task =up.Test_Task_PictureBook, Line3_Format_outline = up.Test_Format_PictureBook_outline, Line4_Task_outline = up.Test_Background_PictureBook, SavePath=up.AI_Childrens_AudioBook_Path + '\\' + Mode,  crazy = .6,  Persona_Task= lup.Persona_Task, Persona_Format= lup.Persona_Format2, Persona_Special= lup.Persona_Special, Revise_Task = up.Revise_PictureBook_Task, Revise_Format = up.Revise_PictureBook_Format)
+
+
+        elif Mode == 'PictureBook':
+            MondeVert.Make_a_poem(self, Mode='PictureBook', Chunk_Limit=333, USERTITLE='', Poet_Bio_Details='',
+                                  Make_Persona=True, Artist_Persona='', Poet_Persona=up.Shane_Persona,
+                                  Line1_System=up.system_TextJoaT,
+                                  Persona_Role=up.Test_Role_PictureBook + "Remember you are a children's author so keep your content and language appropriate for your audience",
+                                  Line2_Role=up.Test_Role_PictureBook + "Remember you are a children's author so keep your content and language appropriate for your audience",
+                                  Line3_Format=up.Test_Format_PictureBook, Line4_Task=up.Test_Task_PictureBook,
+                                  Line3_Format_outline=up.Test_Format_PictureBook_outline,
+                                  Line4_Task_outline=up.Test_Background_PictureBook,
+                                  SavePath=up.AI_Blog_Path + '\\' + Mode, crazy=.5, Persona_Task=lup.Persona_Task,
+                                  Persona_Format=lup.Persona_Format, Persona_Special=lup.Persona_Special,
+                                  Revise_Task=up.Revise_PictureBook_Task, Revise_Format=up.Revise_PictureBook_Task)
+
+
+
+        elif Mode == 'PictureBook_old':
+            MondeVert.MondeVertTask(self,  SavePath=up.AI_Childrens_AudioBook_Path + '\\' + Mode, System=up.system_TextJoaT, Role=up.Test_Role_PictureBook,Background=up.Test_Background_PictureBook, Task=up.Test_Task_PictureBook, Special=up.Test_Special_PictureBook,Format=up.Test_Format_PictureBook, Mode='PictureBook_old', ArtPrompt= up.MondeVert_ArtPrompt,ArtFormat = up.MondeVert_ArtFormat, AdvanceArtPrompt = up.MondeVert_ArtPrompt_PictureBook , AdvanceArtFormat= up.MondeVert_ArtFormat_PictureBook)
+        elif Mode == 'PictureBook_Shane_old':
+            MondeVert.MondeVertTask(self,  SavePath=up.AI_Childrens_AudioBook_Path + '\\' + Mode, System=up.system_TextJoaT, Role=up.Shane_Persona + "Remember you are a children's author so keep the content and language appropriate for a young child",Background=up.Test_Background_PictureBook, Task=up.Test_Task_PictureBook, Special=up.Test_Special_PictureBook,Format=up.Test_Format_PictureBook, Mode='PictureBook_Shane_old', ArtPrompt= up.MondeVert_ArtPrompt,ArtFormat = up.MondeVert_ArtFormat, AdvanceArtPrompt = up.MondeVert_ArtPrompt_PictureBook , AdvanceArtFormat= up.MondeVert_ArtFormat_PictureBook)
+
+        elif Mode == 'PjSpecial_old':
+            MondeVert.MondeVertTask(self,  SavePath=up.AI_Childrens_AudioBook_Path + '\\' + Mode, System=up.system_TextJoaT, Role= up.DinosaurTaco_Writing,Background=up.Test_Background_PictureBook + up.DinosaurTaco_Writing + up.DinosaurTaco_Art, Task=up.Test_Task_PictureBook, Special=up.Test_Special_PictureBook,Format=up.Test_Format_PictureBook, Mode='PjSpecial_old', ArtPrompt= up.MondeVert_ArtPrompt,ArtFormat = up.DinosaurTaco_Art, AdvanceArtPrompt = up.MondeVert_ArtPrompt_PictureBook , AdvanceArtFormat= up.MondeVert_ArtFormat_PictureBook)
+
+
+
 
         elif Mode == 'Speech_Shane':
             MondeVert.Make_a_poem(self, Mode='Speech_Shane', Chunk_Limit=1333, USERTITLE='', Poet_Bio_Details='',
@@ -2450,12 +2490,6 @@ class MondeVert():
             MondeVert.MondeVertTask(self,  SavePath=up.AI_Task_Path + '\\' + Mode,System=up.system_TextJoaT, Role=up.Test_Role_SM, Background=up.Test_Background_SM,Task=up.Test_Task_SM, Special=up.Test_Special_SM, Format=up.Test_Format_SM, Mode='Social')
         elif Mode == 'RealEstate':
             MondeVert.MondeVertTask(self, SavePath=up.AI_Task_Path + '\\' + Mode, System=up.system_TextJoaT, Role=up.Test_Role_RE,Background=up.Test_Background_RE, Task=up.Test_Task_RE, Special=up.Test_Special_RE,Format=up.Test_Format_RE, Mode='RealEstate')
-        elif Mode == 'PictureBook':
-            MondeVert.MondeVertTask(self,  SavePath=up.AI_Childrens_AudioBook_Path + '\\' + Mode, System=up.system_TextJoaT, Role=up.Test_Role_PictureBook,Background=up.Test_Background_PictureBook, Task=up.Test_Task_PictureBook, Special=up.Test_Special_PictureBook,Format=up.Test_Format_PictureBook, Mode='PictureBook', ArtPrompt= up.MondeVert_ArtPrompt,ArtFormat = up.MondeVert_ArtFormat, AdvanceArtPrompt = up.MondeVert_ArtPrompt_PictureBook , AdvanceArtFormat= up.MondeVert_ArtFormat_PictureBook)
-
-        elif Mode == 'PjSpecial':
-            MondeVert.MondeVertTask(self,  SavePath=up.AI_Childrens_AudioBook_Path + '\\' + Mode, System=up.system_TextJoaT, Role= up.DinosaurTaco_Writing,Background=up.Test_Background_PictureBook + up.DinosaurTaco_Writing + up.DinosaurTaco_Art, Task=up.Test_Task_PictureBook, Special=up.Test_Special_PictureBook,Format=up.Test_Format_PictureBook, Mode='PjSpecial', ArtPrompt= up.MondeVert_ArtPrompt,ArtFormat = up.DinosaurTaco_Art, AdvanceArtPrompt = up.MondeVert_ArtPrompt_PictureBook , AdvanceArtFormat= up.MondeVert_ArtFormat_PictureBook)
-
 
 
 
@@ -2471,7 +2505,7 @@ class MondeVert():
         elif Mode == 'Social_Media_Clean_Post':
 
             Line3 = sms.Clean_Post_Line3 + sms.SHAINE_User_Inquiry
-            Text = MondeVert.Basic_GPT_Query(self, Line1_System_Rule= sms.Clean_Post_Line1, Line2_Role=sms.Clean_Post_Line2, Line3_Format=Line3, Line4_Task=sms.Clean_Post_Line4,Mode='Social_Media_Clean_Post', SaveFile= True, MakeArt=True ,SavePath=up.AI_Blogger + '\\' + Mode )
+            Text = MondeVert.Basic_GPT_Query(self, Line1_System_Rule= sms.Clean_Post_Line1, Line2_Role=sms.Clean_Post_Line2, Line3_Format=Line3, Line4_Task=sms.Clean_Post_Line4,Mode='Social_Media_Clean_Post', SaveFile= True, MakeArt=True ,SavePath=up.AI_Blog_Path + '\\' + Mode )
 
 
 
@@ -2551,7 +2585,7 @@ class MondeVert():
 
 
 
-    def MondeVertTask(self, System = '', Role='', Background='', Task='',Special='', Title='', Mode='Basic', Logic_AI=0,Format = '',  SavePath = up.AI_Task_Path, ArtPrompt= up.MondeVert_ArtPrompt,ArtFormat = up.MondeVert_ArtFormat, AdvanceArtPrompt = up.MondeVert_ArtPrompt_PictureBook , AdvanceArtFormat= up.MondeVert_ArtFormat_PictureBook, ART_System = up.system_Text_Art):
+    def MondeVertTask(self, System = '', Role='', Background='', Task='',Special='', Title='', Mode='Basic', Logic_AI=0,Format = up.Test_Format_PictureBook,OutlineFormat = up.Test_Format_PictureBook_outline,  SavePath = up.AI_Task_Path, ArtPrompt= up.MondeVert_ArtPrompt,ArtFormat = up.MondeVert_ArtFormat, AdvanceArtPrompt = up.MondeVert_ArtPrompt_PictureBook , AdvanceArtFormat= up.MondeVert_ArtFormat_PictureBook, ART_System = up.system_Text_Art):
 
         ArtPaths = []
         openai.api_key = API_Key
@@ -2605,28 +2639,32 @@ class MondeVert():
         Format0 = up.Test_Format0
         KillSwitch = 0
 
-        Format_f = Format
-        if Mode =='skit':
-            Format_f = Format0
+
 
         if Title != '':
             Background = Title + Background
 
         tempFormat = Format
-        if Mode == 'PictureBook':
-            Format = up.Test_Format_PictureBook_outline
+        if Mode == 'PictureBook' or  Mode == 'PictureBook_Shane' or  Mode == 'PjSpecial' :
+
+            Format = up.Test_Format_PictureBook
+            OutlineFormat = up.Test_Format_PictureBook_outline
 
 
 
         if Mode == 'PictureBook':
             Writer_Persona =  MondeVert.Writer_Persona_Short_Story(self, Special = 'You are writing a children story so make your character extremely fit for children storyies with a clean bio and approachable to families, content should be 100% family friendly')
+        elif Mode == 'PictureBook_Shane':
+            Writer_Persona = MondeVert.Writer_Persona_Short_Story(self,Role=up.Shane_Persona, Special='You are writing a children story so make your character extremely fit for children storyies with a clean bio and approachable to families, content should be 100% family friendly')
         elif 'PjSpecial' in Mode:
                 Writer_Persona =  MondeVert.Writer_Persona_Short_Story(self, Role =up.DinosaurTaco_Writing, Special = 'You are writing a children story so make your character extremely fit for children storyies with a clean bio and approachable to families, content should be 100% family friendly' )
         else:
             Writer_Persona = MondeVert.Writer_Persona_Short_Story(self)
 
 
-
+        Format_f = OutlineFormat
+        if Mode =='skit':
+            Format_f = Format0
 
         Role = Role + ' You are specifically taking on the role of the following persona: ' + Writer_Persona
 
@@ -2837,7 +2875,7 @@ class MondeVert():
                 print(CSVLocation)
 
                 try:
-                    if Mode == 'PictureBook' or Mode == 'Skit':
+                    if Mode == 'PictureBook' or Mode == 'Skit' or Mode == 'PjSpecial' or Mode == 'PictureBook_Shane':
                         if 'PjSpecial' in Mode:
                             Project_Description = up.DinosaurTaco_Art
 
@@ -3796,9 +3834,9 @@ if __name__ == '__main__':
     #args= ['Blog_Random']
     #args= ['Speech']
     #args = ['Music_Rich']
-    args = ['PictureBook']
+#    args = ['Blog_Random_Shane']
     #args = ['Speech_Shane']
-
+    args = ['PictureBook_Shane']
     #
 
     #
