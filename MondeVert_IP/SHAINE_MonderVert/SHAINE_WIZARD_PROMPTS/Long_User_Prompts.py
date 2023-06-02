@@ -880,8 +880,17 @@ Persona_Summary_For_Role_Play_Line4_Task = "Task: ###  Exapand on the following 
 
 Persona_Background = """Create a persona for your writer to use as an alias be extremely creative and make the person completely unique. It should feel like a real person completely unique with all of their own personal details to be shared with the world. I want them to  feel real and cover many genres but pick a specific few they are specialists at and also the tone""" + Persona_Task
 
+artDetailsPrompt =  "Come up with specific details  for an artist to render a work of art that is related to the action/symbolism/tone/context of the following text pic a well known childrens illustrator who has basic designs with simple backgrounds and sharp details:  "
+artDetailsFormat = """Complete the {Task} provided below, use the {Persona} you created to do all of the tasks. Make sure the result is in the correct format.
 
 
+Desired Format:
+
+Artist that art is similar to: 
+Art Style: 
+Art Utensil Used: 
+Tone: 
+Color Schemes: """
 
 Persona_artist_Task = Persona_Task
 

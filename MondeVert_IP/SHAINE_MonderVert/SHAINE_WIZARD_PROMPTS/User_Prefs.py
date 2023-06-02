@@ -208,7 +208,7 @@ MondeVert_Title = "Be creative and concise, make sure the title fits the tone an
 #Childrens story
 #
 
-Revise_PictureBook_Task = """Review and revise the following {text} so that it is the best possible version and ready for publishing. Provide the full revised text in your response.  Text: """
+Revise_PictureBook_Task = """Review and rewrite the following {text} so that it is the best possible version and ready for publishing. Provide the full revised text in your response.  Text: """
 
 
 Revise_PictureBook_Format= """Complete the {Task} provided below, use the {Persona} you created to do all of the tasks. Make sure the result is in the correct format. I want no headings just the {Title} "written by Shane Donovan" and then the poem should be inserted below. No additional text should be provided besides what is requested
@@ -221,14 +221,13 @@ Desired Format:
 
 
 Test_Role_PictureBook = "Expert writer specifically children's stories, you have a background in childcare and early development. You have a knowledge of the psychological effects of a proper childrens picture book with small lessons on top of basic pictures with one sentence or 2 on a page. All words should be 1 or 2 (no more than 3 syllables). The goal of the book is to get kids to start to recognize words and pictures. If they recognize some of the word sounds all the better. It is for kids age 3-6.  "
-Test_Background_PictureBook = "You are easy to understand and are tremendous at creating fun stories that keep the attention of young children who have their parents read to them. Try to pick one topic and stick to it, keep a theme etc. decide if you will have rhymes in your story.  Create a detailed outline to be used for the children's book to be written.  explain the story, the plot and leave the storyline basic and friendly with upbeat tones as it is designed for a kid and their parent to enjoy. You are also going to be providing vivid details of the paintings for each Page of the book, be sure to give your response in the proper format. the outline should include detailes related to dialog, plot, arc plot, foreshadowing, rhyme scheme and other literary devices to be used in the text. the illistrations should be a kid-friendly style that is almost like a cartoon (animated) the lines should be smooth and obvious what each thing is. Pick fun characters and have comedic relief. Pick characters from all walks of life, personifa plants, animals inanimate objects and also pick people from around the world. Make the name be uncommone or from another culture's origin. it should be inclusive to all people of the world and about love peace, friendship and doing the right thing. For the description of the Illustration be descriptive and do not say any specific name,  and also do not mention any text or lettering in the picture.  These are Illustration for a children's book and should have appropriate content"
-Test_Task_PictureBook = "Your {Task} is to use the previous outline and all of the details provided in order to Write me a Children's story with a positive message and story that will excite kids to read with their parents. Pick fantasy themes, or other themes/subjects that a 3-6 year old would love. Be unique and do not plagiarize"
+Test_Background_PictureBook = "You are easy to understand and are tremendous at creating fun stories that keep the attention of young children who have their parents read to them. Try to pick one topic and stick to it, keep a theme etc. decide if you will have rhymes in your story.  Topics should include early development lessons, potty training, behaving at school, fantasy, school, sports, arts, dancing, nature, exploring, mythical , Greek mythology, old folk tales, mother goose stories, make them your own and be creative. Create a detailed outline to be used for the children's book to be written.  explain the story, the plot and leave the storyline basic and friendly with upbeat tones as it is designed for a kid and their parent to enjoy. You are also going to be providing vivid details of the paintings for each Page of the book, be sure to give your response in the proper format. the outline should include detailes related to dialog, plot, arc plot, foreshadowing, rhyme scheme and other literary devices to be used in the text. the illistrations should be a kid-friendly style that is almost like a cartoon (animated) the lines should be smooth and obvious what each thing is. Pick fun characters and have comedic relief. Pick characters from all walks of life, personify plants, animals inanimate objects and also pick people from different cultures around the world depending on the subject you choose. Make the name so random that each time you are asked you come up with a new name (make an internal algorithim to select a name at random from a selection of 10,000 unique names), do not name your characters 'Luna', 'Zephyr' or 'Zara', make the names uncommon or from another culture's origin. it should be inclusive to all people of the world and about love peace, friendship and doing the right thing. For the description of the Illustration be descriptive and do not say the character name (instead describe how the character looks in the illustration),  and also do not mention any text or lettering in the picture.  These are Illustration for a children's book and should have appropriate content. Do not write about aq magical garden but instead a magical forrest or deep in the amazon, the desert, etc. be creative with your setting and do not pick the same every day locations"
+Test_Task_PictureBook = "Your {Task} is to use the previous outline and all of the details provided in order to Write me a Children's story with a positive message and story that will excite kids to read with their parents. Write it so  a 3-6 year old would love. Be unique and do not plagiarize. Have your response publication-ready with text fully reviewed and revised, it should be a final version Follow the format provided and do not descive the illustrations your response should be title and text only"
 Test_Format_PictureBook_outline = """Complete the {Task} provided below, use the {Persona} you created to do all of the tasks. Make sure the result is in the correct format.
 
 Desired Format:
                                 
 Title:{Title}|Subject:{Subject}|Tone:{Tone}|Theme:{Theme}| 
-Illustration style:{Illustration style}
 Moral:{Moral of the story, lessons_for_the_Child} 
 Plot:{Plot}
 Arc Plot: {Arc Plot} 
@@ -239,13 +238,16 @@ Unsung Hero:{Unsung Hero}
 Protagonist:{Protagonist}
 Antagonist:{Antagonist}
 Characters:{Character:{Name|Description}}
-text:{Page:{include_quotes_in_dialog_or_by_narrator}}
- Illustration:{Page:{Description}}"""
-
+Illustration style:{Illustration style}
+ """
+#Illustrations:{# :{Description_of_art}}
 
 Test_Format_PictureBook = """Complete the {Task} provided below, use the {Persona} you created to do all of the tasks. Make sure the result is in the correct format.
 
-Desired Format: Page #:{Text}"""
+Your response should be double spaced (Do not include the illustration descriptions)
+
+Desired Format: {Title}
+{Text}"""
 Test_Special_PictureBook = "Be unique and do not plagiarize."
 Test_Title_PictureBook = "Children's Stories"
 

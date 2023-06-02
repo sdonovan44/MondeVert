@@ -632,7 +632,7 @@ class MondeVert():
                 FileName = prompt
                 print('Length of File Name: ' + str(len(FileName)))
                 if len(FileName) >= 150:
-                    FileName = FileName[0:150]
+                    FileName = FileName[-150:]
                     print('Length of File Name: ' + str(len(FileName)))
 
                 FileName = cu.CleanFileName(FileName)
@@ -984,6 +984,29 @@ class MondeVert():
         #make artist person
 
 
+        try:
+            try:
+                Art_persona = MondeVert.Artist_Persona_Short_Story(Writer_persona=Poet_Bio_Details,)
+                try:
+                    Art_Details = MondeVert.summarize_art_style_for_short_story(writer_persona=Poet_Bio_Details,
+                                                                            outline=Lyrics,Artist_Persona=Art_persona, Format=lup.artDetailsFormat)  # , Format='Make a concise summary of an art style and artist to make a work of art like. Also provide the colors used, themes, moods, and tones.')
+                except:
+                    Dn = 100
+
+                originalFilepath = self.PersonaArtPath2
+                PicNewPath = SavePath_Pics + '_' + Title1 + '_Artist Pic.png'
+                try:
+                    shutil.copyfile(originalFilepath, PicNewPath)
+                except:
+                    dn = 100
+
+            except:
+                Art_Details = Poet_Bio_Details
+                dn = 100
+        except:
+            dn = 100
+
+
 
         #summarize art style
         #Save Files including word document
@@ -1001,6 +1024,11 @@ class MondeVert():
             data_final= """Poem: """ + Poem + """Poem 2.0: """ + Revised_Poem
         print(data_final)
 
+
+        try:
+            data_final = data_final + Poet_Bio_Details + Artist_Persona + Art_persona + Art_Details
+        except:
+            dn = 100
         # MondeVert.speak(self, "Saving the files round 1")
         # print(data)
 
@@ -1024,34 +1052,16 @@ class MondeVert():
             print('Review Error File did not save ')
 
 
+
         try:
-            try:
-                Art_persona = MondeVert.Artist_Persona_Short_Story(Writer_persona=Poet_Bio_Details)
-                try:
-                    Art_Details = MondeVert.summarize_art_style_for_short_story(writer_persona=Poet_Bio_Details,
-                                                                            outline=Lyrics,Artist_Persona=Art_persona)  # , Format='Make a concise summary of an art style and artist to make a work of art like. Also provide the colors used, themes, moods, and tones.')
-                except:
-                    Dn = 100
-
-                originalFilepath = self.PersonaArtPath2
-                PicNewPath = SavePath_Pics + '_' + Title1 + '_Artist Pic.png'
-                try:
-                    shutil.copyfile(originalFilepath, PicNewPath)
-                except:
-                    dn = 100
-
-            except:
-                Art_Details = Poet_Bio_Details
-                dn = 100
-
             newline = """\n"""
             newline2 = """\\n"""
             audioname = cu.SaveText2Audio(Text=Lyrics, Translate=Translate, SavePath=SavePath,
                                           FileName=Title1, Chunk_Replaces=['.', ')', ':', '?',newline,newline2], Chunk_Limit=Chunk_Limit,
                                           Artist_Persona=Art_Details )
-            test = 100
+
         except:
-            dn = 100
+            test = 100
 
 
 

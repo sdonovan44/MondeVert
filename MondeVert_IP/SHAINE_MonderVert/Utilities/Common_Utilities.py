@@ -412,11 +412,12 @@ def Split_Audio2(Text, SavePath, FileName,FilePath = '', OpeningSound = up.Monde
                     Chunk_Limit_Translate = len(tempTranslate) + 10
                     FilePathc = SaveText2Audio(Text=tempTranslate, SavePath=SavePath_Chunks+Translate_Folder,
                                           FileName=FileName_Chunk,
-                                          Voice=Translate_Voice, Chunk_Mode=True, FilePath=FilePath, Translate=Translate, Chunk_Limit=Chunk_Limit_Translate)
+                                          Voice=Translate_Voice, Chunk_Mode=True, FilePath=FilePath, Translate=Translate, Chunk_Limit=Chunk_Limit_Translate, Artist_Persona=Artist_Persona)
                     FilePaths.append(FilePathc)
                     print('successfully made an audio file in ' + l)
                 except:
                     print('Error could not create audio for this text')
+
 
                 if len(tempTranslate) > 44:
                     try:
@@ -426,7 +427,7 @@ def Split_Audio2(Text, SavePath, FileName,FilePath = '', OpeningSound = up.Monde
                         ArtPrompt[:313]
 
                     try:
-                        PicPath = x.makeArt(Prompt=ArtPrompt)
+                        PicPath = x.makeArt(Prompt='Using the following details ' + Artist_Persona + " create a work of art about the following subject:  " + ArtPrompt)
                         print('successfully made a work of art in foreign language')
                         newPicPath = SavePath_Pics + '\\'+FileName_Chunk + '.png'
                         try:
@@ -447,7 +448,7 @@ def Split_Audio2(Text, SavePath, FileName,FilePath = '', OpeningSound = up.Monde
                 if len(Text_Chunk_Final)>44:
                     ArtPrompt = x.GPTArt2(User_Subject='Create a prompt for an artist to create a work of art based on the following text: ' + Text_Chunk_Final,ArtFormat='Describe the work of art as per the following Artist persona: ' + Artist_Persona )
                     try:
-                        PicPath = x.makeArt(Prompt=ArtPrompt)
+                        PicPath = x.makeArt(Prompt='Using the following details ' + Artist_Persona + " create a work of art about the following subject:  " + ArtPrompt)
                         newPicPath = SavePath_Pics + '\\' +FileName_Chunk + '.png'
                         try:
                             shutil.copy(PicPath, newPicPath)
@@ -478,154 +479,6 @@ def Split_Audio2(Text, SavePath, FileName,FilePath = '', OpeningSound = up.Monde
 
             #print('Error Could not parse files together, see chunks for now')
     return FilePath2
-#
-#
-# def Split_Audio(Text, SavePath, FileName,FilePath = '', OpeningSound = up.MondeVertIntro, Chunk_Limit = 1500, Voice = random.choices(SAF.Original_List_of_Voices_English)[0], Translate = sfa.Translation_Languages_Testing, Chunk_Replaces = ['.','?','\\n',')'], Chunk_Delimiter = '!',Artist_Persona = 'embrace the spirit and culture of the following text describe it to be illustrated by an artist'):
-#     Length_Text = len(Text)
-#     Chunk_Limit = Chunk_Limit -20
-#     Text_Chunks = []
-#     Text_New = Text
-#     FilePaths = []
-#     length = len(Text)
-#     Audio_File_Count= 1
-#     if 'Audio Chunks' in SavePath:
-#         SavePath_Chunks= SavePath
-#     else:
-#         SavePath_Chunks = SavePath + r'\Audio Chunks'
-#     Check_Folder_Exists(SavePath)
-#     Check_Folder_Exists(SavePath_Chunks)
-#     RunningCheck = 0
-#     LastPunc = 100
-#     New_Text_Translated=[]
-#     Audio_File_Count = 0
-#     Voices = []
-#     countl = 0
-#     print('All Languages')
-#     print(Translate)
-#     TranslateLanguages = []
-#     for l in Translate:
-#         if l == 'English':
-#             v = Voice
-#         else:
-#             v = SAF.Pick_Voice(Language=l)
-#         print(l + 'Voice: ' +v )
-#         Voices.append(v)
-#         New_Text_Translated.append('Voice: ' + str(Voices[countl]) + '   ' + str(l) + '_Translation: ')
-#         countl += 1
-#         LastPunc =Chunk_Limit
-#
-#         while  LastPunc != -1:
-#             countl = 0
-#             Text_Chunk = Text_New[:Chunk_Limit]
-#             Audio_File_Count += 1
-#             for i in Chunk_Replaces:
-#                 Text_Chunk_Info_only = Text_Chunk.replace(i, Chunk_Delimiter)
-#
-#
-#                 #Text_Chunk_Info_only = Text_Chunk.replace('.','!')
-#                 #Text_Chunk_Info_only = Text_Chunk_Info_only.replace('?', '!')
-#
-#             #print(Text_Chunk_Info_only)
-#             # print('Last Punc Position')
-#             # print(LastPunc)
-#
-#
-#             print(l)
-#             print(v)
-#
-#             print('Chunk Limit')
-#
-#             print(Chunk_Limit)
-#             print(len(Text_New))
-#             print('Last Punc Position')
-#             print(LastPunc)
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#             countl = -1
-#             for l in Translate:
-#                 countl += 1
-#                 # print(l)
-#                 # print(countl)
-#                 # print(Voices[countl])
-#                 # print(New_Text_Translated[countl])
-#                 New_Text_Translated_Temp = ''
-#
-#                 #print(Text_Chunk_Final)
-#                 x = GPT.MondeVert()
-#                 if l != 'English':
-#
-#                     tempTranslate = x.Translate(Text = Text_Chunk_Final, Language_Final=l)
-#                     Translate_Voice = Voices[countl]
-#                     New_Text_Translated[countl] += tempTranslate
-#                     translate2 = [l]
-#                     try:
-#                         FilePathc = SaveText2Audio(Text=tempTranslate, SavePath=SavePath_Chunks,
-#                                               FileName=FileName +'_' + l +'_' + Translate_Voice +'_Chunk_'+ str(Audio_File_Count),
-#                                               Voice=Translate_Voice, Chunk_Mode=True, FilePath=FilePath, Translate=translate2, Chunk_Limit=len(tempTranslate))
-#                     except:
-#                         print('Error could not create audio for this text')
-#                     try:
-#                         ArtPrompt = x.GPTArt2( User_Subject='Create a prompt for an artist to create a work of art based on the following text: '  +tempTranslate, ArtFormat=Artist_Persona )
-#                     except:
-#                         ArtPrompt = Artist_Persona + tempTranslate
-#                         ArtPrompt[:313]
-#     #+ 'Embrace/depict the cultures around the world that speak '
-#     #+ 'adapt the text to a person from a country that speaks: '+ str(l)
-#
-#                     try:
-#                         PicPath = x.makeArt(Prompt=ArtPrompt)
-#                         newPicPath = FilePath[:-4] + '.png'
-#                         shutil.copy(PicPath,newPicPath)
-#                     except:
-#                         print('Art not made, not an issue for now, maybe down the road')
-#                     print('successfully made a work of art in foreign language')
-#                     if LastPunc == -1:
-#                         SaveCSV(SavePath=SavePath, Title= FileName+l+'_Translate', Text=New_Text_Translated[countl])
-#
-#                 else:
-#                     print('Text_Chunk_Final: ' + str(len(Text_Chunk_Final)))
-#                     translate2 = [l]
-#                     FilePathc = SaveText2Audio(Text = Text_Chunk_Final, SavePath = SavePath_Chunks, FileName=FileName +'_' + l +'_' + Voice +'_Chunk_' + str(Audio_File_Count), Voice = Voice , Chunk_Mode=True, FilePath=FilePath, Translate=translate2)
-#                     ArtPrompt = x.GPTArt2(User_Subject='Create a prompt for an artist to create a work of art based on the following text: ' + Text_Chunk_Final)
-#                     try:
-#                         PicPath = x.makeArt(Prompt=ArtPrompt)
-#                         newPicPath = FilePath[:-4] + '.png'
-#                         shutil.copy(PicPath, newPicPath)
-#                     except:
-#                         print('Art not made, not an issue for now, maybe down the road')
-#                     countl += 1
-#
-#                 FilePaths.append(FilePath)
-#                 Text_Chunks.append(Text_Chunk_Final)
-#                 RunningCheck +=len(Text_Chunk_Final)
-#
-#
-#                 #countl += 1
-#
-#             FilePath2 = FilePaths[0]
-#             try:
-#                 #length = len(Text_New)
-#                 New_pos = (LastPunc + 1)
-#                 Text_New = Text_New[New_pos:]
-#                 #length = len(Text_New)
-#             except:
-#                 print('Review Error Triggered, could be just how this has to work')
-#                 #print(Text_New)
-#                 #print(len(Text_New))
-#     # try:
-#     #     FilePath2 = Combine_Splitsof_audio(AudioFiles_ordered = FilePaths, FilePath=FilePath,SavePath= SavePath)
-#     # except:
-#     #     FilePath2 = FilePaths[0]
-#
-#         print('Error COuld not parse files together, see chunks for now')
-#     return FilePath2
 
 def CleanLyrics4audio( text,Chunk_Delimiter_right = ':', Chunk_Delimiter_left= '\\n', RemoveChars = [':', 'Chorus', 'Verse', 'Bridge', 'Sample']):
     findChars = True
@@ -662,10 +515,12 @@ def CleanLyrics4audio( text,Chunk_Delimiter_right = ':', Chunk_Delimiter_left= '
 def CleanFileName(Text):
     Text = re.sub(r"[^a-zA-Z0-9 ]", "", Text)
     return Text
-def SaveText2Audio( Translate = sfa.Translation_Languages_Testing,Text = '', SavePath =up.SavePath, FileName="Text2Audio", FilePath = '', Neural='Neural', Mode='Text2Audio', Chunk_Limit = 1500,Voice = random.choices(SAF.Original_List_of_Voices_English)[0], Chunk_Replaces = ['.','?','\n'], Chunk_Delimiter = '!',Artist_Persona = 'embrace the spirit and culture of the following text describe it to be illustrated by an artist', Chunk_Mode = False):
+def SaveText2Audio( Translate = sfa.Translation_Languages_Testing,Text = '', SavePath =up.SavePath, FileName="Text2Audio", FilePath = '', Neural='Neural', Mode='Text2Audio', Chunk_Limit = 1500,Voice = random.choices(SAF.Original_List_of_Voices_English)[0], Chunk_Replaces = ['.','?','\n'], Chunk_Delimiter = '!',Artist_Persona = '', Chunk_Mode = False):
     #Voice = CleanFileName(Voice)
 
     Check_Folder_Exists(SavePath)
+
+
 
 
     if Chunk_Mode == True:
@@ -688,8 +543,18 @@ def SaveText2Audio( Translate = sfa.Translation_Languages_Testing,Text = '', Sav
         else:
             FilePath_m = SavePath + '\\' + FileName + '.mp3'
 
-
-
+    if Artist_Persona == 'embrace the spirit/symbolism and culture of the following text describe it to be illustrated by an artist' or Artist_Persona == '':
+        arttext = Text
+        try:
+            arttext = Text[:1700]
+        except:
+            dn = 100
+        try:
+            x = GPT.MondeVert()
+            Artist_Persona = x.GPTArt2(User_Subject=arttext,ArtFormat = lup.artDetailsFormat, prompt=lup.artDetailsPrompt)
+            print(Artist_Persona)
+        except:
+            Artist_Persona = 'embrace the spirit/symbolism and culture of the following text describe it to be illustrated by an artist'
 
     #polly = Session(region_name='eu-west-2').client('polly')
 
