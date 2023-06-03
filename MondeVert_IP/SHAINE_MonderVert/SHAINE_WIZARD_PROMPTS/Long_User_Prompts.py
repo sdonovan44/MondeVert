@@ -880,8 +880,16 @@ Persona_Summary_For_Role_Play_Line4_Task = "Task: ###  Exapand on the following 
 
 Persona_Background = """Create a persona for your writer to use as an alias be extremely creative and make the person completely unique. It should feel like a real person completely unique with all of their own personal details to be shared with the world. I want them to  feel real and cover many genres but pick a specific few they are specialists at and also the tone""" + Persona_Task
 
-artDetailsPrompt =  "Come up with specific details  for an artist to render a work of art that is related to the action/symbolism/tone/context of the following text pic a well known childrens illustrator who has basic designs with simple backgrounds and sharp details:  "
-artDetailsFormat = """Complete the {Task} provided below, use the {Persona} you created to do all of the tasks. Make sure the result is in the correct format.
+PicturebookArt = "Come up with a short prompt [less than 250 characters] to for an artist to render a work of art for a children's book that is derived from the following text. Take the text and Describe the simple background and the subjects of the work of art. Keep it simple for instance if there is a new character introduced, the artwork should show the audience the new character. Do not use proper nouns, use third person to describe the character as he/she/the <insert_animal_plant_inanimate_object>.  Make the prompt concise and easy for the artist to interpret, use the following text as your subject Text:  "
+
+artDetailsPrompt =  "Come up with specific details that is related(or would be a good style match-up) to the symbolism/tone/context of the following text   Text:  "
+artDetailsFormat = """ use the {Persona} you created to provide  the result  in the correct format, keep your response concise no more than 100 characters.
+
+Desired Format:
+Similar Artist and Details: <Artist that art is similar to>, <Tone>, <Colors> """
+
+
+artDetailsFormat2 = """Complete the {Task} provided below, use the {Persona} you created to do all of the tasks. Make sure the result is in the correct format.
 
 
 Desired Format:

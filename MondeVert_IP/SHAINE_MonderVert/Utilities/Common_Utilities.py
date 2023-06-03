@@ -2,6 +2,7 @@
 # from ffmpeg import Progress
 # from ffmpeg.asyncio import FFmpeg
 import threading
+import time
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.mime.application import MIMEApplication
@@ -421,13 +422,13 @@ def Split_Audio2(Text, SavePath, FileName,FilePath = '', OpeningSound = up.Monde
 
                 if len(tempTranslate) > 44:
                     try:
-                        ArtPrompt = x.GPTArt2( User_Subject='Create a prompt for an artist to create a work of art based on the following text: '  +tempTranslate, ArtFormat='Describe the work of art as per the following Artist persona: ' + Artist_Persona )
+                        ArtPrompt = x.GPTArt2( User_Subject='Create a prompt for an artist to create a work of art based on the following text: '  +tempTranslate, ArtFormat=lup.PicturebookArt)
                     except:
                         ArtPrompt = Artist_Persona + tempTranslate
                         ArtPrompt[:313]
 
                     try:
-                        PicPath = x.makeArt(Prompt='Using the following details ' + Artist_Persona + " create a work of art about the following subject:  " + ArtPrompt)
+                        PicPath = x.makeArt(Prompt='Using the following details: ' + Artist_Persona + " Art Prompt:  " + ArtPrompt)
                         print('successfully made a work of art in foreign language')
                         newPicPath = SavePath_Pics + '\\'+FileName_Chunk + '.png'
                         try:
@@ -446,9 +447,9 @@ def Split_Audio2(Text, SavePath, FileName,FilePath = '', OpeningSound = up.Monde
                 FilePathc = SaveText2Audio(Text = Text_Chunk_Final, SavePath = SavePath_Chunks, FileName=FileName +'_' + l +'_' + Voice +'_Chunk_' + str(Audio_File_Count), Voice = v , Chunk_Mode=True, FilePath=FilePath, Translate=[l], Chunk_Delimiter=Chunk_Delimiter,Chunk_Replaces=Chunk_Replaces,Chunk_Limit=Chunk_Limit + 10 ,Artist_Persona=Artist_Persona)
                 FilePaths.append(FilePathc)
                 if len(Text_Chunk_Final)>44:
-                    ArtPrompt = x.GPTArt2(User_Subject='Create a prompt for an artist to create a work of art based on the following text: ' + Text_Chunk_Final,ArtFormat='Describe the work of art as per the following Artist persona: ' + Artist_Persona )
+                    ArtPrompt = x.GPTArt2(User_Subject='Create a prompt for an artist to create a work of art based on the following text: ' + Text_Chunk_Final, ArtFormat=lup.PicturebookArt  )
                     try:
-                        PicPath = x.makeArt(Prompt='Using the following details ' + Artist_Persona + " create a work of art about the following subject:  " + ArtPrompt)
+                        PicPath = x.makeArt(Prompt='Using the following details: ' + Artist_Persona + " Art Prompt: " + ArtPrompt)
                         newPicPath = SavePath_Pics + '\\' +FileName_Chunk + '.png'
                         try:
                             shutil.copy(PicPath, newPicPath)
@@ -515,7 +516,7 @@ def CleanLyrics4audio( text,Chunk_Delimiter_right = ':', Chunk_Delimiter_left= '
 def CleanFileName(Text):
     Text = re.sub(r"[^a-zA-Z0-9 ]", "", Text)
     return Text
-def SaveText2Audio( Translate = sfa.Translation_Languages_Testing,Text = '', SavePath =up.SavePath, FileName="Text2Audio", FilePath = '', Neural='Neural', Mode='Text2Audio', Chunk_Limit = 1500,Voice = random.choices(SAF.Original_List_of_Voices_English)[0], Chunk_Replaces = ['.','?','\n'], Chunk_Delimiter = '!',Artist_Persona = '', Chunk_Mode = False):
+def SaveText2Audio( MultiThread = True,Translate = sfa.Translation_Languages_Testing,Text = '', SavePath =up.SavePath, FileName="Text2Audio", FilePath = '', Neural='Neural', Mode='Text2Audio', Chunk_Limit = 1500,Voice = random.choices(SAF.Original_List_of_Voices_English)[0], Chunk_Replaces = ['.','?','\n'], Chunk_Delimiter = '!',Artist_Persona = '', Chunk_Mode = False):
     #Voice = CleanFileName(Voice)
 
     Check_Folder_Exists(SavePath)
@@ -560,73 +561,83 @@ def SaveText2Audio( Translate = sfa.Translation_Languages_Testing,Text = '', Sav
 
     print(Translate)
 
-    if len(str(Text)) >= Chunk_Limit or (( len(Translate) > 1 or Translate[0] != 'English') and  Chunk_Mode == False):
-        #try:
-        FilePathNew = Split_Audio2(Text = Text,SavePath = SavePath, FileName=FileName, FilePath=FilePath_m, Chunk_Limit= Chunk_Limit, Voice = Voice, Chunk_Replaces = Chunk_Replaces, Chunk_Delimiter =Chunk_Delimiter, Artist_Persona = Artist_Persona, Translate=Translate)
-        #except:
-            #print('Error trying to create audio file try again later')
+    if MultiThread == True and len(Translate)>1:
+        for l in Translate:
+            ll = [l]
+            t = threading.Thread(target=SaveText2Audio, args=(MultiThread,ll,Text,SavePath,FileName,FilePath,Neural,Mode,Chunk_Limit,Voice,Chunk_Replaces,Chunk_Delimiter,Artist_Persona,Chunk_Mode)).start()
 
+            #FilePath = '', Neural='Neural', Mode='Text2Audio', Chunk_Limit = 1500,Voice = random.choices(SAF.Original_List_of_Voices_English)[0], Chunk_Replaces = ['.','?','\n'], Chunk_Delimiter = '!',Artist_Persona = '', Chunk_Mode = False
+            time.sleep(23)
+            FilePathNew = 'Used Multithreading so multiple files created'
     else:
-        #FilePaths = ''
 
-        # print(FilePath)
-        # print(len(str(Text)))
-        if Voice not in FileName:
-            FileName = FileName + '_' + Voice
-            FilePath1 = 'No File Saved'
-
-        try:
-            session = Session(aws_access_key_id=DNC.aws_access_key_id, aws_secret_access_key=DNC.aws_secret_access_key,
-                              region_name='us-west-2')
-            polly = session.client("polly")
-            response = polly.synthesize_speech(Text=Text, OutputFormat="mp3",
-                                               VoiceId=Voice, Engine='neural', )
-
-            # # Request speech synthesis #StartSpeechSynthesisTask #synthesize_speech
-            # response = polly.start_speech_synthesis_task(Text=Text, OutputFormat="mp3",
-            #                                    VoiceId=Voice, Engine='neural',
-            #                                 OutputS3KeyPrefix= "InputAudio",
-            #                                 OutputS3BucketName='s3bucketname',)
-        except (BotoCoreError, ClientError) as error:
-            # The service returned an error, exit gracefully
-            print(error)
-            sys.exit(-1)
-
-        # Access the audio stream from the response
-        if "AudioStream" in response:
-            # Note: Closing the stream is important because the service throttles on the
-            # number of parallel connections. Here we are using contextlib.closing to
-            # ensure the close method of the stream object will be called automatically
-            # at the end of the with statement's scope.
-            with closing(response["AudioStream"]) as stream:
-                output = os.path.join(gettempdir(), FilePath_m)
-
-
-                try:
-                    # Open a file for writing the output as a binary stream
-                    with open(output, "wb") as file:
-                        file.write(stream.read())
-                        #FilePath = FilePath
-                    FilePathNew = FilePath_m
-                except IOError as error:
-                    # Could not write to file, exit gracefully
-                    print(error)
-                    sys.exit(-1)
+        if len(str(Text)) >= Chunk_Limit or (( len(Translate) > 1 or Translate[0] != 'English') and  Chunk_Mode == False):
+            #try:
+            FilePathNew = Split_Audio2(Text = Text,SavePath = SavePath, FileName=FileName, FilePath=FilePath_m, Chunk_Limit= Chunk_Limit, Voice = Voice, Chunk_Replaces = Chunk_Replaces, Chunk_Delimiter =Chunk_Delimiter, Artist_Persona = Artist_Persona, Translate=Translate)
+            #except:
+                #print('Error trying to create audio file try again later')
 
         else:
-            # The response didn't contain audio data, exit gracefully
-            print("Could not stream audio as file is large, trying alternate ways")
-           # Monitor_Audio_File(FileName, FilePath)
-            sys.exit(-1)
-        #
-        # Play the audio using the platform's default player
-        if sys.platform == "win32":
-            os.startfile(output)
-        # else:
-        #     # The following works on macOS and Linux. (Darwin = mac, xdg-open = linux).
-        #     opener = "open" if sys.platform == "darwin" else "xdg-open"
-        #     subprocess.call([opener, output])
-        # #
+            #FilePaths = ''
+
+            # print(FilePath)
+            # print(len(str(Text)))
+            if Voice not in FileName:
+                FileName = FileName + '_' + Voice
+                FilePath1 = 'No File Saved'
+
+            try:
+                session = Session(aws_access_key_id=DNC.aws_access_key_id, aws_secret_access_key=DNC.aws_secret_access_key,
+                                  region_name='us-west-2')
+                polly = session.client("polly")
+                response = polly.synthesize_speech(Text=Text, OutputFormat="mp3",
+                                                   VoiceId=Voice, Engine='neural', )
+
+                # # Request speech synthesis #StartSpeechSynthesisTask #synthesize_speech
+                # response = polly.start_speech_synthesis_task(Text=Text, OutputFormat="mp3",
+                #                                    VoiceId=Voice, Engine='neural',
+                #                                 OutputS3KeyPrefix= "InputAudio",
+                #                                 OutputS3BucketName='s3bucketname',)
+            except (BotoCoreError, ClientError) as error:
+                # The service returned an error, exit gracefully
+                print(error)
+                sys.exit(-1)
+
+            # Access the audio stream from the response
+            if "AudioStream" in response:
+                # Note: Closing the stream is important because the service throttles on the
+                # number of parallel connections. Here we are using contextlib.closing to
+                # ensure the close method of the stream object will be called automatically
+                # at the end of the with statement's scope.
+                with closing(response["AudioStream"]) as stream:
+                    output = os.path.join(gettempdir(), FilePath_m)
+
+
+                    try:
+                        # Open a file for writing the output as a binary stream
+                        with open(output, "wb") as file:
+                            file.write(stream.read())
+                            #FilePath = FilePath
+                        FilePathNew = FilePath_m
+                    except IOError as error:
+                        # Could not write to file, exit gracefully
+                        print(error)
+                        sys.exit(-1)
+
+            else:
+                # The response didn't contain audio data, exit gracefully
+                print("Could not stream audio as file is large, trying alternate ways")
+               # Monitor_Audio_File(FileName, FilePath)
+                sys.exit(-1)
+            #
+            # Play the audio using the platform's default player
+            if sys.platform == "win32":
+                os.startfile(output)
+            # else:
+            #     # The following works on macOS and Linux. (Darwin = mac, xdg-open = linux).
+            #     opener = "open" if sys.platform == "darwin" else "xdg-open"
+            #     subprocess.call([opener, output])
+            # #
 
 
     return FilePathNew

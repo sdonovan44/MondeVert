@@ -985,29 +985,55 @@ class MondeVert():
 
 
         try:
+            Art_Details = ''
+            if len(Outline) > 1313:
+                Outline1 = Outline[:1313]
+            else:
+                Outline1 = Outline
+
             try:
-                Art_persona = MondeVert.Artist_Persona_Short_Story(Writer_persona=Poet_Bio_Details,)
+                Art_persona = MondeVert.Artist_Persona_Short_Story(self,Writer_persona=Outline1)
                 try:
-                    Art_Details = MondeVert.summarize_art_style_for_short_story(writer_persona=Poet_Bio_Details,
-                                                                            outline=Lyrics,Artist_Persona=Art_persona, Format=lup.artDetailsFormat)  # , Format='Make a concise summary of an art style and artist to make a work of art like. Also provide the colors used, themes, moods, and tones.')
+                    # Art_Details = MondeVert.summarize_art_style_for_short_story(writer_persona=Poet_Bio_Details,
+                    #                                                         outline=Lyrics,Artist_Persona=Art_persona, Format=lup.artDetailsFormat)  # , Format='Make a concise summary of an art style and artist to make a work of art like. Also provide the colors used, themes, moods, and tones.')
+
+                    Art_Details = MondeVert.GPTArt2(self,User_Subject=Art_persona, ArtFormat=lup.artDetailsFormat,
+                                           prompt=lup.artDetailsPrompt)
+
+                    originalFilepath = self.PersonaArtPath2
+                    PicNewPath = SavePath_Pics + '_' + Title1 + '_Artist Pic.png'
+                    try:
+                        shutil.copyfile(originalFilepath, PicNewPath)
+                    except:
+                        dn = 100
+
                 except:
                     Dn = 100
 
-                originalFilepath = self.PersonaArtPath2
-                PicNewPath = SavePath_Pics + '_' + Title1 + '_Artist Pic.png'
-                try:
-                    shutil.copyfile(originalFilepath, PicNewPath)
-                except:
-                    dn = 100
+
 
             except:
-                Art_Details = Poet_Bio_Details
                 dn = 100
         except:
             dn = 100
 
+        print(Art_Details)
 
+        if Art_Details =='':
+            try:
 
+                Art_Details = MondeVert.GPTArt2(self,User_Subject=Outline1, ArtFormat=lup.artDetailsFormat,
+                                                prompt=lup.artDetailsPrompt)
+            except:
+                try:
+                    Art_Details = MondeVert.GPTArt2(self,User_Subject=Poet_Bio_Details, ArtFormat=lup.artDetailsFormat,
+                                                prompt=lup.artDetailsPrompt)
+                except:
+                    if Art_Details == '':
+                        Art_Details = 'Where the wild things are, fun and colorful'
+                    dn = 100
+
+        print(Art_Details)
         #summarize art style
         #Save Files including word document
         #Make art specific for the poem
@@ -1041,6 +1067,11 @@ class MondeVert():
             # print(df1)
             # print(Title2)
 
+            ReplaceStrings = [",0"," 0,","Title:"]
+            for r in ReplaceStrings:
+                Lyrics = Lyrics.replace(r,"")
+
+
             filename = cu.SaveCSV(Title=Title1 + '_PreProduction', SavePath=SavePath_Details, Text=Text)
             MondeVert.add2log(self, Log_Add='Txt File Created: ' + filename)
             try:
@@ -1053,15 +1084,17 @@ class MondeVert():
 
 
 
-        try:
+        #try:
+        if 1 ==1:
             newline = """\n"""
             newline2 = """\\n"""
             audioname = cu.SaveText2Audio(Text=Lyrics, Translate=Translate, SavePath=SavePath,
                                           FileName=Title1, Chunk_Replaces=['.', ')', ':', '?',newline,newline2], Chunk_Limit=Chunk_Limit,
                                           Artist_Persona=Art_Details )
 
-        except:
-            test = 100
+        # except:
+        #     test = 100
+        #     print('Audio File not created')
 
 
 
@@ -1078,6 +1111,8 @@ class MondeVert():
         except:
             print('email not send, its possible file was not created')
 
+        if Art_Details =='':
+            Art_Details = 'Be Creative and make a beautiful work of art related to the respective text'
         Art_Prompt = MondeVert.GPTArt2(self, prompt="Make a work of art describing the following subject:", User_Subject=Line2_Role + Poet_Bio_Details, ArtFormat=Art_Details)
         print("Work of Art Inspiration:" + Art_Prompt)
 
@@ -2416,15 +2451,15 @@ class MondeVert():
 
 
         elif Mode == 'PictureBook_PJSpecial':
-            MondeVert.Make_a_poem(self,Mode = 'PictureBook_PJSpecial', Chunk_Limit = 333, USERTITLE= '', Poet_Bio_Details = '', Make_Persona = True, Artist_Persona=  up.DinosaurTaco_Art, Poet_Persona = up.Shane_Persona + up.DinosaurTaco_Writing + up.DinosaurTaco_Art, Line1_System = up.system_TextJoaT, Persona_Role=up.Shane_Persona + up.DinosaurTaco_Writing + up.DinosaurTaco_Art, Line2_Role=up.Shane_Persona + up.DinosaurTaco_Writing + up.DinosaurTaco_Art,Line3_Format = up.Test_Format_PictureBook, Line4_Task =up.Test_Task_PictureBook, Line3_Format_outline = up.Test_Format_PictureBook_outline, Line4_Task_outline = up.Test_Background_PictureBook, SavePath=up.AI_Childrens_AudioBook_Path + '\\' + Mode,  crazy = .6,  Persona_Task= lup.Persona_Task, Persona_Format= lup.Persona_Format2, Persona_Special= lup.Persona_Special, Revise_Task = up.Revise_PictureBook_Task, Revise_Format = up.Revise_PictureBook_Format)
+            MondeVert.Make_a_poem(self,Mode = 'PictureBook_PJSpecial', Chunk_Limit = 333, USERTITLE= '', Poet_Bio_Details = '', Make_Persona = True, Artist_Persona=  up.DinosaurTaco_Art, Poet_Persona = up.Shane_Persona + up.DinosaurTaco_Writing + up.DinosaurTaco_Art, Line1_System = up.system_TextJoaT, Persona_Role=up.Shane_Persona + up.DinosaurTaco_Writing + up.DinosaurTaco_Art, Line2_Role=up.Shane_Persona + up.DinosaurTaco_Writing + up.DinosaurTaco_Art,Line3_Format = up.Test_Format_PictureBook, Line4_Task =up.Test_Task_PictureBook, Line3_Format_outline = up.Test_Format_PictureBook_outline, Line4_Task_outline = up.Test_Background_PictureBook  + up.DinosaurTaco_Writing + up.DinosaurTaco_Art, SavePath=up.AI_Childrens_AudioBook_Path + '\\' + Mode,  crazy = .6,  Persona_Task= lup.Persona_Task, Persona_Format= lup.Persona_Format2, Persona_Special= lup.Persona_Special, Revise_Task = up.Revise_PictureBook_Task, Revise_Format = up.Revise_PictureBook_Format)
 
 
         elif Mode == 'PictureBook_2':
-            MondeVert.Make_a_poem(self,Mode = 'PictureBook_PJSpecial', Chunk_Limit = 333, USERTITLE= '', Poet_Bio_Details = '', Make_Persona = True, Artist_Persona=  up.DinosaurTaco_Art, Poet_Persona = up.Shane_Persona + up.DinosaurTaco_Writing1 , Line1_System = up.system_TextJoaT, Persona_Role=up.Shane_Persona + up.DinosaurTaco_Writing1, Line2_Role=up.Shane_Persona + up.DinosaurTaco_Writing + up.DinosaurTaco_Art,Line3_Format = up.Test_Format_PictureBook, Line4_Task =up.Test_Task_PictureBook, Line3_Format_outline = up.Test_Format_PictureBook_outline, Line4_Task_outline = up.Test_Background_PictureBook, SavePath=up.AI_Childrens_AudioBook_Path + '\\' + Mode,  crazy = .6,  Persona_Task= lup.Persona_Task, Persona_Format= lup.Persona_Format2, Persona_Special= lup.Persona_Special, Revise_Task = up.Revise_PictureBook_Task, Revise_Format = up.Revise_PictureBook_Format)
+            MondeVert.Make_a_poem(self,Mode = 'PictureBook_2', Chunk_Limit = 333, USERTITLE= '', Poet_Bio_Details = '', Make_Persona = True, Artist_Persona=  up.DinosaurTaco_Art, Poet_Persona = up.Shane_Persona + up.DinosaurTaco_Writing1 , Line1_System = up.system_TextJoaT, Persona_Role=up.Shane_Persona + up.DinosaurTaco_Writing1, Line2_Role=up.Shane_Persona + up.DinosaurTaco_Writing + up.DinosaurTaco_Art,Line3_Format = up.Test_Format_PictureBook, Line4_Task =up.Test_Task_PictureBook, Line3_Format_outline = up.Test_Format_PictureBook_outline, Line4_Task_outline = up.Test_Background_PictureBook, SavePath=up.AI_Childrens_AudioBook_Path + '\\' + Mode,  crazy = .6,  Persona_Task= lup.Persona_Task, Persona_Format= lup.Persona_Format2, Persona_Special= lup.Persona_Special, Revise_Task = up.Revise_PictureBook_Task, Revise_Format = up.Revise_PictureBook_Format)
 
 
         elif Mode == 'PictureBook_Shane':
-            MondeVert.Make_a_poem(self,Mode = 'PictureBook_Shane', Chunk_Limit = 333, USERTITLE= '', Poet_Bio_Details = '', Make_Persona = True, Artist_Persona= 'You are illustrating a childrens book, you should be skilled at making kid friendly pictures with basic backgrounds and the focus on the action. Make the lines clean and almost like a disney animation', Poet_Persona = up.Shane_Persona, Line1_System = up.system_TextJoaT, Persona_Role=up.Shane_Persona + "Remember you are a children's author so keep your content and language appropriate for your audience", Line2_Role=up.Shane_Persona + "Remember you are a children's author so keep your content and language appropriate for your audience", Line3_Format = up.Test_Format_PictureBook, Line4_Task =up.Test_Task_PictureBook, Line3_Format_outline = up.Test_Format_PictureBook_outline, Line4_Task_outline = up.Test_Background_PictureBook, SavePath=up.AI_Childrens_AudioBook_Path + '\\' + Mode,  crazy = .6,  Persona_Task= lup.Persona_Task, Persona_Format= lup.Persona_Format2, Persona_Special= lup.Persona_Special, Revise_Task = up.Revise_PictureBook_Task, Revise_Format = up.Revise_PictureBook_Format)
+            MondeVert.Make_a_poem(self,Mode = 'PictureBook_Shane', Chunk_Limit = 333, USERTITLE= '', Poet_Bio_Details = '', Make_Persona = True, Artist_Persona= "You are illustrating a children's book, you should be skilled at making kid friendly pictures with basic backgrounds and the focus on the action. Make the lines clean and almost like a disney animation", Poet_Persona = up.Shane_Persona, Line1_System = up.system_TextJoaT, Persona_Role=up.Shane_Persona + "Remember you are a children's author so keep your content and language appropriate for your audience", Line2_Role=up.Shane_Persona + "Remember you are a children's author so keep your content and language appropriate for your audience", Line3_Format = up.Test_Format_PictureBook, Line4_Task =up.Test_Task_PictureBook, Line3_Format_outline = up.Test_Format_PictureBook_outline, Line4_Task_outline = up.Test_Background_PictureBook, SavePath=up.AI_Childrens_AudioBook_Path + '\\' + Mode,  crazy = .6,  Persona_Task= lup.Persona_Task, Persona_Format= lup.Persona_Format2, Persona_Special= lup.Persona_Special, Revise_Task = up.Revise_PictureBook_Task, Revise_Format = up.Revise_PictureBook_Format)
 
 
         elif Mode == 'PictureBook':
@@ -3846,7 +3881,12 @@ if __name__ == '__main__':
     #args = ['Music_Rich']
 #    args = ['Blog_Random_Shane']
     #args = ['Speech_Shane']
-    args = ['PictureBook_Shane']
+    #args = ['PictureBook_Shane']
+
+    #args = ['PictureBook_PJSpecial']
+    args = ['PictureBook_Shane','PictureBook_2','Shane_Poem']
+    #args = ['Shane_Poem']
+
     #
 
     #

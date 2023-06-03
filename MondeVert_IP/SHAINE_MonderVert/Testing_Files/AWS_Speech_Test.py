@@ -30,11 +30,11 @@ Text:###""" + Text + """###"""
 
 
 #
-audio_new4 ="A:\Amini Amor\SHAINE\Requests\Beta\AI AudioBooks\AI_Childrens_AudioBooks\PictureBook_Shane\The Adventures of Zephyr the Zebra\The Adventures of Zephyr the Zebra_.txt"
-audio_new3 ="A:\Amini Amor\SHAINE\Requests\Beta\AI AudioBooks\AI_Childrens_AudioBooks\PictureBook_Shane\The Little Explorers Big Adventure\The Little Explorers Big Adventure.txt"
-audio_new2 ="A:\Amini Amor\SHAINE\Requests\Beta\AI AudioBooks\AI_Childrens_AudioBooks\PictureBook_Shane\The Adventures of the Littlest Explorer\The Adventures of the Littlest Explorer.txt"
+audio_new4 =r"A:\Amini Amor\SHAINE\Requests\Beta\AI AudioBooks\AI_Childrens_AudioBooks\PictureBook_Shane\The Adventures of Zephyr the Zebra\The Adventures of Zephyr the Zebra_.txt"
+audio_new3 =r"A:\Amini Amor\SHAINE\Requests\Beta\AI AudioBooks\AI_Childrens_AudioBooks\PictureBook_Shane\The Magic Forest Adventures\The Magic Forest Adventures.txt"
+audio_new2 =r"A:\Amini Amor\SHAINE\Requests\Beta\AI AudioBooks\AI_Childrens_AudioBooks\PictureBook_Shane\Cherishing Memories and Protecting the Magic Within\Protect the Magic Within.txt"
 
-audio_new = r"A:\Amini Amor\SHAINE\Requests\Beta\AI AudioBooks\AI_Childrens_AudioBooks\PictureBook_Shane\Kikis Adventure\Kikis Adventure.txt"
+audio_new = r"A:\Amini Amor\SHAINE\Requests\Beta\AI AudioBooks\AI_Childrens_AudioBooks\PictureBook_PJSpecial\The Magical Strawberry Farm\The Magical Strawberry Farm_.txt"
 audio_File_name = 'King Richard Reid'
 #x.Manual_Audio_File(SavePath =up.AI_AudioBook_Path ,FileName=  audio_File_name, Source_FilePath = audio_new)
 
@@ -71,15 +71,16 @@ Runs.append('MondeVert_Audio_Video_Story')
 # for i in Runs:
 #     x.MondeVertMenu_up(Mode=i)
 
-#cu.SaveText2Audio( FilePath = audio_new, Chunk_Limit=444)
+# cu.SaveText2Audio( FilePath = audio_new3, Chunk_Limit=444)
 
-cu.SaveText2Audio( FilePath = audio_new4, Chunk_Limit=444)
+cu.SaveText2Audio( FilePath = audio_new, Chunk_Limit=444)
 
-cu.SaveText2Audio( FilePath = audio_new3, Chunk_Limit=444)
-
-cu.SaveText2Audio( FilePath = audio_new2, Chunk_Limit=444)
-
+# cu.SaveText2Audio( FilePath = audio_new4, Chunk_Limit=444)
 #
+#
+# cu.SaveText2Audio( FilePath = audio_new2, Chunk_Limit=444)
+#
+# #
 
 
 #
