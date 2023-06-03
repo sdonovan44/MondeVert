@@ -57,23 +57,23 @@ args = ['Poem']
 
 Runs = []
 # Runs.append('Music_Shane')
-Runs.append('Blog_Random')
-Runs.append('Speech')
-Runs.append('PictureBook')
-Runs.append('PjSpecial')
-Runs.append('MondeVert_Audio_Video_Story')
+# Runs.append('Blog_Random')
+# Runs.append('Speech')
+# Runs.append('PictureBook')
+# Runs.append('PjSpecial')
+Runs.append('AUDIOBOOK_Shane')
 # Runs.append('PictureBook')
 # Runs.append('MondeVert_Audio_Video_Story')
 # Runs.append('ReSearch3')
 # Runs.append('Basic')
 # Runs.append('Wedding Vows')
 
-# for i in Runs:
-#     x.MondeVertMenu_up(Mode=i)
+for i in Runs:
+    x.MondeVertMenu_up(Mode=i)
 
 # cu.SaveText2Audio( FilePath = audio_new3, Chunk_Limit=444)
 
-cu.SaveText2Audio( FilePath = audio_new, Chunk_Limit=444)
+#cu.SaveText2Audio( FilePath = audio_new, Chunk_Limit=444)
 
 # cu.SaveText2Audio( FilePath = audio_new4, Chunk_Limit=444)
 #

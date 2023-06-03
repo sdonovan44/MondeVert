@@ -17,7 +17,7 @@ import os
 # import FFProbe.utility
 import random
 from MondeVert_IP.SHAINE_MonderVert import Instagram_Posts as IP
-from MondeVert_IP.SHAINE_MonderVert.SHAINE_WIZARD_PROMPTS import Long_User_Prompts as lup
+from MondeVert_IP.SHAINE_MonderVert.SHAINE_WIZARD_PROMPTS import Long_User_Prompts as lup, Social_Media_SHAINE as sms
 import shutil
 from docx import Document
 import pandas as pd
@@ -198,6 +198,159 @@ def SaveCSV(Text, Title, SavePath, AddTimeStamp = True, FileType = '.txt'):
 # section of the AWS credentials file (~/.aws/credentials).
 
 from pydub import AudioSegment
+
+
+
+
+
+
+
+def Chop4Art(Text, SavePath, FileName,FilePath = '',  Chunk_Limit = 1500,  Chunk_Replaces = ['.','?'], Chunk_Delimiter = '!',Artist_Persona = 'embrace the spirit and culture of the following text describe it to be illustrated by an artist', aPrompt = sms.ArtPrompt_Clean_Social_Media_Post_Line2_Prompt):
+    Length_Text = len(Text)
+    Chunk_Limit = Chunk_Limit -10
+    Text_Chunks = []
+    Translate_Folder = r'\Translated'
+    Text_New = Text
+    SavePath_Pics = SavePath + r'\SHAINE - Art'
+
+    length = len(Text)
+    Audio_File_Count= 1
+    if 'Audio Chunks' in SavePath:
+        SavePath_Chunks= SavePath
+    else:
+        SavePath_Chunks = SavePath + r'\SHAINE - Audio'
+    Check_Folder_Exists(SavePath)
+    Check_Folder_Exists(SavePath_Chunks)
+    Check_Folder_Exists(SavePath_Pics)
+    RunningCheck = 0
+    LastPunc = 100
+    #New_Text_Translated=[]
+
+    Voices = []
+    countl = 0
+
+    x = GPT.MondeVert()
+    TranslateLanguages = []
+    FilePaths = []
+    Audio_File_Count = 0
+    New_Text_Translated = ''
+    Text_New = Text
+
+
+    FileName_Language_Voice = FileName + '_' + l + '_' + v
+    countl = 0
+    LastPunc = Chunk_Limit
+    while  LastPunc != -1 and len(Text_New)> 0:
+        countl += 1
+        Text_Chunk = Text_New[:Chunk_Limit]
+        Audio_File_Count += 1
+        Text_Chunk_Info_only= Text_Chunk
+        for i in Chunk_Replaces:
+            Text_Chunk_Info_only = Text_Chunk_Info_only.replace(i, Chunk_Delimiter)
+
+        LastPunc =Text_Chunk_Info_only.rfind(Chunk_Delimiter)
+
+
+        print('Starting Chars:')
+        print(len(Text))
+        print('Chars Remaining:')
+        print(len(Text_New))
+        print('Last Punc Position(New):')
+        print(LastPunc)
+
+        #LastPunc = Text_Chunk_Info_only.rfind(Chunk_Delimiter)
+        if LastPunc == -1 and len(Text_New) > Chunk_Limit:
+
+            LastPunc = Text_Chunk_Info_only.rfind('\\n')
+            print('Last Punc Position(using new Char)')
+            print(LastPunc)
+            if LastPunc == -1 and len(Text_New) > Chunk_Limit:
+                LastPunc = Text_Chunk_Info_only.rfind(' ')
+                if LastPunc == -1 and len(Text_New) > Chunk_Limit:
+
+                    if Chunk_Limit < 1700:
+                        Chunk_Limit_new = round(Chunk_Limit * (1.33))
+                        if Chunk_Limit_new > 1700:
+                            Chunk_Limit_new == 1700
+
+                        print('New Chunk Limit')
+                        print(Chunk_Limit_new)
+                        Text2Send = Text_New[:Chunk_Limit_new]
+
+                        try:
+                            # length = len(Text_New)
+                            New_pos = (Chunk_Limit_new + 1)
+                            Text_New = Text_New[New_pos:]
+                            # length = len(Text_New)
+                        except:
+                            print('Review Error Triggered, could be just how this has to work')
+
+                    else:
+                        Text_Chunk_Final = Text_New[:LastPunc]
+                        New_pos = (LastPunc + 1)
+                        Text_New = Text_New[New_pos:]
+
+                elif LastPunc != -1 and len(Text_New) > Chunk_Limit:
+                    Text_Chunk_Final = Text_New[:LastPunc]
+                    try:
+                        # length = len(Text_New)
+                        New_pos = (LastPunc + 1)
+                        Text_New = Text_New[New_pos:]
+                        # length = len(Text_New)
+                    except:
+                        print('Review Error Triggered, could be just how this has to work')
+                elif LastPunc == -1 and len(Text_New) <= Chunk_Limit:
+                    Text_Chunk_Final = Text_New
+                    Text_New = ''
+
+
+        elif LastPunc > -1 and LastPunc <= Chunk_Limit:
+
+            Text_Chunk_Final = Text_New[:LastPunc]
+            try:
+                # length = len(Text_New)
+                New_pos = (LastPunc + 1)
+                Text_New = Text_New[New_pos:]
+                # length = len(Text_New)
+            except:
+                print('Review Error Triggered, could be just how this has to work')
+
+        elif LastPunc == -1 and len(Text_New) <= Chunk_Limit:
+            Text_Chunk_Final = Text_New
+            Text_New = ''
+
+
+        FileName_Chunk = FileName + '_Chunk_' + str(Audio_File_Count)
+
+        if 1== 1:
+
+
+            if len(Text_Chunk_Final) > 44:
+                try:
+                    ArtPrompt = x.GPTArt2( User_Subject='Create a prompt for an artist to create a work of art based on the following text: '  +Text_Chunk_Final, ArtFormat=aPrompt)
+                except:
+                    ArtPrompt = Artist_Persona + Text_Chunk_Final
+                    ArtPrompt[:313]
+
+                try:
+                    PicPath = x.makeArt(Prompt='Using the following details: ' + Artist_Persona + " Art Prompt:  " + ArtPrompt)
+                    print('successfully made a work of art in foreign language')
+                    newPicPath = SavePath_Pics + '\\'+FileName_Chunk + '.png'
+                    try:
+
+                        shutil.copy(PicPath,newPicPath)
+                    except:
+                        dn = 100
+                except:
+                    print('Art not made, not an issue for now, maybe down the road')
+
+        #print('Error Could not parse files together, see chunks for now')
+
+
+    return FilePaths
+
+
+
 def Combine_Splitsof_audio(AudioFiles_ordered,FilePath,FileName = 'SHAINE - Audio Combined', SavePath = up.SavePath + 'r/Orphan Audio Files',Opening_Sound = up.MondeVertIntro, Voice = random.choices(SAF.Original_List_of_Voices_English)[0]):
     Check_Folder_Exists(SavePath)
     Merged_Audio = Opening_Sound
@@ -259,7 +412,7 @@ def Combine_Splitsof_audio(AudioFiles_ordered,FilePath,FileName = 'SHAINE - Audi
 
 
 
-def Split_Audio2(Text, SavePath, FileName,FilePath = '', OpeningSound = up.MondeVertIntro, Chunk_Limit = 1500, Voice = random.choices(SAF.Original_List_of_Voices_English)[0], Translate = sfa.Translation_Languages_Testing, Chunk_Replaces = ['.','?'], Chunk_Delimiter = '!',Artist_Persona = 'embrace the spirit and culture of the following text describe it to be illustrated by an artist',Origin_Language = 'English'):
+def Split_Audio2(Text, SavePath, FileName,FilePath = '', OpeningSound = up.MondeVertIntro, Chunk_Limit = 1500, Voice = random.choices(SAF.Original_List_of_Voices_English)[0], Translate = sfa.Translation_Languages_Testing, Chunk_Replaces = ['.','?'], Chunk_Delimiter = '!',Artist_Persona = 'embrace the spirit and culture of the following text describe it to be illustrated by an artist',Origin_Language = 'English', aPrompt = sms.ArtPrompt_Clean_Social_Media_Post_Line2_Prompt):
     Length_Text = len(Text)
     Chunk_Limit = Chunk_Limit -10
     Text_Chunks = []
@@ -350,7 +503,7 @@ def Split_Audio2(Text, SavePath, FileName,FilePath = '', OpeningSound = up.Monde
                                 Split_Audio2(Text=Text2Send, Translate=[l], SavePath=SavePath,
                                              FileName=FileName + '_' + str(Audio_File_Count),
                                              Chunk_Limit=Chunk_Limit_new, Chunk_Delimiter=Chunk_Delimiter,
-                                             Artist_Persona=Artist_Persona, Voice=v)
+                                             Artist_Persona=Artist_Persona, Voice=v, aPrompt = aPrompt)
 
                                 New_Text_Translated += '****Review, there is missing text that was captured elsewhere'
                             except:
@@ -413,7 +566,7 @@ def Split_Audio2(Text, SavePath, FileName,FilePath = '', OpeningSound = up.Monde
                     Chunk_Limit_Translate = len(tempTranslate) + 10
                     FilePathc = SaveText2Audio(Text=tempTranslate, SavePath=SavePath_Chunks+Translate_Folder,
                                           FileName=FileName_Chunk,
-                                          Voice=Translate_Voice, Chunk_Mode=True, FilePath=FilePath, Translate=Translate, Chunk_Limit=Chunk_Limit_Translate, Artist_Persona=Artist_Persona)
+                                          Voice=Translate_Voice, Chunk_Mode=True, FilePath=FilePath, Translate=Translate, Chunk_Limit=Chunk_Limit_Translate, Artist_Persona=Artist_Persona,  aPrompt = aPrompt)
                     FilePaths.append(FilePathc)
                     print('successfully made an audio file in ' + l)
                 except:
@@ -422,7 +575,7 @@ def Split_Audio2(Text, SavePath, FileName,FilePath = '', OpeningSound = up.Monde
 
                 if len(tempTranslate) > 44:
                     try:
-                        ArtPrompt = x.GPTArt2( User_Subject='Create a prompt for an artist to create a work of art based on the following text: '  +tempTranslate, ArtFormat=lup.PicturebookArt)
+                        ArtPrompt = x.GPTArt2( User_Subject='Create a prompt for an artist to create a work of art based on the following text: '  +tempTranslate, ArtFormat=aPrompt)
                     except:
                         ArtPrompt = Artist_Persona + tempTranslate
                         ArtPrompt[:313]
@@ -444,7 +597,7 @@ def Split_Audio2(Text, SavePath, FileName,FilePath = '', OpeningSound = up.Monde
             else:
                 print('Text_Chunk_Final: ' + str(len(Text_Chunk_Final)))
                 translate2 = [l]
-                FilePathc = SaveText2Audio(Text = Text_Chunk_Final, SavePath = SavePath_Chunks, FileName=FileName +'_' + l +'_' + Voice +'_Chunk_' + str(Audio_File_Count), Voice = v , Chunk_Mode=True, FilePath=FilePath, Translate=[l], Chunk_Delimiter=Chunk_Delimiter,Chunk_Replaces=Chunk_Replaces,Chunk_Limit=Chunk_Limit + 10 ,Artist_Persona=Artist_Persona)
+                FilePathc = SaveText2Audio(Text = Text_Chunk_Final, SavePath = SavePath_Chunks, FileName=FileName +'_' + l +'_' + Voice +'_Chunk_' + str(Audio_File_Count), Voice = v , Chunk_Mode=True, FilePath=FilePath, Translate=[l], Chunk_Delimiter=Chunk_Delimiter,Chunk_Replaces=Chunk_Replaces,Chunk_Limit=Chunk_Limit + 10 ,Artist_Persona=Artist_Persona,  aPrompt = aPrompt)
                 FilePaths.append(FilePathc)
                 if len(Text_Chunk_Final)>44:
                     ArtPrompt = x.GPTArt2(User_Subject='Create a prompt for an artist to create a work of art based on the following text: ' + Text_Chunk_Final, ArtFormat=lup.PicturebookArt  )
@@ -516,7 +669,7 @@ def CleanLyrics4audio( text,Chunk_Delimiter_right = ':', Chunk_Delimiter_left= '
 def CleanFileName(Text):
     Text = re.sub(r"[^a-zA-Z0-9 ]", "", Text)
     return Text
-def SaveText2Audio( MultiThread = True,Translate = sfa.Translation_Languages_Testing,Text = '', SavePath =up.SavePath, FileName="Text2Audio", FilePath = '', Neural='Neural', Mode='Text2Audio', Chunk_Limit = 1500,Voice = random.choices(SAF.Original_List_of_Voices_English)[0], Chunk_Replaces = ['.','?','\n'], Chunk_Delimiter = '!',Artist_Persona = '', Chunk_Mode = False):
+def SaveText2Audio( MultiThread = True,Translate = sfa.Translation_Languages_Testing,Text = '', SavePath =up.SavePath, FileName="Text2Audio", FilePath = '', Neural='Neural', Mode='Text2Audio', Chunk_Limit = 1500,Voice = random.choices(SAF.Original_List_of_Voices_English)[0], Chunk_Replaces = ['.','?','\n'], Chunk_Delimiter = '!',Artist_Persona = '', Chunk_Mode = False,  aPrompt = sms.ArtPrompt_Clean_Social_Media_Post_Line2_Prompt):
     #Voice = CleanFileName(Voice)
 
     Check_Folder_Exists(SavePath)
@@ -564,7 +717,7 @@ def SaveText2Audio( MultiThread = True,Translate = sfa.Translation_Languages_Tes
     if MultiThread == True and len(Translate)>1:
         for l in Translate:
             ll = [l]
-            t = threading.Thread(target=SaveText2Audio, args=(MultiThread,ll,Text,SavePath,FileName,FilePath,Neural,Mode,Chunk_Limit,Voice,Chunk_Replaces,Chunk_Delimiter,Artist_Persona,Chunk_Mode)).start()
+            t = threading.Thread(target=SaveText2Audio, args=(MultiThread,ll,Text,SavePath,FileName,FilePath,Neural,Mode,Chunk_Limit,Voice,Chunk_Replaces,Chunk_Delimiter,Artist_Persona,Chunk_Mode,aPrompt)).start()
 
             #FilePath = '', Neural='Neural', Mode='Text2Audio', Chunk_Limit = 1500,Voice = random.choices(SAF.Original_List_of_Voices_English)[0], Chunk_Replaces = ['.','?','\n'], Chunk_Delimiter = '!',Artist_Persona = '', Chunk_Mode = False
             time.sleep(23)
@@ -573,7 +726,7 @@ def SaveText2Audio( MultiThread = True,Translate = sfa.Translation_Languages_Tes
 
         if len(str(Text)) >= Chunk_Limit or (( len(Translate) > 1 or Translate[0] != 'English') and  Chunk_Mode == False):
             #try:
-            FilePathNew = Split_Audio2(Text = Text,SavePath = SavePath, FileName=FileName, FilePath=FilePath_m, Chunk_Limit= Chunk_Limit, Voice = Voice, Chunk_Replaces = Chunk_Replaces, Chunk_Delimiter =Chunk_Delimiter, Artist_Persona = Artist_Persona, Translate=Translate)
+            FilePathNew = Split_Audio2(Text = Text,SavePath = SavePath, FileName=FileName, FilePath=FilePath_m, Chunk_Limit= Chunk_Limit, Voice = Voice, Chunk_Replaces = Chunk_Replaces, Chunk_Delimiter =Chunk_Delimiter, Artist_Persona = Artist_Persona, Translate=Translate, aPrompt=aPrompt)
             #except:
                 #print('Error trying to create audio file try again later')
 

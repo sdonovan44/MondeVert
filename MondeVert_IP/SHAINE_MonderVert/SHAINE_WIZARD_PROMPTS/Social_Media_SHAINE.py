@@ -3,7 +3,7 @@ from MondeVert_IP.SHAINE_MonderVert.SHAINE_WIZARD_PROMPTS import User_Prefs as u
 
 ArtPrompt_Sys = system_Text_Artist_ScreenPlay = "The user wants you,the brilliant assistant, to role play that you are an award winning artist who knows how to connect the reader with what the words are depicting. You are extremely vivid and able to capture the emotion of the text beautifully and descriptive. You are rewarded if the pictures are visually pleasing and will be deducted points if you creep me out. Make sure your response is no more than 313 characters. Short and concise is better"
 
-ArtPrompt_Clean_Social_Media_Post_Line2_Prompt = "Come up with a short prompt [less than 313 characters] to for an artist to render a work of art, be descriptive and abstract make it attractive to the audience, related to the following text:  "
+ArtPrompt_Clean_Social_Media_Post_Line2_Prompt = "Come up with a short prompt [less than 313 characters] to for an artist to render a work of art, be descriptive about a scene described in the text or describe something abstract and make it attractive to the audience, related to the following text:  "
 ArtPrompt_Clean_Social_Media_Post_Line3 = "Be creative and make a work of art that draws in a reader to the post. It should reflect the underlying themes and mood of the text, try to pick one idea or thing to create the picture about, do not try to explain the full text."
 #Mode = Social_Media_Clean_Post
 #Clean_Post_Line1 = up.system_Input

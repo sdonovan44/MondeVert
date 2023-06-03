@@ -886,7 +886,7 @@ artDetailsPrompt =  "Come up with specific details that is related(or would be a
 artDetailsFormat = """ use the {Persona} you created to provide  the result  in the correct format, keep your response concise no more than 100 characters.
 
 Desired Format:
-Similar Artist and Details: <Artist that art is similar to>, <Tone>, <Colors> """
+Similar Artist and Details: <Artist that art is similar to>,<Art_Style> <Tone>, <Colors> """
 
 
 artDetailsFormat2 = """Complete the {Task} provided below, use the {Persona} you created to do all of the tasks. Make sure the result is in the correct format.
@@ -984,21 +984,24 @@ Key Signature: -||-
 
 
 Short_Story_Role = """role play that you are an award winning writer and director with all the talents neccesary to make a succesful screenplay/audio book that is exciting and draws the audience for more and more"""
-Short_Story_Special = """Have fun, be creative and follow the rules. You are currently writing the story/screenplay for Episode #:"""
-Short_Story_Task = """{Task}: ### Using the {Persona} you created, the {Episode Outline} you created and the {Characters} you created, write an Episode for all of the episodes for the series you created. See Special notes for what episode you are writing for. The story should read like a screenplay with lots of emotions, actions, dialogue and it should be relatable but also drive the reader in and use literary devices like cliff hangers to make the content breath taking. Try to make something that is emotional but also has a sweet side that makes you cry tears of joy. Do not be corny stick to the writing persona you have created when in doubt of what to do.###"""
+Short_Story_Special = """Have fun, be creative and follow the rules. It is imperative that you understand that You are currently writing the story/screenplay using the information  I provided  for Episode #:"""
+Short_Story_Task = """Task: Using the {Persona} you created, and specifically the {Episode Outline} you created with the the {Characters} you created as reference, write an entertaining Episode based on the information I provide you. See Special notes for what episode you are writing for. The story should read like a screenplay with lots of emotions, actions, dialogue, cliff hangers making the audience hooked by the story and it should be relatable but also drive the reader in and use literary devices like cliff hangers to make the content breath taking. Make the Episode a combination/mix of long and short scenes with a lot of action or a lot of dialogue ranging from 3 - 10 scenes."""
 Short_Story_Format = """Complete the {Task} provided , use the {Persona} and {Episode Outline} you created to do all of the tasks. Make sure the result is in the correct format.
 
-Note: For the results, you should format the text as a screen play where the Narrator is written like one of the characters named 'NARRATOR'. The Narrator will say the non verbal words from the text, for example the mood, the actions happening, the scenery, the smells etc. anything not spoken should be 'spoken' by the NARRATOR. If the NARRATOR is one of the Characters switch the name from NARRATOR to their respective name. All of the Narrator non-verbal parts should be in parenthesis so the reader knows it is not being spoken aloud (NARRATOR:).
+Note: For the results, you should format the text as a screen play where the Narrator is written like one of the characters named 'NARRATOR'. The Narrator will say the non verbal words from the text, for example the mood, the actions happening, the scenery, the smells etc. anything not spoken should be 'spoken' by the NARRATOR. If the NARRATOR is one of the Characters switch the name from NARRATOR to their respective name. All of the Narrator non-verbal parts should be in parenthesis so the reader knows it is not being spoken aloud (NARRATOR:). 
 
 Desired Format:
-
-Episode Details:
 
 ###<Episode_#>|<Episode_Title>|<Series Title>|Music:{Opening Song|Other Songs/Instrumentals}###
 
 ###
-|NARRATOR: (<Describes_Scene_and_other_actions_emotions_voiceover_narrator>)
-|CHARACTERS: "<witty_exciting_Dialog_that_fits_character_persona_and_plot>"
+FADE IN
+
+@Setting: <Highly descriptive_Scene_Details>
+@NARRATOR: (<Narrates_and_Describes_actions_emotions_voiceover_narrator>)
+@CHARACTERS: "<witty_exciting_Dialog_that_fits_character_persona_and_plot>"
+
+FADE OUT
 ###"""
 
 #Note add this to the task or background when making the outline and when writing the episode 1
@@ -1076,7 +1079,7 @@ Characters_Task = Characters_Task1 + Character_Task_add_on1
 Shane_Test_User_Input = "Try to be funny, but also entertaining.   Episode_Constraints: 1 Season  4 Episodes total###"
 
 Short_Story_Config = """The following Instruction from user must be followed, Instruction: ###"""
-Short_Story_Outline_Task =  """Create a Detailed Outline that fits in the format described. Base your answers off of the {Persona} you have created and are currently role playing. Do not be afraid to have tragedy strike your main/beloved characters, everyone dies eventually in life so why not see it in literature. That doesn't mean you have to follow the themes provided by the persona, but make the stories feel real even happy endings have some tragedies along the way, life is never a fairy tale, in fact even fairy tales have misfortune that needs to be overcome  """
+Short_Story_Outline_Task =  """Create a Detailed Outline that fits in the format described. Create a story using the writing  {Persona} you have created and are currently role playing. Do not be afraid to have tragedy strike your main/beloved characters, everyone dies eventually in life so why not see it in literature. Mmake the stories feel real even happy endings have some tragedies along the way, life is never a fairy tale, in fact even fairy tales have misfortune that needs to be overcome  """
 Short_Story_Outline_Format = """Complete the {Task} provided , use the {Persona} and {Characters} you created to do all of the tasks. Make sure the result is in the correct format.
 
 ###
@@ -1097,6 +1100,8 @@ Background:
 Literary Devices:###
     Plot:{Exposition:{Exposition}|Rising Action (Conflict){Rising Action (Conflict)}|Climax:{Climax}|Falling Action:{Falling Action}|Resolution:{Resolution}}
     Arc-Plots:{Arc-Plots}
+    Protagonist: - || - 
+    Antagonist: - || - 
     Foreshadowing:{Foreshadowing}
     Red Herrings:{Red Herrings}
     Plot Twists:{Plot Twists}
@@ -1114,15 +1119,13 @@ Literary Devices:###
 #Below is step 3
 #****************************************************************
 Short_Story_Season_Outline_Role = Short_Story_Role
-Short_Story_Season_Outline_Task = """{Task}: ### Using the {Persona} you created, the {Outline} you created and the {Characters} you created, write an extensivley detailed outline for all of the episodes in the series, do not make a show more than 6 episodes for now. In your outline Give a detailed description of each episode with all of the respective {Literary devices being used and relevant plot points and major character development ###"""
+Short_Story_Season_Outline_Task = """Task: ### Using  the {Outline} you created and the {Characters} you created, write a detailed outline for all of the episodes in the series. In your outline Give a  description of each episode in the respective season with all of the respective Literary devices being used and relevant plot points and major character development """
 
 #Below is step 4
 Short_Story_Season_Outline_Format = """Complete the {Task} provided , use the {Persona} and {Characters} you created to do all of the tasks. Make sure the result is in the correct format. You should make a table for each episode in the story/Series.
 
-Episode by Episode Outline:
-    Episode Specific Info: ###Episode Number{Episode Number}| Episode Title:{Title}|Episode Length:{Episode Length}|Setting:{Setting}|mood:{mood}|Theme:{Theme}Narrative:{Narrative}|Point of view:{Point of view}|Language(s):{Language(s)}|Specific Quotes:{'Quote' - Character}|Literary Devices:{Plot:{Exposition:{Exposition}|Rising Action (Conflict){Rising Action (Conflict)}|Climax:{Climax}|Falling Action:{Falling Action}|Resolution:{Resolution}}|Arc-Plots:{Arc-Plots}|Foreshadowing:{Foreshadowing}|Red Herrings:{Red Herrings}|Plot Twists:{Plot Twists}|Literary Devices:{Literary Devices}|Reoccurring Jokes:{Reoccurring Jokes}}###
-    ###
-    Major Character Development:###{Major Character Development}###  """
+Desired Format:
+   @Episode{Episode Number:{@Title:{Title}|Episode Length:{Episode Length}|Setting:{Setting}|mood:{mood}|Theme:{Theme}|Narrative:{Narrative}|Point of view:{Point of view}|Language(s):{Language(s)}|Specific Quotes:{'Quote' - Character}|Literary Devices:{Plot:{Exposition:{Exposition}|Rising Action (Conflict){Rising Action (Conflict)}|Climax:{Climax}|Falling Action:{Falling Action}|Resolution:{Resolution}}|Arc-Plots:{Arc-Plots}|Foreshadowing:{Foreshadowing}|Red Herrings:{Red Herrings}|Plot Twists:{Plot Twists}|Literary Devices:{Literary Devices}|Reoccurring Jokes:{Reoccurring Jokes}}|Major Character Development:{Major Character Development} }"""
 
 
 
@@ -1135,12 +1138,21 @@ Episode by Episode Outline:
 
 Short_Story_Episode_Outline_Role = Short_Story_Role
 Short_Story_Episode_Outline_Special = """You are currently writing the story/screenplay for Episode #:"""
-Short_Story_Episode_Outline_Task = """{Task}: ### Using the {Persona} you created, and the {Season Outline} you created and the {Characters} you created, write a detailed outline for one episode in from the story. Use the {Season Outline as your main guide and then use the Characters as potential minor characters to use and how to use the prior characters.###"""
-Short_Story_Episode_Outline_Format = """Complete the {Task} provided , use the {Persona} and {Characters} you created to do all of the tasks. Make sure the result is in the correct format. Only work on the current Episode that is the focus of your task.
-Episode Summary:### Episode Number{Episode Number}| Episode Title:{Title}|Episode Length:{Episode Length}|Setting:{Setting}|Point of view:{Point of view}|Language(s):{Language(s)}|Music:{genres:{song genre}|songs:{song by artist,song by artist}}|Theme:{Theme}|mood:{mood}|Literary Devices:{Literary Devices} ###
-    
-Scene by Scene Summary:### Scene:{Setting:{Setting}|Characters:{Characters}|Specific Quotes:{'Quote' - Character}|Scene Summary:{Scene Summarry}} ###
-"""
+Short_Story_Episode_Outline_Task = """Task:  Using the {Persona} you created, and most importantly the {Season Outline} you created and the {Characters} you created, write a detailed outline for one episode in from the story. Use the {Season Outline} as your main guide and also use the character information provided for your story"""
+Short_Story_Episode_Outline_Format = """Complete the {Task} provided , use the {Persona} and {Characters} you created to do all of the tasks. Make sure the result is in the correct format. You should make a table for each episode in the story/Series.
+
+Desired Format:
+@Title:{Title}|Episode Length:{Episode Length}|Setting:{Setting}|Point of view:{Point of view}|Language(s):{Language(s)}|Music:{genres:{song genre}|songs:{song by artist,song by artist}}|Theme:{Theme}|mood:{mood}|Characters:{<Characters_in_Episode>}
+@Literary Devices:{Plot:{Exposition:{Exposition}|Rising Action (Conflict){Rising Action (Conflict)}|Climax:{Climax}|Falling Action:{Falling Action}|Resolution:{Resolution}}|Arc-Plots:{Arc-Plots}|Foreshadowing:{Foreshadowing}|Red Herrings:{Red Herrings}|Plot Twists:{Plot Twists}|Literary Devices:{Literary Devices}|Reoccurring Jokes:{Reoccurring Jokes}}|Major Character Development:{Major Character Development}
+@Scene:{@Characters:{Characters}|Setting:{Setting}|Specific Quotes:{'Quote' - Character}|Scene Summary:{Detailed_Description_ofScene_Summary}}} """
+
+
+
+
+
+# """Complete the {Task} provided , use the {Persona} and {Characters} you created to do all of the tasks. Make sure the result is in the correct format. Only work on the current Episode that is the focus of your task.
+#
+# """
 
 
 
