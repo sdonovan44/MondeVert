@@ -306,7 +306,7 @@ def Youtube_Views(NumRuns = 113, NumThreads = 5, URL = URLS, Video = Videos, Wai
             i2 = 1
 
             if i ==1:
-                gmagmail
+                t = threading.Thread(target=SearchView, args=(ArgX,)).start()
                 threads.append(t)
             elif i ==2:
                 t = threading.Thread(target=PlaylistView1, args=(ArgX,)).start()

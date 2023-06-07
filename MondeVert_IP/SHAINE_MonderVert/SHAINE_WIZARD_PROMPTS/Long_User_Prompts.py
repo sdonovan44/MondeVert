@@ -814,7 +814,7 @@ Desired Format:
 #Persona_Task_PictureBook = """{Task}: ### Write a bio and complete the table as requested in the {Desired Format}###"""
 
 
-Persona_Task = """{Task}: ### Write a bio and complete the table as requested in the {Desired Format}###"""
+Persona_Task = """{Task}: ### Write a short bio and complete the table as requested in the {Desired Format}###"""
 
 Persona_Role = """You are an expert writer master of poetry, screenplays, novels, short stories, children's books etc. specifically you will be taking on the persona you created. Be a master of writing and also anything else I tell you to be"""
 Persona_Special = """Have fun, you should have a unique brand and style that makes your persona feel one of a kind but still relateable. Pick a unique name for your persona, use uncommon names, then cultural names, then nicknames, try to pick common names only 10% or less of the time"""
@@ -852,16 +852,25 @@ Desired Format:
     Dialogue Style: -||-
     Personality: -||-
     Odd_Facts_or_Fun_Facts: -||-
+    Characters from their stories: <Comma_Separated_list_of_7+_characters_and_quick_description_and_bio> (under 500 words total)
     Brief Summary: <Short_Description>
 """
 
 #Characters from their stories: <Comma_Separated_list_of_5+_characters_and_quick_description_and_bio> (under 500 words total)
 
 
-Persona_Summary_For_Role_Play_Line2_Role = "You are a master of all skills, you are great at role playing and describing how to role play a person based on the details they provide."
-Persona_Summary_For_Role_Play_Line3_Format = """Desired Format:
+Persona_Summary_For_Role_Play_Line2_Role = "You are a master of all skills and talents, specifically you are an award winning writer."
+Persona_Summary_For_Role_Play_Line3_Format = """Complete the {Task} provided below, use the {Persona} you created to do all of the tasks. Make sure the result is in the correct format keep your response short and under 113 words. Do not add to the format, answer only the questions asked . Desired Format:
 
-Skills:-||-
+Skills:{Skills}|Subject_of_Works:{Subject_of_Works}|Writing Style:{Writing Style}|Influences:{Influences}|Audience:{Audience}|genres:{genres}|Tone:{Tone}|Themes:{Themes}|Dialogue Style:{Dialogue Style}|Writing Personality:{Writing Personality}
+"""
+Persona_Summary_For_Role_Play_Line4_Task = "Task: ###  Reformat the details provided and fit them into a more condensed format. Be creative and make them feel real and human. Follow the format I proivded and give me a complete response ('N/A' is not the correct response). ###   Persona: ###"
+
+
+
+Persona_Summary_For_Role_Play_Line3_Format_0ld = """Complete the {Task} provided below, use the {Persona} you created to do all of the tasks. Make sure the result is in the correct format. Desired Format:
+
+Skills:-||- | 
 Subject of Works:-||-
 Writing Style: -||-
 Influences (music, literature, film, other): -||-
@@ -871,9 +880,7 @@ Tone: -||-
 Themes:-||-
 Dialogue Style: -||-
 Personality: -||-
-Brief Summary: <Short_Description>
 """
-Persona_Summary_For_Role_Play_Line4_Task = "Task: ###  Exapand on the following Persona's details in a way way for ChatGPT to assume the role of this persona. Be creative and make them feel real and human, you should have an idea the person's voice and personality from your summary  Follow the format I proivded and give me a complete response ('N/A' is not the correct response). ###   Persona: ###"
 
 
 
@@ -985,24 +992,23 @@ Key Signature: -||-
 
 Short_Story_Role = """role play that you are an award winning writer and director with all the talents neccesary to make a succesful screenplay/audio book that is exciting and draws the audience for more and more"""
 Short_Story_Special = """Have fun, be creative and follow the rules. It is imperative that you understand that You are currently writing the story/screenplay using the information  I provided  for Episode #:"""
-Short_Story_Task = """Task: Using the {Persona} you created, and specifically the {Episode Outline} you created with the the {Characters} you created as reference, write an entertaining Episode based on the information I provide you. See Special notes for what episode you are writing for. The story should read like a screenplay with lots of emotions, actions, dialogue, cliff hangers making the audience hooked by the story and it should be relatable but also drive the reader in and use literary devices like cliff hangers to make the content breath taking. Make the Episode a combination/mix of long and short scenes with a lot of action or a lot of dialogue ranging from 3 - 10 scenes."""
+Short_Story_Task = """Task: Using the {Persona} you created, and specifically the {Episode Outline} you created with the the {Characters} you created as reference, write an entertaining screenplay based on the information I provide you. The story should read like a screenplay with lots of emotions, actions, dialogue, cliff hangers making the audience hooked by the story and it should be relatable but also drive the reader in and use literary devices like cliff hangers to make the content breath taking. Make the Episode a combination/mix of long and short scenes with a lot of action or a lot of dialogue ranging from 3 - 10 scenes."""
 Short_Story_Format = """Complete the {Task} provided , use the {Persona} and {Episode Outline} you created to do all of the tasks. Make sure the result is in the correct format.
 
-Note: For the results, you should format the text as a screen play where the Narrator is written like one of the characters named 'NARRATOR'. The Narrator will say the non verbal words from the text, for example the mood, the actions happening, the scenery, the smells etc. anything not spoken should be 'spoken' by the NARRATOR. If the NARRATOR is one of the Characters switch the name from NARRATOR to their respective name. All of the Narrator non-verbal parts should be in parenthesis so the reader knows it is not being spoken aloud (NARRATOR:). 
+Note: For the results, you should format the text as a screen play where the Narrator is written like one of the characters named 'NARRATOR'. The Narrator will say the non verbal words from the text, for example the mood, the actions happening, the scenery, the smells etc. anything not spoken should be 'spoken' by the NARRATOR.  All of the Narrator non-verbal parts should be in parenthesis so the reader knows it is not being spoken aloud. 
 
 Desired Format:
 
-###<Episode_#>|<Episode_Title>|<Series Title>|Music:{Opening Song|Other Songs/Instrumentals}###
+<Episode_Title>|Music:{Opening Song|Other Songs/Instrumentals}|@Episode Narrator:{Character_Name_or_other}
 
-###
-FADE IN
+Setting: <Highly descriptive_Scene_Details>
+NARRATOR: (<Narrates_and_Describes_actions_emotions_voiceover_narrator>)
+@CHARACTER: "<Character_Dialog>"
 
-@Setting: <Highly descriptive_Scene_Details>
-@NARRATOR: (<Narrates_and_Describes_actions_emotions_voiceover_narrator>)
-@CHARACTERS: "<witty_exciting_Dialog_that_fits_character_persona_and_plot>"
+"""
 
-FADE OUT
-###"""
+Short_Story_Format_Screenplay = 'For your response use the basic screen play format with proper narration, description of setting, and dialog, make it look like a real hollywood script.'
+
 
 #Note add this to the task or background when making the outline and when writing the episode 1
 Pilot_Short_story_fix = """Important Note:###this is the pilot episode so you need to introduce a bunch of characters and get the plot/arc plot going at the end of the episode the audience should know the basic plot/anti-hero/antagonist. Introduce a lot of the characters and start the arc-plots. Make the audience fall in love with some of the rich-with-details and exciting/relatable characters you create.###"""
@@ -1044,12 +1050,12 @@ Character_Art_Format_Minor = Character_Art_Format_Main
 Character_Art_Task_Minor=  "write a  short descriptive art prompt for an DALL-E (ai) artist to render a work of art for each main {Character} of the following story/screenplay. Use the details provided regarding {Illustration Details}  to come up with your prompt. The more clear the picture the better. It would also be ideal if you could match the  style and tones of each prompt.use the artist persona you created, Your prompt should have each art prompts  separated by a '|' delimiter"
 
 
-Short_Story_Art_Season_Task= "write 6 short descriptive art prompts for each Episode for an DALL-E (ai) artist to render a work of art for each {Scene} of the following {Story} of the following short Story. Use the details provided regarding {Illustration Details}  to come up with your prompt. The more clear the picture the better. It would also be ideal if you could match the  style and tones of each the artist persona you created. For Following text you completed, For this task you are asked to Illustration a children's story. Pictures should match the tone/theme/art styles of your artist {persona} Your prompt should have multiple art prompts per scene where each one is separated by a '|' delimiter"
+Short_Story_Art_Season_Task= "write 6 short descriptive art prompts for each scene for an DALL-E (ai) artist to render a work of art for each {Scene} of the following {Story} of the following short Story. Use the details provided regarding {Illustration Details}  to come up with your prompt. The more clear the picture the better. Pictures should match the tone/theme/art styles of your artist {persona} Your prompt should have multiple art prompts per scene where each one is separated by a '|' delimiter"
 Short_Story_Art_Season_Format= """"For your final output, the data is to be formatted in the following way:  Episode#:{Art_Prompt_1_Picture_of_Mood_theme_start_of_Episode}|{Art_Prompt_2_Picture_of_Mood_theme_end_of_Episode}|{Art_Prompt_3_Picture_of_characters_at_start_of_Episode}|{Art_Prompt_4_Picture_of_characters_at_end_of_Episode}|{Art_Prompt_5_Picture_of_Main_event_start_of_Episode}|{Art_Prompt_6_Picture_of_Main_event_end_of_Episode}"""
 
 
 #this is Scene by scene, should be easy enough to make a list of prompts I can loop through
-Short_Story_Art_Episode_Task= "write 6 short descriptive art prompts for each scene for an DALL-E (ai) artist to render a work of art for each {Scene} of the following {Story} of the following short Story. Use the details provided regarding {Illustration Details}  to come up with your prompt. The more clear the picture the better. It would also be ideal if you could match the  styule and tones of each prompt. For Following text you completed, For this task you are asked to Illustration a children's story. Pictures should match the tone/theme/art styles of your artist {persona} Your prompt should have multiple art prompts per scene where each one is separated by a '|' delimiter"
+Short_Story_Art_Episode_Task= "write 6 short descriptive art prompts for each scene for an DALL-E (ai) artist to render a work of art for each {Scene} of the following {Story} of the following short Story. Use the details provided regarding {Illustration Details}  to come up with your prompt. The more clear the picture the better. Pictures should match the tone/theme/art styles of your artist {persona} Your prompt should have multiple art prompts per scene where each one is separated by a '|' delimiter"
 Short_Story_Art_Episode_Format= """"For your final output, the data is to be formatted in the following way:  Scene#:{Art_Prompt_1_Picture_of_Mood_theme_start_of_scene}|{Art_Prompt_2_Picture_of_Mood_theme_end_of_scene}|{Art_Prompt_3_Picture_of_characters_at_start_of_scene}|{Art_Prompt_4_Picture_of_characters_at_end_of_scene}|{Art_Prompt_5_Picture_of_Main_event_start_of_scene}|{Art_Prompt_6_Picture_of_Main_event_end_of_scene}"""
 
 
@@ -1063,14 +1069,22 @@ Clean_Format_after_Delimit = "Keep the prompt short and to the point. Explain th
 
 
 #Character Outline to build the story (do this after you have details)
-Character_Task_add_on1 = """ When creating the {character} details use the following {outline}  as a guide. Outline:###"""
+Character_Task_add_on1 = """ When creating the {character} details use the following {outline}  as a guide to create your characters. Outline:###"""
 Characters_Role = Short_Story_Role
-Characters_Task1 ="""{Task}: ###Create 10-15 Main Characters and 10-20 Minor Characters for a short story/screenplay be creative and pick a diverse mix of characters, or if there is a specific time period or theme you are picking you can use names and characters that fit accordingly. Use the {Persona} you created to come up with the inspiration###"""
+Characters_Task1 ="""{Task}: ###Create 7-13 Main Characters and 7-13 Minor Characters for a short story/screenplay be creative and pick a diverse mix of characters, or if there is a specific time period or theme you are picking you can use names and characters that fit accordingly. Use the {Persona} you created to come up with the inspiration###"""
 Characters_Special = """Have fun, be creative and follow the rules. Pick unique names for your characters, use uncommon names, then cultural names, then nicknames, try to pick common names only 10% or less of the time"""
 Characters_Format = """Complete the {Task} provided, use the {Persona} you created to do all of the tasks. Make sure the result is in the correct format.
 
-Characters: ###{Name:{First Name Last Name}Age:{Age}|Voice:{Voice}|Personality:{Personality}|Home:{Current:{City State}|origin:{Country}}|Language:{Language}|Role:{Minor_Major_Protaganist_Antagonist_Unknown}|Career:{Current:{Current Job}|Dream Job:{Dream Job}}|strengths:{strengths,strengths,strengths}|weakness:{weakness,weakness,weakness}|Background:{Background}}###"""
+#Characters:{@Name:{First Name Last Name}Age:{Age}|Voice:{Voice}|Personality:{Personality}|Home:{Current:{City State}|origin:{Country}}|Language:{Language}|Role:{Minor_Major_Protaganist_Antagonist_Unknown}|Career:{Current:{Current Job}|Dream Job:{Dream Job}}|strengths:{strengths,strengths,strengths}|weakness:{weakness,weakness,weakness}}"""
 Characters_Task = Characters_Task1 + Character_Task_add_on1
+
+
+
+
+
+Characters_Format_old = """Complete the {Task} provided, use the {Persona} you created to do all of the tasks. Make sure the result is in the correct format.
+
+Characters: ###{Name:{First Name Last Name}Age:{Age}|Voice:{Voice}|Personality:{Personality}|Home:{Current:{City State}|origin:{Country}}|Language:{Language}|Role:{Minor_Major_Protaganist_Antagonist_Unknown}|Career:{Current:{Current Job}|Dream Job:{Dream Job}}|strengths:{strengths,strengths,strengths}|weakness:{weakness,weakness,weakness}|Background:{Background}}###"""
 
 
 #Below is step 2
@@ -1079,12 +1093,14 @@ Characters_Task = Characters_Task1 + Character_Task_add_on1
 Shane_Test_User_Input = "Try to be funny, but also entertaining.   Episode_Constraints: 1 Season  4 Episodes total###"
 
 Short_Story_Config = """The following Instruction from user must be followed, Instruction: ###"""
-Short_Story_Outline_Task =  """Create a Detailed Outline that fits in the format described. Create a story using the writing  {Persona} you have created and are currently role playing. Do not be afraid to have tragedy strike your main/beloved characters, everyone dies eventually in life so why not see it in literature. Mmake the stories feel real even happy endings have some tragedies along the way, life is never a fairy tale, in fact even fairy tales have misfortune that needs to be overcome  """
-Short_Story_Outline_Format = """Complete the {Task} provided , use the {Persona} and {Characters} you created to do all of the tasks. Make sure the result is in the correct format.
+Short_Story_Outline_Task =  """Using the writing  {Persona} you have created and are currently role playing. Create a Detailed Outline that fits in the format described. Do not put yourself in the text (you can break this rule 10% of the time), use the characters you have developed as well as the details that describve you as a writer (Writing Styles, audience, etc.)  Do not be afraid to have tragedy strike your main/beloved characters, everyone dies eventually in life so why not see it in literature. Mmake the stories feel real even happy endings have some tragedies along the way, life is never a fairy tale, in fact even fairy tales have misfortune that needs to be overcome  """
+Short_Story_Outline_Format = """Complete the {Task} provided , Role play that you are the {Persona} and use the {Characters} you created to do provide your response in the format shown below. Make sure the result is in the correct format.
 
-###
+
+Desired Format:
+
 Background:
-    Title:{Title}|Episode Length:{Episode Length}|Number of Seasons:{Number of Seasons}|Episodes per Season:{Episodes per Season}
+    @Abstract_Title:{Abstract_Title}|Episode Length:{Episode Length}|@Number of Seasons:{Number of Seasons}|@Episodes per Season:{Episodes per Season}
     Target Audience:{Target Audience}
     Setting:{Setting}
     TimePeriod:{TimePeriod}
@@ -1095,13 +1111,14 @@ Background:
     Point of view:{Point of view}
     Language(s):{Language(s)}
     Music:{genres:{song genre}|songs:{song by artist,song by artist}}
-    Specific Quotes:{'Quote' - Character}
+    #Specific Quotes:{'Quote' - Character}
 
-Literary Devices:###
+#Literary Devices:
     Plot:{Exposition:{Exposition}|Rising Action (Conflict){Rising Action (Conflict)}|Climax:{Climax}|Falling Action:{Falling Action}|Resolution:{Resolution}}
     Arc-Plots:{Arc-Plots}
     Protagonist: - || - 
     Antagonist: - || - 
+    Other Character's by Name: <Comma_Separated_List_Of_Character_Names> 
     Foreshadowing:{Foreshadowing}
     Red Herrings:{Red Herrings}
     Plot Twists:{Plot Twists}
@@ -1122,10 +1139,11 @@ Short_Story_Season_Outline_Role = Short_Story_Role
 Short_Story_Season_Outline_Task = """Task: ### Using  the {Outline} you created and the {Characters} you created, write a detailed outline for all of the episodes in the series. In your outline Give a  description of each episode in the respective season with all of the respective Literary devices being used and relevant plot points and major character development """
 
 #Below is step 4
-Short_Story_Season_Outline_Format = """Complete the {Task} provided , use the {Persona} and {Characters} you created to do all of the tasks. Make sure the result is in the correct format. You should make a table for each episode in the story/Series.
+Short_Story_Season_Outline_Format = """Complete the {Task} provided , use the {Persona} and {Characters} you created to do all of the tasks. Make sure the result is in the correct format. You should make a table for each episode in the story/Series. For the literary devices keep your explanation short and concise if the response is 'N/A' just leave the line blank to save on the token usage.
 
 Desired Format:
-   @Episode{Episode Number:{@Title:{Title}|Episode Length:{Episode Length}|Setting:{Setting}|mood:{mood}|Theme:{Theme}|Narrative:{Narrative}|Point of view:{Point of view}|Language(s):{Language(s)}|Specific Quotes:{'Quote' - Character}|Literary Devices:{Plot:{Exposition:{Exposition}|Rising Action (Conflict){Rising Action (Conflict)}|Climax:{Climax}|Falling Action:{Falling Action}|Resolution:{Resolution}}|Arc-Plots:{Arc-Plots}|Foreshadowing:{Foreshadowing}|Red Herrings:{Red Herrings}|Plot Twists:{Plot Twists}|Literary Devices:{Literary Devices}|Reoccurring Jokes:{Reoccurring Jokes}}|Major Character Development:{Major Character Development} }"""
+   @Episode Number:{#Abstract_Title:{Abstract_Title}|Episode Length:{Episode Length}|Setting:{Setting}|mood:{mood}|Theme:{Theme}|Narrative:{Narrative}|Point of view:{Point of view}|Language(s):{Language(s)}|Specific Quotes:{'Quote' - Character}
+   #Literary Devices:{Plot:{Plot}|Arc-Plots:{Arc-Plots}|Foreshadowing:{Foreshadowing}|Red Herrings:{Red Herrings}|Plot Twists:{Plot Twists}||Reoccurring Jokes:{Reoccurring Jokes}}|Major Character Development:{Major Character Development}}"""
 
 
 
@@ -1142,9 +1160,10 @@ Short_Story_Episode_Outline_Task = """Task:  Using the {Persona} you created, an
 Short_Story_Episode_Outline_Format = """Complete the {Task} provided , use the {Persona} and {Characters} you created to do all of the tasks. Make sure the result is in the correct format. You should make a table for each episode in the story/Series.
 
 Desired Format:
-@Title:{Title}|Episode Length:{Episode Length}|Setting:{Setting}|Point of view:{Point of view}|Language(s):{Language(s)}|Music:{genres:{song genre}|songs:{song by artist,song by artist}}|Theme:{Theme}|mood:{mood}|Characters:{<Characters_in_Episode>}
+@Abstract_Title:{Abstract_Title}|Episode Length:{Episode Length}|Setting:{Setting}|Point of view:{Point of view}|Language(s):{Language(s)}|Music:{genres:{song genre}|songs:{song by artist,song by artist}}|Theme:{Theme}|mood:{mood}|Characters:{<Characters_in_Episode>:{<with_short_background_related_to_episode>}}
 @Literary Devices:{Plot:{Exposition:{Exposition}|Rising Action (Conflict){Rising Action (Conflict)}|Climax:{Climax}|Falling Action:{Falling Action}|Resolution:{Resolution}}|Arc-Plots:{Arc-Plots}|Foreshadowing:{Foreshadowing}|Red Herrings:{Red Herrings}|Plot Twists:{Plot Twists}|Literary Devices:{Literary Devices}|Reoccurring Jokes:{Reoccurring Jokes}}|Major Character Development:{Major Character Development}
-@Scene:{@Characters:{Characters}|Setting:{Setting}|Specific Quotes:{'Quote' - Character}|Scene Summary:{Detailed_Description_ofScene_Summary}}} """
+@Scene Number:{Setting:{Setting}|@Characters:{Characters_in_Scene}|Specific Quotes:{'Quote' - Character}|Scene_Details:{Scene_Details}} 
+"""
 
 
 
@@ -1158,6 +1177,10 @@ Desired Format:
 
 #you need to place the custom person after this
 
+ArtBlog1 = """Create the outline for your blog about Abstract Expressionism. Talk about the techniques and styles that make up the art form. Talk about the origin and the most notable artists. Mention the most famous 10 works of art and where to find them. Add additional details as neccesary and make an interesting read that draws the reader in. Provide legit URLs in your response for further research to be completed. Discuss how the art form varies accross cultures and also similar styles and origins"""
+#"""Create the outline for your blog about Surrealism. Talk about the techniques and styles that make up the art form. Talk about the origin and the most notable artists. Mention the most famous 10 works of art and where to find them. Add additional details as neccesary and make an interesting read that draws the reader in. Provide legit URLs in your response for further research to be completed. Discuss how the art form varies accross cultures and also similar styles and origins"""
+#"""Create the outline for your blog about Geometric art. Talk about the techniques and styles that make up the art form. Talk about the origin and the most notable artists. Mention the most famous 10 works of art and where to find them. Add additional details as neccesary and make an interesting read that draws the reader in. Provide legit URLs in your response for further research to be completed.Discuss how the art form varies accross cultures and also similar styles and origins"""
+#"""Create the outline for your blog about Impressionism. Talk about the techniques and styles that make up the art form. Talk about the origin and the most notable artists. Mention the most famous 10 works of art and where to find them. Add additional details as neccesary and make an interesting read that draws the reader in. Provide legit URLs in your response for further research to be completed. Discuss how the art form varies accross cultures and also similar styles and origins"""
 
 
 Focus_AI = """###"""

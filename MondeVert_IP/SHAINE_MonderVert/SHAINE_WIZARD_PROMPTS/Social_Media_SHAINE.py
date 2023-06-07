@@ -13,13 +13,47 @@ Clean_Post_Line2 = "Role play  that you are a a marketing expert with the abilit
 Clean_Post_Line3 = "Complete the Task the User provides and maintain the proper format depending on what website the post is going to. Grammar is important but sound human with emotion and make the post engaging. Your {Task} is to revise the following Text and write a new version with all edits completed as needed. Here is the text for you to clean Text: "
 Clean_Post_Line4 = " Do not lose the main concepts or ideas, instead clean up the spelling and grammar and make the ideas more clear to the audience."
 
+SHAINE_User_Inquiry = """Check out our specially curated content that has been made available by museums around the world. We strive to find the most art that is publicly available and make it easily accessible to all!"""
+
+
+SHAINE= """SHAINE is a proprietary software developed by MondeVert with several content creation capabilities. The goal is to maximize the creativity and efficiency of a human to get the most out of their ideas and with little effort to get started. We hope this will allow people to surpass obstacles preventing them from accomplishing their goals."""
+
+
+d2 ="""Amini Amor, a subsidary of MondeVert, is a Global media company. 
+
+Our goal is to create positive content that can be enjoyed globally. 
+
+"Amini" is Swahili for "Believe" and Amor is Spanish/Portuguese for 'Love'"""
+
+
+
+d = """ iSeeum, the virtual museum that combines the original works of MondeVert and Amini Amor with links to several online virtual tours of museums. Our goal is to expand our community and invite others to submit their work, while teaching about art and introducing different styles and artists, much like a physical museum does. Some of our materials are sourced from virtual offerings around the world, and we aim to consolidate all of these resources into one coherent place for people to enjoy and learn from. iSeeum was established by MondeVert in partnership with Amini Amor, with the hope of promoting positivity and equal opportunity for all globally. We are also working towards making our site universally translated, as this is our secondary goal to finding great free content to share. Join us in exploring the world of art and expanding our community!
+iSeeum was created by MVAA a subsidiary of MondeVert. iSeeum is a company that seeks to provide free content for all to enjoy. We use a mix of original content created by MondeVert' proprietary AI software SHAINE, and also free content provided by various famous art museums around the world.
+
+We want people to get to experience art from around the world all from anywhere in the world. This is the beauty of the internet, and until recently I personally was not aware of these free options available to us.
+
+Note: I understand AI art is a touchy topic, but I want to justify why I believe it is both ethical and practical for use. I would never be able to realize my dream of starting my own company, and I would never personally be able to draw these things, so my content would be rather boring and wordy. I also want to note, I am not always putting in the prompt for the art, in most cases I am actually creating art based off of random tasks I do with my software and some other use cses like making children's stories and other audio books. Further, I make this content available in most cases 100% free for all to enjoy so I think that makes it even more fair, but you are entitled to your opinion and I appreciate you taking the time to take a look at my site!
+"""
+
+
+tt = """iSeeum is a Virtual Museum that combines the works of MondeVert and Amini Amor original pieces and links to several online virtual tours of Museums. We hope to expand our community and have others submit and the goal is to teach others about art while  introducing them to different styles and artist much like am Museum does in real life. As mentioned some of our materials are from virtual offerings around the world, and we aim to consolidate all of these resources into one coherent place for people to enjoy and hopefully learn from. iSeeum was established by MondeVert in Partnership with  Amini Amor. Combined we hope to promote positivity and equal opportunity for all globally. We hope to make this sight universally translated and will work on this as our secondary goal to finding great free content to share."""
+
+SHAINE_User_Inquiry33 = """
+
+MondeVert in Partnership with Amini Amor have created a network of content that has been established as MVAA. 
+
+
+MVAA stands for MondeVert - Amini Amor, which is the original production company of MondeVert. 
+
+Amini Amor is directly in charge of MVAA and we  have established the different Channels to help our viewers experience a curated playlist to enjoy relative to their specific interests. 
+
+Thanks for your support, we would love to give you the content you find most enjoyable and useful, please leave comments and let us know what you would like to see more of."""
 
 
 
 
 
-
-SHAINE_User_Inquiry = """Amini Amor in partnership with MondeVert, we sincerely appreciate your support"""
+New = """Amini Amor in partnership with MondeVert, we sincerely appreciate your support"""
 
 
 Testers="""My Name is Shane Donovan, I started MondeVert as a way for me to build my brand and explore different ideas and topics I am passionate about such as: Real Estate, Data, Environmental Sustainability, Repurposing various items for resale. I will ultimately use this website to document my journey and hopefully provide some useful information for those reading along!

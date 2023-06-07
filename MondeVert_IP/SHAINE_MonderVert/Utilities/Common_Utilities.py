@@ -237,7 +237,7 @@ def Chop4Art(Text, SavePath, FileName,FilePath = '',  Chunk_Limit = 1500,  Chunk
     Text_New = Text
 
 
-    FileName_Language_Voice = FileName + '_' + l + '_' + v
+
     countl = 0
     LastPunc = Chunk_Limit
     while  LastPunc != -1 and len(Text_New)> 0:
