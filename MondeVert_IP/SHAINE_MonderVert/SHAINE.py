@@ -1,11 +1,13 @@
 import datetime
+import sys
+
 import pandas as pd
 global Record
 from  MondeVert_IP.SHAINE_MonderVert.SHAINE_WIZARD_PROMPTS import Wedding_Prompts as WeddingP
 from MondeVert_IP.SHAINE_MonderVert.SHAINE_WIZARD_PROMPTS import Social_Media_SHAINE as sms
 from secrets import randbelow
 from MondeVert_IP.SHAINE_MonderVert.SHAINE_WIZARD_PROMPTS import Long_User_Prompts as lup, User_Prefs as up, \
-    Stories_For_Audio_Files as SAF
+    Stories_For_Audio_Files as SAF, StoryMode_Wizard as StoryMode
 from threading import Event
 from gingerit.gingerit import GingerIt
 import numpy
@@ -30,6 +32,7 @@ from MondeVert_IP.SHAINE_MonderVert.Utilities.DoNotCommit import API_Key
 import threading
 import shutil
 import os
+import MondeVert_IP.SHAINE_MonderVert.SHAINE_WIZARD_PROMPTS.StoryOutlines  as ShaneOriginals
 
 
 # from email_config import gmail_pass, user, host, port
@@ -97,6 +100,7 @@ API_KEY = "..."
 #
 
 
+
 class MondeVert():
     def __init__(self, voice=4, language_settings=1):
         self.voice = voice
@@ -105,6 +109,7 @@ class MondeVert():
         self.UserName = up.getUserName()
         self.transcript_Final = ''
         self.API_Key = API_Key
+        self.Show_Print = True
         self.Correction_Comment = ''
         self.AI_Corrected_Content = ''
         self.SilentMode = False
@@ -866,7 +871,12 @@ class MondeVert():
 
         #make outline
 
-        Outline = MondeVert.Basic_GPT_Query(self,Line2_Role=Line2_Role + str(Poet_Bio_Details),Line3_Format=Line3_Format_outline,Line4_Task=Line4_Task_outline)
+
+
+        if Mode != 'StudyGuide':
+            Outline = MondeVert.Basic_GPT_Query(self,Line2_Role=Line2_Role + str(Poet_Bio_Details),Line3_Format=Line3_Format_outline,Line4_Task=Line4_Task_outline)
+        else:
+            Outline = MondeVert.Basic_GPT_Query(self,Line2_Role=Line2_Role ,Line3_Format=Line3_Format_outline,Line4_Task=Line4_Task_outline)
 
         if Outline == '':
             MondeVert.add2log(self,Log_Add = 'Outline: Error when trying to make Outline')
@@ -881,9 +891,11 @@ class MondeVert():
 
 
         #make poem
-        Poem = MondeVert.Basic_GPT_Query(self, Line2_Role=Line2_Role + str(Poet_Bio_Details), Line3_Format=Line3_Format,
-                                            Line4_Task=Line4_Task +Outline)
 
+        if Mode != 'StudyGuide':
+            Poem = MondeVert.Basic_GPT_Query(self, Line2_Role=Line2_Role + str(Poet_Bio_Details), Line3_Format=Line3_Format, Line4_Task=Line4_Task +Outline)
+        else:
+            Poem = MondeVert.Basic_GPT_Query(self, Line2_Role=Line2_Role, Line3_Format=Line3_Format,Line4_Task=Line4_Task +Outline)
         #Edit poem
         if Poem != '*Did not create':
 
@@ -908,6 +920,8 @@ class MondeVert():
         try:
             if len(Revised_Poem) > 150:
                 Lyrics = Revised_Poem
+            elif Mode == 'StudyGuide':
+                Lyrics = Outline
             else:
                 Lyrics = Poem
 
@@ -929,7 +943,8 @@ class MondeVert():
         dn = 100
 
     # Create new subfolder etc for this filepath
-
+        if len(Title) > 90:
+            Title = Title[:44]
 
         Title1 = cu.CleanFileName(Title)
         USERTITLE = cu.CleanFileName(USERTITLE)
@@ -1064,6 +1079,7 @@ class MondeVert():
         # print(data)
 
         # data = [(self.current_time + '_' + data_final)]
+
         Text = str("Create Date: " + self.current_time + '_Results: ' + data_final)
 
         # print(data)
@@ -1632,7 +1648,7 @@ class MondeVert():
         ArtistPoetInfo = 'Lyrics Written By: Shane Donovan   (' + 'Artwork by: ' + up.AI_ArtistName + ')'
         cu.NamePoemSavePoem(self, prompt, ArtPaths, Prompts_Used, ArtistPoetInfo, title=Title1,
                                        SavePath=SavePath, Mode='Song Lyrics' + Mode)
-
+        return Title
 
     def MondeVert_SHAINE_WeddingVows(self,FileName = 'Wedding Vows' , RandomCouple = False,SavePath = up.AI_Wedding ,Line1 = up.system_TextJoaT, Line2 = WeddingP.Wedding_Vows_Line2_role,Line3 = WeddingP.Wedding_Vows_Line3_Format, Line4 = WeddingP.Wedding_Vows_Line4_Task, Mode = 'Wedding Vows', Couple = ''):
         RandomCouple =True
@@ -1730,7 +1746,7 @@ class MondeVert():
             print('Audio File created with Voice: ' + str(Voice_fix))
         except:
             print(NewTempPath)
-    def Basic_GPT_Query(self,   Line2_Role  , Line3_Format,Line4_Task,Special = '',Line1_System_Rule = up.system_TextJoaT, crazy = .5, Subject= '', Outline = '', Allowed_Fails = 8, SaveFile = False,MakeArt = False, Mode = 'SHAINE SAYS', SavePath= ''):#use this to create art style for the work
+    def Basic_GPT_Query(self,   Line2_Role  , Line3_Format,Line4_Task,Special = '',Line1_System_Rule = up.system_TextJoaT_quick, crazy = .5, Subject= '', Outline = '', Allowed_Fails = 8, SaveFile = False,MakeArt = False, Mode = 'SHAINE SAYS', SavePath= ''):#use this to create art style for the work
         if SavePath == '':
             SavePath = self.SavePath
 
@@ -1809,13 +1825,12 @@ class MondeVert():
 
 
 
-    def summarize_art_style_for_short_story(self,Role, Task, Artist_Persona, outline,writer_persona,Format = lup.Art_Summary_short_story_format, crazy = .5 ):
+    def summarize_art_style_for_short_story(self,Role, Task, Artist_Persona, outline,writer_persona,Format = lup.Art_Summary_short_story_format, crazy = .5, System = up.system_TextJoaT_quick):
         Line2_Role = Role
         Line3_Format = Format
-        Line4_Task = """Using the following {Artist_Persona},{outline} and {writer_persona} complete the table previously provided with information that aligns with the intersection of all 3 data points""" + """
-        Artist Persona:###""" +Artist_Persona +"""###
-        outline:  ###""" +outline +"""###
-        Writer Persona:  ###""" +writer_persona +"""###"""
+        Line4_Task = """Using the following {Artist_Persona},{outline}, complete the respective formatted response""" + """
+        Artist Persona:""" +str(Artist_Persona) +"""###
+        outline:  """ +str(outline)
 
 
         Art_Style_details =  MondeVert.Basic_GPT_Query(self, Line2_Role = Line2_Role, Line4_Task = Line4_Task, Line3_Format= Line3_Format)
@@ -2006,20 +2021,20 @@ class MondeVert():
     #lastly dont forget to make audio file
 
 
-    def Quick_Title(self, Text, Line1_System_Rule = up.system_TextJoaT, crazy = .5):
+    def Quick_Title(self, Text, Line1_System_Rule = up.system_TextJoaT_quick, crazy = .5):
         KeepGoing = False
         KillSwitch = 0
         while KeepGoing == False and KillSwitch < 8:
             try:
 
                 Line1_System_Rule = Line1_System_Rule
-                Line2_Task_Text = """Extract the Title from the following data, do not include 'Title:' or 'Title' in the title. Text: ###""" + Text + "###"
-
-                # This is for the result if you let the AI describe project and details and then make the response
+                Line2_Task_Text = """Text: ###""" + Text + "###"
+                Line3_Format_Text = StoryMode.Title_Format
                 response = openai.ChatCompletion.create(
                     model="gpt-3.5-turbo",
                     messages=[
                         {"role": "system", "content": Line1_System_Rule},
+                        {"role": "user", "content": Line3_Format_Text},
                         {"role": "user", "content": Line2_Task_Text}
                     ]
                     , temperature=crazy
@@ -2067,10 +2082,711 @@ class MondeVert():
         Italian_Text = MondeVert.Basic_GPT_Query(self,Line1_System_Rule=Line1,Line2_Role= Line2, Line3_Format=Line3, Line4_Task=  Line4)
         return Italian_Text
 
-    def MondeVert_Audio_Video_Story(self, Persona = '',Translate = SAF.Translation_Languages_Testing,Role='', Background='', Task='', Special='', Title='SHAINE Project Fail Safe', Mode='Audio_Video_Story', Episodes = 4,  Seasons = 1,Logic_AI=0, Format='', SavePath=up.AI_AudioBook_Path, Persona_Role= lup.Persona_Role, Persona_Task = lup.Persona_Background, Persona_Special = lup.Persona_Special, Persona_Format = lup.Persona_Format2, Persona_summary_Role = lup.Persona_Summary_For_Role_Play_Line2_Role,Persona_summary_Task = lup.Persona_Summary_For_Role_Play_Line4_Task, Persona_summary_Format =  lup.Persona_Summary_For_Role_Play_Line3_Format, Persona_artist_Role = lup.Persona_artist_Role, Persona_artist_Task = lup.Persona_artist_Background, Persona_artist_Format = lup.Persona_artist_Format, Persona_artist_Special = lup.Persona_artist_Special, Outline1_Format = lup.Short_Story_Outline_Format,  Outline1_Task = lup.Short_Story_Outline_Task, System = up.system_TextJoaT_quick,  Outline_Main_AddOn_Pre = lup.Short_Story_Config + lup.Shane_Test_User_Input + lup.Focus_AI, Season_Outline_Format = lup.Short_Story_Season_Outline_Format, Season_Outline_Task = lup.Short_Story_Season_Outline_Task,Pilot_Short_story_fix1 = lup.Pilot_Short_story_fix, Episode_by_Episode_Outline_Format=lup.Short_Story_Episode_Outline_Format,Episode_by_Episode_Outline_Task=lup.Short_Story_Episode_Outline_Task, Episode_by_Episode_Format = lup.Short_Story_Format,Episode_by_Episode_Task=lup.Short_Story_Task, Episode_by_Episode_Special =  lup.Short_Story_Special,     Episode_by_Episode_Outline_Special = lup.Short_Story_Episode_Outline_Special):
 
-        Translate = ['English']
+#make it so it has threads to speed things up (this is intensive), for now make sure you can run multiple seasons, allow it to go scene by scene, and also add how episode starts/ends and how season starts and ends
+    # def MondeVert_Audio_Video_Story(self, Persona='', Subject='', Translate=SAF.Translation_Languages_Testing,
+    #                                 Role='', Background='', Task='', Special='', Title='SHAINE Project Fail Safe',
+    #                                 Mode='Audio_Video_Story', Episodes=3, Seasons=2, Logic_AI=0, Format='',
+    #                                 SavePath=up.AI_AudioBook_Path, Persona_Role=lup.Persona_Role,
+    #                                 Persona_Task=lup.Persona_Background, Persona_Special=lup.Persona_Special,
+    #                                 Persona_Format=lup.Persona_Format2,
+    #                                 Persona_summary_Role=lup.Persona_Summary_For_Role_Play_Line2_Role,
+    #                                 Persona_summary_Task=lup.Persona_Summary_For_Role_Play_Line4_Task,
+    #                                 Persona_summary_Format=lup.Persona_Summary_For_Role_Play_Line3_Format,
+    #                                 Persona_artist_Role=lup.Persona_artist_Role,
+    #                                 Persona_artist_Task=lup.Persona_artist_Background,
+    #                                 Persona_artist_Format=lup.Persona_artist_Format,
+    #                                 Persona_artist_Special=lup.Persona_artist_Special,
+    #                                 Outline1_Format=lup.Short_Story_Outline_Format,
+    #                                 Outline1_Task=lup.Short_Story_Outline_Task, System=up.system_TextJoaT_quick,
+    #                                 Outline_Main_AddOn_Pre=lup.Short_Story_Config + lup.Shane_Test_User_Input ,
+    #                                 Season_Outline_Format=lup.Short_Story_Season_Outline_Format,
+    #
+    #                                 Season_Outline_Task=lup.Short_Story_Season_Outline_Task,
+    #                                 Season_By_Season_Outline_Format=lup.Short_Story_SeasonBySeason_Outline_Format,
+    #                                 Season_By_Season_Outline_Task=lup.Short_Story_SeasonBySeason_Outline_Task,
+    #                                 Pilot_Short_story_fix1=lup.Pilot_Short_story_fix,
+    #                                 Episode_by_Episode_Outline_Format=lup.Short_Story_Episode_Outline_Format,
+    #                                 Episode_by_Episode_Outline_Task=lup.Short_Story_Episode_Outline_Task,
+    #
+    #                                 Episode_by_Episode_Format=lup.Short_Story_Format,
+    #                                 Episode_by_Episode_Task=lup.Short_Story_Task2
+    #                                 ):
+    #
+    #     Translate = ['English']
+    #
+    #     Episode_Count = Episodes
+    #     ArtPaths = []
+    #     openai.api_key = API_Key
+    #     Art_PromptCharoo = ''
+    #     Art_PromptCharo = ''
+    #     Art_PromptForDALLE = ''
+    #     Episode = []
+    #     Episode2 = []
+    #     Episode3 = []
+    #     Episode4 = []
+    #
+    #     # ******************************************************************
+    #     Episode_Outlines = ''
+    #
+    #     Outline_Main = 'N/A not ready to test this yet'
+    #     Outline_All_Episodes = 'N/A not ready to test this yet'
+    #     ScreenPlay = 'N/A not ready to test this yet'
+    #     Outline_Episode_Specific = ''
+    #     Title = 'N/A not ready to test this yet'
+    #     Project_Description = 'N/A not ready to test this yet'
+    #     Result = 'N/A not ready to test this yet'
+    #     Result_AI = 'N/A not ready to test this yet'
+    #     AIPrompt = 'N/A not ready to test this yet'
+    #     Writer_Persona = 'N/A not ready to test this yet'
+    #     Artist_Persona = 'N/A not ready to test this yet'
+    #     Art_Prompts = 'N/A not ready to test this yet'
+    #     Writer_Persona_Summary = ''
+    #     Episode_Outline = []
+    #
+    #     Titleo = Title
+    #
+    #     if Logic_AI == 0:
+    #         crazy = round((randbelow(520000) + 170000) / 100000, 0)
+    #         crazy = crazy / 10
+    #         print('Crazy Rating: ' + str(crazy))
+    #         crazy += .2
+    #         if crazy < .4:
+    #             crazy = .6
+    #         if crazy > .9:
+    #             crazy = .7
+    #     else:
+    #         crazy = Logic_AI
+    #
+    #     SavePath
+    #
+    #     Format0 = up.Test_Format0
+    #     KillSwitch = 0
+    #
+    #     Format_f = Format
+    #     if Mode == 'skit':
+    #         Format_f = Format0
+    #
+    #     if Title != '':
+    #         Background = Title + Background
+    #
+    #     tempFormat = Format
+    #     if Mode == 'PictureBook':
+    #         Format = up.Test_Format_PictureBook_outline
+    #
+    #     if Persona != '':
+    #         Persona_Role = 'You are the following Persona use them as a model for your response: ' + Persona
+    #
+    #     # Call Writer persona function
+    #     Writer_Persona = MondeVert.Writer_Persona_Short_Story(self, Role=Persona_Role, Task=Persona_Task,
+    #                                                           Format=Persona_Format, Special=Persona_Special,
+    #                                                           Subject=Subject[:1313], crazy=crazy)
+    #
+    #     if Writer_Persona == '':
+    #         Writer_Persona = Subject[:1313]
+    #
+    #     Writer_Persona_Summary = MondeVert.Basic_GPT_Query(self, Line2_Role=Persona_summary_Role,
+    #                                                        Line4_Task=Persona_summary_Task + Writer_Persona,
+    #                                                        Line3_Format=Persona_summary_Format, Special='',
+    #                                                        Subject='', crazy=crazy)
+    #
+    #     if Writer_Persona_Summary == '':
+    #         Writer_Persona_Summary = MondeVert.Basic_GPT_Query(self,
+    #                                                            Line4_Task="Summarize the following Writer Persona: " + Writer_Persona,
+    #                                                            Line3_Format=Persona_summary_Format, Special='',
+    #                                                            Subject='', crazy=crazy)
+    #
+    #     cu.add2Master_Persona(Text=Writer_Persona)
+    #     cu.add2Master_Persona(Text=Writer_Persona_Summary)
+    #
+    #     if Writer_Persona_Summary == '':
+    #         Writer_Persona_Summary = Writer_Persona[:1800]
+    #
+    #
+    #     Artist_Persona = MondeVert.Artist_Persona_Short_Story(self, Role=Persona_artist_Role,
+    #                                                           Task=Persona_artist_Task,
+    #                                                           Format=Persona_artist_Format,
+    #                                                           Special=Persona_artist_Special,
+    #                                                           Writer_persona=Writer_Persona, crazy=crazy)
+    #
+    #     Art_Details = MondeVert.GPTArt2(self, User_Subject=Artist_Persona, ArtFormat=lup.artDetailsFormat,
+    #                                     prompt=lup.artDetailsPrompt)
+    #
+    #     # Call outline - Main function
+    #
+    #     if Subject == '':
+    #         Outline_Main = MondeVert.Basic_GPT_Query(self,
+    #                                                  Line2_Role='Take on the following writer persona:' + Writer_Persona,
+    #                                                  Line3_Format=Outline1_Format,
+    #                                                  Line4_Task=Outline_Main_AddOn_Pre + Outline1_Task, Special='',
+    #                                                  Line1_System_Rule=System, crazy=crazy, Subject='')
+    #     else:
+    #         if Writer_Persona_Summary != '':
+    #             Writer_Persona = Writer_Persona_Summary
+    #         Outline1_Task = "Use the following outline to create your own outline, be sure to use the correct format for your outline"
+    #         Outline0_Task = "Use the following outline to create your own outline, be sure to use the correct format for your outline"
+    #         if len(Subject) > 1717:
+    #             Subject_trim = Subject[:2700]
+    #             Subject_Summary = MondeVert.Basic_GPT_Query(self,
+    #                                                         Line2_Role='You are a master editor and writer',
+    #                                                         Line3_Format='Trim redundant words and make it concise so it is less than 1900 characters and still has the main components of the story',
+    #                                                         Line4_Task=Outline0_Task + Subject_trim, Special='',
+    #                                                         Line1_System_Rule=System, crazy=crazy)
+    #         Outline_Main = MondeVert.Basic_GPT_Query(self,
+    #                                                  Line2_Role='Take on the following writer persona:' + Writer_Persona_Summary,
+    #                                                  Line3_Format=Outline1_Format,
+    #                                                  Line4_Task=Outline_Main_AddOn_Pre + Outline1_Task + Subject_Summary,
+    #                                                  Special='',
+    #                                                  Line1_System_Rule=System, crazy=crazy)
+    #     print('Writer Persona: ' + Writer_Persona)
+    #     print('Writer Persona_Summary: ' + Writer_Persona_Summary)
+    #     print('Artist Persona: ' + Artist_Persona)
+    #     print(Outline_Main)
+    #
+    #     print('Created Writer Persona')
+    #     print('Created Artist Persona')
+    #     print('Created Main Outline')
+    #
+    #     # print(up.breakupOutput)
+    #     # print('User_Input_Outline_Main: ' + User_Input_Outline_Main)
+    #     # print(up.breakupOutput)
+    #     # Call Art Theme Function
+    #
+    #     Art_Style_For_Story = MondeVert.summarize_art_style_for_short_story(self,Role,   Artist_Persona = Artist_Persona, outline = Outline_Main,Task = lup.artDetailsPrompt, Format = lup.artDetailsFormat, crazy = crazy, writer_persona = Writer_Persona_Summary )
+    #     print('Created Artist style summary (see below)')
+    #     print(Art_Style_For_Story)
+    #
+    #     # Call Character function
+    #     Characters = MondeVert.Create_Characters_Short_Story(self, Role=lup.Characters_Role,
+    #                                                          Task=lup.Characters_Task + Outline_Main,
+    #                                                          Special=lup.Characters_Special,
+    #                                                          Format=lup.Characters_Format, Outline='',
+    #                                                          Persona=Writer_Persona_Summary, crazy=crazy)
+    #     if Characters == '':
+    #         Characters = MondeVert.Create_Characters_Short_Story(self, Role=lup.Characters_Role,
+    #                                                              Task=lup.Characters_Task,
+    #                                                              Special=lup.Characters_Special,
+    #                                                              Format=lup.Characters_Format, Outline=Outline_Main,
+    #                                                              Persona=Writer_Persona_Summary, crazy=crazy)
+    #
+    #     # Add this back once its working correctly
+    #     # cu.Chop4Art(Text = Characters, Artist_Persona=Art_Details, Chunk_Limit=333, SavePath=SavePath, FileName=Title + '_Characters_v1')
+    #     # cu.Chop4Art(Text=self.Character_Art_Prompts_Main + self.Character_Art_Prompts_Main, Artist_Persona=Art_Details, Chunk_Limit=333, SavePath=SavePath, FileName=Title + '_Characters_v2')
+    #
+    #     # print(up.breakupOutput)
+    #     # print('User_Input_Character: ' +  User_Input_Character)
+    #     # print(up.breakupOutput)
+    #
+    #     print('Created Character Personas')
+    #     CharactersTrim = Characters[:444]
+    #     Outline_ALL_Seasons_list = ['']
+    #     # Call Outline - All Episodes
+    #     Outline_ALL_Seasons = MondeVert.Basic_GPT_Query(self,
+    #                                                      Line2_Role='Role Play as the following persona:' + Writer_Persona_Summary,
+    #                                                      Line3_Format=Season_By_Season_Outline_Format,
+    #                                                      Line4_Task=Season_By_Season_Outline_Task + """Use the following High level {Main Outline} as a source for the creating the season by season specific outline you are working on  Outline for each of the Seasons in the Series:###""" + Outline_Main +  """### Use the following main characters: """ + CharactersTrim,
+    #                                                      Special='', Line1_System_Rule=System, crazy=crazy,
+    #                                                      Subject='')
+    #
+    #     if "@" in Outline_ALL_Seasons:
+    #         Outline_ALL_Seasons_split = Outline_ALL_Seasons.split("@")
+    #     else:
+    #         Outline_ALL_Seasons_split = Outline_ALL_Seasons.replace("Season", "@Season")
+    #         Outline_ALL_Seasons_split = Outline_ALL_Seasons.replace("SEASON", "@SEASON")
+    #         Outline_ALL_Seasons_split = Outline_ALL_Seasons.split("@")
+    #
+    #     for s in Outline_ALL_Seasons_split:
+    #         if "SEASON" in s.upper():
+    #             Outline_ALL_Seasons_list.append(s)
+    #
+    #     data = ''
+    #     AudioBook_Text = ''
+    #     SeasonCounts = Seasons + 1
+    #     try:
+    #         Title = MondeVert.Quick_Title(self, Outline_Main)
+    #     except:
+    #         Title = 'MondeVert_SHAINE_Confidential_AudioBook'
+    #
+    #     Title = Title.replace("The Title:", "")
+    #     Title = Title.replace("Title:", "")
+    #     Title = Title.replace("The Title", "")
+    #     Title = Title.replace("Title", "")
+    #     Title1 = cu.CleanFileName(Title)
+    #     FileName = Title1
+    #     SavePath = SavePath + '\\' + Title1
+    #     cu.Check_Folder_Exists(SavePath)
+    #     FileName_Char_Main = Title1 + '_Main Characters_'
+    #     FileName_Char_Minor = Title1 + '_Minor Characters_'
+    #     # Call Character art prompt
+    #
+    #     Text2Add = 'Story Outline: ' + up.breakupOutput + Outline_Main + up.breakupOutput2 + 'All Seasons Outline: ' + Outline_ALL_Seasons + up.breakupOutput + 'Characters: ' + up.breakupOutput + Characters + up.breakupOutput2 + up.breakupOutput + 'Writer Persona: ' + up.breakupOutput + Writer_Persona + up.breakupOutput2 + up.breakupOutput + 'Writer Persona Summary: ' + up.breakupOutput + Writer_Persona_Summary + up.breakupOutput2 + up.breakupOutput + 'Artist Persona: ' + up.breakupOutput + Artist_Persona + up.breakupOutput2 + up.breakupOutput + 'Character Description - Main: ' + up.breakupOutput + self.Character_Art_Prompts_Main + up.breakupOutput2 + up.breakupOutput + 'Character Description - Minor: ' + up.breakupOutput + self.Character_Art_Prompts_Minor
+    #     FileName_Details_Pre = FileName + ' PreProduction'
+    #     cu.SaveCSV(Text=Text2Add, Title=FileName_Details_Pre, SavePath=SavePath)
+    #
+    #     for x in range(1,SeasonCounts):
+    #         Season_num = x
+    #
+    #         try:
+    #             if len (Outline_ALL_Seasons_list) >= Season_num:
+    #                 Outline_AllS = Outline_ALL_Seasons_list[Season_num]
+    #         except:
+    #             continue
+    #         print('Outline Season # ' + str(Season_num) + ': ' + up.breakupOutput2 + Outline_AllS)
+    #
+    #
+    #         Outline_ALL_Episode_list = ['']
+    #         # Call Outline - All Episodes
+    #         Outline_ALL_Episodes = MondeVert.Basic_GPT_Query(self,
+    #                                                          Line2_Role='Role Play as the following persona:' + Writer_Persona_Summary,
+    #                                                          Line3_Format=Season_Outline_Format,
+    #                                                          Line4_Task=Season_Outline_Task + """Use the following High level  {Season Specific Outline}  as a source for the creating the season specific outline you are working on  Outline for All Seasons in the season:###""" + Outline_AllS + """ Use the following characters: """ + CharactersTrim,
+    #                                                          Special='', Line1_System_Rule=System, crazy=crazy,
+    #                                                          Subject='')
+    #
+    #         if "@" in Outline_All_Episodes:
+    #             Outline_ALL_Episodes_split = Outline_ALL_Episodes.split("@")
+    #         else:
+    #             Outline_All_Episodes = Outline_ALL_Episodes.replace("Episode", "@EPISODE")
+    #             Outline_All_Episodes = Outline_All_Episodes.replace("EPISODE", "@EPISODE")
+    #             Outline_ALL_Episodes_split = Outline_All_Episodes.split("@")
+    #
+    #         for s in Outline_ALL_Episodes_split:
+    #             if "EPISODE" in s.upper():
+    #                 Outline_ALL_Episode_list.append(s)
+    #
+    #         print('Created All Episode Outline')
+    #
+    #
+    #
+    #         Text2Add = 'Story Outline: ' + up.breakupOutput + Outline_Main + up.breakupOutput2 + 'All Seasons Outline: ' + Outline_ALL_Seasons +up.breakupOutput + 'All Episodes Outline: ' + up.breakupOutput + Outline_ALL_Episodes + up.breakupOutput2 + up.breakupOutput
+    #         FileName_Details_Pre = FileName   +  ' Season ' + str(Season_num) + ' Outlines'
+    #         cu.SaveCSV(Text=Text2Add, Title=FileName_Details_Pre, SavePath=SavePath)
+    #
+    #         # Call Outline - Episode by episode
+    #         Pilot_Short_story_fix = ''
+    #
+    #         print(Outline_ALL_Episode_list)
+    #         for_num = Episode_Count + 1
+    #         print(for_num)
+    #         Outline_Episodes_by_episode = ''
+    #
+    #         for episode_num in range(1, for_num):
+    #             Episode_Story = ''
+    #             Episode_Story_Audio = ''
+    #             Episode_Story_Novel = ''
+    #             Episode_Story_Play = ''
+    #
+    #             print(episode_num)
+    #             print(len(Outline_ALL_Episode_list) )
+    #
+    #             try:
+    #                 if len(Outline_ALL_Episode_list) >= episode_num:
+    #                     Outline_All = Outline_ALL_Episode_list[episode_num]
+    #             except:
+    #                 continue
+    #
+    #             print('Outline All:' + up.breakupOutput2 + Outline_All)
+    #             if episode_num == 1:
+    #                 Pilot_Short_story_fix = Pilot_Short_story_fix1
+    #             else:
+    #                 Pilot_Short_story_fix = ''
+    #             print('Created Outline for Episode ' + str(episode_num))
+    #             # Special = Episode_by_Episode_Outline_Special + str(episode_num) + "### " + Pilot_Short_story_fix
+    #
+    #             Outline_Episodes_by_episode = MondeVert.Basic_GPT_Query(self,
+    #                                                                     Line2_Role='Take on the following writer persona:' + Writer_Persona_Summary,
+    #                                                                     Line3_Format=Episode_by_Episode_Outline_Format,
+    #                                                                     Line4_Task=Episode_by_Episode_Outline_Task + """Episode Outline:### """ + Outline_All + ' ###' + 'Characters: ' + Characters,
+    #                                                                     Line1_System_Rule=System, crazy=crazy,
+    #                                                                     Subject='')
+    #
+    #             Episode_Outline.append(Outline_Episodes_by_episode)
+    #             Outline_Episodes_by_episode_list = ['']
+    #             if "@" in Outline_Episodes_by_episode:
+    #                 Outline_Episodes_by_episode_Split = Outline_Episodes_by_episode.split("@")
+    #             else:
+    #                 Outline_Episodes_by_episode = Outline_Episodes_by_episode.replace("Scene", "@Scene")
+    #                 Outline_Episodes_by_episode = Outline_Episodes_by_episode.replace("SCENE", "@SCENE")
+    #                 Outline_Episodes_by_episode_Split = Outline_Episodes_by_episode.split("@")
+    #
+    #             for s in Outline_Episodes_by_episode_Split:
+    #                 if "SCENE" in s.upper():
+    #                     Outline_Episodes_by_episode_list.append(s)
+    #                 else:
+    #                     if s == Outline_Episodes_by_episode_Split[0]:
+    #                         Episode_By_Episode_Details = s
+    #
+    #             Scene_Range = len(Outline_Episodes_by_episode_list) + 1
+    #             print("Number of scenes: ")
+    #             print (Scene_Range)
+    #             for y in range(1,Scene_Range):
+    #                 Scene_Num = y
+    #
+    #
+    #                 if Outline_Episodes_by_episode == '':
+    #                     Outline_Episodes_by_episode = Outline_All_Episodes
+    #                 try:
+    #                     try:
+    #                         try:
+    #                             Story1 = MondeVert.Basic_GPT_Query(self,
+    #                                                                             Line2_Role='Take on the following writer persona:' + Writer_Persona_Summary,
+    #                                                                             Line3_Format=Episode_by_Episode_Format,
+    #                                                                             Line4_Task=Episode_by_Episode_Task + """Scene Outline:### """ + Episode_By_Episode_Details + Outline_Episodes_by_episode_list[Scene_Num] + '  ###',
+    #                                                                             Special=Pilot_Short_story_fix,
+    #                                                                             Line1_System_Rule=System, crazy=crazy,
+    #                                                                             Subject='', Outline='')
+    #
+    #                             Episode_Story_Audio  +=  'Season ' + str(Season_num) + ' Episode #' + str(episode_num) + ' Scene # ' + str(Scene_Num)+  Story1 + up.breakupOutput2
+    #
+    #                         except:
+    #                             dn = 100
+    #
+    #                         try:
+    #                             Story3 = MondeVert.Basic_GPT_Query(self,
+    #                                                                       Line2_Role='Take on the following writer persona:' + Writer_Persona_Summary,
+    #                                                                       Line3_Format=lup.Short_Story_Format_Novel_Chapter,
+    #                                                                       Line4_Task=lup.Short_Story_Task_Novel_Chapter + """Scene Outline:### """ + Episode_By_Episode_Details + Outline_Episodes_by_episode_list[Scene_Num] + '  ###',
+    #                                                                       Special=Pilot_Short_story_fix,
+    #                                                                       Line1_System_Rule=System,
+    #                                                                       crazy=crazy, Subject='', Outline='')
+    #                             Episode_Story_Novel +=  'Season ' + str(Season_num) + ' Episode #' + str(episode_num) + ' Scene # ' + str(Scene_Num)+  Story3 + up.breakupOutput2
+    #
+    #                         except:
+    #                             dn = 100
+    #                         try:
+    #                             Story4 = MondeVert.Basic_GPT_Query(self,
+    #                                                                Line2_Role='Take on the following writer persona:' + Writer_Persona_Summary,
+    #                                                                Line3_Format=lup.Short_Story_Format_Play_Scene,
+    #                                                                Line4_Task=lup.Short_Story_Task_Play_Scene + """Scene Outline:### """ + Episode_By_Episode_Details +
+    #                                                                           Outline_Episodes_by_episode_list[
+    #                                                                               Scene_Num] + '  ###',
+    #                                                                Special=Pilot_Short_story_fix,
+    #                                                                Line1_System_Rule=System,
+    #                                                                crazy=crazy, Subject='', Outline='')
+    #                             Episode_Story_Play += 'Season ' + str(Season_num) + ' Episode #' + str(
+    #                                 episode_num) + ' Scene # ' + str(Scene_Num) + Story4 + up.breakupOutput2
+    #
+    #                         except:
+    #                             dn = 100
+    #
+    #                         try:
+    #                             Story2 = MondeVert.Basic_GPT_Query(self,
+    #                                                                       Line2_Role='Take on the following writer persona:' + Writer_Persona_Summary,
+    #                                                                       Line3_Format=lup.Short_Story_Format_Screenplay,
+    #                                                                       Line4_Task=Episode_by_Episode_Task + """Scene Outline:### """ + Episode_By_Episode_Details + Outline_Episodes_by_episode_list[Scene_Num] + '  ###',
+    #                                                                       Special=Pilot_Short_story_fix,
+    #                                                                       Line1_System_Rule=System,
+    #                                                                       crazy=crazy, Subject='', Outline='')
+    #                             Episode_Story +=  'Season ' + str(Season_num) + ' Episode #' + str(episode_num) + ' Scene # ' + str(Scene_Num)+  Story2 + up.breakupOutput2
+    #
+    #
+    #
+    #                         except:
+    #                             dn = 100
+    #                     except:
+    #                         Story2 = MondeVert.Basic_GPT_Query(self,
+    #                                                                   Line2_Role='Take on the following writer persona:' + Writer_Persona_Summary,
+    #                                                                   Line3_Format=Episode_by_Episode_Format,
+    #                                                                   Line4_Task=Episode_by_Episode_Task + """Episode Outline:### """ + Outline_Episodes_by_episode,
+    #                                                                   Special=Pilot_Short_story_fix,
+    #                                                                   Line1_System_Rule=System, crazy=crazy, Subject='',
+    #                                                                   Outline='')
+    #                         Episode_Story += 'Season ' + str(Season_num) + ' Episode #' + str(episode_num) + ' Scene # ' + str(Scene_Num) + Story2 + up.breakupOutput2
+    #
+    #
+    #
+    #
+    #                 except:
+    #                     print('Error making Scene # ' + str(Scene_Num) + 'Episode #' + str(episode_num))
+    #
+    #             print('Created Episode ' + str(episode_num)  + ' for Season ' + str(Season_num))
+    #
+    #             Episode3.append(Episode_Story_Novel)
+    #             Episode.append(Episode_Story)
+    #             Episode2.append(Episode_Story_Audio)
+    #             Episode4.append(Episode_Story_Play)
+    #             Text2Add = "Amini Amor in partnership with MondeVert Presents: " + up.breakupOutput + Episode_Story
+    #             FileName_Episode = FileName + ' Season ' + str(Season_num) + ' EPISODE ' + str(episode_num)
+    #             FileName_Episode2 = FileName +  ' Season ' + str(Season_num) + ' EPISODE ' + str(episode_num) + ' Audio'
+    #             FileName_Episode3 = FileName + ' Act ' + str(Season_num) + ' Chapter ' + str(episode_num) + ' Novel'
+    #             FileName_Episode4 = FileName + ' Act ' + str(Season_num) + ' Chapter ' + str(episode_num) + ' Play'
+    #             csv1 = cu.SaveCSV(Text=Text2Add, Title=FileName_Episode, SavePath=SavePath)
+    #             Text2Add2 = "Amini Amor in partnership with MondeVert Presents: " + up.breakupOutput + Episode_Story_Audio
+    #             csv2 = cu.SaveCSV(Text=Text2Add2, Title=FileName_Episode2, SavePath=SavePath)
+    #             Text2Add3 = "Amini Amor in partnership with MondeVert Presents: " + up.breakupOutput + Episode_Story_Novel
+    #             csv3 = cu.SaveCSV(Text=Text2Add3, Title=FileName_Episode3, SavePath=SavePath)
+    #             Text2Add4 = "Amini Amor in partnership with MondeVert Presents: " + up.breakupOutput + Episode_Story_Play
+    #             csv4 = cu.SaveCSV(Text=Text2Add4, Title=FileName_Episode4, SavePath=SavePath)
+    #
+    #             Text2Add5 = "Outline Details: " + up.breakupOutput2 + up.breakupOutput + Outline_Episodes_by_episode
+    #             FileName_Episode = FileName  +  ' Season ' + str(Season_num) + ' Episode ' + str(episode_num) +   ' Outline '
+    #             cu.SaveCSV(Text=Text2Add5, Title=FileName_Episode, SavePath=SavePath)
+    #
+    #             try:
+    #
+    #                 Voice = random.choices(SAF.Original_List_of_Voices_English[0])
+    #
+    #                 Voice_Audio = random.choices(SAF.Original_List_of_Voices_English[0])
+    #
+    #                 Voice_Novel = random.choices(SAF.Original_List_of_Voices_English[0])
+    #
+    #                 Voice_Play = random.choices(SAF.Original_List_of_Voices_English[0])
+    #
+    #
+    #                 print('translate Langauge:')
+    #                 print(Translate)
+    #
+    #                 # cu.SaveText2Audio(SavePath=SavePath, FileName=FileName_Episode, Voice=Voice, Neural='Neural',
+    #                 #                   Mode='AUDIOBOOK', Chunk_Limit=1444, Artist_Persona=Art_Style_For_Story, Text=Text2Add,
+    #                 #                   Translate=Translate)
+    #                 #
+    #                 # cu.SaveText2Audio(SavePath=SavePath, FileName=FileName_Episode2, Voice=Voice_Audio,
+    #                 #                   Neural='Neural',
+    #                 #                   Mode='AUDIOBOOK', Chunk_Limit=1444, Artist_Persona=Art_Style_For_Story,
+    #                 #                   Text=Text2Add2,
+    #                 #                   Translate=Translate)
+    #                 #
+    #                 #
+    #
+    #
+    #                 try:
+    #                     cu.SaveText2Audio(SavePath=SavePath, FileName=FileName_Episode3, Voice=Voice_Novel,
+    #                                       Neural='Neural',
+    #                                       Mode='AUDIOBOOK', Chunk_Limit=1444, Artist_Persona=Art_Style_For_Story,
+    #                                       Text=Text2Add3,
+    #                                       Translate=Translate)
+    #
+    #
+    #                 except:
+    #                     csv2
+    #                     cu.SaveText2Audio(
+    #                         FilePath=csv3,
+    #                         Chunk_Limit=1333, Translate=['English'])
+    #
+    #                 # cu.SaveText2Audio(SavePath=SavePath, FileName=FileName_Episode4, Voice=Voice_Play, Neural='Neural',
+    #                 #                   Mode='AUDIOBOOK', Chunk_Limit=1444, Artist_Persona=Art_Style_For_Story,
+    #                 #                   Text=Text2Add4,
+    #                 #                   Translate=Translate)
+    #             except:
+    #                 print('Audio Files not recorded error occurred')
+    #
+    #
+    #
+    #             # print(up.breakupOutput)
+    #             # print('User_Input_AllEpisodes_Episodes_by_episode: ' + User_Input_AllEpisodes_Episodes_by_episode)
+    #             # print(up.breakupOutput)
+    #
+    #         # ******************************************************************
+    #
+    #         # print(up.breakupOutput)
+    #         # ************************************************************************************************************************************
+    #         # ************************************************************************************************************************************
+    #         #         for each_thread in thread_pool:
+    #         #             each_thread.join()
+    #
+    #         try:
+    #             if Title == '':
+    #                 # Title = MondeVert.ChatGPTDA(self, temp=0.5, MakeArt=True, Prompt=( Titleo+ '"' + Background + '"'),ConfirmBot=False)
+    #                 Title = Titleo
+    #         except:
+    #             print('could not come up with title review')
+    #             Title = Mode
+    #         # ********************************************************************************************************************************
+    #         # ********************************************************************************************************************************
+    #
+    #         Audio_Script = ''
+    #         ScreenPlay = ''
+    #         Novel = ''
+    #         Play = ''
+    #
+    #         RunLen = len(Episode)
+    #
+    #         for x in range(0, RunLen):
+    #             Episode_Outlines += Episode_Outline[x]
+    #             ScreenPlay += Episode[x]
+    #             Audio_Script += Episode2[x]
+    #             Novel += Episode3[x]
+    #             Play += Episode4[x]
+    #         # MondeVert.speak(self, "MondeVert Project Work complete yo")
+    #
+    #         print(up.breakupOutput2)
+    #
+    #         # Save all of the userinputs for reference later UserInputs =
+    #         # Save Details and Have voice speak it out
+    #
+    #         # print(Title)
+    #         # print(Writer_Persona)
+    #         # print(Artist_Persona)
+    #         # print(Art_Style_For_Story)
+    #         # print(Outline_Main)
+    #         # print(Characters)
+    #         # print(self.Character_Art_Prompts_Minor)
+    #         # print(self.Character_Art_Prompts_Major)
+    #         # print(Outline_All_Episodes)
+    #         # print(Outline_Episode_Specific)
+    #         # print(ScreenPlay)
+    #
+    #         try:
+    #
+    #             try:
+    #                 data += """Title: """ + Title
+    #             except:
+    #                 data += '***Missing Text Review***'
+    #                 AudioBook_Text += Title
+    #                 print('Error trying to put text together, went forward anyway')
+    #             try:
+    #                 data += up.breakupOutput2
+    #             except:
+    #                 data += '***Missing Text Review***'
+    #                 print('Error trying to put text together, went forward anyway')
+    #             try:
+    #                 data += """Outline_Main: """ + Outline_Main + up.breakupOutput2
+    #             except:
+    #                 data += '***Missing Text Review***'
+    #                 print('Error trying to put text together, went forward anyway')
+    #             try:
+    #                 data += +"""Characters: """ + Characters + up.breakupOutput2
+    #             except:
+    #                 data += '***Missing Text Review***'
+    #                 print('Error trying to put text together, went forward anyway')
+    #             try:
+    #                 data += """  Outline_All_Episodes: """ + Outline_All_Episodes + up.breakupOutput2
+    #             except:
+    #                 data += '***Missing Text Review***'
+    #                 print('Error trying to put text together, went forward anyway')
+    #             try:
+    #                 data += """ScreenPlay: """ + ScreenPlay + up.breakupOutput2
+    #             except:
+    #                 data += '***Missing Text Review***'
+    #                 print('Error trying to put text together, went forward anyway')
+    #                 try:
+    #                     data += """Audio_Script: """ + Audio_Script + up.breakupOutput2
+    #                 except:
+    #                     data += '***Missing Text Review***'
+    #                     print('Error trying to put text together, went forward anyway')
+    #
+    #             try:
+    #                 data += """Writer Bio: """ + Writer_Persona + up.breakupOutput2
+    #             except:
+    #                 data += '***Missing Text Review***'
+    #                 print('Error trying to put text together, went forward anyway')
+    #             try:
+    #                 data += """Artist Bio: """ + Artist_Persona + Art_Style_For_Story + up.breakupOutput2
+    #             except:
+    #                 data += '***Missing Text Review***'
+    #                 print('Error trying to put text together, went forward anyway')
+    #             try:
+    #                 data += +"""Character Descriptions: """ + self.Character_Art_Prompts_Main + up.breakupOutput2 + self.Character_Art_Prompts_Minor + up.breakupOutput2 + up.breakupOutput2 + """Outline_Episode_Specific: """ + Episode_Outlines + up.breakupOutput2
+    #             except:
+    #                 data += '***Missing Text Review***'
+    #                 print('Error trying to put text together, went forward anyway')
+    #
+    #             AudioBook_Text = """Title: """ + Title + up.breakupOutput2 + ScreenPlay
+    #             Outline_and_Details = """Title: """ + Title + up.breakupOutput2 + """Writer Bio: """ + Writer_Persona + up.breakupOutput2 + """Artist Bio: """ + Artist_Persona + Art_Style_For_Story + up.breakupOutput2 + """Outline_Main: """ + Outline_Main + up.breakupOutput2 + """Characters: """ + Characters + up.breakupOutput2 + """Character Descriptions:    Main Characters - """ + self.Character_Art_Prompts_Main + up.breakupOutput2 + """ | Minor Characters - """ + self.Character_Art_Prompts_Minor + """     Outline_All_Episodes: """ + Outline_All_Episodes + up.breakupOutput2 + """Outline_Episode_Specific: """ + Episode_Outlines + up.breakupOutput2
+    #         except:
+    #             print('Error when trying to create Text String results, review file could have some issues')
+    #
+    #         try:
+    #             #print('Output for : ' + Mode)
+    #             #print(data)
+    #             print(Outline_and_Details)
+    #             print(up.breakupOutput2)
+    #             # print(up.breakupOutput2)
+    #             # print(up.breakupOutput2)
+    #             print('End of creation, saving files')
+    #         except:
+    #             print('Error when trying to print results, review file could have some issues')
+    #
+    #
+    #
+    #     # #This is just the characters, need to do this for scenes etc too
+    #     #         ArtPaths1 = MondeVert.Create_Art_from_String_to_list(self, self.Character_Art_Prompts_Main,  SavePath = SavePath,
+    #     #                                                              FileName=FileName_Char_Main, Art_Style_details = Art_Style_For_Story,
+    #     #                                                              Key_Word='Character', Key_Char=':', Delimiter='|',
+    #     #                                                              crazy=crazy)
+    #     #         ArtPaths.append(ArtPaths1)
+    #     #         ArtPaths1 =MondeVert.Create_Art_from_String_to_list(self, self.Character_Art_Prompts_Minor,  SavePath = SavePath,
+    #     #                                                              FileName=FileName_Char_Minor, Art_Style_details = Art_Style_For_Story,
+    #     #                                                              Key_Word='Character', Key_Char=':', Delimiter='|',
+    #     #                                                              crazy=crazy)
+    #
+    #     # ArtPaths.append(ArtPaths1)
+    #     # print(up.breakupOutput)
+    #
+    #     # MondeVert.speak(self, "Saving the files round 1")
+    #     # print(data)
+    #     Voice = SAF.Original_List_of_Voices_English[0]
+    #     cu.SaveText2Audio(Text=self.Character_Art_Prompts_Main, SavePath=SavePath,
+    #                       FileName=Title + '_Charactors_Main', Chunk_Limit=213, Voice=Voice,
+    #                       Artist_Persona=Art_Style_For_Story)
+    #     cu.SaveText2Audio(Text=self.Character_Art_Prompts_Minor, SavePath=SavePath,
+    #                       FileName=Title + '_Charactors_Minor', Chunk_Limit=213, Voice=Voice,
+    #                       Artist_Persona=Art_Style_For_Story)
+    #
+    #     #
+    #     # data1 = [(data)]
+    #
+    #     try:
+    #         # df1 = pd.DataFrame(data1, columns=['Text'])
+    #
+    #         Email_File = cu.SaveCSV(Text=data, Title=FileName, SavePath=SavePath)
+    #
+    #     except:
+    #         print('Review Error File did not save ')
+    #
+    #     try:
+    #         cu.send_email_no_attachment_gmail(body=AudioBook_Text)
+    #         cu.send_email_no_attachment_outlook(body=AudioBook_Text)
+    #
+    #         cu.send_email_w_attachment_outlook(body=AudioBook_Text, filename=[Email_File])
+    #         cu.send_email_w_attachment_gmail(body=AudioBook_Text, filename=[Email_File], fType='txt')
+    #         print("Outlook email sent")
+    #     except:
+    #         print('email not send, its possible file was not created')
+    #
+    #     # Art changes based on mode for now I will switch only when the mode calls for it otherwise default
+    #
+    #     prompt = data
+    #     Prompts_Used = [self.UserPrompts]
+    #     ArtistPoetInfo = 'Shane Donovan - SHAINE - MondeVert'
+    #     cu.NamePoemSavePoem(self, prompt, ArtPaths, Prompts_Used, ArtistPoetInfo, title=Title,
+    #                         SavePath=SavePath, Mode=Mode)
+    #     KillSwitch = 7
+    #
+    #
 
+    def StoryMode(self, Persona='', Subject='', Translate=['English'], Chunk_Limit = 1444,
+                                    Role='', Background='', Task='', Special='', Title='SHAINE Project Fail Safe',
+                                    Mode='StoryMode', Episodes=3, Seasons=2, Logic_AI=0,Output_Types = ["Novel","Play", "Song"], Format='',
+                                    SavePath=up.AI_AudioBook_Path, Persona_Role=lup.Persona_Role,
+                                    Persona_Task=StoryMode.Persona_Background,
+                                    Persona_Format=StoryMode.Persona_Format2,
+                                    Persona_summary_Role=StoryMode.Persona_Summary_For_Role_Play_Line2_Role,
+                                    Persona_summary_Task=StoryMode.Persona_Summary_For_Role_Play_Line4_Task,
+                                    Persona_summary_Format=StoryMode.Persona_Summary_For_Role_Play_Line3_Format,
+                                    Outline1_Format=StoryMode.Short_Story_Outline_Format,
+                                    Outline1_Task=StoryMode.Short_Story_Outline_Task, System=up.system_TextJoaT_quick,
+                                    Outline_Main_AddOn_Pre=StoryMode.Short_Story_Config + StoryMode.Shane_Test_User_Input,
+                                    Season_Outline_Format=StoryMode.Short_Story_Season_Outline_Format,
+                                    Season_Outline_Task=StoryMode.Short_Story_Season_Outline_Task,
+                                    Season_By_Season_Outline_Format=StoryMode.Short_Story_SeasonBySeason_Outline_Format,
+                                    Season_By_Season_Outline_Detail_Format=StoryMode.Short_Story_SeasonBySeason_Detail_Outline_Format,
+                                    Season_By_Season_Outline_Detail_Task=StoryMode.Short_Story_SeasonBySeason_Detail_Outline_Task,
+                                    Episode_by_Episode_Detail_Outline_Format=StoryMode.Short_Story_Episode_Detail_Outline_Format,
+                                    Episode_by_Episode_Detail_Outline_Task=StoryMode.Short_Story_Episode_Detail_Outline_Task,
+                                    Episode_by_Episode_Detail_Outline_Format1=StoryMode.Short_Story_Episode_Details_Outline1_Format,
+                                    Episode_by_Episode_Detail_Outline_Task1=StoryMode.Short_Story_Episode_Details_Outline1_Task,
+                                    Season_By_Season_Outline_Task=StoryMode.Short_Story_SeasonBySeason_Outline_Task,
+                                    Episode_by_Episode_Outline_Format=StoryMode.Short_Story_Episode_Outline_Format,
+                                    Episode_by_Episode_Outline_Task=StoryMode.Short_Story_Episode_Outline_Task,
+                                    Episode_by_Episode_Format=StoryMode.Short_Story_Format,
+                                    Episode_by_Episode_Task=StoryMode.Short_Story_Task2,
+                                    Story_Details_Format = StoryMode.Story_Details_Format,
+                                    Story_Details_Task=StoryMode.Story_Details_Task,
+                                    Story_Details_Format2=StoryMode.Story_Details_Format2,
+                                    Story_Details_Task2=StoryMode.Story_Details_Task2):
+
+        Outline_Main_AddOn_Pre = Outline_Main_AddOn_Pre + "Episode_Constraints:  {Seasons:" + str(Seasons)+ """Episodes:{""" + str(Episodes)+ """ Episodes Per Season}"""
         Episode_Count = Episodes
         ArtPaths = []
         openai.api_key = API_Key
@@ -2079,18 +2795,20 @@ class MondeVert():
         Art_PromptForDALLE = ''
         Episode = []
         Episode2 = []
+        Episode3 = []
+        Episode4 = []
+        Episode6 = []
+        Subject_Details = ''
+
         # ******************************************************************
         Episode_Outlines = ''
-
-
-
-
+        Episode_Story_Song = ''
 
         Outline_Main = 'N/A not ready to test this yet'
         Outline_All_Episodes = 'N/A not ready to test this yet'
         ScreenPlay = 'N/A not ready to test this yet'
         Outline_Episode_Specific = ''
-        Title = 'N/A not ready to test this yet'
+        Title = Mode + ' '+self.current_time
         Project_Description = 'N/A not ready to test this yet'
         Result = 'N/A not ready to test this yet'
         Result_AI = 'N/A not ready to test this yet'
@@ -2098,15 +2816,17 @@ class MondeVert():
         Writer_Persona = 'N/A not ready to test this yet'
         Artist_Persona = 'N/A not ready to test this yet'
         Art_Prompts = 'N/A not ready to test this yet'
+        Writer_Persona_Summary = ''
         Episode_Outline = []
-
+        Character_progression = ''
+        Outline_progression = ''
 
         Titleo = Title
 
         if Logic_AI == 0:
             crazy = round((randbelow(520000) + 170000) / 100000, 0)
             crazy = crazy / 10
-            print('Crazy Rating: ' + str(crazy))
+            #print('Crazy Rating: ' + str(crazy))
             crazy += .2
             if crazy < .4:
                 crazy = .6
@@ -2115,7 +2835,9 @@ class MondeVert():
         else:
             crazy = Logic_AI
 
-        SavePath
+        Subject_Details += up.breakupOutput +'User input Subject:' + Subject
+
+
 
         Format0 = up.Test_Format0
         KillSwitch = 0
@@ -2131,388 +2853,930 @@ class MondeVert():
         if Mode == 'PictureBook':
             Format = up.Test_Format_PictureBook_outline
 
-
-
-
-        if Persona !='':
+        if Persona != '':
             Persona_Role = 'You are the following Persona use them as a model for your response: ' + Persona
 
-#Call Writer persona function
-        Writer_Persona  = MondeVert.Writer_Persona_Short_Story(self, Role=Persona_Role, Task=Persona_Task,
-                                   Format=Persona_Format, Special=Persona_Special,
-                                   Subject='', crazy=crazy)
+        # Call Writer persona function
+        Writer_Persona = MondeVert.Writer_Persona_Short_Story(self, Role=Persona_Role, Task=Persona_Task,
+                                                              Format=Persona_Format,
+                                                              Subject=Subject[:1313], crazy=crazy)
+
+        if Writer_Persona == '':
+            Writer_Persona = Subject[:1313]
+
+        Writer_Persona_Summary = MondeVert.Basic_GPT_Query(self, Line2_Role=Persona_summary_Role,
+                                                           Line4_Task=Persona_summary_Task + Writer_Persona,
+                                                           Line3_Format=Persona_summary_Format, Special='',
+                                                           Subject='', crazy=crazy)
+
+        if Writer_Persona_Summary == '':
+            Writer_Persona_Summary = MondeVert.Basic_GPT_Query(self,
+                                                               Line4_Task="Summarize the following Writer Persona: " + Writer_Persona,
+                                                               Line3_Format=Persona_summary_Format, Special='',
+                                                               Subject='', crazy=crazy)
+
+        cu.add2Master_Persona(Text=Writer_Persona)
+        cu.add2Master_Persona(Text=Writer_Persona_Summary)
+
+        if Writer_Persona_Summary == '':
+            Writer_Persona_Summary = Writer_Persona[:1800]
 
 
 
-        Writer_Persona_Summary  = MondeVert.Basic_GPT_Query(self, Line2_Role=Persona_summary_Role, Line4_Task= Persona_summary_Task + Writer_Persona + '###',
-                                   Line3_Format=Persona_summary_Format, Special='',
-                                   Subject='', crazy=crazy)
-
-        cu.add2Master_Persona(Text = Writer_Persona_Summary)
-
-
-
-# Call Artist persona function
-
-        # t = threading.Thread(target=SHAINEBootUP, args=(ArgX,)).start()
-        # threads.append(t)
-
-        Artist_Persona = MondeVert.Artist_Persona_Short_Story(self,Role = Persona_artist_Role, Task = Persona_artist_Task,Format = Persona_artist_Format, Special = Persona_artist_Special, Writer_persona = Writer_Persona, crazy = crazy)
-
-        Art_Details = MondeVert.GPTArt2(self, User_Subject=Artist_Persona, ArtFormat=lup.artDetailsFormat,
-                                        prompt=lup.artDetailsPrompt)
-
-
-        # Call outline - Main function
-        Outline_Main = MondeVert.Basic_GPT_Query(self,   Line2_Role = 'Take on the following writer persona:' + Writer_Persona , Line3_Format= Outline1_Format,Line4_Task = Outline_Main_AddOn_Pre + Outline1_Task  , Special = '',Line1_System_Rule = System, crazy = crazy, Subject= '')
-
-        print('Writer Persona: ' + Writer_Persona)
-        print('Writer Persona_Summary: ' + Writer_Persona_Summary)
-        print('Artist Persona: ' + Artist_Persona)
-        print(Outline_Main)
-
-        print('Created Writer Persona')
-        print('Created Artist Persona')
-        print('Created Main Outline')
-
-        #print(up.breakupOutput)
-        #print('User_Input_Outline_Main: ' + User_Input_Outline_Main)
-        #print(up.breakupOutput)
-        #Call Art Theme Function
-        Art_Style_For_Story = MondeVert.summarize_art_style_for_short_story(self,Role, Task, Artist_Persona, Outline_Main,Writer_Persona_Summary,Format = lup.Art_Summary_short_story_format, crazy = crazy )
-        print('Created Artist style summary')
-
-#Call Character function
-        Characters = MondeVert.Create_Characters_Short_Story(self, Role = lup.Characters_Role, Task = lup.Characters_Task, Special = lup.Characters_Special, Format =  lup.Characters_Format, Outline = Outline_Main, Persona = Writer_Persona + Writer_Persona_Summary , crazy = crazy)
-        if Characters == '':
-            Characters = MondeVert.Create_Characters_Short_Story(self, Role=lup.Characters_Role,Task=lup.Characters_Task,Special=lup.Characters_Special,Format=lup.Characters_Format, Outline=Outline_Main,Persona= Writer_Persona_Summary,crazy=crazy)
-
-#Add this back once its working correctly
-        #cu.Chop4Art(Text = Characters, Artist_Persona=Art_Details, Chunk_Limit=333, SavePath=SavePath, FileName=Title + '_Characters_v1')
-        #cu.Chop4Art(Text=self.Character_Art_Prompts_Main + self.Character_Art_Prompts_Main, Artist_Persona=Art_Details, Chunk_Limit=333, SavePath=SavePath, FileName=Title + '_Characters_v2')
-
-
-
-        # print(up.breakupOutput)
-        # print('User_Input_Character: ' +  User_Input_Character)
-        # print(up.breakupOutput)
-
-        print('Created Character Personas')
-
-        Outline_ALL_Episode_list = ['']
- #Call Outline - All Episodes
-        Outline_ALL_Episodes = MondeVert.Basic_GPT_Query(self,   Line2_Role = 'Role Play as the following persona:' + Writer_Persona_Summary , Line3_Format= Season_Outline_Format,Line4_Task = Season_Outline_Task + """Use the following High level {Main Outline} as a source for the creating the season specific outline you are working on Main Outline:###""" + Outline_Main + '###',Special = '',Line1_System_Rule = System, crazy = crazy, Subject= '', Outline = Outline_Main)
-
-
-
-
-        if "@" in Outline_All_Episodes:
-            Outline_ALL_Episodes_split = Outline_ALL_Episodes.split("@")
+        if Subject == '':
+            Outline_Main = MondeVert.Basic_GPT_Query(self,
+                                                     Line2_Role='Take on the following writer persona:' + Writer_Persona,
+                                                     Line3_Format=Outline1_Format,
+                                                     Line4_Task=Outline_Main_AddOn_Pre + Outline1_Task, Special='',
+                                                     Line1_System_Rule=System, crazy=crazy, Subject='')
         else:
-            Outline_ALL_Episodes_split = Outline_ALL_Episodes.replace("Episode", "@EPISODE")
-            Outline_ALL_Episodes_split = Outline_ALL_Episodes.replace("EPISODE","@EPISODE")
-            Outline_ALL_Episodes_split = Outline_ALL_Episodes.split("@")
+            if Writer_Persona_Summary != '':
+                Writer_Persona = Writer_Persona_Summary
+            Outline1_Task = "Use the following outline to create your own outline, be sure to use the correct format for your outline"
+            Outline0_Task = "Use the following outline to create your own outline, be sure to use the correct format for your outline"
 
-        for s in Outline_ALL_Episodes_split:
-            if "EPISODE"  in s.upper():
-                Outline_ALL_Episode_list.append(s)
+            xxx = 1
+            Subject_Summary = Subject
+            if len(Subject) > 1717 or xxx == 1:
+                Subject_trim = Subject[:2700]
+                Subject_Details += 'Subject Trimmed and summary created below:'
+                Subject_Summary = MondeVert.Basic_GPT_Query(self,
+                                                            Line2_Role='You are a master editor and writer',
+                                                            Line3_Format='Trim redundant words and make it concise so it is less than 1900 characters and still has the main components of the story',
+                                                            Line4_Task=Outline0_Task + Subject_trim, Special='',
+                                                            Line1_System_Rule=System, crazy=crazy)
+            Subject_Details += 'Subject Summary:' + Subject_Summary
+            Outline_Main = MondeVert.Basic_GPT_Query(self,
+                                                     Line2_Role='Take on the following writer persona:' + Writer_Persona_Summary,
+                                                     Line3_Format=Outline1_Format,
+                                                     Line4_Task=Outline_Main_AddOn_Pre + Outline1_Task + Subject_Summary,
+                                                     Special='',
+                                                     Line1_System_Rule=System, crazy=crazy)
+
+            Outline_progression += up.breakupOutput2 + 'Outline - Main - Most High Level: ' + Outline_Main
+        #print('Writer Persona: ' + Writer_Persona)
+        #print('Writer Persona_Summary: ' + Writer_Persona_Summary)
+
+        Story_Details = MondeVert.Basic_GPT_Query(self,
+                                                 Line2_Role='Take on the following writer persona:' + Writer_Persona_Summary,
+                                                 Line3_Format=Story_Details_Format,
+                                                 Line4_Task=Story_Details_Task + Outline_Main,
+                                                 Special='',
+                                                 Line1_System_Rule=System, crazy=crazy)
 
 
-        print('Created All Episode Outline')
+        Story_Details2 = MondeVert.Basic_GPT_Query(self,
+                                                 Line2_Role='Take on the following writer persona:' + Writer_Persona_Summary,
+                                                 Line3_Format=Story_Details_Format2,
+                                                 Line4_Task=Story_Details_Task2 + Outline_Main,
+                                                 Special='',
+                                                 Line1_System_Rule=System, crazy=crazy)
 
 
+        Story_Role = 'Role Play as an award winning writer able to impersonate any genre or style/voice base your persona on the following details' + Story_Details2
+
+
+
+
+        #print(up.breakupOutput2)
+        #print('Story Details: ' + Story_Details)
+        arttext = Story_Details
+        Art_Type_Config = ''
+        if 'FAMILIA' in Mode.upper():
+            Art_Type_Config = """This story is for children so the art should mimic a children's book/comic/Cartoon or some other easy to draw, simple paintings that have basic backgrounds and descriptions"""
         try:
-            Title = MondeVert.Quick_Title(self, Outline_Main)
+            if len(arttext)> 1700:
+                arttext = arttext[:1700]
         except:
-            Title = 'MondeVert_SHAINE_Confidential_AudioBook'
+            dn = 100
+        try:
+            #
+            Artist_Persona = MondeVert.GPTArt2(User_Subject=arttext, ArtFormat=StoryMode.artDetailsFormat,prompt= Art_Type_Config+ StoryMode.artDetailsPrompt  )
+        except:
+            try:
+
+                Artist_Persona = MondeVert.GPTArt2(User_Subject=Writer_Persona_Summary, ArtFormat=StoryMode.artDetailsFormat,prompt=Art_Type_Config+ StoryMode.artDetailsPrompt )
+
+                Artist_Persona = MondeVert.Basic_GPT_Query(self,
+                                                         Line2_Role='You are an expert artist master of all disciplines and art styles',
+                                                         Line3_Format=StoryMode.artDetailsFormat,
+                                                         Line4_Task="Pick a random artist based on the following Text" + arttext, Special='',
+                                                         Line1_System_Rule=System, crazy=crazy, Subject='')
+
+            except:
+                try:
+                    Artist_Persona = MondeVert.Basic_GPT_Query(self,
+                                                         Line2_Role='You are an expert artist master of all disciplines and art styles',
+                                                         Line3_Format=StoryMode.artDetailsFormat,
+                                                         Line4_Task="Pick a random artist and fill in the respective template in your response", Special='',
+                                                         Line1_System_Rule=System, crazy=crazy, Subject='')
+                except:
+
+                    Artist_Persona = 'embrace the spirit/imagery/symbolism  of the following text describe it to be illustrated by an artist it can be any form of art'
+
+
+
+        Art_Style_For_Story = Artist_Persona
+        # print('Artist Persona: ' + Artist_Persona)
+        # print(Outline_Main)
+        # print('Created Writer Persona')
+        # print('Created Artist Persona')
+        # print('Created Main Outline')
+        # print('Created Story Details')
+        # print('Created Story Details2  (see below)')
+        # print(Story_Details2)
+        # print('Created Artist style summary (see below)')
+        # print(Art_Style_For_Story)
+
+
+
+
+
+
+   #Make a Function that gets the characters created and then creates a summary relevant to the current story line using their character reference
+        # CharacterSummary(Characters, Season/Episode/Scene High Level Outline)
+        #Create a short description of the characters that can be used as reference
+
+        #
+        #
+        # print('Created Character Personas')
+
+        Outline_ALL_Seasons_list = ['']
+        # Call Outline - All Episodes
+        Outline_ALL_Seasons = MondeVert.Basic_GPT_Query(self,
+                                                         Line2_Role=Story_Role,
+                                                         Line3_Format=Season_By_Season_Outline_Format,
+                                                         Line4_Task=Season_By_Season_Outline_Task + """Use the following High level {Main Outline} as a source for the creating the season by season specific outline you are working on  Outline for each Season in the Series   (Follow the constraints provided by the outlines regarding # of Seasons/Episodes)  Story Details:""" + Story_Details,
+                                                         Special='', Line1_System_Rule=System, crazy=crazy,
+                                                         Subject='')
+        Outline_progression += up.breakupOutput2 + 'Outline - All Seasons - High Level Seasons Outlines (Full Series): ' + Outline_ALL_Seasons
+
+        # Call Character function
+        Characters = MondeVert.Create_Characters_Short_Story(self, Role=lup.Characters_Role,
+                                                             Task=lup.Characters_Task + Outline_ALL_Seasons,
+                                                             Special=lup.Characters_Special,
+                                                             Format=lup.Characters_Format, Outline='',
+                                                             Persona=Writer_Persona_Summary, crazy=crazy)
+        if Characters == '':
+            Characters = MondeVert.Create_Characters_Short_Story(self, Role=lup.Characters_Role,
+                                                                 Task=lup.Characters_Task,
+                                                                 Special=lup.Characters_Special,
+                                                                 Format=lup.Characters_Format, Outline=Outline_ALL_Seasons,
+                                                                 Persona=Writer_Persona_Summary, crazy=crazy)
+        Character_progression += up.breakupOutput2 + 'Characters Start of Series: ' + Characters
+
+        Outline_ALL_Seasons_split = Outline_ALL_Seasons
+        Outline_ALL_Seasons_split2 =Outline_ALL_Seasons
+        Outline_ALL_Seasons_split = Outline_ALL_Seasons_split.replace("Season", "SEASON")
+        Outline_ALL_Seasons_split = Outline_ALL_Seasons_split.replace("Number", "NUMBER")
+
+
+
+        # print(up.breakupOutput2)
+        # print(up.breakupOutput2)
+        # # print('All Seasons Outline:')
+        # # print(Outline_ALL_Seasons_split)
+        # print(up.breakupOutput2)
+        # print(up.breakupOutput2)
+        if "@SEASON" in Outline_ALL_Seasons_split:
+            Outline_ALL_Seasons_split = Outline_ALL_Seasons_split.replace("@SEASON", "@@SEASON")
+            Outline_ALL_Seasons_split2 = Outline_ALL_Seasons_split.split("@@")
+
+        else:
+
+            Outline_ALL_Seasons_split = Outline_ALL_Seasons_split.replace("SEASON", "@@SEASON")
+            Outline_ALL_Seasons_split2 = Outline_ALL_Seasons_split.split("@@")
+
+
+        # print('All Seasons Split Outline:')
+        # print(Outline_ALL_Seasons_split2)
+
+
+        # Text2Add = 'Story Outline: ' + up.breakupOutput + Outline_Main +  'Story Details: ' + up.breakupOutput + Story_Details+ up.breakupOutput2 +  'Story Details(fine): ' + up.breakupOutput +  Story_Details2 + 'All Seasons Outline: ' + Outline_ALL_Seasons + up.breakupOutput + 'Characters: ' + up.breakupOutput + Characters + up.breakupOutput2 + up.breakupOutput + 'Writer Persona: ' + up.breakupOutput + Writer_Persona + up.breakupOutput2 + up.breakupOutput + 'Writer Persona Summary: ' + up.breakupOutput + Writer_Persona_Summary + up.breakupOutput2 + up.breakupOutput + 'Artist Persona: ' + up.breakupOutput + Artist_Persona + up.breakupOutput2 + up.breakupOutput + 'Character Description - Main: ' + up.breakupOutput + self.Character_Art_Prompts_Main + up.breakupOutput2 + up.breakupOutput + 'Character Description - Minor: ' + up.breakupOutput + self.Character_Art_Prompts_Minor
+        # FileName_Details_Pre = 'PreProduction Test'
+        # cu.SaveCSV(Text=Text2Add, Title=FileName_Details_Pre, SavePath=SavePath)
+
+
+
+
+        for s in Outline_ALL_Seasons_split2:
+            if "SEASON" in s.upper():
+                Outline_ALL_Seasons_list.append(s)
+
+        data = ''
+        AudioBook_Text = ''
+        SeasonCounts = Seasons + 1
+        try:
+            Title = MondeVert.Quick_Title(self, Text = Outline_Main)
+
+            TrimCharR = Outline_Main.find("#Episode") + 1
+            TrimCharL = Outline_Main.find("Title:")
+
+            Title = Outline_Main[TrimCharL:TrimCharR]
+        except:
+            Title = ''
+
+        if Title == '':
+            try:
+                    Title = MondeVert.Quick_Title(self, Text=Outline_Main)
+
+            except:
+                Title = 'MondeVert_SHAINE_Confidential_AudioBook'
+
+
 
         Title = Title.replace("The Title:", "")
         Title = Title.replace("Title:", "")
         Title = Title.replace("The Title", "")
         Title = Title.replace("Title", "")
+
+
+        TitleOO = Title
+        # try:
+        #     TrimChar = Title.find("|") + 1
+        # except:
+        #     TrimChar = 44
+
+
+        # if TrimChar > 8:
+        #     try:
+        #         Title = Title[:TrimChar]
+        #
+        #     except:
+        #         Title = TitleOO
+
+        if len(Title) > 90:
+            Title = Title[:44]
+
         Title1 = cu.CleanFileName(Title)
         FileName = Title1
         SavePath = SavePath + '\\' + Title1
         cu.Check_Folder_Exists(SavePath)
+        cu.Check_Folder_Exists(SavePath + '\\Outlines')
         FileName_Char_Main = Title1 + '_Main Characters_'
         FileName_Char_Minor = Title1 + '_Minor Characters_'
         # Call Character art prompt
 
-        Text2Add = 'Story Outline: '+ up.breakupOutput +  Outline_Main +  up.breakupOutput2 + up.breakupOutput + 'All Episodes Outline: ' + up.breakupOutput + Outline_ALL_Episodes + up.breakupOutput2 + up.breakupOutput + 'Characters: '+ up.breakupOutput +  Characters +  up.breakupOutput2 + up.breakupOutput+ 'Writer Persona: '+ up.breakupOutput +  Writer_Persona +up.breakupOutput2 + up.breakupOutput+ 'Writer Persona Summary: ' + up.breakupOutput + Writer_Persona_Summary +up.breakupOutput2 + up.breakupOutput+ 'Artist Persona: ' + up.breakupOutput + Artist_Persona +up.breakupOutput2 + up.breakupOutput+ 'Character Description - Main: ' + up.breakupOutput + self.Character_Art_Prompts_Main +up.breakupOutput2 + up.breakupOutput+ 'Character Description - Minor: ' + up.breakupOutput + self.Character_Art_Prompts_Minor
-        FileName_Details_Pre = FileName + '_PreProduction'
-        cu.SaveCSV(Text = Text2Add, Title = FileName_Details_Pre, SavePath=SavePath)
+        Text2Add = 'Story Outline: ' + Outline_Main +  up.breakupOutput + 'Story Details: ' + Story_Details + up.breakupOutput2 +  'Story Details(fine): '  +  Story_Details2 +   up.breakupOutput2 +'All Seasons Outline: ' + Outline_ALL_Seasons + up.breakupOutput + 'Characters: ' + Characters + up.breakupOutput2 + up.breakupOutput + 'Writer Persona: ' +  Writer_Persona + up.breakupOutput2 + up.breakupOutput + 'Writer Persona Summary: ' + Writer_Persona_Summary + up.breakupOutput2 + up.breakupOutput + 'Artist Persona: ' + Artist_Persona + up.breakupOutput2 + up.breakupOutput + 'Character Description - Main: ' + up.breakupOutput + self.Character_Art_Prompts_Main + up.breakupOutput2 + up.breakupOutput + 'Character Description - Minor: ' + up.breakupOutput + self.Character_Art_Prompts_Minor
+        FileName_Details_Pre = FileName + ' PreProduction'
+        cu.SaveCSV(Text=Text2Add, Title=FileName_Details_Pre, SavePath=SavePath+'\\Outlines')
+        Season_num = len(Outline_ALL_Seasons_list) + 1
+        for x in range(1,Season_num):
+            Season_num = x
 
-
-#Call Outline - Episode by episode
-        Pilot_Short_story_fix = ''
-
-
-
-
-
-        for_num = Episode_Count + 1
-        Outline_Episodes_by_episode = ''
-        Episode_Story = ''
-        for episode_num in range(1,for_num):
-            Outline_All = Outline_ALL_Episode_list[episode_num]
-            print('Outline All:' +up.breakupOutput2+ Outline_All)
-            if episode_num ==1:
-                Pilot_Short_story_fix = Pilot_Short_story_fix1
-            else:
-                Pilot_Short_story_fix = ''
-            print('Created Outline for Episode ' + str(episode_num))
-            Outline_Episodes_by_episode = MondeVert.Basic_GPT_Query(self,Line2_Role='Take on the following writer persona:' + Writer_Persona_Summary,Line3_Format=Episode_by_Episode_Outline_Format,Line4_Task=Episode_by_Episode_Outline_Task + """Season Outline:### """ + Outline_All + ' ###' + 'Characters: ' + Characters,Special=Episode_by_Episode_Outline_Special + str(episode_num) + "### " + Pilot_Short_story_fix,Line1_System_Rule=System,crazy=crazy,Subject='',Outline=Outline_ALL_Episodes)
-            Episode_Outline.append(Outline_Episodes_by_episode)
-
-            if Outline_Episodes_by_episode =='':
-                Outline_Episodes_by_episode = Outline_All_Episodes
             try:
-                # print('episode_num ' + str(episode_num))
-                # print('Outline_Episodes_by_episode' + Outline_Episodes_by_episode)
-                # print('Characters' + Characters)
-                # print( 'Writer_Persona_Summary'  + Writer_Persona_Summary)
-                # print('Episode_by_Episode_Format' + Episode_by_Episode_Format)
-                # print('Episode_by_Episode_Task' + Episode_by_Episode_Task)
-                # print('Episode_by_Episode_Special' + Episode_by_Episode_Special)
-                # print('Pilot_Short_story_fix' + Pilot_Short_story_fix)
-                # print('System' + System)
+                if len (Outline_ALL_Seasons_list) >= Season_num:
+                    Outline_AllS = Outline_ALL_Seasons_list[Season_num]
+            except:
+                continue
+            # print('Outline Season # ' + str(Season_num) + ': ' + up.breakupOutput2 + Outline_AllS)
+
+            Outline_progression += up.breakupOutput2 + 'High Level Outline - Season ' + str(Season_num) + ': ' +  Outline_AllS
+
+            #This is where I pick characters based on season outline to put in detailed outline
+
+            Characterst = Characters
+            if len (Characterst)> 2000:
+                Characterst = Characterst[:2000]
+
+
+
+
+            CharactersTrim = MondeVert.Basic_GPT_Query(self,
+                                                             Line2_Role=Story_Role,
+                                                             Line3_Format=StoryMode.Characters_Format_Fine,
+                                                             Line4_Task=StoryMode.Characters_Task_Fine + """ Use the following text for the source of information Text:###""" + Outline_AllS + """### Use the following characters: """ + Characterst,
+                                                             Special='', Line1_System_Rule=System, crazy=crazy,
+                                                             Subject='')
+
+            #This is where I make the detailed outline using character info from the prior function
+            Outline_Season = MondeVert.Basic_GPT_Query(self,
+                                                             Line2_Role=Story_Role,
+                                                             Line3_Format=Season_By_Season_Outline_Detail_Format,
+                                                             Line4_Task=Season_By_Season_Outline_Detail_Task + """ Use the following text for the source of information Text:###""" + Outline_AllS + """### Use the following characters: """ + CharactersTrim ,
+                                                             Special='', Line1_System_Rule=System, crazy=crazy,
+                                                             Subject='')
+
+            Outline_progression += up.breakupOutput2 + 'Detailed Outline -  Season ' + str(Season_num) + ': ' +  Outline_Season
+
+            try:
+                Characters1 = MondeVert.Basic_GPT_Query(self,
+                                                                 Line2_Role=Story_Role,
+                                                                 Line3_Format=StoryMode.Characters_Update_Format,
+                                                                 Line4_Task=StoryMode.Characters_Update_Task + """ Use the following text for the source of information Text:###""" + Outline_Season + """### Use the following characters: """ + Characterst,
+                                                                 Special='', Line1_System_Rule=System, crazy=crazy,
+                                                                 Subject='')
 
                 try:
-                    Episode_Story_Audio = MondeVert.Basic_GPT_Query(self,Line2_Role='Take on the following writer persona:' + Writer_Persona_Summary,Line3_Format=Episode_by_Episode_Format,Line4_Task=Episode_by_Episode_Task + """Episode Outline:### """ + Outline_Episodes_by_episode + '  ###' ,Special=  Pilot_Short_story_fix,Line1_System_Rule=System,crazy=crazy,Subject='',Outline='')
-                    Episode_Story = MondeVert.Basic_GPT_Query(self,
-                                                          Line2_Role='Take on the following writer persona:' + Writer_Persona_Summary,
-                                                          Line3_Format=lup.Short_Story_Format_Screenplay,
-                                                          Line4_Task=Episode_by_Episode_Task + """Episode Outline:### """ + Outline_Episodes_by_episode ,
-                                                          Special=Pilot_Short_story_fix, Line1_System_Rule=System,
-                                                          crazy=crazy, Subject='', Outline='')
+                    CheckSize =len(Characters)*.44
+
+                    if len(Characters1)> CheckSize:
+                        Characters = Characters1
+                        Character_progression += up.breakupOutput2 + 'Characters Updated as of Season ' + str(Season_num) + ': '   + Characters
                 except:
-                    Episode_Story = MondeVert.Basic_GPT_Query(self,
-                                                              Line2_Role='Take on the following writer persona:' + Writer_Persona_Summary,
-                                                              Line3_Format=Episode_by_Episode_Format,
-                                                              Line4_Task=Episode_by_Episode_Task + """Episode Outline:### """ + Outline_Episodes_by_episode ,
-                                                              Special= Pilot_Short_story_fix,
-                                                              Line1_System_Rule=System, crazy=crazy, Subject='',
-                                                              Outline='')
+                    print("Could not update the Characters")
             except:
-                print('Error making Episode #' + str(episode_num))
+                print("Could not update the Characters")
 
-            print('Created Episode ' + str(episode_num))
-            Episode.append(Episode_Story)
-            Episode2.append(Episode_Story_Audio)
-            Text2Add = "Amini Amor in partnership with MondeVert Presents: "  +up.breakupOutput +  Episode_Story
-            FileName_Episode = FileName+'_EPISODE_' + str(episode_num)
-            FileName_Episode2 = FileName + '_EPISODE_' + str(episode_num) + '_Audio'
-            cu.SaveCSV(Text=Text2Add,Title= FileName_Episode,SavePath= SavePath)
-            Text2Add = "Amini Amor in partnership with MondeVert Presents: "  +up.breakupOutput + Episode_Story_Audio
-            cu.SaveCSV(Text=Text2Add, Title=FileName_Episode2, SavePath=SavePath)
+            # This is where I make a high level outline for each episode based on the prior detailed outline
+            Outline_ALL_Episode_list = ['']
+            # Call Outline - All Episodes
+            Outline_ALL_Episodes = MondeVert.Basic_GPT_Query(self,
+                                                             Line2_Role=Story_Role,
+                                                             Line3_Format=Season_Outline_Format,
+                                                             Line4_Task=Season_Outline_Task + """ Use the following text for the source of information Text:###""" + Outline_Season + """### Use the following characters: """ + CharactersTrim,
+                                                             Special='', Line1_System_Rule=System, crazy=crazy,
+                                                             Subject='')
 
-            Text2Add =  "Outline Details: " + up.breakupOutput2 + up.breakupOutput + Outline_Episodes_by_episode
-            FileName_Episode = FileName + '_Outline_' + str(episode_num)
-            cu.SaveCSV(Text=Text2Add, Title=FileName_Episode, SavePath=SavePath)
+            Outline_progression += up.breakupOutput2 + 'Outline - All Episodes - High Level Episodes Outlines (Full Season): ' + Outline_ALL_Episodes
 
-            # print(up.breakupOutput)
-            # print('User_Input_AllEpisodes_Episodes_by_episode: ' + User_Input_AllEpisodes_Episodes_by_episode)
-            # print(up.breakupOutput)
+            Outline_ALL_Episodes_split= Outline_ALL_Episodes
+            Outline_ALL_Episodes_split = Outline_ALL_Episodes_split.replace("Episode", "EPISODE")
+            Outline_ALL_Episodes_split = Outline_ALL_Episodes_split.replace("Number", "NUMBER")
 
-#******************************************************************
+            if "@EPISODE" in Outline_ALL_Episodes_split:
+                Outline_ALL_Episodes_split = Outline_ALL_Episodes_split.replace("@EPISODE", "@@EPISODE")
+                Outline_ALL_Episodes_split2 = Outline_ALL_Episodes_split.split("@@")
 
-        #print(up.breakupOutput)
-# ************************************************************************************************************************************
-# ************************************************************************************************************************************
-#         for each_thread in thread_pool:
-#             each_thread.join()
+            else:
 
-
-        try:
-            if Title == '':
-                # Title = MondeVert.ChatGPTDA(self, temp=0.5, MakeArt=True, Prompt=( Titleo+ '"' + Background + '"'),ConfirmBot=False)
-                Title = Titleo
-        except:
-            print('could not come up with title review')
-            Title = Mode
-#********************************************************************************************************************************
-#********************************************************************************************************************************
-
-        Audio_Script = ''
-        ScreenPlay = ''
-        for x in range(0, Episode_Count):
-            Episode_Outlines += Episode_Outline[x]
-            ScreenPlay += Episode[x]
-            Audio_Script += Episode2[x]
-        # MondeVert.speak(self, "MondeVert Project Work complete yo")
-
-        print(up.breakupOutput2)
-
-        #Save all of the userinputs for reference later UserInputs =
-        #Save Details and Have voice speak it out
-
-        # print(Title)
-        # print(Writer_Persona)
-        # print(Artist_Persona)
-        # print(Art_Style_For_Story)
-        # print(Outline_Main)
-        # print(Characters)
-        # print(self.Character_Art_Prompts_Minor)
-        # print(self.Character_Art_Prompts_Major)
-        # print(Outline_All_Episodes)
-        # print(Outline_Episode_Specific)
-        # print(ScreenPlay)
+                Outline_ALL_Episodes_split = Outline_ALL_Episodes_split.replace("EPISODE", "@@EPISODE")
+                Outline_ALL_Episodes_split2 = Outline_ALL_Episodes_split.split("@@")
+            for s in Outline_ALL_Episodes_split2:
+                if "EPISODE" in s.upper():
+                    Outline_ALL_Episode_list.append(s)
 
 
-        try:
-            data =''
-            AudioBook_Text= ''
-            try:
-                data += """Title: """ + Title
-            except:
-                data+= '***Missing Text Review***'
-                AudioBook_Text+= Title
-                print('Error trying to put text together, went forward anyway')
-            try:
-                data += up.breakupOutput2
-            except:
-                data+= '***Missing Text Review***'
-                print('Error trying to put text together, went forward anyway')
-            try:
-                data +="""Outline_Main: """ + Outline_Main + up.breakupOutput2
-            except:
-                data+= '***Missing Text Review***'
-                print('Error trying to put text together, went forward anyway')
-            try:
-                data +=+"""Characters: """+ Characters + up.breakupOutput2
-            except:
-                data+= '***Missing Text Review***'
-                print('Error trying to put text together, went forward anyway')
-            try:
-                data +="""  Outline_All_Episodes: """ + Outline_All_Episodes + up.breakupOutput2
-            except:
-                data+= '***Missing Text Review***'
-                print('Error trying to put text together, went forward anyway')
-            try:
-                data +="""ScreenPlay: """ + ScreenPlay + up.breakupOutput2
-            except:
-                data+= '***Missing Text Review***'
-                print('Error trying to put text together, went forward anyway')
+            #
+            # print('Created All Episode Outline')
+
+            Writer_Art_Details =   'Writer_Persona: ' + Writer_Persona + 'Writer_Persona_Summary: ' + Writer_Persona_Summary + 'Art_Style_For_Story: '+Art_Style_For_Story
+            Text2Add = Writer_Art_Details +  up.breakupOutput2 + Outline_progression + up.breakupOutput2  + 'User Subject/how it was used as source material: ' + Subject_Details
+            FileName_Details_Pre = FileName   +  ' Season ' + str(Season_num) + ' Outlines'
+            cu.SaveCSV(Text=Text2Add, Title=FileName_Details_Pre, SavePath=SavePath + '\\Outlines')
+
+            # Call Outline - Episode by episode
+            Pilot_Short_story_fix = ''
+
+            # print(Outline_ALL_Episode_list)
+            for_num = Episode_Count + 1
+            # print(for_num)
+            Outline_Episodes_by_episode = ''
+
+            print(Outline_ALL_Episode_list)
+            print(len)
+            episode_num = len(Outline_ALL_Episode_list) + 1
+#This should likely be its own function (Call it for each season)
+            for episode_num2 in range(1, episode_num):
+                Episode_Story = ''
+                Episode_Story_Audio = ''
+                Episode_Story_Novel = ''
+                Episode_Story_Play = ''
+                Episode_Story_Song = ''
+
+                # print(episode_num2)
+                # print(len(Outline_ALL_Episode_list) )
+
                 try:
-                    data += """Audio_Script: """ + Audio_Script + up.breakupOutput2
+                    if len(Outline_ALL_Episode_list) >= episode_num2:
+                        Outline_All = Outline_ALL_Episode_list[episode_num2]
+                except:
+                    continue
+
+
+                Outline_progression += up.breakupOutput2 + 'High Level Outline -  Season ' + str(Season_num) + ' Episode ' + str(episode_num2)+ ': ' + Outline_All
+
+                try:
+                    Characterst = Characters
+                    CharactersTrim = Characters
+
+                    if len(Characterst) > 2000:
+                        Characterst = Characterst[:2000]
+
+                    CharactersTrim = MondeVert.Basic_GPT_Query(self,
+                                                               Line2_Role=Story_Role,
+                                                               Line3_Format=StoryMode.Characters_Format_Fine,
+                                                               Line4_Task=StoryMode.Characters_Task_Fine + """Use the following Text:###""" + Outline_All + """ ###
+                                                               
+                                                               Do not add any Characters that are not supposed to be in the Episode, Pick/describe using the following character descriptions (if the character has none, create a unique description for the required character): """ + Characterst,
+                                                               Special='', Line1_System_Rule=System, crazy=crazy,
+                                                               Subject='')
+                except:
+                    DN = 100
+
+                # This is where I make the detailed outline using character info from the prior function
+                Outline_Episode = MondeVert.Basic_GPT_Query(self,
+                                                           Line2_Role=Story_Role,
+                                                           Line3_Format=Season_By_Season_Outline_Detail_Format,
+                                                           Line4_Task=Season_By_Season_Outline_Detail_Task + """Use the following {Text}     Text:###"""+ Outline_All + """### Use the following characters: """ + CharactersTrim,                                                           Special='', Line1_System_Rule=System, crazy=crazy,
+                                                           Subject='')
+
+                # This is where I make a high level outline for each episode based on the prior detailed outline
+                Outline_progression += up.breakupOutput2 + 'Detailed Outline -  Season ' + str(Season_num) + ' Episode ' + str(episode_num2)+  ': ' + Outline_Episode
+                try:
+                    Characters1 = MondeVert.Basic_GPT_Query(self,
+                                                           Line2_Role=Story_Role,
+                                                           Line3_Format=StoryMode.Characters_Update_Format,
+                                                           Line4_Task=StoryMode.Characters_Update_Task + + """Use the following {Text}     Text:###""" + Outline_Episode+ """### Use the following characters: """ + Characterst,
+                                                           Special='', Line1_System_Rule=System, crazy=crazy,
+                                                           Subject='')
+
+                    try:
+                        CheckSize = len(Characters) * .75
+
+                        if len(Characters1) > CheckSize:
+                            Characters = Characters1
+                            Character_progression += up.breakupOutput2 + 'Characters end of Season ' +  str(Season_num) +  ' Episode ' + str(episode_num2)  + ': ' + Characters
+                    except:
+                        print("Could not update the Characters")
+                except:
+                    print("Could not update the Characters")
+
+
+
+
+
+                Outline_Episodes_by_episode = MondeVert.Basic_GPT_Query(self,
+                                                                        Line2_Role=Story_Role,
+                                                                        Line3_Format=Episode_by_Episode_Outline_Format,
+                                                                        Line4_Task=Episode_by_Episode_Outline_Task + """Episode Outline:### """ + Outline_Episode + ' ###' + 'Characters: ' + CharactersTrim,
+                                                                        Line1_System_Rule=System, crazy=crazy,
+                                                                        Subject='')
+
+
+
+                Outline_Episodes_Details = MondeVert.Basic_GPT_Query(self,
+                                                                        Line2_Role=Story_Role,
+                                                                        Line3_Format=Episode_by_Episode_Detail_Outline_Format1,
+                                                                        Line4_Task=Episode_by_Episode_Detail_Outline_Task1 + """ ### Episode Outline:### """ + Outline_Episode + ' ###' + 'Characters: ' + CharactersTrim,
+                                                                        Line1_System_Rule=System, crazy=crazy,
+                                                                        Subject='')
+
+                Outline_progression += up.breakupOutput2 + 'Detailed Outline -  Season ' + str(Season_num) + ' Episode ' + str(episode_num2) + ': ' + Outline_Episode
+
+                Episode_Outline.append(Outline_Episodes_by_episode)
+                Outline_Episodes_by_episode_list = ['']
+
+
+                Outline_Episodes_by_episode_Split = Outline_Episodes_by_episode
+                Outline_Episodes_by_episode_Split = Outline_Episodes_by_episode_Split.replace("Scene", "SCENE")
+                Outline_Episodes_by_episode_Split = Outline_Episodes_by_episode_Split.replace("Number", "NUMBER")
+
+                if "@SCENE" in Outline_Episodes_by_episode_Split:
+                    Outline_Episodes_by_episode_Split = Outline_Episodes_by_episode_Split.replace("@SCENE", "@@SCENE")
+                    Outline_Episodes_by_episode_Split2 = Outline_Episodes_by_episode_Split.split("@@")
+
+                else:
+
+                    Outline_Episodes_by_episode_Split = Outline_Episodes_by_episode_Split.replace("SCENE", "@@SCENE")
+                    Outline_Episodes_by_episode_Split2 = Outline_Episodes_by_episode_Split.split("@@")
+
+                for s in Outline_Episodes_by_episode_Split2:
+                    if "SCENE" in s.upper():
+                        Outline_Episodes_by_episode_list.append(s)
+                    else:
+                        if s == Outline_Episodes_by_episode_Split[0]:
+                            Episode_By_Episode_Details = s
+
+                print(Outline_Episodes_by_episode_list)
+                Scene_Range = len(Outline_Episodes_by_episode_list) + 1
+                # print("Number of scenes: ")
+                # print (Scene_Range)
+                Episode_Construction = ''
+                for y in range(1,Scene_Range):
+                    Scene_Num = y
+                    Story1 = ''
+                    Story2 = ''
+                    Story4 = ''
+                    Story5 = ''
+                    Story3 = ''
+
+                    try:
+                        if len(Outline_Episodes_by_episode_list) >= Scene_Num:
+                            Outline_Fine = Outline_Episodes_by_episode_list[Scene_Num]
+                    except:
+                        continue
+
+                    # UPDATE_This is where I should do the Episode Detail version and get that returned
+
+                    Characterst = Characters
+                    if len(Characterst) > 2800:
+                        Characterst = Characterst[:2800]
+                    CharactersTrim = MondeVert.Basic_GPT_Query(self,
+                                                               Line2_Role=Story_Role,
+                                                               Line3_Format=StoryMode.Characters_Format_Fine,
+                                                               Line4_Task=StoryMode.Characters_Task_Fine + """Use the following Text:###""" + Outline_Fine + """ ###
+
+                                                                                                                              Do not add any Characters that are not supposed to be in the Episode, Pick/describe using the following character descriptions (if the character has none, create a unique description for the required character): """ + Characterst,
+                                                               Special='', Line1_System_Rule=System, crazy=crazy,
+                                                               Subject='')
+
+
+                    Character_progression += up.breakupOutput2 + 'Characters Used for Season ' + str(Season_num) + ' Episode ' + str(episode_num2) + ' Scene ' + str(Scene_Num) + ': ' + CharactersTrim
+
+
+                    # This is where I make the detailed outline using character info from the prior function
+                    Outline_Scene = MondeVert.Basic_GPT_Query(self,
+                                                                Line2_Role=Story_Role,
+                                                                Line3_Format=Episode_by_Episode_Detail_Outline_Format,
+                                                                Line4_Task=Episode_by_Episode_Detail_Outline_Task + """Use the following  {Scene Specific Outline}  as a source for the creating the season specific outline you are working on a Scene Specific Outline:###""" + Outline_Fine + """ Use the following characters: """ + CharactersTrim,
+                                                                Special='', Line1_System_Rule=System, crazy=crazy,
+                                                                Subject='')
+
+                    # This is where I make a high level outline for each episode based on the prior detailed outline
+
+                    try:
+                        Characters1 = MondeVert.Basic_GPT_Query(self,
+                                                           Line2_Role=Story_Role,
+                                                           Line3_Format=StoryMode.Characters_Update_Format,
+                                                           Line4_Task=StoryMode.Characters_Update_Task + """Use the following {Scene Specific Outline}  as a source for the creating the Scene specific outline you are working on a Scene Specific Outline:""" + Outline_Scene + """ Use the following characters: """ + Characterst,
+                                                           Special='', Line1_System_Rule=System, crazy=crazy,
+                                                           Subject='')
+
+
+                        try:
+                            CheckSize = len(Characters) * .75
+
+                            if len(Characters1) > CheckSize:
+                                Characters = Characters1
+                                Character_progression += up.breakupOutput2 + 'Characters end of Season ' + str(Season_num) + ' Episode ' + str(episode_num2) + ' Scene ' + str(Scene_Num) + ': ' + Characters
+                        except:
+                            print("Could not update the Characters")
+
+                    except:
+                        dn = 100
+
+
+
+
+                    if Outline_Episodes_by_episode == '':
+                        Outline_Episodes_by_episode = Outline_All_Episodes
+                    try:
+
+                        Episode_Construction += up.breakupOutput2 + 'Scene Specific Outline' + Outline_Scene
+
+                        Outline_progression+= "Outline_Scene" + str(Season_num) + ": "
+                        for type in Output_Types:
+                            try:
+                                current_time1 = datetime.datetime.now()
+                                current_time = self.current_time1.strftime('%m-%d-%Y_%H.%M')
+                                a = current_time
+                                b = self.current_time
+
+
+                                c = a - b
+
+
+                                minutes = c.total_seconds() / 60
+                                print('Total difference in minutes: ', minutes)
+
+                                # returns the difference of the time of the day
+                                minutes = c.seconds / 60
+                                if minutes > 250:
+                                    continue
+                                    sys.exit()
+                                if minutes > 251:
+                                    sys.exit()
+
+                            except:
+                                dn = 100
+
+                            try:
+                                if type == "ScreenPlay_Audio":
+                                    try:
+                                        Story1 = MondeVert.Basic_GPT_Query(self,Line2_Role=Story_Role,Line3_Format=Episode_by_Episode_Format, Line4_Task=Episode_by_Episode_Task + """Scene Outline: """ +Outline_Episodes_Details + '  ' + Outline_Scene + '  ',Line1_System_Rule=System, crazy=crazy,Subject='', Outline='')
+                                        Episode_Story_Audio  +=  'Season ' + str(Season_num) + ' Episode #' + str(episode_num2) + ' Scene # ' + str(Scene_Num)+  Story1 + up.breakupOutput2
+                                    except:
+                                        dn = 100
+
+                                if type == "Novel":
+                                    try:
+                                        Story3 = MondeVert.Basic_GPT_Query(self,
+                                                                                  Line2_Role=Story_Role,
+                                                                                  Line3_Format=StoryMode.Short_Story_Format_Novel_Chapter,
+                                                                                  Line4_Task=StoryMode.Short_Story_Task_Novel_Chapter +"""Scene Outline: """ +Outline_Episodes_Details + '  '+ Outline_Scene + '  ',
+
+                                                                                  Line1_System_Rule=System,
+                                                                                  crazy=crazy, Subject='', Outline='')
+                                        Episode_Story_Novel +=  'Season ' + str(Season_num) + ' Episode #' + str(episode_num2) + ' Scene # ' + str(Scene_Num)+  Story3 + up.breakupOutput2
+
+                                    except:
+                                        dn = 100
+
+                                if type == "Play":
+                                    try:
+                                        Story4 = MondeVert.Basic_GPT_Query(self,
+                                                                           Line2_Role=Story_Role,
+                                                                           Line3_Format=StoryMode.Short_Story_Format_Play_Scene,
+                                                                           Line4_Task=StoryMode.Short_Story_Task_Play_Scene +"""Scene Outline: """ +Outline_Episodes_Details + '  '+ Outline_Scene + '  ',
+
+                                                                           Line1_System_Rule=System,
+                                                                           crazy=crazy, Subject='', Outline='')
+                                        Episode_Story_Play += 'Season ' + str(Season_num) + ' Episode #' + str(episode_num2) + ' Scene # ' + str(Scene_Num) + Story4 + up.breakupOutput2
+
+                                    except:
+                                        dn = 100
+
+                                if type == "ScreenPlay":
+                                    try:
+                                        Story2 = MondeVert.Basic_GPT_Query(self,
+                                                                                  Line2_Role=Story_Role,
+                                                                                  Line3_Format=StoryMode.Short_Story_Format_Screenplay_Scene,
+                                                                                  Line4_Task=Episode_by_Episode_Task + """Scene Outline: """ +Outline_Episodes_Details + '  '+ Outline_Scene + '  ',
+
+                                                                                  Line1_System_Rule=System,
+                                                                                  crazy=crazy, Subject='', Outline='')
+                                        Episode_Story +=  'Season ' + str(Season_num) + ' Episode #' + str(episode_num2) + ' Scene # ' + str(Scene_Num)+  Story2 + up.breakupOutput2
+
+
+
+                                    except:
+                                        dn = 100
+
+                                if type == "Song":
+                                    try:
+                                        Story5 = MondeVert.Basic_GPT_Query(self,
+                                                                           Line2_Role=StoryMode.Music_Role,
+                                                                           Line3_Format=StoryMode.Short_Story_Song_Format,
+                                                                           Line4_Task=StoryMode.Short_Story_Song_Task + """Scene Outline: """ + Outline_Episodes_Details + '  ' + Outline_Scene + '  ',
+
+                                                                           Line1_System_Rule=System,
+                                                                           crazy=crazy, Subject='', Outline='')
+                                        Episode_Story_Song += 'Season ' + str(Season_num) + ' Episode #' + str(episode_num2) + ' Scene # ' + str(Scene_Num) + Story5 + up.breakupOutput2
+
+                                        #Turned this off for now, but its an interesting feature
+                                        # Song_title = MondeVert.Make_a_Song_2(self, Make_Persona=True, SavePath=SavePath,
+                                        #                         System=up.system_TextRR, Mode=Mode,
+                                        #                         Artist_Bio_Details=Story_Details2,
+                                        #                         Song_Subject=Outline_Episodes_Details + '  ' + Outline_Scene, Role=StoryMode.Music_Role)
+                                        #
+                                        # Outline_progression+= up.breakupOutput2 + 'Song_Title ' + str(Season_num) + ' Episode ' + str(episode_num2) + ' Scene ' + str(Scene_Num) + ': ' + Song_title
+
+                                    except:
+                                        dn = 100
+                            except:
+                                print(Title + ' - Error making Scene # ' + str(Scene_Num) + 'Episode #' + str(episode_num2) + " For the following Type: " + type)
+
+
+
+                    except:
+                        print(Title + ' - Error making Scene # ' + str(Scene_Num) + 'Episode #' + str(episode_num2) )
+
+                print(Title + ' - Created Episode ' + str(episode_num2)  + ' for Season ' + str(Season_num))
+
+                Episode3.append(Episode_Story_Novel)
+                Episode.append(Episode_Story)
+                Episode2.append(Episode_Story_Audio)
+                Episode4.append(Episode_Story_Play)
+                Episode6.append(Episode_Story_Song)
+                Text2Add = "Amini Amor in partnership with MondeVert Presents: " + up.breakupOutput + Episode_Story
+                FileName_Episode = FileName + ' Season ' + str(Season_num) + ' EPISODE ' + str(episode_num2)
+                FileName_Episode2 = FileName +  ' Season ' + str(Season_num) + ' EPISODE ' + str(episode_num2) + ' Audio'
+                FileName_Episode3 = FileName + ' Act ' + str(Season_num) + ' Chapter ' + str(episode_num2) + ' Novel'
+                FileName_Episode4 = FileName + ' Act ' + str(Season_num) + ' Part ' + str(episode_num2) + ' Play'
+                FileName_Episode6 =  FileName +  ' Season ' + str(Season_num) + ' EPISODE ' + str(episode_num2) + ' Song'
+                csv1 = cu.SaveCSV(Text=Text2Add, Title=FileName_Episode, SavePath=SavePath)
+                Text2Add2 = "Amini Amor in partnership with MondeVert Presents: " + up.breakupOutput + Episode_Story_Audio
+                csv2 = cu.SaveCSV(Text=Text2Add2, Title=FileName_Episode2, SavePath=SavePath)
+                Text2Add3 = "Amini Amor in partnership with MondeVert Presents: " + up.breakupOutput + Episode_Story_Novel
+                csv3 = cu.SaveCSV(Text=Text2Add3, Title=FileName_Episode3, SavePath=SavePath)
+                Text2Add4 = "Amini Amor in partnership with MondeVert Presents: " + up.breakupOutput + Episode_Story_Play
+                csv4 = cu.SaveCSV(Text=Text2Add4, Title=FileName_Episode4, SavePath=SavePath)
+                Text2Add6= "Amini Amor in partnership with MondeVert Presents: " + up.breakupOutput + Episode_Story_Song
+                csv4 = cu.SaveCSV(Text=Text2Add6, Title=FileName_Episode6, SavePath=SavePath)
+
+                Text2Add5 = "Outline Details: " + up.breakupOutput2 + 'Outline_ALL_Episodes: ' + Outline_ALL_Episodes + up.breakupOutput2 + 'Outline_All: ' + Outline_All + up.breakupOutput +  'Outline_Season: ' +Outline_Episodes_by_episode+ up.breakupOutput +  'Outline_Scene(s): ' + Episode_Construction + up.breakupOutput
+                FileName_Episode5 = FileName  +  ' Season ' + str(Season_num) + ' Episode ' + str(episode_num2) +   ' Outline '
+                try:
+                    cu.SaveCSV(Text=Text2Add5, Title=FileName_Episode5, SavePath=SavePath + '\\Outlines')
+                except:
+                    cu.SaveCSV(Text=Text2Add5, Title=FileName_Episode5, SavePath=SavePath )
+
+
+
+
+            # ******************************************************************
+
+            try:
+                if Title == '':
+                    # Title = MondeVert.ChatGPTDA(self, temp=0.5, MakeArt=True, Prompt=( Titleo+ '"' + Background + '"'),ConfirmBot=False)
+                    Title = Titleo
+            except:
+                print('could not come up with title review')
+                Title = Mode
+            # ********************************************************************************************************************************
+            # ********************************************************************************************************************************
+
+            Audio_Script = ''
+            ScreenPlay = ''
+            Novel = ''
+            Play = ''
+            Song = ''
+
+            Voice = random.choices(SAF.Original_List_of_Voices_English[0])
+
+            Voice_Audio = Voice
+
+            Voice_Novel = Voice
+
+            Voice_Play = Voice
+
+            # print('translate Langauge:')
+            # print(Translate)
+
+            RunLen = len(Episode)
+            for x in range(0, RunLen):
+                ScreenPlay += Episode[x]
+
+            RunLen = len(Episode_Outline)
+            for x in range(0, RunLen):
+                Episode_Outlines += Episode_Outline[x]
+
+            RunLen = len(Episode2)
+            for x in range(0, RunLen):
+
+                Audio_Script += Episode2[x]
+
+            RunLen = len(Episode3)
+            for x in range(0, RunLen):
+                Novel += Episode3[x]
+
+            RunLen = len(Episode4)
+            for x in range(0, RunLen):
+                Play += Episode4[x]
+
+            RunLen = len(Episode4)
+            for x in range(0, RunLen):
+                Song += Episode6[x]
+
+            Text2Add = "Amini Amor in partnership with MondeVert Presents: " + up.breakupOutput + ScreenPlay
+            FileName_1 = FileName + ' ScreenPlay '
+            FileName_2 = FileName + ' Audio'
+            FileName_3 = FileName +' Novel'
+            FileName_4 = FileName +  ' Play'
+            FileName_5 = FileName + ' Outlines '
+            FileName_6 = FileName + ' Song '
+            FileName_7 = FileName + ' Character progression '
+
+            csv1 = cu.SaveCSV(Text=Text2Add, Title=FileName_1, SavePath=SavePath)
+            Text2Add2 = "Amini Amor in partnership with MondeVert Presents: " + up.breakupOutput + Audio_Script
+            csv2 = cu.SaveCSV(Text=Text2Add2, Title=FileName_2, SavePath=SavePath)
+            Text2Add3 = "Amini Amor in partnership with MondeVert Presents: " + up.breakupOutput + Novel
+            csv3 = cu.SaveCSV(Text=Text2Add3, Title=FileName_3, SavePath=SavePath)
+            Text2Add4 = "Amini Amor in partnership with MondeVert Presents: " + up.breakupOutput + Play
+            csv4 = cu.SaveCSV(Text=Text2Add4, Title=FileName_4, SavePath=SavePath)
+            Text2Add5 = "Outline Details: " + up.breakupOutput  + Outline_progression
+            csv5 = cu.SaveCSV(Text=Text2Add5, Title=FileName_5, SavePath=SavePath + '\\Outlines')
+            Text2Add6 = "Amini Amor in partnership with MondeVert Presents: " + up.breakupOutput + Song
+            csv6 = cu.SaveCSV(Text=Text2Add6, Title=FileName_6, SavePath=SavePath)
+            Text2Add7 = ' Character progression: '  + up.breakupOutput + Character_progression
+            csv7 = cu.SaveCSV(Text=Text2Add7, Title=FileName_7, SavePath=SavePath + '\\Outlines')
+
+            try:
+                # cu.SaveText2Audio(SavePath=SavePath, FileName=FileName_Episode3, Voice=Voice_Novel,
+                #                   Neural='Neural',
+                #                   Mode='AUDIOBOOK', Chunk_Limit=Chunk_Limit, Artist_Persona=Art_Style_For_Story,
+                #                   Text=Text2Add3,
+                #                   Translate=Translate)
+                #
+                #
+                cu.SaveText2Audio(SavePath=SavePath, FileName=FileName_1, Voice=Voice,
+                                  Neural='Neural',
+                                  Mode='AUDIOBOOK', Chunk_Limit=Chunk_Limit, Artist_Persona=Art_Style_For_Story,
+                                  Text=Text2Add,
+                                  Translate=Translate)
+            except:
+
+                cu.SaveText2Audio(
+                    FilePath=csv1,
+                    Chunk_Limit=Chunk_Limit, Translate=['English'])
+
+            # print(up.breakupOutput2)
+
+
+            try:
+
+                try:
+                    data += """Title: """ + Title
+                except:
+                    data += '***Missing Text Review***'
+                    AudioBook_Text += Title
+                    print('Error trying to put text together, went forward anyway')
+                try:
+                    data += up.breakupOutput2
+                except:
+                    data += '***Missing Text Review***'
+                    print('Error trying to put text together, went forward anyway')
+                try:
+                    data += """Outline_Main: """ + Outline_Main + up.breakupOutput2
+                except:
+                    data += '***Missing Text Review***'
+                    print('Error trying to put text together, went forward anyway')
+                try:
+                    data += +"""Characters: """ + Characters + up.breakupOutput2
+                except:
+                    data += '***Missing Text Review***'
+                    print('Error trying to put text together, went forward anyway')
+                try:
+                    data += """  Outline_All_Episodes: """ + Outline_All_Episodes + up.breakupOutput2
+                except:
+                    data += '***Missing Text Review***'
+                    print('Error trying to put text together, went forward anyway')
+                try:
+                    data += """ScreenPlay: """ + ScreenPlay + up.breakupOutput2
+                except:
+                    data += '***Missing Text Review***'
+                    print('Error trying to put text together, went forward anyway')
+                    try:
+                        data += """Audio_Script: """ + Audio_Script + up.breakupOutput2
+                    except:
+                        data += '***Missing Text Review***'
+                        print('Error trying to put text together, went forward anyway')
+
+                try:
+                    data += """Writer Bio: """ + Writer_Persona + up.breakupOutput2
+                except:
+                    data += '***Missing Text Review***'
+                    print('Error trying to put text together, went forward anyway')
+                try:
+                    data += """Artist Bio: """ + Artist_Persona + Art_Style_For_Story + up.breakupOutput2
+                except:
+                    data += '***Missing Text Review***'
+                    print('Error trying to put text together, went forward anyway')
+                try:
+                    data += +"""Character Descriptions: """ + self.Character_Art_Prompts_Main + up.breakupOutput2 + self.Character_Art_Prompts_Minor + up.breakupOutput2 + up.breakupOutput2 + """Outline_Episode_Specific: """ + Episode_Outlines + up.breakupOutput2
                 except:
                     data += '***Missing Text Review***'
                     print('Error trying to put text together, went forward anyway')
 
-            try:
-                data +="""Writer Bio: """ + Writer_Persona +  up.breakupOutput2
+                AudioBook_Text = """Title: """ + Title + up.breakupOutput2 + ScreenPlay
+                Outline_and_Details = """Title: """ + Title + up.breakupOutput2 + """Writer Bio: """ + Writer_Persona + up.breakupOutput2 + """Artist Bio: """ + Artist_Persona + Art_Style_For_Story + up.breakupOutput2 + """Outline_Main: """ + Outline_Main + up.breakupOutput2 + """Characters: """ + Characters + up.breakupOutput2 + """Character Descriptions:    Main Characters - """ + self.Character_Art_Prompts_Main + up.breakupOutput2 + """ | Minor Characters - """ + self.Character_Art_Prompts_Minor + """     Outline_All_Episodes: """ + Outline_All_Episodes + up.breakupOutput2 + """Outline_Episode_Specific: """ + Episode_Outlines + up.breakupOutput2
             except:
-                data+= '***Missing Text Review***'
-                print('Error trying to put text together, went forward anyway')
+                print('Error when trying to create Text String results, review file could have some issues')
+
             try:
-                data +="""Artist Bio: """ + Artist_Persona + Art_Style_For_Story + up.breakupOutput2
+                #print('Output for : ' + Mode)
+                #print(data)
+                # print(Outline_and_Details)
+                # print(up.breakupOutput2)
+                # print(up.breakupOutput2)
+                # print(up.breakupOutput2)
+                print('End of creation, saving files')
             except:
-                data+= '***Missing Text Review***'
-                print('Error trying to put text together, went forward anyway')
-            try:
-                data +=+"""Character Descriptions: """+ self.Character_Art_Prompts_Main + up.breakupOutput2 +   self.Character_Art_Prompts_Minor  + up.breakupOutput2   + up.breakupOutput2 + """Outline_Episode_Specific: """ + Episode_Outlines + up.breakupOutput2
-            except:
-                data += '***Missing Text Review***'
-                print('Error trying to put text together, went forward anyway')
+                print('Error when trying to print results, review file could have some issues')
 
 
 
-            AudioBook_Text =  """Title: """ + Title + up.breakupOutput2 + ScreenPlay
-            Outline_and_Details = """Title: """ + Title + up.breakupOutput2 + """Writer Bio: """ + Writer_Persona + up.breakupOutput2 + """Artist Bio: """ + Artist_Persona + Art_Style_For_Story + up.breakupOutput2 + """Outline_Main: """ + Outline_Main + up.breakupOutput2 +"""Characters: """+ Characters + up.breakupOutput2 + """Character Descriptions:    Main Characters - """+ self.Character_Art_Prompts_Main + up.breakupOutput2 +  """ | Minor Characters - """ + self.Character_Art_Prompts_Minor +  """     Outline_All_Episodes: """ + Outline_All_Episodes + up.breakupOutput2 + """Outline_Episode_Specific: """ + Episode_Outlines + up.breakupOutput2
-        except:
-            print('Error when trying to create Text String results, review file could have some issues')
-
-        try:
-            print('Output for : ' + Mode)
-            print(data)
-            print(Outline_and_Details)
-            print(up.breakupOutput2)
-            # print(up.breakupOutput2)
-            # print(up.breakupOutput2)
-            print('End of creation, saving files')
-        except:
-            print('Error when trying to print results, review file could have some issues')
+        # Voice = SAF.Original_List_of_Voices_English[0]
+        # cu.SaveText2Audio(Text=self.Character_Art_Prompts_Main, SavePath=SavePath,
+        #                   FileName=Title + '_Charactors_Main', Chunk_Limit=213, Voice=Voice,
+        #                   Artist_Persona=Art_Style_For_Story)
+        # cu.SaveText2Audio(Text=self.Character_Art_Prompts_Minor, SavePath=SavePath,
+        #                   FileName=Title + '_Charactors_Minor', Chunk_Limit=213, Voice=Voice,
+        #                   Artist_Persona=Art_Style_For_Story)
 
 
-
-        try:
-            for i in range (1,Episode_Count+1):
-                FileName_Audio = Title + '_Episode_' + i
-                Voice = random.choices(SAF.Original_List_of_Voices_English[0])
-                e = Episode2[i]
-                cu.SaveText2Audio(SavePath=SavePath, FileName=FileName_Audio, Voice=Voice, Neural='Neural', Mode='AUDIOBOOK', Chunk_Limit=1444, Artist_Persona=Art_Details, Text=e, Translate=Translate)
-        except:
-            print('Audio Files not recorded error occurred')
-
-
-
-# #This is just the characters, need to do this for scenes etc too
-#         ArtPaths1 = MondeVert.Create_Art_from_String_to_list(self, self.Character_Art_Prompts_Main,  SavePath = SavePath,
-#                                                              FileName=FileName_Char_Main, Art_Style_details = Art_Style_For_Story,
-#                                                              Key_Word='Character', Key_Char=':', Delimiter='|',
-#                                                              crazy=crazy)
-#         ArtPaths.append(ArtPaths1)
-#         ArtPaths1 =MondeVert.Create_Art_from_String_to_list(self, self.Character_Art_Prompts_Minor,  SavePath = SavePath,
-#                                                              FileName=FileName_Char_Minor, Art_Style_details = Art_Style_For_Story,
-#                                                              Key_Word='Character', Key_Char=':', Delimiter='|',
-#                                                              crazy=crazy)
-
-
-        #ArtPaths.append(ArtPaths1)
-        #print(up.breakupOutput)
-
-
-
-
-        # MondeVert.speak(self, "Saving the files round 1")
-        # print(data)
-        Voice = SAF.Original_List_of_Voices_English[0]
-        cu.SaveText2Audio(Text=self.Character_Art_Prompts_Main, SavePath=SavePath,
-                          FileName=Title + '_Charactors_Main', Chunk_Limit=213, Voice=Voice,
-                          Artist_Persona=Artist_Persona)
-        cu.SaveText2Audio(Text = self.Character_Art_Prompts_Minor,SavePath=SavePath, FileName=Title + '_Charactors_Minor', Chunk_Limit=213, Voice= Voice, Artist_Persona=Artist_Persona)
-
-
-#
-       # data1 = [(data)]
 
         try:
             # df1 = pd.DataFrame(data1, columns=['Text'])
 
-
-            Email_File = cu.SaveCSV(Text=data,Title=  FileName, SavePath= SavePath)
+            Email_File = cu.SaveCSV(Text=data, Title=FileName, SavePath=SavePath)
 
         except:
             print('Review Error File did not save ')
-
-
-
 
         try:
             cu.send_email_no_attachment_gmail(body=AudioBook_Text)
             cu.send_email_no_attachment_outlook(body=AudioBook_Text)
 
             cu.send_email_w_attachment_outlook(body=AudioBook_Text, filename=[Email_File])
-            cu.send_email_w_attachment_gmail(body=AudioBook_Text, filename=[Email_File],fType='txt')
+            cu.send_email_w_attachment_gmail(body=AudioBook_Text, filename=[Email_File], fType='txt')
             print("Outlook email sent")
         except:
             print('email not send, its possible file was not created')
 
         # Art changes based on mode for now I will switch only when the mode calls for it otherwise default
 
-
         prompt = data
         Prompts_Used = [self.UserPrompts]
         ArtistPoetInfo = 'Shane Donovan - SHAINE - MondeVert'
         cu.NamePoemSavePoem(self, prompt, ArtPaths, Prompts_Used, ArtistPoetInfo, title=Title,
-                                   SavePath=SavePath, Mode=Mode)
+                            SavePath=SavePath, Mode=Mode)
         KillSwitch = 7
+
+
+
+
 
     # MondeVert.speak(self, ReWrite )
     def MondeVertAuto(self, Mode='AutoSocial', Role = '', System = ''):
         if Mode == 'AutoSocial':
             Caption = MondeVert.MondeVertTask(self, System=up.system_TextJoaT, Role=up.Test_Role_SMA, Background=up.Test_Background_SMA,Task=up.Test_Task_SMA, Special=up.Test_Special_SMA, Format=up.Test_Format_SMA, Title = up.Test_Title_SMA,Mode='AutoSocial')
         return Caption + up.Instagram_Adds
+
+
+
+
     def MondeVertMenu_up(self, Mode='Basic', Role = '', System = '', Translate = SAF.Translation_Languages_Testing):
         self.Mode = Mode
         openai.api_key = API_Key
@@ -2522,7 +3786,20 @@ class MondeVert():
         Log_Add = 'Mode: ' + Mode + ' Time of Request: ' + self.current_time
         self.Request_log.append(Log_Add)
 
-        if Mode == 'ScreenPlay':
+        if  Mode == 'MVAA':
+            MondeVert.StoryMode(self, System=up.system_TextJoaT_quick,SavePath=up.AI_AudioBook_Path + '\\' + Mode,Persona_Task=" use your current persona to complete the task and instead of making up a persona you are the writer (Shane Donovan)" + lup.Persona_Task,
+                                                  Output_Types = ["Play","Novel", "ScreenPlay","Song"],Translate=['English'], Mode='MVAA', Persona=up.Shane_Persona, Persona_Role= up.Shane_Persona, Subject=ShaneOriginals.Stripper_Gritty)
+        elif  Mode == 'MVAA2':
+            MondeVert.StoryMode(self, System=up.system_TextJoaT_quick,SavePath=up.AI_AudioBook_Path + '\\MVAA'  ,Persona_Task=" use your current persona to complete the task and instead of making up a persona you are the writer (Shane Donovan)" + lup.Persona_Task,
+                                                  Output_Types = ["Play","Novel", "ScreenPlay","Song"],Translate=['English'], Mode='MVAA', Persona=up.Shane_Persona, Persona_Role= up.Shane_Persona, Subject=ShaneOriginals.Underground_War)
+
+        elif  Mode == 'MVAA_La_Familia':
+            MondeVert.StoryMode(self, Episodes=3, Seasons=1,System=up.system_TextJoaT_quick,SavePath=up.AI_AudioBook_Path + '\\MVAA_La_Familia'  ,Persona_Task=" use your current persona to complete the task and instead of making up a persona you are the writer (Shane Donovan)" + lup.Persona_Task,
+                                                  Output_Types = ["Play","Novel", "ScreenPlay","Song"],Translate=['English'], Mode='MVAA_La_Familia', Persona=up.Shane_Persona, Persona_Role= up.Shane_Persona, Subject=ShaneOriginals.Kid_Story, Chunk_Limit=333)
+
+
+
+        elif Mode == 'ScreenPlay':
             MondeVert.Make_a_ScreenPlay(self, SavePath=up.AI_Screen_Plays + '\\' + Mode,System = up.system_Text_ScreenPlay0, Mode='ScreenPlay')
 
         elif Mode == 'Poem':
@@ -2592,6 +3869,13 @@ class MondeVert():
 
         elif Mode == 'Blog_Random':
             MondeVert.Make_a_poem(self,Mode = 'Blog_Random', Chunk_Limit = 1333, USERTITLE= '', Poet_Bio_Details = '', Make_Persona = True, Artist_Persona= '', Poet_Persona = '', Line1_System = up.system_TextJoaT, Line2_Role = lup.Blog_Role, Line3_Format = lup.Blog_Format, Line4_Task =lup.Blog_Task, Line3_Format_outline = lup.Blog_Outline_Format, Line4_Task_outline = lup.Blog_Outline_Task, SavePath=up.AI_Blog_Path + '\\' + Mode,  crazy = .5, Persona_Role= lup.Blog_Persona_Role, Persona_Task= lup.Blog_Persona_Task, Persona_Format= lup.Blog_Persona_Format, Persona_Special= lup.Blog_Persona_Special, Revise_Task = lup.Blog_Revise_Task, Revise_Format = lup.Blog_Revise_Format)
+
+
+        elif Mode == 'StudyGuide':
+            MondeVert.Make_a_poem(self,Mode = 'StudyGuide', Translate=['English'],Chunk_Limit = 1333, USERTITLE= '', Poet_Bio_Details = '', Make_Persona = True, Artist_Persona= '', Poet_Persona = up.Shane_Bio, Line1_System = up.system_TextJoaT_quick, Line2_Role = lup.StudyGuide_Role, Line3_Format = lup.StudyGuide_Format, Line4_Task =lup.StudyGuide_Task, Line3_Format_outline = lup.StudyGuide_Outline_Format, Line4_Task_outline = lup.StudyGuide_Outline_Task, SavePath=up.AI_Task_Path + '\\' + Mode,  crazy = .5, Persona_Role= lup.StudyGuide_Role, Persona_Task= lup.Blog_Persona_Task, Persona_Format= lup.Blog_Persona_Format, Persona_Special= lup.Blog_Persona_Special, Revise_Task = lup.StudyGuide_Revise_Task, Revise_Format = lup.StudyGuide_Revise_Format)
+
+
+
 
         elif Mode == 'Speech':
             MondeVert.Make_a_poem(self, Mode='Speech', Chunk_Limit=1333, USERTITLE='', Poet_Bio_Details='',
@@ -2676,11 +3960,14 @@ class MondeVert():
 
 
         elif Mode == 'AUDIOBOOK':
-           MondeVert.MondeVert_Audio_Video_Story(self, SavePath=up.AI_AudioBook_Path + '\\' + Mode,Translate = ['English'], Mode='AUDIOBOOK')
+           MondeVert.StoryMode(self, SavePath=up.AI_AudioBook_Path + '\\' + Mode,Translate = ['English'], Mode='AUDIOBOOK')
 
         elif Mode == 'AUDIOBOOK_Shane':
-            MondeVert.MondeVert_Audio_Video_Story(self, SavePath=up.AI_AudioBook_Path + '\\' + Mode,Persona_Task=" use your current persona to complete the task and instead of making up a persona you are the writer (Shane Donovan)" + lup.Persona_Task,
+            MondeVert.StoryMode(self, SavePath=up.AI_AudioBook_Path + '\\' + Mode,Persona_Task=" use your current persona to complete the task and instead of making up a persona you are the writer (Shane Donovan)" + lup.Persona_Task,
                                                   Translate=['English'], Mode='AUDIOBOOK_Shane', Persona=up.Shane_Persona, Persona_Role= up.Shane_Persona)
+
+
+
 
 
 
@@ -3979,7 +5266,17 @@ if __name__ == '__main__':
     #args = ['PictureBook_PJSpecial']
 #    args = ['PictureBook_Shane','PictureBook_2','Shane_Poem']
     #args = ['PictureBook_2', 'Blog_Random_Shane', 'AUDIOBOOK_Shane', 'MondeVert_Audio_Video_Story']
-    args = ['Blog_Random_Shane_Specific_Subject']
+    #args = ['Blog_Random_Shane_Specific_Subject']
+    #args = ['PictureBook_2']
+
+    #args = ['ShaneOriginal', 'AUDIOBOOK_Shane']
+    #args = ['MVAA']
+    #args = ['MVAA','MVAA2']
+    #args = ['MVAA', 'MVAA2', 'MVAA_La_Familia']
+    args = [ 'StudyGuide']
+    #args = ['MVAA_La_Familia']
+
+
 
     #
 

@@ -34,9 +34,9 @@ audio_new4 =r"A:\Amini Amor\SHAINE\Requests\Beta\AI AudioBooks\AI_Childrens_Audi
 audio_new3 =r"A:\Amini Amor\SHAINE\Requests\Beta\AI AudioBooks\AI_Childrens_AudioBooks\PictureBook_Shane\The Magic Forest Adventures\The Magic Forest Adventures.txt"
 audio_new2 =r"A:\Amini Amor\SHAINE\Requests\Beta\AI AudioBooks\AI_Childrens_AudioBooks\PictureBook_Shane\Cherishing Memories and Protecting the Magic Within\Protect the Magic Within.txt"
 
-audio_new = r"A:\Amini Amor\SHAINE\Requests\Beta\AI AudioBooks\AI_Childrens_AudioBooks\PictureBook_PJSpecial\The Magical Strawberry Farm\The Magical Strawberry Farm_.txt"
+audio_new = r"A:\Amini Amor\SHAINE\Requests\Beta\AI AudioBooks\ShaneOriginal\Shanes Journey\Shanes JourneySeason 1EPISODE 2__07-27-2023_20.14.txt"
 audio_File_name = 'King Richard Reid'
-#x.Manual_Audio_File(SavePath =up.AI_AudioBook_Path ,FileName=  audio_File_name, Source_FilePath = audio_new)
+# x.Manual_Audio_File(SavePath =up.AI_AudioBook_Path ,FileName=  audio_File_name, Source_FilePath = audio_new)
 
 # args = ['ReSearch3', 'ReSearch',  'ReSearch2']
 # args = ['ReSearch2']
@@ -69,8 +69,8 @@ Runs.append('Social_Media_Clean_Post')
 # Runs.append('Basic')
 # Runs.append('Wedding Vows')
 
-for i in Runs:
-    x.MondeVertMenu_up(Mode=i)
+# for i in Runs:
+#     x.MondeVertMenu_up(Mode=i)
 
 # cu.SaveText2Audio( FilePath = audio_new3, Chunk_Limit=444)
 
@@ -102,6 +102,7 @@ for i in Runs:
 # '''
 #
 #
-#cu.SaveText2Audio(FilePath=r"A:\Amini Amor\SHAINE\Requests\Beta\AI Blogs\Blog_Random\Prioritizing Mental Health in Communities of Color\Prioritizing Mental Health in Communities of Color.txt", Chunk_Limit=1333 )
+# cu.SaveText2Audio(FilePath=r"A:\Amini Amor\SHAINE\Requests\Beta\AI AudioBooks\ShaneOriginal\ Shanes Journey A Gritty Tale of SelfDiscovery and Redemption\ Shanes Journey A Gritty Tale of SelfDiscovery and Redemption Act 1 Chapter 4 Novel__07-28-2023_01.26.txt", Chunk_Limit=1333,Translate= ['English'] )
+# cu.SaveText2Audio(FilePath=r"A:\Amini Amor\SHAINE\Requests\Beta\AI AudioBooks\ShaneOriginal\ Shanes Journey A Gritty Tale of SelfDiscovery and Redemption\ Shanes Journey A Gritty Tale of SelfDiscovery and Redemption Act 1 Chapter 4 Play__07-28-2023_01.26.txt", Chunk_Limit=1333, Translate= ['English'] )
 
-#x.MondeVertMenu_up(Mode = 'Social_Media_Clean_Post')
+x.MondeVertMenu_up(Mode = 'Social_Media_Clean_Post')

@@ -531,6 +531,142 @@ Test_Background_Resume_old_New_Combo = Test_Task_Resume_old_New_Combo + """
 
 
 
+# RE_State = 'Maine'
+# HandBookURL ="https://home.pearsonvue.com/getattachment/abeb9965-3ffb-4f7b-98b4-57be2f2618e5/Maine%20Real%20Estate%20Candidate%20Handbook.aspx"
+
+HandBookURL = 'https://www.scstatehouse.gov/code/t40c057.php'
+RE_State = 'South Carolina'
+
+Add_on = """ Provide definitions for the following Maine Laws
+1. Maine Real Estate Brokerage License Act
+2. Maine Real Estate Commission Rules
+3. Maine Human Rights Act
+4. Maine Uniform Commercial Code
+5. Maine Consumer Credit Code
+6. Maine Land Use Regulation Commission Act
+7. Maine Subdivision Control Law
+8. Maine Environmental Protection Act
+9. Maine Wetlands Protection Act
+10. Maine Shoreland Zoning Act"""
+
+
+
+#StudyGuide_Revise_Task = Add_on + StudyGuide_Revise_Task
+
+
+
+
+StudyGuide_Format= """Complete the {Task} provided below, use the {Persona} you created to do all of the tasks. Make sure the result is in the correct format.
+
+Desired Format: 
+Exam:
+State:
+
+20 + Key Terms: {Key Term: {Definition}}
+
+20+ Key Topics: {Topic #: {Summary 100 - 300 words each}
+
+
+
+"""
+
+
+#StudyGuide_Format =
+
+StudyGuide_Role= RE_State +  """  Realtor/Broker (expert) who is the best teacher for passing the """ + RE_State + """ (USA) real estate exam. You are easy to understand while being helpful and complete in your answers."""
+
+
+# StudyGuide_Outline_Format= """Exam:
+# State:
+#
+# 40 Questions related to State Exam: {@Question #:{Question|Correct Answer}}
+#
+# """
+
+# Score Required to Pass:
+# Reciprocity with other states explained:
+# How to get Real Estate License:
+#
+# Study Guide Key Topics: -||-
+# 15 Most Complex topics: -||-
+# State Specific Information: -||-
+# Key Terms: <Term>|<Definition>
+
+#100 Sample Questions related to State Exam: -||-
+
+#StudyGuide_Outline_Task= """You are easy to understand while being helpful and complete in your response. (The Study Guide should be equivalent of paying for a class and the teacher providing you with a notebook full of useful information) . Provide all of the details related to the """+ RE_State + """ State Portion of the exam (Do not mention the Federal Exam Questions/Topics/requirements). As per the """+RE_State + """ Real Estate Commission provides a Candidate Handbook that includes a list of laws and regulations that you need to know for the exam. You can access the handbook here: '"""+HandBookURL+"""' that will enable me to pass the """+ RE_State + """ State Exam, Provide easy to understand explanations of the most difficult concepts and have a list of the specific laws that you just need to memorize to pass the test; provide the full details needed to pass the test and answer all of the questions. Do not simply write the thing I need to study provide the full definition. Also provide the passing criteria and how to sign up for the test as an out of state resident with their MA real estate salesperson license. {Goal}: The study guide should be so informative and complete the user should be able to pass the Real Estate exam for """+ RE_State + """ State after reviewing the text"""
+
+
+
+
+StudyGuide_Outline_Task= """ Create a 20 Question Multiple Choice Practice Exam (vary the which Option is the correct Answer, randomize which answer is the correct one between A,B,C and D, do not always make the answer D, that have the correct answer and mix in some all of the above/none of the above and make some of the questions tricky) to help a person who is studying to take the """+ RE_State + """ State Real Estate Exam refer to the data on the following webpage. Focus on State Specific Real Estate Comission Questions and State Specific Land-Use Law Webpage URL: """ + HandBookURL
+#StudyGuide_Outline_Task= """ Provide a detailed summary of the following handbook/laws URL  to help a person who is studying to take the """+ RE_State + """ State Real Estate Exam. Go Topic by topic and complete the request in the proper format   Handbook URL: """ + HandBookURL
+
+
+
+
+StudyGuide_Task=  """using the following data to come up with the 10 most important topics to cover to pass the exam     Data: """
+#""" Create a 40 Question Multiple choice Quiz with detailed options that sample topics from the Following Questions and Answers:  """
+#StudyGuide_Task= """ Create a 40 Question Multiple choice Quiz with detailed options that sample topics from the Following Outline:  """
+#StudyGuide_Task= """Write me a Detailed Study guide with the full definitions of key terms, provide helpful information about the laws, the user should not have to do any further research after this request is complete, do not say what to study actually provide the details for each topic. Provide all of the details related to the """+ RE_State + """ State Portion of the exam. As per the """+RE_State + """ Real Estate Commission provides a Candidate Handbook that includes a list of laws and regulations that you need to know for the exam. You can access the handbook here: '"""+HandBookURL+"""' that will enable me to pass the """+ RE_State + """ State Exam, Provide easy to understand explanations of the most difficult concepts and have a list of the specific laws that you just need to memorize to pass the test; provide the full details needed to pass the test and answer all of the questions. Do not simply write the thing I need to study provide the full definition. Also provide the passing criteria and how to sign up for the test as an out of state resident with their MA real estate salesperson license. {Goal}: The study guide should be so informative and complete the user should be able to pass the Real Estate exam for """+ RE_State + """ State after reviewing the text"""
+
+
+StudyGuide_Outline_Format1 =  """Complete the {Task} provided below, use the {Persona} you created to do all of the tasks. Make sure the result is in the correct format.
+
+
+
+Desired Format: 
+Study Guide: {Topic #: <Description_of_topic>
+High Level Details: <Description_of_High_level_details>
+Specific Laws:  <Description_of_relative_laws>
+Key terms:  <List_of_key_terms_and_Definitions>}"""
+
+
+StudyGuide_Outline_Format= """Complete the {Task} provided below, use the {Persona} you created to do all of the tasks. Make sure the result is in the correct format.
+
+
+
+Desired Format: 
+Details:{State|Exam Name} 
+
+
+Sample Quiz (20 Questions): 
+{@Question 1: Question
+A). Option A
+B). Option B
+C). Option C
+D). Option D
+
+<Leave_5_Blank_Lines_To_Separate_Question_and_answer)
+
+
+
+
+Answer: Correct Answer |  {Explanation of Correct answer}}
+<Your_result_should_have_20_questions_1_to_20>
+
+
+
+"""
+
+StudyGuide_Revise_Format = StudyGuide_Outline_Format
+StudyGuide_Revise_Task = """ Create a 20 Question Multiple Choice Practice Exam (vary the Answer options, do not always make the answer D, that have the correct answer and mix in some all of the above/none of the above and make some of the questions tricky) to help a person who is studying to take the """+ RE_State + """ State Real Estate Exam. Use the following Study guide for reference"""
+#StudyGuide_Revise_Task = """Review the following study guide and provide further details and make the study guide a complete guide to pass the state Real Estate Exam for """ + RE_State + """ Study Guide: """
+
+#StudyGuide_Outline_Format = StudyGuide_Format
+
+
+# Answers:
+# 1). Option {} | {Question 1}| {Explanation of Correct answer}
+# 2). Option {} | {Question 2}| {Explanation of Correct answer}
+# n). Option {} | {Question n}| {Explanation of Correct answer}
+# <Your_result_should_have_100_respective_answers_to_questions_1_to_100>
+# 100). Option {} | {Question 100}| {Explanation of Correct answer}
+#
+
+
+
+
 
 
 
@@ -993,7 +1129,12 @@ Key Signature: -||-
 Short_Story_Role = """role play that you are an award winning writer and director with all the talents neccesary to make a succesful screenplay/audio book that is exciting and draws the audience for more and more"""
 Short_Story_Special = """Have fun, be creative and follow the rules. It is imperative that you understand that You are currently writing the story/screenplay using the information  I provided  for Episode #:"""
 Short_Story_Task = """Task: Using the {Persona} you created, and specifically the {Episode Outline} you created with the the {Characters} you created as reference, write an entertaining screenplay based on the information I provide you. The story should read like a screenplay with lots of emotions, actions, dialogue, cliff hangers making the audience hooked by the story and it should be relatable but also drive the reader in and use literary devices like cliff hangers to make the content breath taking. Make the Episode a combination/mix of long and short scenes with a lot of action or a lot of dialogue ranging from 3 - 10 scenes."""
-Short_Story_Format = """Complete the {Task} provided , use the {Persona} and {Episode Outline} you created to do all of the tasks. Make sure the result is in the correct format.
+Short_Story_Task2 = """Task: Using the {Persona} you created, and specifically the {Scene Outline} you created with the the {Characters} you created as reference, write an entertaining Scene for a screen play based on the outline I provide you. The story should read like a screenplay with lots of emotions, actions, dialogue, cliff hangers making the audience hooked by the story and it should be relatable but also drive the reader in."""
+
+
+
+
+Short_Story_Format = """Complete the {Task} provided , use the {Persona} and {Scene Outline} you created to do all of the tasks. Make sure the result is in the correct format.
 
 Note: For the results, you should format the text as a screen play where the Narrator is written like one of the characters named 'NARRATOR'. The Narrator will say the non verbal words from the text, for example the mood, the actions happening, the scenery, the smells etc. anything not spoken should be 'spoken' by the NARRATOR.  All of the Narrator non-verbal parts should be in parenthesis so the reader knows it is not being spoken aloud. 
 
@@ -1008,6 +1149,14 @@ NARRATOR: (<Narrates_and_Describes_actions_emotions_voiceover_narrator>)
 """
 
 Short_Story_Format_Screenplay = 'For your response use the basic screen play format with proper narration, description of setting, and dialog, make it look like a real hollywood script.'
+
+Short_Story_Format_Screenplay_Scene = 'For your response use the basic screen play format with proper narration, description of setting, and dialog, make it look like a real hollywood script.'
+Short_Story_Task_Novel_Chapter =   """Task: Using the {Persona} you created, and specifically the {Scene Outline} you created with the the {Characters} you created as reference, write an entertaining chapter for a Novel based on the outline I provide you. The story should read like a screenplay with lots of emotions, actions, dialogue, cliff hangers making the audience hooked by the story and it should be relatable but also drive the reader in."""
+Short_Story_Task_Play_Scene =   """Task: Using the {Persona} you created, and specifically the {Scene Outline} you created with the the {Characters} you created as reference, write an entertaining Scene for a Play script based on the outline I provide you. The story should read like a screenplay with lots of emotions, actions, dialogue, cliff hangers making the audience hooked by the story and it should be relatable but also drive the reader in."""
+Short_Story_Format_Play_Scene = 'For your response format the text as a novel that is sure to win an award for being such an entertaining and uniquely surprising play. Keep the details in tact but format it like a Short Scene or number in a play script to be acted out on a stage'
+Short_Story_Format_Novel_Chapter = 'For your response format the text as a novel that is sure to win a publishing award for being so well written and entertaining. Keep the details in tact but format it like a chapter in a short Novel'
+
+
 
 
 #Note add this to the task or background when making the outline and when writing the episode 1
@@ -1071,8 +1220,8 @@ Clean_Format_after_Delimit = "Keep the prompt short and to the point. Explain th
 #Character Outline to build the story (do this after you have details)
 Character_Task_add_on1 = """ When creating the {character} details use the following {outline}  as a guide to create your characters. Outline:###"""
 Characters_Role = Short_Story_Role
-Characters_Task1 ="""{Task}: ###Create 7-13 Main Characters and 7-13 Minor Characters for a short story/screenplay be creative and pick a diverse mix of characters, or if there is a specific time period or theme you are picking you can use names and characters that fit accordingly. Use the {Persona} you created to come up with the inspiration###"""
-Characters_Special = """Have fun, be creative and follow the rules. Pick unique names for your characters, use uncommon names, then cultural names, then nicknames, try to pick common names only 10% or less of the time"""
+Characters_Task1 ="""{Task}: ###Describe/create the details for the respective  Main Characters and Minor Characters for the respective outline that is to be provided. be creative and pick a diverse mix of characters, or if there is a specific time period or theme you are picking you can use names and characters that fit accordingly. Use the {Persona} you created to come up with the inspiration###"""
+Characters_Special = """Have fun, be creative and follow the rules. Pick unique names for your characters (that are not described in the outline directly), use uncommon names, then cultural names, then nicknames, try to pick common names only 10% or less of the time"""
 Characters_Format = """Complete the {Task} provided, use the {Persona} you created to do all of the tasks. Make sure the result is in the correct format.
 
 #Characters:{@Name:{First Name Last Name}Age:{Age}|Voice:{Voice}|Personality:{Personality}|Home:{Current:{City State}|origin:{Country}}|Language:{Language}|Role:{Minor_Major_Protaganist_Antagonist_Unknown}|Career:{Current:{Current Job}|Dream Job:{Dream Job}}|strengths:{strengths,strengths,strengths}|weakness:{weakness,weakness,weakness}}"""
@@ -1090,17 +1239,17 @@ Characters: ###{Name:{First Name Last Name}Age:{Age}|Voice:{Voice}|Personality:{
 #Below is step 2
 #****************************************************************
 #Fist Outline of all details
-Shane_Test_User_Input = "Try to be funny, but also entertaining.   Episode_Constraints: 1 Season  4 Episodes total###"
+Shane_Test_User_Input = "Be entertaining, draw the audience in and make them feel a mix of emotions that make a great performance.   Episode_Constraints: 2 Seasons  3 Episodes total###"
 
 Short_Story_Config = """The following Instruction from user must be followed, Instruction: ###"""
 Short_Story_Outline_Task =  """Using the writing  {Persona} you have created and are currently role playing. Create a Detailed Outline that fits in the format described. Do not put yourself in the text (you can break this rule 10% of the time), use the characters you have developed as well as the details that describve you as a writer (Writing Styles, audience, etc.)  Do not be afraid to have tragedy strike your main/beloved characters, everyone dies eventually in life so why not see it in literature. Mmake the stories feel real even happy endings have some tragedies along the way, life is never a fairy tale, in fact even fairy tales have misfortune that needs to be overcome  """
-Short_Story_Outline_Format = """Complete the {Task} provided , Role play that you are the {Persona} and use the {Characters} you created to do provide your response in the format shown below. Make sure the result is in the correct format.
+Short_Story_Outline_Format = """Complete the {Task} provided , Role play that you are the {Persona} and use the {Characters} you created to do provide your response in the format shown below. Make sure the result is in the correct format, if there is a N/A or None in your results remove the category to save on tokens used in your results.
 
 
 Desired Format:
 
 Background:
-    @Abstract_Title:{Abstract_Title}|Episode Length:{Episode Length}|@Number of Seasons:{Number of Seasons}|@Episodes per Season:{Episodes per Season}
+    #Abstract_Title:{<3_word_or_less_unique_abstract_title>}|#Episode Length:{#Episode Length}|#Number of Seasons:{Number of Seasons}|#Episodes per Season:{Episodes per Season}
     Target Audience:{Target Audience}
     Setting:{Setting}
     TimePeriod:{TimePeriod}
@@ -1136,15 +1285,21 @@ Background:
 #Below is step 3
 #****************************************************************
 Short_Story_Season_Outline_Role = Short_Story_Role
-Short_Story_Season_Outline_Task = """Task: ### Using  the {Outline} you created and the {Characters} you created, write a detailed outline for all of the episodes in the series. In your outline Give a  description of each episode in the respective season with all of the respective Literary devices being used and relevant plot points and major character development """
+Short_Story_Season_Outline_Task = """Task: ### Using  the {Outline} you created and the {Characters} you created, write a detailed outline for all of the episodes in the respective season. In your outline Give a  description of each episode in the respective season."""
 
 #Below is step 4
-Short_Story_Season_Outline_Format = """Complete the {Task} provided , use the {Persona} and {Characters} you created to do all of the tasks. Make sure the result is in the correct format. You should make a table for each episode in the story/Series. For the literary devices keep your explanation short and concise if the response is 'N/A' just leave the line blank to save on the token usage.
+Short_Story_Season_Outline_Format = """Complete the {Task} provided , Role play that you are the {Persona} and use the {Characters} you created to do provide your response in the format shown below. Make sure the result is in the correct format, if there is a N/A or None in your results remove the respective category/line from your result to save on tokens used in your results
 
 Desired Format:
-   @Episode Number:{#Abstract_Title:{Abstract_Title}|Episode Length:{Episode Length}|Setting:{Setting}|mood:{mood}|Theme:{Theme}|Narrative:{Narrative}|Point of view:{Point of view}|Language(s):{Language(s)}|Specific Quotes:{'Quote' - Character}
-   #Literary Devices:{Plot:{Plot}|Arc-Plots:{Arc-Plots}|Foreshadowing:{Foreshadowing}|Red Herrings:{Red Herrings}|Plot Twists:{Plot Twists}||Reoccurring Jokes:{Reoccurring Jokes}}|Major Character Development:{Major Character Development}}"""
+   @Episode Number:{#Title:{<short_Abstract_Title>}|Setting:{Setting}|mood:{mood}|Theme:{Theme}|Narrative:{Narrative}|Point of view:{Episode Specific Point of view}|Significant Quotes:{'Quote' - Character}|Literary Devices:{Plot:{Plot}|Arc-Plots:{Arc-Plots}|Foreshadowing:{Foreshadowing}|Red Herrings:{Red Herrings}|Plot Twists:{Plot Twists}|Reoccurring Jokes:{Reoccurring Jokes}}"""
 
+Short_Story_SeasonBySeason_Outline_Task = """Task: ### Using  the {Outline} you created and the {Characters} you created, write a detailed outline for all of the Seasons in the series. Briefly Describe any  new characters and their details to be introduced and how they fit in the story.  """
+
+#Below is step 4
+Short_Story_SeasonBySeason_Outline_Format = """Complete the {Task} provided , Role play that you are the {Persona} and use the {Characters} you created to do provide your response in the format shown below. Make sure your result is in the correct format provide unique details for each season's result, if there is a N/A or None in your results remove the respective category/line from your result to save on tokens used in your results
+
+Desired Format:
+   @Season Number:{Plot:{Exposition:{Exposition}|Rising_Action_Conflict:{Rising_Action_Conflict}|Climax:{Climax}|Falling Action:{Falling Action}|Resolution:{Resolution}}|Arc-Plots:{Arc-Plots}|Foreshadowing:{Foreshadowing}|Red Herrings:{Red Herrings}|Plot Twists:{Plot Twists}|Reoccurring Jokes:{Reoccurring Jokes}|Season Opening: {Season Opening Description}| Season Finale: {Season Finale Description}|Setting:{List of Settings}|Narrative:{Season Narratives}|Points of view:{Season Specific Points of view}|Season Significant Quotes:{'Quote' - Character}"""
 
 
 
@@ -1157,13 +1312,20 @@ Desired Format:
 Short_Story_Episode_Outline_Role = Short_Story_Role
 Short_Story_Episode_Outline_Special = """You are currently writing the story/screenplay for Episode #:"""
 Short_Story_Episode_Outline_Task = """Task:  Using the {Persona} you created, and most importantly the {Season Outline} you created and the {Characters} you created, write a detailed outline for one episode in from the story. Use the {Season Outline} as your main guide and also use the character information provided for your story"""
-Short_Story_Episode_Outline_Format = """Complete the {Task} provided , use the {Persona} and {Characters} you created to do all of the tasks. Make sure the result is in the correct format. You should make a table for each episode in the story/Series.
+Short_Story_Episode_Outline_Format = """Complete the {Task} provided , Role play that you are the {Persona} and use the {Characters} you created to do provide your response in the format shown below. Make sure the result is in the correct format, if there is a N/A or None in your results remove the respective category/line from your result to save on tokens used in your results
 
 Desired Format:
-@Abstract_Title:{Abstract_Title}|Episode Length:{Episode Length}|Setting:{Setting}|Point of view:{Point of view}|Language(s):{Language(s)}|Music:{genres:{song genre}|songs:{song by artist,song by artist}}|Theme:{Theme}|mood:{mood}|Characters:{<Characters_in_Episode>:{<with_short_background_related_to_episode>}}
-@Literary Devices:{Plot:{Exposition:{Exposition}|Rising Action (Conflict){Rising Action (Conflict)}|Climax:{Climax}|Falling Action:{Falling Action}|Resolution:{Resolution}}|Arc-Plots:{Arc-Plots}|Foreshadowing:{Foreshadowing}|Red Herrings:{Red Herrings}|Plot Twists:{Plot Twists}|Literary Devices:{Literary Devices}|Reoccurring Jokes:{Reoccurring Jokes}}|Major Character Development:{Major Character Development}
-@Scene Number:{Setting:{Setting}|@Characters:{Characters_in_Scene}|Specific Quotes:{'Quote' - Character}|Scene_Details:{Scene_Details}} 
+Title:{<short_Abstract_Title>}|Episode Length:{Episode Length}|Setting:{Setting}|Point of view:{Episode Specific Point of view}|Theme:{Theme}|mood:{mood}|Characters:{<Characters_in_Episode>}|Literary Devices:{Plot:{Exposition:{Exposition}|Rising Action (Conflict){Rising Action (Conflict)}|Climax:{Climax}|Falling Action:{Falling Action}|Resolution:{Resolution}}|Arc-Plots:{Arc-Plots}|Foreshadowing:{Foreshadowing}|Red Herrings:{Red Herrings}|Plot Twists:{Plot Twists}|Literary Devices:{Literary Devices}|Reoccurring Jokes:{Reoccurring Jokes}}
+
+
+@Scene:{Setting:{Setting}|#Characters:{Characters_in_Scene}|Scene_Details:{Scene_Details}|Significant Quotes for this Scene:{'Quote' - Character}}
 """
+
+# Desired Format:
+# @Title:{<short_Abstract_Title>}|Episode Length:{Episode Length}|Setting:{Setting}|Point of view:{Point of view}|Language(s):{Language(s)}|Music:{genres:{song genre}|songs:{song by artist,song by artist}}|Theme:{Theme}|mood:{mood}|Characters:{<Characters_in_Episode>:{<with_short_background_related_to_episode>}}
+# @Literary Devices:{Plot:{Exposition:{Exposition}|Rising Action (Conflict){Rising Action (Conflict)}|Climax:{Climax}|Falling Action:{Falling Action}|Resolution:{Resolution}}|Arc-Plots:{Arc-Plots}|Foreshadowing:{Foreshadowing}|Red Herrings:{Red Herrings}|Plot Twists:{Plot Twists}|Literary Devices:{Literary Devices}|Reoccurring Jokes:{Reoccurring Jokes}}|Major Character Development:{Major Character Development}
+# @Scene Number:{Setting:{Setting}|@Characters:{Characters_in_Scene}|Specific Quotes:{'Quote' - Character}|Scene_Details:{Scene_Details}}
+# """
 
 
 

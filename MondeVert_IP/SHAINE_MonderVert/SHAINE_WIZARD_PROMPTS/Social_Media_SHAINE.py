@@ -9,11 +9,52 @@ ArtPrompt_Clean_Social_Media_Post_Line3 = "Be creative and make a work of art th
 #Clean_Post_Line1 = up.system_Input
 Clean_Post_Line1 = up.system_TextJoaT
 #Role
-Clean_Post_Line2 = "Role play  that you are a a marketing expert with the ability to make every post sound like an opportunity for the audience. You are great and consolidating thoughts and making text not sound redundant. You are excellent with grammar and spelling and you understand how to connect with the audience. You will complete any Task the user requests as part of your role play."
+Clean_Post_Line2 = "Role play  that you are a a marketing expert with the ability to make every post sound like an opportunity for the reader. You are great and consolidating thoughts and making text not sound redundant. You are excellent with grammar and spelling and you understand how to connect with the audience. You will complete any Task the user requests as part of your role play."
 Clean_Post_Line3 = "Complete the Task the User provides and maintain the proper format depending on what website the post is going to. Grammar is important but sound human with emotion and make the post engaging. Your {Task} is to revise the following Text and write a new version with all edits completed as needed. Here is the text for you to clean Text: "
 Clean_Post_Line4 = " Do not lose the main concepts or ideas, instead clean up the spelling and grammar and make the ideas more clear to the audience."
 
-SHAINE_User_Inquiry = """Check out our specially curated content that has been made available by museums around the world. We strive to find the most art that is publicly available and make it easily accessible to all!"""
+SHAINE_User_Inquiry = """Are you in search of a trustworthy and dedicated real estate expert who is eager to assist you in making the right investment that aligns perfectly with your goals and aspirations? Look no further, because I am here to lend a helping hand!
+
+Rest assured, I am committed to finding the best properties that seamlessly fit within your budget. I am thrilled to share my expertise and knowledge with you, all in the pursuit of finding your dream home and/or investment opportunity. Let's embark on this exciting journey together!"""
+
+
+
+"""If you are looking for a reliable real estate professional who is passionate about helping you make the best investment that aligns with you and your goals, I am here to help! 
+
+I am committed to finding you the best deal that fits your budget. I look forward to sharing my expertise and knowledge with you in order to find you the perfect home and/or investment.  """
+
+
+
+d = """MondeVert is committed to finding ways to reduce the impact of global climate change. We have begun investing in a fleet of 100% electric landscaping equipment because we believe there is no ethical reason as a society we should be still using gasoline to landscape when the technology for electric equipment is at an even level with the gasoline counterparts. 
+
+We are often challenged by traditional landscapers about the time the batteries last and with my experience there is no issue, with proper charging and planning there is little to no impact on being electric vs gas. In fact we are much quieter and the smell is eliminated as well. Finally you can relax when the landscapers are working outdoors because not only is the noise reduced to peaceful levels, the world is a better place from your contributions.
+
+We are also in the process of  investing in a fleet of automatic mowers so we can maximize the efficiency of our efforts. Contrary to popular belief automation will enable more skilled jobs on the site and allow the team to focus on the parts of landscaping no automated solution exists such as Mulch beds, tree services, planting new flowerbeds/yard plants & shrubbery. We believe in combination with automation the work we can accomplish will make the movement to electric mowers in tandem with robotic mowers a no brainer.
+
+On top of offering top of the line services, we are working with specific manufacturers in the electric mower and robotic mower industry to enable our customers the chance to own their own equiptment. This potentially allows customers to completely remove their reliance on landscaping in general, and this may sound coutnerintuitive but we understand everyone has different circumstances and our goal is to make landscaping no more challenging than ordering a pizza on your smartphone. I look forward to working with you and feel free to reach out with any questions"""
+
+
+
+
+old = """
+Hello, friends, family and people I have been fortunate enough to meet in my life!
+
+
+
+Although I've been focused on building my full-time career, I have realized that real estate is my true calling and my goal is to make it my full-time job.
+
+Currently, I am a licensed real estate agent in Massachusetts and in the process of obtaining licenses in multiple other states, including South Carolina, Rhode Island, New Hampshire, and Maine. 
+
+I'm passionate about helping people make the best investment decisions when it comes to purchasing or renting a home. 
+
+
+
+Since I will primarily rely on my network, I wanted to reach out and request that anyone who is trying to buy a house or in need of a realtor to consider hiring me. I also work with investors who need help renting out their properties, whether it be for long-term leases or vacation rentals.
+
+Additionally, I am relocating to Myrtle Beach, SC, which gives me experience in moving across the country.
+
+I would love to learn about your goals and see how I can assist you in any way possible. Please feel free to message me or reach out to me at sdonovan@mondevert.co. Let's work together to achieve your real estate goals!"""
+s2222= """Check out our specially curated content that has been made available by museums around the world. We strive to find the most art that is publicly available and make it easily accessible to all!"""
 
 
 SHAINE= """SHAINE is a proprietary software developed by MondeVert with several content creation capabilities. The goal is to maximize the creativity and efficiency of a human to get the most out of their ideas and with little effort to get started. We hope this will allow people to surpass obstacles preventing them from accomplishing their goals."""

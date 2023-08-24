@@ -17,12 +17,13 @@ import os
 # import FFProbe.utility
 import random
 from MondeVert_IP.SHAINE_MonderVert import Instagram_Posts as IP
-from MondeVert_IP.SHAINE_MonderVert.SHAINE_WIZARD_PROMPTS import Long_User_Prompts as lup, Social_Media_SHAINE as sms
+from MondeVert_IP.SHAINE_MonderVert.SHAINE_WIZARD_PROMPTS import Long_User_Prompts as lup, Social_Media_SHAINE as sms,StoryMode_Wizard as StoryMode
 import shutil
 from docx import Document
 import pandas as pd
 import pyttsx3
 import datetime
+from pdf2image import convert_from_path
 import re
 from boto3 import Session
 from botocore.exceptions import BotoCoreError, ClientError
@@ -42,6 +43,20 @@ from MondeVert_IP.SHAINE_MonderVert.SHAINE_WIZARD_PROMPTS import Stories_For_Aud
 current_time1 = datetime.datetime.now()
 current_time = current_time1.strftime('%m-%d-%Y_%H.%M')
 
+
+
+
+def PDF2JPG():
+    # import module
+
+
+    # Store Pdf with convert_from_path function
+    images = convert_from_path('example.pdf')
+
+    for i in range(len(images)):
+
+    # Save pages as images in the pdf
+        images[i].save('page' + str(i) + '.jpg', 'JPEG')
 
 
 def Check_Folder_Exists(SavePath):
@@ -151,27 +166,9 @@ def SaveCSV(Text, Title, SavePath, AddTimeStamp = True, FileType = '.txt'):
     # if len(folder) > 44:
     #     folder = folder[0:44]
 
-
-
-
-
     Title1 =  str(Title1)
-
-
-
-
-
-
     Check_Folder_Exists(SavePath)
-
-
-
-
-
-
     Data1 = [(Text1)]
-
-
     try:
         df1 = pd.DataFrame(data=Data1)
         df1.to_csv(Title2)
@@ -205,7 +202,7 @@ from pydub import AudioSegment
 
 
 
-def Chop4Art(Text, SavePath, FileName,FilePath = '',  Chunk_Limit = 1500,  Chunk_Replaces = ['.','?'], Chunk_Delimiter = '!',Artist_Persona = 'embrace the spirit and culture of the following text describe it to be illustrated by an artist', aPrompt = sms.ArtPrompt_Clean_Social_Media_Post_Line2_Prompt):
+def Chop4Art(Text, SavePath, FileName,FilePath = '',  Chunk_Limit = 1500,  Chunk_Replaces = ['.','?'], Chunk_Delimiter = '!',Artist_Persona = 'embrace the spirit and culture of the following text describe it to be illustrated by an artist', aPrompt = StoryMode.ArtPrompt_Story):
     Length_Text = len(Text)
     Chunk_Limit = Chunk_Limit -10
     Text_Chunks = []
@@ -412,7 +409,7 @@ def Combine_Splitsof_audio(AudioFiles_ordered,FilePath,FileName = 'SHAINE - Audi
 
 
 
-def Split_Audio2(Text, SavePath, FileName,FilePath = '', OpeningSound = up.MondeVertIntro, Chunk_Limit = 1500, Voice = random.choices(SAF.Original_List_of_Voices_English)[0], Translate = sfa.Translation_Languages_Testing, Chunk_Replaces = ['.','?'], Chunk_Delimiter = '!',Artist_Persona = 'embrace the spirit and culture of the following text describe it to be illustrated by an artist',Origin_Language = 'English', aPrompt = sms.ArtPrompt_Clean_Social_Media_Post_Line2_Prompt):
+def Split_Audio2(Text, SavePath, FileName,FilePath = '', OpeningSound = up.MondeVertIntro, Chunk_Limit = 1500, Voice = random.choices(SAF.Original_List_of_Voices_English)[0], Translate =["English"], Chunk_Replaces = ['.','?'], Chunk_Delimiter = '!',Artist_Persona = 'embrace the spirit and culture of the following text describe it to be illustrated by an artist',Origin_Language = 'English', aPrompt = StoryMode.ArtPrompt_Story):
     Length_Text = len(Text)
     Chunk_Limit = Chunk_Limit -10
     Text_Chunks = []
@@ -435,8 +432,8 @@ def Split_Audio2(Text, SavePath, FileName,FilePath = '', OpeningSound = up.Monde
 
     Voices = []
     countl = 0
-    print('All Languages to translate')
-    print(Translate)
+    # print('All Languages to translate')
+    # print(Translate)
     x = GPT.MondeVert()
     TranslateLanguages = []
     for l in Translate:
@@ -465,20 +462,22 @@ def Split_Audio2(Text, SavePath, FileName,FilePath = '', OpeningSound = up.Monde
 
             LastPunc =Text_Chunk_Info_only.rfind(Chunk_Delimiter)
 
-            print(l + 'Voice: ' + v)
-            print('Starting Chars:')
-            print(len(Text))
-            print('Chars Remaining:')
-            print(len(Text_New))
-            print('Last Punc Position(New):')
-            print(LastPunc)
+
+            #
+            # print(l + 'Voice: ' + v)
+            # print('Starting Chars:')
+            # print(len(Text))
+            # print('Chars Remaining:')
+            # print(len(Text_New))
+            # print('Last Punc Position(New):')
+            # print(LastPunc)
 
             #LastPunc = Text_Chunk_Info_only.rfind(Chunk_Delimiter)
             if LastPunc == -1 and len(Text_New) > Chunk_Limit:
 
                 LastPunc = Text_Chunk_Info_only.rfind('\\n')
-                print('Last Punc Position(using new Char)')
-                print(LastPunc)
+                # print('Last Punc Position(using new Char)')
+                # print(LastPunc)
                 if LastPunc == -1 and len(Text_New) > Chunk_Limit:
                     LastPunc = Text_Chunk_Info_only.rfind(' ')
                     if LastPunc == -1 and len(Text_New) > Chunk_Limit:
@@ -487,9 +486,9 @@ def Split_Audio2(Text, SavePath, FileName,FilePath = '', OpeningSound = up.Monde
                             Chunk_Limit_new = round(Chunk_Limit * (1.33))
                             if Chunk_Limit_new > 1700:
                                 Chunk_Limit_new == 1700
-
-                            print('New Chunk Limit')
-                            print(Chunk_Limit_new)
+                            #
+                            # print('New Chunk Limit')
+                            # print(Chunk_Limit_new)
                             Text2Send = Text_New[:Chunk_Limit_new]
 
                             try:
@@ -545,8 +544,8 @@ def Split_Audio2(Text, SavePath, FileName,FilePath = '', OpeningSound = up.Monde
 
             FileName_Language_Voice = FileName + '_' + l + '_' + v
             FileName_Chunk = FileName + '_' + l + '_' + v + '_Chunk_' + str(Audio_File_Count)
-            print(FileName_Chunk)
-            print(SavePath_Pics)
+            # print(FileName_Chunk)
+            # print(SavePath_Pics)
             # print(l)
             # print(countl)
             # print(Voices[countl])
@@ -568,21 +567,22 @@ def Split_Audio2(Text, SavePath, FileName,FilePath = '', OpeningSound = up.Monde
                                           FileName=FileName_Chunk,
                                           Voice=Translate_Voice, Chunk_Mode=True, FilePath=FilePath, Translate=Translate, Chunk_Limit=Chunk_Limit_Translate, Artist_Persona=Artist_Persona,  aPrompt = aPrompt)
                     FilePaths.append(FilePathc)
-                    print('successfully made an audio file in ' + l)
+                    # print('successfully made an audio file in ' + l)
                 except:
                     print('Error could not create audio for this text')
 
 
                 if len(tempTranslate) > 44:
                     try:
-                        ArtPrompt = x.GPTArt2( User_Subject='Create a prompt for an artist to create a work of art based on the following text: '  +tempTranslate, ArtFormat=aPrompt)
+                        ArtPrompt = x.GPTArt2( User_Subject='Create a prompt for an artist to create a work of art based on the following text (Use the original language for inspiration/context/Location of artwork): '  +tempTranslate, ArtFormat=StoryMode.StoryArt)
                     except:
-                        ArtPrompt = Artist_Persona + tempTranslate
+                        ArtPrompt = tempTranslate
                         ArtPrompt[:313]
 
                     try:
-                        PicPath = x.makeArt(Prompt='Using the following details: ' + Artist_Persona + " Art Prompt:  " + ArtPrompt)
-                        print('successfully made a work of art in foreign language')
+                        PicPath = x.makeArt(Prompt='Using the following details: ' + Artist_Persona + " Art Prompt: " + ArtPrompt)
+                            #x.makeArt(Prompt="Using the following Art Sytles/Details from the text create a work of art pased on the following Art Prompt:  " + ArtPrompt)
+                        # print('successfully made a work of art in foreign language')
                         newPicPath = SavePath_Pics + '\\'+FileName_Chunk + '.png'
                         try:
 
@@ -595,12 +595,12 @@ def Split_Audio2(Text, SavePath, FileName,FilePath = '', OpeningSound = up.Monde
 
 
             else:
-                print('Text_Chunk_Final: ' + str(len(Text_Chunk_Final)))
+                # print('Text_Chunk_Final: ' + str(len(Text_Chunk_Final)))
                 translate2 = [l]
                 FilePathc = SaveText2Audio(Text = Text_Chunk_Final, SavePath = SavePath_Chunks, FileName=FileName +'_' + l +'_' + Voice +'_Chunk_' + str(Audio_File_Count), Voice = v , Chunk_Mode=True, FilePath=FilePath, Translate=[l], Chunk_Delimiter=Chunk_Delimiter,Chunk_Replaces=Chunk_Replaces,Chunk_Limit=Chunk_Limit + 10 ,Artist_Persona=Artist_Persona,  aPrompt = aPrompt)
                 FilePaths.append(FilePathc)
                 if len(Text_Chunk_Final)>44:
-                    ArtPrompt = x.GPTArt2(User_Subject='Create a prompt for an artist to create a work of art based on the following text: ' + Text_Chunk_Final, ArtFormat=lup.PicturebookArt  )
+                    ArtPrompt = x.GPTArt2(User_Subject='Create a prompt for an artist to create a work of art based on the following text: ' + Text_Chunk_Final, ArtFormat=aPrompt)
                     try:
                         PicPath = x.makeArt(Prompt='Using the following details: ' + Artist_Persona + " Art Prompt: " + ArtPrompt)
                         newPicPath = SavePath_Pics + '\\' +FileName_Chunk + '.png'
@@ -669,7 +669,7 @@ def CleanLyrics4audio( text,Chunk_Delimiter_right = ':', Chunk_Delimiter_left= '
 def CleanFileName(Text):
     Text = re.sub(r"[^a-zA-Z0-9 ]", "", Text)
     return Text
-def SaveText2Audio( MultiThread = True,Translate = sfa.Translation_Languages_Testing,Text = '', SavePath =up.SavePath, FileName="Text2Audio", FilePath = '', Neural='Neural', Mode='Text2Audio', Chunk_Limit = 1500,Voice = random.choices(SAF.Original_List_of_Voices_English)[0], Chunk_Replaces = ['.','?','\n'], Chunk_Delimiter = '!',Artist_Persona = '', Chunk_Mode = False,  aPrompt = sms.ArtPrompt_Clean_Social_Media_Post_Line2_Prompt):
+def SaveText2Audio( MultiThread = True,Translate = ["English"],Text = '', SavePath =up.SavePath, FileName="Text2Audio", FilePath = '', Neural='Neural', Mode='Text2Audio', Chunk_Limit = 1500,Voice = random.choices(SAF.Original_List_of_Voices_English)[0], Chunk_Replaces = ['.','?','\n'], Chunk_Delimiter = '!',Artist_Persona = '', Chunk_Mode = False,  aPrompt = sms.ArtPrompt_Clean_Social_Media_Post_Line2_Prompt):
     #Voice = CleanFileName(Voice)
 
     Check_Folder_Exists(SavePath)
@@ -688,8 +688,8 @@ def SaveText2Audio( MultiThread = True,Translate = sfa.Translation_Languages_Tes
             FStart = (SavePath_index+1)
             FileName = FilePath[FStart:-4]
             SavePath = FilePath[:SavePath_index]
-            print('SavePath: ' + SavePath)
-            print('FileName: ' + FileName)
+            # print('SavePath: ' + SavePath)
+            # print('FileName: ' + FileName)
 
             with open(FilePath) as f:
                 Text = f.read()
@@ -706,13 +706,13 @@ def SaveText2Audio( MultiThread = True,Translate = sfa.Translation_Languages_Tes
         try:
             x = GPT.MondeVert()
             Artist_Persona = x.GPTArt2(User_Subject=arttext,ArtFormat = lup.artDetailsFormat, prompt=lup.artDetailsPrompt)
-            print(Artist_Persona)
+            # print(Artist_Persona)
         except:
             Artist_Persona = 'embrace the spirit/symbolism and culture of the following text describe it to be illustrated by an artist'
 
     #polly = Session(region_name='eu-west-2').client('polly')
 
-    print(Translate)
+    # print(Translate)
 
     if MultiThread == True and len(Translate)>1:
         for l in Translate:
@@ -825,20 +825,22 @@ def SaveText2Audio( MultiThread = True,Translate = sfa.Translation_Languages_Tes
 
 
 def add2Master_Persona(df1 = '', Text = 'No Data Provided'):
-    if df1 != '':
-        df1 = df1
-    else:
-        data = ([Text])
-        df1 = pd.DataFrame(data)
+    try:
+        if df1 != '':
+            df1 = df1
+        else:
+            data = ([Text])
+            df1 = pd.DataFrame(data)
 
-    f2 =  up.MasterFilePersona
-    df2 = pd.read_excel(f2)
-    df3 = pd.concat([df1, df2])
-    df3.drop_duplicates()
-    df3.iloc[:, 1:]
-    # creating a new excel file and save the data
-    df3.to_excel(f2, index=False)
-
+        f2 =  up.MasterFilePersona
+        df2 = pd.read_excel(f2)
+        df3 = pd.concat([df1, df2])
+        df3.drop_duplicates()
+        df3.iloc[:, 1:]
+        # creating a new excel file and save the data
+        df3.to_excel(f2, index=False)
+    except:
+        dn = 1000
 
 
 

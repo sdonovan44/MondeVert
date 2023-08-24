@@ -172,8 +172,8 @@ def upload_pictures(Folder = up.PICS_PATH, Caption = ''):
 
 
 
-def onetimeClean():
-    for f in glob.glob(up.PNGPath + '/**/*.png', recursive=True):
+def onetimeClean(FilePath = up.PNGPath + '/**/*.png', Destination = up.PICS_PATH):
+    for f in glob.glob(FilePath, recursive=True):
         try:
             print(f)
 
@@ -196,7 +196,7 @@ def onetimeClean():
 
                 #x = len(Details2)
 
-                png2JPG(f, up.PICS_PATH, Details2)
+                png2JPG(f, Destination, Details2)
 
 
                 ddd = 1
