@@ -1746,7 +1746,7 @@ class MondeVert():
             print('Audio File created with Voice: ' + str(Voice_fix))
         except:
             print(NewTempPath)
-    def Basic_GPT_Query(self,   Line2_Role  , Line3_Format,Line4_Task,Special = '',Line1_System_Rule = up.system_TextJoaT_quick, crazy = .5, Subject= '', Outline = '', Allowed_Fails = 8, SaveFile = False,MakeArt = False, Mode = 'SHAINE SAYS', SavePath= ''):#use this to create art style for the work
+    def Basic_GPT_Query(self,   Line2_Role  , Line3_Format,Line4_Task,Big = False,Special = '',Line1_System_Rule = up.system_TextJoaT_quick, crazy = .5, Subject= '', Outline = '', Allowed_Fails = 8, SaveFile = False,MakeArt = False, Mode = 'SHAINE SAYS', SavePath= ''):#use this to create art style for the work
         if SavePath == '':
             SavePath = self.SavePath
 
@@ -1766,14 +1766,17 @@ class MondeVert():
         KillSwitch = 0
         while KeepGoing == False and KillSwitch < Allowed_Fails:
 
-
+            if Big == True:
+                Model = "gpt-3.5-turbo-16k-0613"
+            else:
+                Model = "gpt-3.5-turbo"
             try:
 
 
 
                 # This is for the result if you let the AI describe project and details and then make the response
                 response = openai.ChatCompletion.create(
-                    model="gpt-3.5-turbo",
+                    model=Model,
                     messages=[
                         {"role": "system", "content": Line1_System_Rule},
                         {"role": "user", "content": Line2_Role },
@@ -2060,7 +2063,7 @@ class MondeVert():
 
 
 
-    def Translate(self,Line1 = SAF.Translate_Sys,Origin_Language = 'English', Language_Final = SAF.Translation_Languages_All[0], Text = 'Sorry no text was sent but translate this instead, Monde Vert apologizes for the inconvenience', Line2 = SAF.Translate_Line2, Line3= SAF.Translate_Line3,Line4= SAF.Translate_Line4, SavePath = up.AI_AudioBook_Path, File_Name = 'Italian Translation'):
+    def Translate(self,Line1 = SAF.Translate_Sys,Origin_Language = 'English', Language_Final = 'Italian', Text = 'Sorry no text was sent but translate this instead, Monde Vert apologizes for the inconvenience', Line2 = SAF.Translate_Line2, Line3= SAF.Translate_Line3,Line4= SAF.Translate_Line4, SavePath = up.AI_AudioBook_Path, File_Name = 'Italian Translation'):
 
         SAF.Pick_Voice(Language = Language_Final)
 
@@ -4010,7 +4013,7 @@ class MondeVert():
 
 
 
-    def MondeVertTask(self, System = '', Role='', Background='', Task='',Special='', Title='', Mode='Basic', Logic_AI=0,Format = up.Test_Format_PictureBook,OutlineFormat = up.Test_Format_PictureBook_outline,  SavePath = up.AI_Task_Path, ArtPrompt= up.MondeVert_ArtPrompt,ArtFormat = up.MondeVert_ArtFormat, AdvanceArtPrompt = up.MondeVert_ArtPrompt_PictureBook , AdvanceArtFormat= up.MondeVert_ArtFormat_PictureBook, ART_System = up.system_Text_Art):
+    def MondeVertTask(self, System = '', Role='', Background='', Task='',Special='', Title='', Mode='Basic', Logic_AI=0,Format = up.Test_Format_PictureBook,OutlineFormat = up.Test_Format_PictureBook_outline,  SavePath = up.AI_Task_Path, ArtPrompt= up.MondeVert_ArtPrompt,ArtFormat = up.MondeVert_ArtFormat, AdvanceArtPrompt = up.MondeVert_ArtPrompt_PictureBook , AdvanceArtFormat= up.MondeVert_ArtFormat_PictureBook, ART_System = up.system_Text_Art, Big = False):
 
         ArtPaths = []
         openai.api_key = API_Key
@@ -5273,7 +5276,7 @@ if __name__ == '__main__':
     #args = ['MVAA']
     #args = ['MVAA','MVAA2']
     #args = ['MVAA', 'MVAA2', 'MVAA_La_Familia']
-    args = [ 'StudyGuide']
+    args = [ 'Resume']
     #args = ['MVAA_La_Familia']
 
 

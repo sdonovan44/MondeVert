@@ -3,7 +3,7 @@ from MondeVert_IP.SHAINE_MonderVert import SHAINE as GPT
 from MondeVert_IP.SHAINE_MonderVert.Utilities import Common_Utilities as cu
 from MondeVert_IP.SHAINE_MonderVert.SHAINE_WIZARD_PROMPTS import Stories_For_Audio_Files as SFA
 from MondeVert_IP.SHAINE_MonderVert.SHAINE_WIZARD_PROMPTS import User_Prefs as up
-
+import threading
 
 
 
@@ -105,4 +105,24 @@ Runs.append('Social_Media_Clean_Post')
 # cu.SaveText2Audio(FilePath=r"A:\Amini Amor\SHAINE\Requests\Beta\AI AudioBooks\ShaneOriginal\ Shanes Journey A Gritty Tale of SelfDiscovery and Redemption\ Shanes Journey A Gritty Tale of SelfDiscovery and Redemption Act 1 Chapter 4 Novel__07-28-2023_01.26.txt", Chunk_Limit=1333,Translate= ['English'] )
 # cu.SaveText2Audio(FilePath=r"A:\Amini Amor\SHAINE\Requests\Beta\AI AudioBooks\ShaneOriginal\ Shanes Journey A Gritty Tale of SelfDiscovery and Redemption\ Shanes Journey A Gritty Tale of SelfDiscovery and Redemption Act 1 Chapter 4 Play__07-28-2023_01.26.txt", Chunk_Limit=1333, Translate= ['English'] )
 
-x.MondeVertMenu_up(Mode = 'Social_Media_Clean_Post')
+# x.MondeVertMenu_up(Mode = 'Social_Media_Clean_Post')
+
+
+#cu.Resume()
+
+
+Movie = "A:\Amini Amor\SHAINE\Requests\Beta\Test 1\A Tale of Two Kitties (1942).mp4"
+Movie = "A:\Amini Amor\SHAINE\Requests\Beta\Audio Transcript\Movie2Audio\IMG_1966.MOV.crdownload"
+Movie2 ="A:\Amini Amor\SHAINE\Requests\Beta\Audio Transcript\Movie2Audio\LaPardon64.mp4"
+Youtube = "https://youtu.be/skrdyoabmgA?si=fPDFIIqzVp2LE9ia"
+# t = threading.Thread(target=cu.MovieSubtitles, args = (Movie,)).start()
+# t = threading.Thread(target=cu.MovieSubtitles, args = (Movie2,"French", "English")).start()
+# t = threading.Thread(target=cu.YouTube, args = (Youtube,)).start()
+
+
+
+#cu.MovieSubtitles(Movie, ReWrite = True)
+#cu.MovieSubtitles(Movie2, Origin="French", Output=["English"])
+cu.DownloadYoutubeMovie(video_url = Youtube)
+
+

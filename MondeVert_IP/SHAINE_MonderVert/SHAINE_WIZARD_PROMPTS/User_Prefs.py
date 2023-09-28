@@ -10,6 +10,8 @@ AI_Poetry_Path = SavePath + r"\AI Poetry"
 AI_Blog_Path = SavePath + r"\AI Blogs"
 AI_Music_Path = SavePath + r"\AI Music"
 AI_Task_Path = SavePath + r"\AI Tasks"
+AI_Audio_Transcript = SavePath + r"\Audio Transcript"
+
 AI_AudioBook_Path = SavePath + r"\AI AudioBooks"
 AI_Childrens_AudioBook_Path = AI_AudioBook_Path + r"\AI_Childrens_AudioBooks"
 

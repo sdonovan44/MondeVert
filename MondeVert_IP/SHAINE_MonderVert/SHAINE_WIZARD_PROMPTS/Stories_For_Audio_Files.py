@@ -127,9 +127,9 @@ Italian_Voices = ['Bianca','Adriano']
 
 
 Translate_Sys = 'You must translate the text I provide in my conversation I will tell you Translate[] you must translate what is between the Text: []'
-Translate_Line2 = "You are a master translator and children's writer able to take an english text and translate to [ "
+Translate_Line2 = "You are a master translator "
 Translate_Line4 = "Translate the following Text: ["
-Translate_Line3 = "The text being translated is a [short story], use appropriate words that are descriptive and accurate translations, try to translate the meaning more than the actual word for word translation so the respective language sounds like someone speaking and not just reading."
+Translate_Line3 = "As a master interpreter use appropriate words that are descriptive and accurate translations, try to translate the meaning more than the actual word for word translation so the respective language sounds like someone speaking and not just reading."
 
 Original_List_of_Voices_English = ['Joanna','Kendra','Kimberly','Salli','Ruth','Olivia','Kajal','Amy','Emma','Aria','Ayanda','Ivy','Joey','Matthew','Stephen','Brian','Arthur','Justin','Kevin']
 Original_List_of_Voices_ESL= ['Lupe','Hiujin','Zhiyu','Lea','Gabrielle','Bianca','Ida','Ola','Camila','Vitoria/Vitoria','Ines','Lucia','Mia','Hala','Arlet','Laura','Suvi','Vicki','Hannah','Kazuha','Tomoko','Seoyeon','Elin','Pedro','Remi','Liam','Adriano','Thiago','Sergio','Andres','Daniel','Takumi']

@@ -1,7 +1,10 @@
-#
+from __future__ import unicode_literals
 # from ffmpeg import Progress
 # from ffmpeg.asyncio import FFmpeg
 import threading
+import whisper
+
+import platform,subprocess
 import time
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
@@ -17,7 +20,7 @@ import os
 # import FFProbe.utility
 import random
 from MondeVert_IP.SHAINE_MonderVert import Instagram_Posts as IP
-from MondeVert_IP.SHAINE_MonderVert.SHAINE_WIZARD_PROMPTS import Long_User_Prompts as lup, Social_Media_SHAINE as sms,StoryMode_Wizard as StoryMode
+from MondeVert_IP.SHAINE_MonderVert.SHAINE_WIZARD_PROMPTS import Long_User_Prompts as lup, Social_Media_SHAINE as sms,StoryMode_Wizard as StoryMode, StoryPrompts as SP
 import shutil
 from docx import Document
 import pandas as pd
@@ -38,13 +41,250 @@ from MondeVert_IP.SHAINE_MonderVert.Utilities import DoNotCommit as DNC
 from MondeVert_IP.SHAINE_MonderVert import SHAINE as GPT
 from MondeVert_IP.SHAINE_MonderVert.SHAINE_WIZARD_PROMPTS import Stories_For_Audio_Files as sfa
 
+from pydub import AudioSegment
+import openai
+from MondeVert_IP.SHAINE_MonderVert.Utilities.DoNotCommit import API_Key
+import requests
+import argparse
+from pytube import YouTube
 
 
+import youtube_dl
 current_time1 = datetime.datetime.now()
 current_time = current_time1.strftime('%m-%d-%Y_%H.%M')
 
+from moviepy.editor import *
 
 
+
+import speech_recognition as sr
+import os
+from pydub import AudioSegment
+from pydub.silence import split_on_silence
+
+# create a speech recognition object
+
+
+
+
+
+def DownloadYoutubeMovie(video_url):
+    VIDEO_SAVE_DIRECTORY = up.AI_Audio_Transcript + '\\' + "YoutubeVideos"
+    Check_Folder_Exists(VIDEO_SAVE_DIRECTORY)
+
+
+
+
+    try:
+        try:
+            video = YouTube(video_url,use_oauth=True,allow_oauth_cache=True)
+            video = video.streams.get_highest_resolution()
+            x = video.download(VIDEO_SAVE_DIRECTORY)
+        except:
+            yt = YouTube(video_url)
+            yt = yt.streams.filter(progressive=True, file_extension='mp4').order_by('resolution').desc().first()
+            if not os.path.exists(VIDEO_SAVE_DIRECTORY):
+                os.makedirs(VIDEO_SAVE_DIRECTORY)
+            x = yt.download(VIDEO_SAVE_DIRECTORY)
+
+        print("video was downloaded successfully")
+    except:
+        print("Failed to download video")
+
+
+    MovieSubtitles(x)
+
+
+
+
+
+
+def ReWrite_Transcript(Text):
+    NewText = Basic_GPT_Query2(Line2_Role = SP.ReWriteTranscript_Role, Line3_Format=SP.ReWriteTranscript_Format, Line4_Task= "Use the following Text as your source Text   Source Text: " + Text, Line5_Task=SP.ReWriteTranscript_Task)
+
+    return NewText
+
+def MovieSubtitles(File, Origin = "English", Output = ["Spanish"], Rewrite = False):
+    d = 1
+
+    SavePath = up.AI_Audio_Transcript + '\\' + 'Movie2Audio'
+    Check_Folder_Exists(SavePath)
+
+    FileName = File[len(SavePath):-4]
+
+    FileName = CleanFileName(FileName)
+
+    SavePath = SavePath +'\\'+ FileName
+    Check_Folder_Exists(SavePath)
+
+    AudioFile = Movie2Audio(File)
+
+    Transcript = transcribe_Large_audio(File,Origin = Origin)
+
+    try:
+        file_stats = os.stat(AudioFile)
+        file_size = file_stats.st_size
+        filesize2 = file_size/1000000
+        print(f"File Size in MegaBytes is {filesize2}")
+    except FileNotFoundError:
+        print("File not found.")
+    except OSError:
+        print("OS error occurred.")
+
+    Transcript2 = ''
+    ReWrite_Transcript2 = ''
+    ReWrite_Transcript1 = ''
+    try:
+        if filesize2 < 38:
+            model = whisper.load_model("tiny")
+        elif filesize2 < 74:
+            model = whisper.load_model("base")
+        elif filesize2 < 244:
+            model = whisper.load_model("small")
+        elif filesize2 < 768:
+            model = whisper.load_model("medium")
+        elif filesize2 >=768:
+            model = whisper.load_model("large")
+
+
+
+        Text= model.transcribe(AudioFile)
+        Transcript2  = Text["text"]
+        if Rewrite ==True:
+            ReWrite_Transcript2 = ReWrite_Transcript(Transcript2)
+            SaveCSV(Text=ReWrite_Transcript2, SavePath=SavePath, Title=FileName + '_Transcript_Revised_AI')
+        SaveCSV(Text=Transcript2, SavePath=SavePath, Title=FileName + '_Transcript_AI')
+
+    except:
+        print("Error Using Whisper")
+
+    if Rewrite == True:
+        ReWrite_Transcript1 = ReWrite_Transcript(Transcript)
+        SaveCSV(Text=ReWrite_Transcript1, SavePath=SavePath, Title=FileName + '_Transcript_Revised')
+
+    SaveCSV(Text=Transcript, SavePath=SavePath, Title=FileName + '_Transcript')
+
+
+    if ReWrite_Transcript2 == '' and Rewrite == True:
+        Final_Text = ReWrite_Transcript2
+    elif Transcript2 == '':
+        Final_Text = Transcript2
+    else:
+        Final_Text = Transcript
+
+    SaveText2Audio(SavePath=SavePath, FileName=FileName,
+                              Neural='Neural',
+                              Mode='AUDIOBOOK', Chunk_Limit=1300, Translate=Output,
+                              Text=Final_Text, Origin_Language= Origin)
+
+    try:
+        shutil.copyfile(AudioFile, SavePath + FileName + '.mp3')
+    except:
+        dn = 100
+        print('Error moving audio file')
+
+
+def Audio_Transcript(File):
+    d = 1
+
+def Movie2Audio(File):
+    # Load the mp4 file
+    video = VideoFileClip(File)
+
+    x = File.rfind('.')
+
+    nFile =  File[:x] + '.mp3'
+
+    # Extract audio from video
+    video.audio.write_audiofile(nFile)
+
+    return nFile
+
+
+# a function to recognize speech in the audio file
+# so that we don't repeat ourselves in in other functions
+def transcribe_audio(path, Origin = 'English'):
+    # use the audio file as the audio source
+    if Origin == "French":
+        Origin_Recognize = "fr-FR"
+    elif Origin =="Italian":
+        Origin_Recognize = "it-IT"
+    elif Origin =="Japanese":
+        Origin_Recognize = "ja"
+
+    else:
+        Origin_Recognize = "en-US"
+
+    r = sr.Recognizer()
+    with sr.AudioFile(path) as source:
+        audio_listened = r.record(source)
+        # try converting it to text
+        text = r.recognize_google(audio_listened, language=Origin_Recognize)
+    return text
+
+# a function that splits the audio file into chunks on silence
+# and applies speech recognition
+def transcribe_Large_audio(path, Origin = "English"):
+
+    # open the audio file using pydub
+    sound = AudioSegment.from_file(path)
+    # split audio sound where silence is 500 miliseconds or more and get chunks
+    chunks = split_on_silence(sound,
+        # experiment with this value for your target audio file
+        min_silence_len = 400,
+        # adjust this per requirement
+        silence_thresh = sound.dBFS-14,
+        # keep the silence for 1 second, adjustable as well
+        keep_silence=400,
+    )
+
+    # chunk_length_ms = 60000 # pydub calculates in millisec
+    # chunks = make_chunks(sound, chunk_length_ms) #Make chunks of ten sec
+
+
+    folder_name = "audio-chunks"
+    # create a directory to store the audio chunks
+    if not os.path.isdir(folder_name):
+        os.mkdir(folder_name)
+    whole_text = ""
+    # process each chunk
+    for i, audio_chunk in enumerate(chunks, start=1):
+        # export audio chunk and save it in
+        # the `folder_name` directory.
+        chunk_filename = os.path.join(folder_name, f"chunk{i}.wav")
+        audio_chunk.export(chunk_filename, format="wav")
+        # recognize the chunk
+        try:
+            text = transcribe_audio(chunk_filename, Origin = Origin)
+        except sr.UnknownValueError as e:
+            print("Error:", str(e))
+            print('Using Whisper')
+            model = whisper.load_model("base")
+            text2 = ''
+            text1 = model.transcribe(chunk_filename)
+            text = text1["text"]
+            print(text)
+        finally:
+            if text != '':
+                text = f"{text.capitalize()}. "
+                print(chunk_filename, ":", text)
+                whole_text += text
+    # return the text for all chunks detected
+    return whole_text
+
+
+def Translator(Line1 = SAF.Translate_Sys,Origin_Language = 'English', Language_Final = 'French', Text = 'Sorry no text was sent but translate this instead, Monde Vert apologizes for the inconvenience', Line2 = SAF.Translate_Line2, Line3= SAF.Translate_Line3,Line4= SAF.Translate_Line4, SavePath = up.AI_AudioBook_Path, File_Name = 'Italian Translation'):
+
+    SAF.Pick_Voice(Language = Language_Final)
+
+
+    Line4 = Line4 + Text + "] From ["+ Origin_Language +"] to [" +Language_Final + "] " #+ Line4
+
+    File_Name = File_Name + '_' +Origin_Language + ' to ' + Language_Final+'_Translation'
+    Translated_Text = ''
+    if Text != ' ' and Text != '  ' and Text != '':
+        Translated_Text = Basic_GPT_Query2(Line2_Role= Line1 , Line3_Format=Line3, Line4_Task= Line2, Line5_Task= Line4)
+    return Translated_Text
 
 def PDF2JPG():
     # import module
@@ -194,8 +434,111 @@ def SaveCSV(Text, Title, SavePath, AddTimeStamp = True, FileType = '.txt'):
 # Create a client using the credentials and region defined in the [adminuser]
 # section of the AWS credentials file (~/.aws/credentials).
 
-from pydub import AudioSegment
+def makeArt( Prompt='', SavePath=up.AI_Art_Path, OpenFile=False):
+    try:
 
+
+        Mode = 'AI Art Mode'
+
+
+
+        Promptc = 'True'
+
+        if Prompt == '':
+            Promptc = 'True'
+        else:
+            Promptc = 'False'
+
+        if Prompt == '':
+            print('Prompt is NULL: ' + Promptc)
+
+
+
+        else:
+            prompt = Prompt
+            print(prompt)
+
+
+        # Set up the OpenAI API client :
+        openai.api_key = API_Key
+        print("Sending to OpenAI...")
+        print()
+
+        try:
+            response = openai.Image.create(
+                prompt=prompt,
+                n=1,
+                size="1024x1024"
+            )
+
+            image_url = response['data'][0]['url']
+
+            print(f"Image URL: {image_url}")
+            print()
+
+            # URL of the image to be downloaded is defined as image_url
+            r = requests.get(image_url)  # create HTTP response object
+
+            # send a HTTP request to the server and save
+            # the HTTP response in a response object called r
+
+            # Commented out for testing
+            FileName = prompt
+            print('Length of File Name: ' + str(len(FileName)))
+            if len(FileName) >= 80:
+                FileName = FileName[-80:]
+                print('Length of File Name: ' + str(len(FileName)))
+
+            FileName = CleanFileName(FileName)
+
+            # fname = f"{''.join([c for c in FileName.strip().replace(' ', '_') if c.isalnum() or c == '_'])}.png"
+            #
+            #
+            #
+            # if os.path.isfile(os.path.join(SavePath, '\'', fname)):
+            #     fname = fname.split(".")[0] + f".{''.join(random.choice(string.ascii_letters) for x in range(5))}.png"
+
+            fname_only = FileName
+            # fname = os.path.join(SavePath, '\'',FileName)
+
+            fname = SavePath + '\\' + FileName + '.png'
+            print(f"Filename: {fname}")
+            with open(fname, 'wb') as f:
+
+                f.write(r.content)
+
+            try:
+                if OpenFile == True:
+                    if platform.system() == 'Darwin':  # macOS
+                        subprocess.call(('open', fname))
+                    elif platform.system() == 'Windows':  # Windows
+                        os.startfile(fname)
+                    else:  # linux variants
+                        subprocess.call(('xdg-open', fname))
+            except:
+                dn = 100
+            # this line saves the
+            # IP.png2JPG(fname, up.PNGPath,fname_only, up.PNGPath_Archive, Del = False )
+        except:
+            fname = 'File not saved error occurred'
+
+    except:
+        fname = 'File not saved error occurred'
+
+    try:
+
+        Text1 = 'Original Prompt: ' + prompt + 'Path to Photo: ' + fname
+
+        fnameText = fname_only
+        SaveCSV(Text=Text1, Title=fnameText, SavePath=SavePath)
+    except:
+        dn = 100
+
+        # data = ([Text1])
+        # df1 = pd.DataFrame(data = data)
+
+        # cu.add2Master2(self, Text1)
+    return fname
 
 
 
@@ -330,7 +673,7 @@ def Chop4Art(Text, SavePath, FileName,FilePath = '',  Chunk_Limit = 1500,  Chunk
                     ArtPrompt[:313]
 
                 try:
-                    PicPath = x.makeArt(Prompt='Using the following details: ' + Artist_Persona + " Art Prompt:  " + ArtPrompt)
+                    PicPath = makeArt(Prompt='Using the following details: ' + Artist_Persona + " Art Prompt:  " + ArtPrompt)
                     print('successfully made a work of art in foreign language')
                     newPicPath = SavePath_Pics + '\\'+FileName_Chunk + '.png'
                     try:
@@ -408,8 +751,137 @@ def Combine_Splitsof_audio(AudioFiles_ordered,FilePath,FileName = 'SHAINE - Audi
 #We will eventually have the narrator say the lines that are in parenthesis, we can have the words split up or something
 
 
+def Resume():
+    Response = Basic_GPT_Query2( SavePath=up.AI_Task_Path + '\\' + "Resume", Line1_System_Rule=up.system_TextJoaT,
+                            Line2_Role=lup.Test_Role_Resume,
+                            Line5_Task="Use the following Resume for your edits:" + lup.Resume_Text, Line4_Task=lup.Test_Task_Resume + lup.Test_Special_Resume,
+                             Line3_Format=lup.Test_Format_Resume,
+                           SaveFile=True, MakeArt=True, Mode = 'Resume')
 
-def Split_Audio2(Text, SavePath, FileName,FilePath = '', OpeningSound = up.MondeVertIntro, Chunk_Limit = 1500, Voice = random.choices(SAF.Original_List_of_Voices_English)[0], Translate =["English"], Chunk_Replaces = ['.','?'], Chunk_Delimiter = '!',Artist_Persona = 'embrace the spirit and culture of the following text describe it to be illustrated by an artist',Origin_Language = 'English', aPrompt = StoryMode.ArtPrompt_Story):
+def Basic_GPT_Query2(   Line2_Role  , Line5_Task,Line3_Format,Line4_Task,Big = False,Model = "gpt-3.5-turbo",upgradeLimit = 3000, Special = '',Line1_System_Rule = StoryMode.system_TextJoaT_quick, crazy = .5, Subject= '', Outline = '', Allowed_Fails = 8, SaveFile = False,MakeArt = False, Mode = 'SHAINE SAYS', SavePath= ''):#use this to create art style for the work
+
+
+    if Subject != '':
+        Line2_Role = Line2_Role + """Your role and subject matter expertise should fit the following Subject and or style and mood in the {Text} provided by the user Text:###""" + Subject + """###"""
+
+
+
+    Line1_System_Rule = Line2_Role
+    #Line2_Role = Line2_Role + Special
+    Full_User_Prompt = """User Inputs to Chat GPT: 
+    1). """ + Line1_System_Rule +"""
+    2).""" + Line3_Format+ """
+    3).""" + Line4_Task + """
+    4).""" + Line5_Task
+
+    if len(Full_User_Prompt) > upgradeLimit:
+        Model = "gpt-3.5-turbo-16k-0613"
+    elif len(Full_User_Prompt) < upgradeLimit:
+        Model = "gpt-3.5-turbo"
+
+
+
+    if Big ==True:
+        Model = "gpt-3.5-turbo-16k-0613"
+    KeepGoing = False
+    KillSwitch = 0
+    while KeepGoing == False and KillSwitch < Allowed_Fails:
+
+
+        try:
+
+
+
+            # This is for the result if you let the AI describe project and details and then make the response
+            response = openai.ChatCompletion.create(
+                model=Model,
+                messages=[
+                    {"role": "system", "content": Line1_System_Rule},
+                    {"role": "user", "content": Line3_Format},
+                    {"role": "user", "content": Line4_Task },
+                    {"role": "user", "content": Line5_Task},
+                ]
+                , temperature=crazy
+            )
+            GPT_Response = str(response.choices[0].message.content)
+
+            KeepGoing = True
+        except:
+            print(' Error ChatGPT failed, trying to rerun prompt now.... if this happens too many times we will kill the script')
+            KillSwitch += 1
+            print(Full_User_Prompt)
+            #as written this does not run but if I got rid of +1 it could
+            if KillSwitch == Allowed_Fails+1:
+                print('could not create a writer persona, redoing it now')
+                GPT_Response = Basic_GPT_Query2( Line2_Role='You are a skilled writer', Line3_Format=Line3_Format, Line4_Task=Line4_Task, Line1_System_Rule=up.system_Text_ScreenPlay)
+
+            continue
+
+
+        #print(up.breakupOutput)
+
+        # self.UserPromptsCount+=1
+        #
+        # self.UserPrompts += 'User Input #' + str(UserPromptsCount)
+        #
+        # self.UserPrompts += Full_User_Prompt + up.breakupOutput2 + up.breakupOutput2
+
+
+        Title = Mode + '_' + current_time
+        if SaveFile ==True:
+            SaveText = current_time+ up.breakupOutput2 + Full_User_Prompt + up.breakupOutput2 + 'SHAINE SAYS: '+  GPT_Response
+            print(SaveText)
+            SaveCSV(Text=SaveText, SavePath=SavePath, Title = Title)
+        if MakeArt ==True:
+            ArtPrompt = GPTArt2(User_Subject = GPT_Response)
+            print(ArtPrompt)
+            originalFilepath = makeArt(Prompt=ArtPrompt)
+            PicNewPath1 = SavePath + '\\' + Mode
+            Check_Folder_Exists(PicNewPath1)
+            PicNewPath =PicNewPath1 + '\\' + Title + '.png'
+            shutil.copyfile(originalFilepath, PicNewPath)
+        return GPT_Response
+
+
+def GPTArt2( crazy=.5,  Model = "gpt-3.5-turbo",prompt=sms.ArtPrompt_Clean_Social_Media_Post_Line2_Prompt,
+             User_Subject='Pick a random subject and medium go wild and make it exciting, beautiful and shocking',
+             ArtFormat=sms.ArtPrompt_Clean_Social_Media_Post_Line3,
+             sys_prompt=sms.ArtPrompt_Sys):
+
+    Full_User_Prompt = sys_prompt + prompt + User_Subject + ArtFormat
+    if len(Full_User_Prompt) > 6000:
+        Model = "gpt-3.5-turbo-16k-0613"
+    elif len(Full_User_Prompt) < 6000:
+        Model = "gpt-3.5-turbo"
+
+    keepgoing = True
+    GPTARTPROMPT = User_Subject
+    while keepgoing == True:
+          try:
+
+              Art_Prompt1 = openai.ChatCompletion.create(
+          model=Model,
+          messages = [
+                         {"role": "system", "content": sys_prompt},
+                         {"role": "user", "content": prompt + User_Subject},
+                         {"role": "user", "content": ArtFormat}
+                     ], temperature = crazy
+              )
+
+              GPTARTPROMPT = Art_Prompt1.choices[0].message.content
+              keepgoing == False
+
+          except:
+              print('GPT error waiting 13 seconds and trying again...')
+
+              try:
+                  time.sleep(13)
+              except:
+                  dn = 100
+
+          return GPTARTPROMPT
+
+def Split_Audio2(Text, SavePath, FileName,FilePath = '', OpeningSound = up.MondeVertIntro, Chunk_Limit = 1500, Voice = random.choices(SAF.Original_List_of_Voices_English)[0], Translate =["English"], Chunk_Replaces = ['.','?'], Chunk_Delimiter = '!',Artist_Persona = 'embrace the spirit and culture of the following text describe it to be illustrated by an artist', aPrompt = StoryMode.ArtPrompt_Story,Origin_Language = 'English'):
     Length_Text = len(Text)
     Chunk_Limit = Chunk_Limit -10
     Text_Chunks = []
@@ -502,7 +974,7 @@ def Split_Audio2(Text, SavePath, FileName,FilePath = '', OpeningSound = up.Monde
                                 Split_Audio2(Text=Text2Send, Translate=[l], SavePath=SavePath,
                                              FileName=FileName + '_' + str(Audio_File_Count),
                                              Chunk_Limit=Chunk_Limit_new, Chunk_Delimiter=Chunk_Delimiter,
-                                             Artist_Persona=Artist_Persona, Voice=v, aPrompt = aPrompt)
+                                             Artist_Persona=Artist_Persona, Voice=v, aPrompt = aPrompt, Origin_Language = Origin_Language)
 
                                 New_Text_Translated += '****Review, there is missing text that was captured elsewhere'
                             except:
@@ -555,8 +1027,8 @@ def Split_Audio2(Text, SavePath, FileName,FilePath = '', OpeningSound = up.Monde
             #print(Text_Chunk_Final)
 
             if l != Origin_Language:
-
-                tempTranslate = x.Translate(Text = Text_Chunk_Final, Language_Final=l, Origin_Language=Origin_Language)
+                d= 100
+                tempTranslate = Translator(Text = Text_Chunk_Final, Language_Final=l, Origin_Language=Origin_Language)
                 Translate_Voice = v
                 New_Text_Translated+= tempTranslate
                 translate2 = [l]
@@ -565,7 +1037,7 @@ def Split_Audio2(Text, SavePath, FileName,FilePath = '', OpeningSound = up.Monde
                     Chunk_Limit_Translate = len(tempTranslate) + 10
                     FilePathc = SaveText2Audio(Text=tempTranslate, SavePath=SavePath_Chunks+Translate_Folder,
                                           FileName=FileName_Chunk,
-                                          Voice=Translate_Voice, Chunk_Mode=True, FilePath=FilePath, Translate=Translate, Chunk_Limit=Chunk_Limit_Translate, Artist_Persona=Artist_Persona,  aPrompt = aPrompt)
+                                          Voice=Translate_Voice, Chunk_Mode=True, FilePath=FilePath, Translate=Translate, Chunk_Limit=Chunk_Limit_Translate, Artist_Persona=Artist_Persona,  aPrompt = aPrompt, Origin_Language = Origin_Language)
                     FilePaths.append(FilePathc)
                     # print('successfully made an audio file in ' + l)
                 except:
@@ -597,7 +1069,7 @@ def Split_Audio2(Text, SavePath, FileName,FilePath = '', OpeningSound = up.Monde
             else:
                 # print('Text_Chunk_Final: ' + str(len(Text_Chunk_Final)))
                 translate2 = [l]
-                FilePathc = SaveText2Audio(Text = Text_Chunk_Final, SavePath = SavePath_Chunks, FileName=FileName +'_' + l +'_' + Voice +'_Chunk_' + str(Audio_File_Count), Voice = v , Chunk_Mode=True, FilePath=FilePath, Translate=[l], Chunk_Delimiter=Chunk_Delimiter,Chunk_Replaces=Chunk_Replaces,Chunk_Limit=Chunk_Limit + 10 ,Artist_Persona=Artist_Persona,  aPrompt = aPrompt)
+                FilePathc = SaveText2Audio(Text = Text_Chunk_Final, SavePath = SavePath_Chunks, FileName=FileName +'_' + l +'_' + Voice +'_Chunk_' + str(Audio_File_Count), Voice = v , Chunk_Mode=True, FilePath=FilePath, Translate=[l], Chunk_Delimiter=Chunk_Delimiter,Chunk_Replaces=Chunk_Replaces,Chunk_Limit=Chunk_Limit + 10 ,Artist_Persona=Artist_Persona,  aPrompt = aPrompt, Origin_Language = Origin_Language)
                 FilePaths.append(FilePathc)
                 if len(Text_Chunk_Final)>44:
                     ArtPrompt = x.GPTArt2(User_Subject='Create a prompt for an artist to create a work of art based on the following text: ' + Text_Chunk_Final, ArtFormat=aPrompt)
@@ -669,7 +1141,7 @@ def CleanLyrics4audio( text,Chunk_Delimiter_right = ':', Chunk_Delimiter_left= '
 def CleanFileName(Text):
     Text = re.sub(r"[^a-zA-Z0-9 ]", "", Text)
     return Text
-def SaveText2Audio( MultiThread = True,Translate = ["English"],Text = '', SavePath =up.SavePath, FileName="Text2Audio", FilePath = '', Neural='Neural', Mode='Text2Audio', Chunk_Limit = 1500,Voice = random.choices(SAF.Original_List_of_Voices_English)[0], Chunk_Replaces = ['.','?','\n'], Chunk_Delimiter = '!',Artist_Persona = '', Chunk_Mode = False,  aPrompt = sms.ArtPrompt_Clean_Social_Media_Post_Line2_Prompt):
+def SaveText2Audio( MultiThread = True,Translate = ["English"],Text = '', SavePath =up.SavePath, FileName="Text2Audio", FilePath = '', Neural='Neural', Mode='Text2Audio', Chunk_Limit = 1500,Voice = random.choices(SAF.Original_List_of_Voices_English)[0], Chunk_Replaces = ['.','?','\n'], Chunk_Delimiter = '!',Artist_Persona = '', Chunk_Mode = False,  aPrompt = sms.ArtPrompt_Clean_Social_Media_Post_Line2_Prompt, Origin_Language = 'English'):
     #Voice = CleanFileName(Voice)
 
     Check_Folder_Exists(SavePath)
@@ -717,7 +1189,7 @@ def SaveText2Audio( MultiThread = True,Translate = ["English"],Text = '', SavePa
     if MultiThread == True and len(Translate)>1:
         for l in Translate:
             ll = [l]
-            t = threading.Thread(target=SaveText2Audio, args=(MultiThread,ll,Text,SavePath,FileName,FilePath,Neural,Mode,Chunk_Limit,Voice,Chunk_Replaces,Chunk_Delimiter,Artist_Persona,Chunk_Mode,aPrompt)).start()
+            t = threading.Thread(target=SaveText2Audio, args=(MultiThread,ll,Text,SavePath,FileName,FilePath,Neural,Mode,Chunk_Limit,Voice,Chunk_Replaces,Chunk_Delimiter,Artist_Persona,Chunk_Mode,aPrompt, Origin_Language)).start()
 
             #FilePath = '', Neural='Neural', Mode='Text2Audio', Chunk_Limit = 1500,Voice = random.choices(SAF.Original_List_of_Voices_English)[0], Chunk_Replaces = ['.','?','\n'], Chunk_Delimiter = '!',Artist_Persona = '', Chunk_Mode = False
             time.sleep(23)
@@ -726,7 +1198,7 @@ def SaveText2Audio( MultiThread = True,Translate = ["English"],Text = '', SavePa
 
         if len(str(Text)) >= Chunk_Limit or (( len(Translate) > 1 or Translate[0] != 'English') and  Chunk_Mode == False):
             #try:
-            FilePathNew = Split_Audio2(Text = Text,SavePath = SavePath, FileName=FileName, FilePath=FilePath_m, Chunk_Limit= Chunk_Limit, Voice = Voice, Chunk_Replaces = Chunk_Replaces, Chunk_Delimiter =Chunk_Delimiter, Artist_Persona = Artist_Persona, Translate=Translate, aPrompt=aPrompt)
+            FilePathNew = Split_Audio2(Text = Text,SavePath = SavePath, FileName=FileName, FilePath=FilePath_m, Chunk_Limit= Chunk_Limit, Voice = Voice, Chunk_Replaces = Chunk_Replaces, Chunk_Delimiter =Chunk_Delimiter, Artist_Persona = Artist_Persona, Translate=Translate, aPrompt=aPrompt,Origin_Language=Origin_Language)
             #except:
                 #print('Error trying to create audio file try again later')
 

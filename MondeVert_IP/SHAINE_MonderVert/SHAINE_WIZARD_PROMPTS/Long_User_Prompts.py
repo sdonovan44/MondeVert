@@ -235,56 +235,65 @@ Master Data Management, Associate I, Remote Work June 2015 - June 2016
 #Shane Resume Builder (Keep passing it through and using the critique to make changes'
 #User Inputs
 Resume_Critique = """The revised resume showcases the candidate's impressive skills in data analysis, automation, and programming. The bullet points are well-organized and easily readable. However, there is a lack of specific examples of how the candidate utilized their skills in their previous role at HarbourVest Partners. The language used in the leadership qualities section can be made more powerful and impactful by using more specific examples. To improve the resume, use specific examples of how you utilized your skills in the workplace. Avoid using overly technical language and acronyms that may be unfamiliar to the reader. Highlight the most important skills and achievements. Use language that is powerful and impressive, but not exaggerated. Keep the resume concise and focused on the key points. Use active voice and avoid passive voice. Use bullet points to organize information and make it easier to read. Use action verbs to start phrases and sentences, such as "developed," "implemented," "managed," and "created." Do not have the same Actions repeated use a thesaurus if needed to be unique. Use specific details and numbers to quantify achievements."""
-Resume_Text = """Skills:
-- Expert of Microsoft Office, including Excel, PowerPoint, Word, Outlook, and Access, with expertise in developing macros using Visual Basic for Applications (VBA).
-- Demonstrated skill in programming languages such as Python, C++, Java, and SQL, with proficiency in Python libraries such as openai, Selenium, TensorFlow, Pandas, Numpy, and Matplotlib.
-- Experienced in performing advanced data queries and utilizing the latest AI software, including ChatGPT and other tools.
-- Skilled in automated data quality testing using Python/SQL and other Automated Test Management Systems (TMS).
-- Proficient in Behavior-Driven Development (BDD) and object-oriented concepts, utilizing Cucumber and Gherkin language with normal Python to run automated testing via pytest and Spira (TMS).
-- Experienced in utilizing Azure, Azure DevOps (ADO), Data Factory, Data Bricks, and automated file loading processes, including file loading from websites to a SQL DB.
-- Expert in Bloomberg Terminal, Asset Control, and Request Builder to extract data and pull security data.
-- Proficient in Salesforce360, SWIFT, Anti-Money Laundering (KYC/AML), Informatica (MDM and IDQ).
-- Vast experience in techniques and best practices of Master Data Management with multiple roles in Enterprise Data Offices. Also have a few of the intial training certificates for LEAN Six Sigma and Yellow Belt skilled at identifying wasteful steps in processes and also proper root cause analysis 
-- Advanced knowledge of Private Equity data, including Fund of Fund investments, Credit, Real Asset, Direct Investments, Credit Facilities, IPOs, and other areas of investments.
-- Skilled in researching and comprehending difficult subject areas with limited information available.
-- Strong ability to develop and test quantitative algorithms, analytical tools, and models to enhance investment and asset allocation decisions.
-- Built personal projects in Real Estate, AI, Content Creation, Entertainment, and other areas.
-- Developed and provided technical support for MondeVert_IP.co, a website that promotes positivity and supports sustainable projects.
-- Created a Digital Assistant utilizing neural speech technology (AWS Polly) as well as ChatGPT (openai) python libraries. Currently learning how to train my own models for future use cases.
-- Utilizes cost-effective solutions for projects and has a wide network of business professionals, developers, attorneys, and other key contacts
-- Strong Communicator, professional and direct.
-- Passionate about data science and research.
+Resume_Text = """
 
-Prior Work Experience:
- HarbourVest Partners|Senior Quantitative Data Associate 2019-2023
-    - Took on multiple roles in a start-up like project, including Developer, Business Analyst, Data Quality Operations, Vendor Management,Project Manager, Team engagement chairperson, training new hires, and Production support.
-    - Developed, implemented, and managed automated QA/Data Quality processes, reducing manual work from 2-3 weeks to 1 day by running a suite of tools. 
-    - Created a regression testing process in Python using Pandas and other python libraries to ensure consistency from DEV to QA to UAT to PROD, achieving 100% accuracy in regression tests.
-    - Automated testing for over 6 million calculations, achieving accuracy above 96% for the system's logic. I took over 20 Stored Procedures and did the calculations in one SQL Script. Implemented a fully automated test to monitor the system's exception flagging logic, resulting in an increase in accuracy to 98%.
-    - Acquired and integrated data from 10+ sources (Including Bloomberg terminal and Automated FTP feeds), to develop new processes and reporting capabilities. Worked with Quant and IT teams to bring new datasets into the Quantitative Risk dataset.
-    - Partnered with 3rd Party and Internal Data providers to improve data sets, working with 3rd party vendors to clean over 100,000 records and helped HarbourVest's internal data providers clean up several production reports.
-    - Worked in a scrum team with frequent scrum calls and biweekly sprints, planning strategic and tactical goals using Azure DevOps (ADO) to track tasks/stories.
-    - Conducted data analysis, process design, and acceptance testing across projects that required new research content.
-    - Led the QA team in identifying/fixing bugs, investigating issues, and providing requirements to the Development team by analyzing large datasets.
-    - Conducted interviews for new hires and participated in Sprint Planning meetings as part of the team's leadership committee.
-    - Trained and mentored new hires in Quality Assurance (QA), Data Quality (DQ), and Business Analyst (BA) work, resulting in their promotions and added value to the team.
-    - Organized and led team engagement projects, such as quarterly party planning, quarterly newsletter, and team-building activities, to foster a collaborative and positive work environment.
-    - Contributed to the growth of the team/company since being hired in 2019, from 6 to 30 employees and the company grew from 550 to 1000+ employees.
-State Street Corporation, Quincy, MA|Master Data Management, Officer, September 2016 – November 2019|IIS Market Support, Associate II, June 2016 - September 2016|Master Data Management, Associate I, Remote Work June 2015 - June 2016
-    - Built a Regression Testing User Checklist to ensure consistent testing for all Production releases
-    - Developed critical data quality reports on IDQ, a web-based informatica reporting tool, using SQL queries
-    - Created advanced VBA macros to simplify complex procedures, resulting in reduced training costs
-    - Managed and trained a team of four direct reports, holding periodic one-on-one meetings to create unique goals for each employee
-    - Co-led a major data transformation project resulting in a 30% increase in efficiency
-    - Trained, troubleshooted, and collaborated with global team members using remote technologies, resulting in a 15% increase in productivity
-    - Successfully transitioned a critical process (partially using saleforce reports) from an internal State Street Team to an offshore team in India within a year with full ownership by the team in India and their management
-    - Orchestrated multiple successful data quality initiatives resulting in a 25% increase in data accuracy
-    - Experienced in testing for system releases, collaborated with IT and project teams to write stories and requirements, resulting in a 20% reduction in defects
-    - Serviced the Teams Reference Data and Master Data Management database, supported the development of procedural improvements, created and enhanced the team's SOPs to maximize effectiveness, and helped transition the team's daily processes offshore
-Education:
-- MA Real Estate Salesperson License, January 2018
-- B.A. in Economics from Wesleyan University, Middletown, CT, May 2016
-- High School Diploma, High Honor Student, Thayer Academy, Braintree, MA, June 2012"""
+SKILLS & EXPERIENCE
+
+•	Strong and direct communicator, passionate about data science and problem-solving
+•	Skilled in in project management and team leadership
+•	Talented at researching and comprehending complex concepts with limited information, exceptionally quick learner
+•	Utilizes cost-effective solutions for projects and excels in collaboration with internal and cross-functional teams
+•	Eager to develop algorithms, analytical tools, and operational processes; simplifies complex processes
+•	Advanced skills in Microsoft Office (Excel, PowerPoint, Word, SSMS, Outlook) with expertise in developing macros using VBA 
+•	Demonstrated proficiency in programming languages such as Python, C++, Java, and SQL, utilizing Python libraries (Pandas, Numpy, Great Expectations, OpenAI, Selenium, TensorFlow) and leveraging Behavior-Driven Development (BDD)
+•	Experienced in utilizing Azure, Azure DevOps (ADO), Data Factory, Data Bricks, and automated file loading processes
+•	Expert with the Bloomberg Terminal, Asset Control, and Request Builder to extract and pull security data. 
+•	Proficient in Salesforce360, SWIFT, Anti-Money Laundering (KYC/AML), and Informatica (MDM and IDQ)
+•	Subject matter expert in Master Data Management with multiple roles in Enterprise Data Offices. 
+•	Advanced knowledge of Private Equity data, including Fund of Fund investments, Credit, Real Asset, Direct Investments, and Credit Facilities
+
+
+
+HarbourVest Partners  Boston, MA | Senior Quantitative Data Associate | Quantitative Data Associate	                      November 2019-October 2023
+•	Held multiple roles in a startup-like project, including Junior Developer, Business Analyst, Data Quality Operations, Vendor Management, Project Manager, Team Engagement Chairperson, Trainer for new hires, and Production Support
+•	Developed and implemented automated QA/DQ processes, reducing manual work from 2-3 weeks to 1 day by running a suite of tools
+•	Created a regression testing process in Python using Pandas and other Python libraries to ensure 100% accuracy and consistency across all database environments including DEV, QA,  UAT and PROD
+•	Automated testing for over 6 million calculations, achieving accuracy above 96% for the system's logic. Consolidated over 20 Stored Procedures and performed the calculations in one SQL Script
+•	Implemented an automated test to monitor the system's DQ exception logic, resulting in an increase in the calculation accuracy up to 98%
+•	Acquired and integrated data from 10+ sources, including Bloomberg Terminal and Automated FTP feeds, to develop new processes and reporting capabilities. Collaborated with Business and Development teams to bring new datasets into the Quantitative Risk dataset
+•	Partnered with both 3rd Party and Internal Data providers to improve data sets, working with 3rd party vendors to clean over 100,000 records and helped HarbourVest's internal data providers clean up several production data extracts that were being sent to the client
+•	Worked in a scrum team with frequent scrum calls and biweekly sprints, planning strategic and tactical goals using Azure DevOps (ADO)
+•	Completed data analysis, process design, and user acceptance testing across projects that required new research content
+•	Identified and resolved bugs, investigated new issues, and provided requirements to the Development team by analyzing large datasets
+•	Conducted interviews for new hires and participated in Sprint Planning meetings as part of the team's leadership committee
+•	Trained and mentored new hires in Quality Assurance (QA), Data Quality (DQ), and Business Analyst (BA) work
+•	Organized and led team engagement projects, such as quarterly party planning, quarterly newsletter, and team building activities
+
+
+
+
+
+State Street Corporation, Quincy, MA | Master Data Management, Officer | IIS Market Support, Associate II	               June 2015-November 2019
+•	Responsible for production sign-off during system releases, collaborated with IT and project teams to write stories and requirements
+•	Built a Regression Testing User Checklist to ensure a consistent process completed for all Production releases
+•	Developed critical automated data quality checks using IDQ, a web-based Informatica reporting tool, writing the necessary SQL queries
+•	Created advanced VBA macros to simplify complex procedures, resulting in reduced training costs
+•	Managed and trained a team of four direct reports. Conducted interviews for the team's open positions
+•	Co-led a major data transformation project resulting in a 30% increase in efficiency. Orchestrated multiple successful data quality initiatives resulting in a 25% increase in data accuracy
+•	Led the transition of a critical SEC mandated process from an internal State Street Team to an offshore team in India within a 3-month period with full ownership by the team in India and their management 
+•	Serviced the Teams Reference Data and Master Data Management database, supported the development of procedural improvements, created and enhanced the team's SOPs to maximize effectiveness, and helped transition the team's daily processes
+
+
+EDUCATION 
+ 
+Massachusetts Real Estate Salesperson License, January 2018
+South Carolina Real Estate Salesperson License August 2023
+B.A. in Economics from Wesleyan University, Middletown, CT, May 2016
+
+
+
+
+"""
 
 Resume_Trim_Skills ="""Skills: ###
 - Writing Business content
@@ -349,7 +358,7 @@ State Street Corporation, Quincy, MA | Master Data Management, Officer|IIS Marke
 #This is one time then turn it off
 ##Resume_Text = Resume_Trim
 
-Test_Role_Resume = "You are a master job recruiter as well as former CEO and head of hiring for several major corporations. You understand what business owners want to see and also are good at making things sound real and connect with the audience personally"
+Test_Role_Resume = "You are a master job recruiter as well as former CEO and head of hiring for several major corporations. You understand what business owners want to see and also are good at making things sound real and connect with the audience personally. This is the resume of a skilled data analyst with many Subject matter expert roles in his career."
 Test_Task_Resume = """ Complete the {Task} provided below, use the {Expert Critique} and {Expert Tips} to process the respective revision
 {Task}: ###Clean up the language, grammar and content of the following resume and remove any redundancies. Use the background provided as the persona/voice of who is authoring these points. Do not change the facts nor add any misinformation. Clean up the grammar and language. Make it sound powerful and impressive, but do not sound exagerated. Shane should be hired for any job. Use the {Expert Critique} as a guide for the neccesary revisions| After the revision takes place you are going to give a new expert critique, give specific examples of how it can be improved, provide specific parts that need to be updated.###
 {Expert Critique}:###""" + Resume_Critique + """"###
@@ -365,6 +374,9 @@ Expert Critique: {Grade_Original_Resume_From_0_to_100%}|{Grade_Revised_Resume_Fr
 Skills:-||-
 Prior Work Experience: -||-
 """
+
+# Test_Format_Resume = """Reformat the text and organize it into a resume that is easy to read and showcases the candidate's skills"""
+#
 
 
 Test_Background_Resume = Test_Task_Resume + """ 
