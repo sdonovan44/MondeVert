@@ -66,7 +66,67 @@ from pydub.silence import split_on_silence
 
 
 
+import sys
+import argparse
 
+import cv2
+
+def MakeVariationArt(Pic, Size = '512x512', NumVars = 1, SavePath =  up.AI_Audio_Transcript + '\\' + 'Extracted images' , FileName= 'Version'):
+
+    response = openai.Image.create_variation(
+        image=open(Pic, "rb"),
+        n=NumVars,
+        size=Size
+    )
+    image_url = response['data'][0]['url']
+
+    r = requests.get(image_url)  # create HTTP response object
+
+    # send a HTTP request to the server and save
+    # the HTTP response in a response object called r
+
+    # Commented out for testing
+
+    print('Length of File Name: ' + str(len(FileName)))
+    if len(FileName) >= 80:
+        FileName = FileName[-80:]
+        print('Length of File Name: ' + str(len(FileName)))
+
+    FileName = CleanFileName(FileName)
+
+    fname_only = FileName
+
+    fname = SavePath + '\\' + FileName + '.png'
+    print(f"Filename: {fname}")
+    with open(fname, 'wb') as f:
+        f.write(r.content)
+
+
+    return fname
+def extractImages(pathIn, pathOut, FileName = '', MakeVar =False, Millisecs = 1000, outputFileType = '.png'):
+    Check_Folder_Exists(pathOut)
+    ExtractedImage = 1
+    if FileName =='':
+        x = pathIn.rfind('.')
+        x2 = pathIn.rfind('\\')
+        FileName = pathIn[x2:x]
+
+    pathOut = pathOut + '\\' + FileName
+    Check_Folder_Exists(pathOut)
+    count = 1
+    vidcap = cv2.VideoCapture(pathIn)
+    success,image = vidcap.read()
+    success = True
+    while success:
+        vidcap.set(cv2.CAP_PROP_POS_MSEC,(count*Millisecs))    # added this line
+        success,image = vidcap.read()
+        print ('Read a new frame: ', success)
+        Pic = pathOut + "\\frame "+ str(count) +  outputFileType
+        cv2.imwrite( pathOut + "\\frame "+ str(count) +  outputFileType , image)
+
+        if MakeVar ==True:
+            MakeVariationArt(Pic = Pic, SavePath=pathOut, FileName=  'Variation ' + "frame " + str(count))# save frame as JPEG file
+        count = count + 1
 
 def DownloadYoutubeMovie(video_url):
     VIDEO_SAVE_DIRECTORY = up.AI_Audio_Transcript + '\\' + "YoutubeVideos"

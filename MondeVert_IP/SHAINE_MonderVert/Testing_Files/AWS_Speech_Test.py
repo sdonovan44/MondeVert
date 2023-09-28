@@ -109,8 +109,9 @@ Runs.append('Social_Media_Clean_Post')
 
 
 #cu.Resume()
-
-
+import datetime
+current_time1 = datetime.datetime.now()
+current_time = current_time1.strftime('%m-%d-%Y_%H.%M.%S')
 Movie = "A:\Amini Amor\SHAINE\Requests\Beta\Test 1\A Tale of Two Kitties (1942).mp4"
 Movie = "A:\Amini Amor\SHAINE\Requests\Beta\Audio Transcript\Movie2Audio\IMG_1966.MOV.crdownload"
 Movie2 ="A:\Amini Amor\SHAINE\Requests\Beta\Audio Transcript\Movie2Audio\LaPardon64.mp4"
@@ -125,7 +126,25 @@ Youtube = "https://youtu.be/skrdyoabmgA?si=fPDFIIqzVp2LE9ia"
 
 
 #cu.MovieSubtitles(Movie, Rewrite = True)
-cu.MovieSubtitles(Movie5, Rewrite = True , AI_Task=True)
+# cu.MovieSubtitles(Movie5, Rewrite = True , AI_Task=True)
+Pictures = r"A:\Amini Amor\Live Recordings Raw\2023-09-28 03-59-14.mp4"
+# cu.extractImages(Pictures, up.AI_Audio_Transcript + '\\' + 'Extracted images', MakeVar=True, Millisecs=5125)
+
+pic = r"A:\Amini Amor\SHAINE\Requests\Beta\AI Art\Approved Quality Art\Curated\MondeVert Studio\SHAINE Favorites\Art_Blunts_Using_the_classic_style_of_Pablo_Picasso_create_a_unique_work_of_art_that_celebrates_the_creative_combination_of_Snoop_Dogg_and_Back - Copy.png"
+pic2 = r"A:\Amini Amor\SHAINE\Requests\Beta\AI Art\Approved Quality Art\Curated\MondeVert Studio\SHAINE Favorites\The artwork depicts a woman with flowing blue hair surrounded by a vibrant and colorful cityscape Her eyes are closed and a serene expression is on.png"
+pic3 = r"A:\Amini Amor\SHAINE\Requests\Beta\AI Art\Approved Quality Art\Curated\MondeVert Studio\SHAINE Favorites\2_stoners_playing_rock_paper_scissors_in_the_style_of_norman_rockwell.png"
+
+# Version2 = cu.MakeVariationArt(Pic= pic2, FileName='Favorite Variant1' + current_time)
+# Version3 = cu.MakeVariationArt(Pic= Version2, FileName='Favorite Variant2' + current_time)
+# Version4 = cu.MakeVariationArt(Pic= Version3, FileName='Favorite Variant2' + current_time)
+
+Version1 = pic3
+for i in range (1,6):
+    Version1 = cu.MakeVariationArt(Pic=Version1, FileName='Favorite Variant  ' + str(i) + '  '+ current_time)
+
+
+
+
 #cu.MovieSubtitles(Movie2, Origin="French", Output=["English"])
 #cu.DownloadYoutubeMovie(video_url = Youtube)
 #Make a function that has a suite of tools, first you select the mode, then you get the output
