@@ -96,28 +96,36 @@ def DownloadYoutubeMovie(video_url):
 
 
 
-
-
-
-def ReWrite_Transcript(Text):
-    NewText = Basic_GPT_Query2(Line2_Role = SP.ReWriteTranscript_Role, Line3_Format=SP.ReWriteTranscript_Format, Line4_Task= "Use the following Text as your source Text   Source Text: " + Text, Line5_Task=SP.ReWriteTranscript_Task)
+def AI_Task_Audio(Text):
+    NewText = Basic_GPT_Query2(Line2_Role = SP.Task_Role, Line3_Format=SP.Task_Format, Line4_Task= "Use the following Text as your source Text   Source Text: " + Text, Line5_Task=SP.Task_Task, Big=True)
 
     return NewText
 
-def MovieSubtitles(File, Origin = "English", Output = ["Spanish"], Rewrite = False):
+def ReWrite_Transcript(Text):
+    NewText = Basic_GPT_Query2(Line2_Role = SP.ReWriteTranscript_Role, Line3_Format=SP.ReWriteTranscript_Format, Line4_Task= "Use the following Text as your source Text   Source Text: " + Text, Line5_Task=SP.ReWriteTranscript_Task, Big=True)
+
+    return NewText
+
+def MovieSubtitles(File, Origin="English", Output=["Spanish"], Rewrite=False, AI_Task = False):
+    AudioFile = Movie2Audio(File)
+    TranscribeAudio(AudioFile = AudioFile,File= File, Origin = Origin, Output = Output, Rewrite = Rewrite, AI_Task = AI_Task)
+
+def TranscribeAudio(File,AudioFile, Origin = "English", Output = ["Spanish"], Rewrite = False,AI_Task = False):
     d = 1
 
     SavePath = up.AI_Audio_Transcript + '\\' + 'Movie2Audio'
     Check_Folder_Exists(SavePath)
-
-    FileName = File[len(SavePath):-4]
+    x = File.rfind('.')
+    x2 = File.rfind('\\')
+    FileName = File[x2:x]
 
     FileName = CleanFileName(FileName)
 
     SavePath = SavePath +'\\'+ FileName
+    print(FileName)
     Check_Folder_Exists(SavePath)
 
-    AudioFile = Movie2Audio(File)
+
 
     Transcript = transcribe_Large_audio(File,Origin = Origin)
 
@@ -171,6 +179,24 @@ def MovieSubtitles(File, Origin = "English", Output = ["Spanish"], Rewrite = Fal
         Final_Text = Transcript2
     else:
         Final_Text = Transcript
+
+    if AI_Task ==True:
+
+        if Rewrite == True:
+            Request = Final_Text
+
+        elif Rewrite ==False:
+            if Transcript2 == '':
+                Request = Transcript
+            else:
+                Request = Transcript2
+
+        try:
+
+            Response = AI_Task_Audio(Request)
+            SaveCSV(Text=Response, SavePath=SavePath, Title=FileName + '_Response')
+        except:
+            print ('Did not provide answer')
 
     SaveText2Audio(SavePath=SavePath, FileName=FileName,
                               Neural='Neural',

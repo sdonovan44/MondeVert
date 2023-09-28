@@ -114,6 +114,9 @@ Runs.append('Social_Media_Clean_Post')
 Movie = "A:\Amini Amor\SHAINE\Requests\Beta\Test 1\A Tale of Two Kitties (1942).mp4"
 Movie = "A:\Amini Amor\SHAINE\Requests\Beta\Audio Transcript\Movie2Audio\IMG_1966.MOV.crdownload"
 Movie2 ="A:\Amini Amor\SHAINE\Requests\Beta\Audio Transcript\Movie2Audio\LaPardon64.mp4"
+Movie3 = r"A:\Amini Amor\SHAINE\Requests\Beta\Audio Transcript\Movie2Audio\Task 1 2023-09-28 02-16-58.mp4"
+Movie4 = r"A:\Amini Amor\Live Recordings Raw\Task 3.mp4"
+Movie5 = "A:\Amini Amor\Live Recordings Raw\Task4.mp4"
 Youtube = "https://youtu.be/skrdyoabmgA?si=fPDFIIqzVp2LE9ia"
 # t = threading.Thread(target=cu.MovieSubtitles, args = (Movie,)).start()
 # t = threading.Thread(target=cu.MovieSubtitles, args = (Movie2,"French", "English")).start()
@@ -121,8 +124,17 @@ Youtube = "https://youtu.be/skrdyoabmgA?si=fPDFIIqzVp2LE9ia"
 
 
 
-#cu.MovieSubtitles(Movie, ReWrite = True)
+#cu.MovieSubtitles(Movie, Rewrite = True)
+cu.MovieSubtitles(Movie5, Rewrite = True , AI_Task=True)
 #cu.MovieSubtitles(Movie2, Origin="French", Output=["English"])
-cu.DownloadYoutubeMovie(video_url = Youtube)
+#cu.DownloadYoutubeMovie(video_url = Youtube)
+#Make a function that has a suite of tools, first you select the mode, then you get the output
+#Step 1 have user send in instructions to the system depending on what mode they choose
+# Step 2 Have the mode kick off and if anything is unclear get clarity so that the task can be completed.
+# Maybe make it so it can break down complex things into each task so the responses are longer (take the edited version and maybe have it formatted as a list that can be regexed)
 
 
+#1. Audio File/Video convert - Configs include revise mode and task mode
+#2 Look at the prompts about research etc. Use chat GPT to categorize task and pick the correct prompts to make the best results.
+#3 allow user to feed in a file, if the task is to load data from a file and recreate or summarize ask for the file etc.
+#4 other tasks maybe make song/story (you can mostly use #1 for this but maybe there is a mode to make another layer if needed)
