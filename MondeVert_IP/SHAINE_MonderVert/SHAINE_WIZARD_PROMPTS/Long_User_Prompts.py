@@ -920,20 +920,31 @@ Desired Format:
 """
 #************************************************************************************************
 
-Song_Role = """You are an expert writer master of all genres of music,poetry, screenplays, novels, short stories, and music production. IN general you are an expert in the entertainment industry specifically you will be taking on the persona you created. Be a master of lyric writing and music theory, also anything else I tell you to be"""
-Song_Outline_Task= """using the persona you are role playing as, Provide me with an outline for a song that summarizes the respective information and provide the result in a format specified previously by me the user."""
-Song_Task= """Write an original hit song based on the following outline: """
+Song_Role = """You are an expert writer master of all genres of music,poetry, screenplays, novels, short stories, and music production. IN general you are an expert in the entertainment industry specifically you will be taking on the persona you created. Be a master of lyric writing and music theory, also anything else I tell you to be. Take on the artist persona described"""
+Song_Outline_Task2= """using the musical artist described take on their persona for your role play, Provide me with an outline for a song  make it extensively detailed with  specific lyrics from the song and the metaphors and other literary devices to be incorporated. Be Abstract and not too specific, do not be over repetetive. The topic should be relatable and the chorus should be somewhat catchy. try to tell a story and/or describe some of your 5 senses what they are experiencing to make the story feel real. Reference pop culture and have witty ways of making it all intertwine. Mention famous people in stories about seeing them out or mention a meal you had at a famous restauraunt and make it funny how excited you are about the details of the meal, make allusions and other allegory or alliteration to make it interesting and surprising. """
+Song_Task2= """Write an original hit song based on the following outline.Use lyrics as if you are role playing that you are slick rick, action bronson, joey badass, pink floyd,nas or some other famous songwriter. Be abstract and metaphorical in your stories, witty and funny is ok. The topic should be relatable and the chorus should be somewhat catchy. try to tell a story and/or describe some of your 5 senses what they are experiencing to make the story feel real.  relatable struggles make his lyrics tell an exciting story that draws the audience in. Be Descriptive make the audience feel like they are living the moment you are describing  outline: """
 
-Song_Format = """Verse:{Lyrics}
+
+Song_Outline_Task= """using the musical artist described take on their persona for your role play, Provide me with an outline for a  song (for a male singer)  make it extensively detailed with  specific lyrics from the song and the metaphors and other literary devices to be incorporated. Be Abstract and not too specific. The language should be college level and have impressive references from history and pop culture. Funny and witty lines are ok. The topic should be relatable and the chorus should be somewhat catchy. try to tell a story and/or describe some of your 5 senses what they are experiencing to make the story feel real. Reference pop culture and have witty ways of making it all intertwine. make allusions and other allegory or alliteration to make it interesting and surprising. Base your story and song on positive thinking and specifically the law of attraction. Make it like a funny how to and explain it in a way that is relatable and understood by audience"""
+Song_Task= """Write an original hit song based on the following outline.Use lyrics as if you are role playing that you are slick rick, action bronson, joey badass, pink floyd,nas or some other famous songwriter. Be abstract and metaphorical in your stories, witty and funny is ok. The topic should be relatable and the chorus should be somewhat catchy. try to tell a story and/or describe some of your 5 senses what they are experiencing to make the story feel real.  relatable struggles make his lyrics tell an exciting story that draws the audience in. Be Descriptive make the audience feel like they are living the moment you are describing  outline: """
+
+#
+# Song_Outline_Task= """using the musical artist described take on their persona for your role play, Provide me with an outline for a  song (for a male singer)  make it extensively detailed with  specific lyrics from the song and the metaphors and other literary devices to be incorporated. Be Abstract and not too specific, do not be over repetetive. The topic should be relatable and the chorus should be somewhat catchy. try to tell a story and/or describe some of your 5 senses what they are experiencing to make the story feel real. Reference pop culture and have witty ways of making it all intertwine. Mention famous people in stories about seeing them out or mention a meal you had at a famous restauraunt and make it funny how excited you are about the details of the meal, make allusions and other allegory or alliteration to make it interesting and surprising. make it a top 40 pop song that would be performed by post malone or justin bieber"""
+# Song_Task= """Write an original hit pop song (for a male) based on the following outline.Use lyrics as if you are role playing that you are justin bieber, post malone, or some other famous top 40 pop star, pink floyd or some other famous songwriter. Be abstract and metaphorical in your stories, witty and funny is ok. The topic should be relatable and the chorus should be somewhat catchy. try to tell a story and/or describe some of your 5 senses what they are experiencing to make the story feel real.  relatable struggles make his lyrics tell an exciting story that draws the audience in. Be Descriptive make the audience feel like they are living the moment you are describing  outline: """
+
+
+
+Song_Format = """ Complete all of the user tasks and provide results in desired format
+Desired Format: 
+Verse:{Lyrics}
               Bridge:{Lyrics}
               Chorus:{Lyrics}
               Verse:{Lyrics}
               """
-Song_Outline_Format = """Complete the {Task} provided below, use the {Persona} you created to do all of the tasks. Make sure the result is in the correct format.
+Song_Outline_Format2 = """Complete the {Task} provided below, use the {Persona} you created to do all of the tasks. Make sure the result is in the correct format.
 
 
 Desired Format:
-    Time:{Less than 100 seconds}
     genres: -||-
     Tone: -||-
     Themes:-||-
@@ -948,11 +959,29 @@ Desired Format:
     Song Structures: -||-
     Similar Artists: -||-
     Brief Summary of Song/Story/Poem: <Short_Description>
+
     Influences (music, literature, film, other): -||-
     Original Quotes to use in the song:Verse:{Sample Lyrics}|Chorus:{Sample Lyrics}|Bridge/Pre-Chorus:{Sample Lyrics}
-    Samples to use in the song (<Including_Song_Name_and_Artist_Name>): -||-
-    Other Important information: -||-
 """
+
+
+
+Song_Outline_Format = """Complete the {Task} provided below, use the {Persona} you created to do all of the tasks. Make sure the result is in the correct format.
+
+
+Desired Format:
+    Tone: -||-
+    Themes:-||-
+    Song Name: -||-
+    Album Name:-||-
+    Similar Songs: -||-
+    Rhyme Scheme: -||-
+    Similar Artists: -||-
+    Detailed Summary of Song/Story/Poem: <Short_Description>
+  
+    Original Lyrics to use in the song:Verse:{Sample Lyrics}|Chorus:{Sample Lyrics}|Bridge/Pre-Chorus:{Sample Lyrics}
+"""
+
 
 
 #************************************************************************************************

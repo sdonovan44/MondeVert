@@ -929,6 +929,113 @@ def Basic_GPT_Query2(   Line2_Role  , Line5_Task,Line3_Format,Line4_Task,Big = F
         return GPT_Response
 
 
+def speak( audio, Add2T=True, voice=4, SilentMode = False):
+
+
+
+    engine = pyttsx3.init()
+    # getter method(gets the current value
+    # of engine property)
+    voices = engine.getProperty('voices')
+    engine.setProperty('voice', voices[voice].id)
+    # Method for the speaking of the assistant
+    if SilentMode == False:
+        engine.say(audio + "")
+        # Blocks while processing all the currently
+        # queued commands
+        engine.runAndWait()
+    else:
+        print('Silent Mode Activated: ' + audio)
+
+
+def Basic_GPT_Query(   Line2_Role  ,Line3_Format,Line4_Task,Big = False,Model = "gpt-3.5-turbo",upgradeLimit = 3000, Special = '',Line1_System_Rule = StoryMode.system_TextJoaT_quick, crazy = .5, Subject= '', Outline = '', Allowed_Fails = 8, SaveFile = False,MakeArt = False, Mode = 'SHAINE SAYS', SavePath= ''):#use this to create art style for the work
+
+
+    if Subject != '':
+        Line2_Role = Line2_Role + """Your role and subject matter expertise should fit the following Subject and or style and mood in the {Text} provided by the user Text:###""" + Subject + """###"""
+
+
+
+    Line1_System_Rule = Line2_Role
+    #Line2_Role = Line2_Role + Special
+    Full_User_Prompt = """User Inputs to Chat GPT: 
+    1). """ + Line1_System_Rule +"""
+    2).""" + Line3_Format+ """
+    3).""" + Line4_Task
+
+    if len(Full_User_Prompt) > upgradeLimit:
+        Model = "gpt-3.5-turbo-16k-0613"
+    elif len(Full_User_Prompt) < upgradeLimit:
+        Model = "gpt-3.5-turbo"
+
+
+
+    if Big ==True:
+        Model = "gpt-3.5-turbo-16k-0613"
+    KeepGoing = False
+    KillSwitch = 0
+    while KeepGoing == False and KillSwitch < Allowed_Fails:
+
+
+        try:
+
+
+
+            # This is for the result if you let the AI describe project and details and then make the response
+            response = openai.ChatCompletion.create(
+                model=Model,
+                messages=[
+                    {"role": "system", "content": Line1_System_Rule},
+                    {"role": "user", "content": Line3_Format},
+                    {"role": "user", "content": Line4_Task },
+
+                ]
+                , temperature=crazy
+            )
+            GPT_Response = str(response.choices[0].message.content)
+
+            KeepGoing = True
+        except:
+            print(' Error ChatGPT failed, trying to rerun prompt now.... if this happens too many times we will kill the script')
+            KillSwitch += 1
+            print(Full_User_Prompt)
+            #as written this does not run but if I got rid of +1 it could
+            if KillSwitch == Allowed_Fails+1:
+                print('could not create a writer persona, redoing it now')
+                GPT_Response = Basic_GPT_Query2( Line2_Role='You are a skilled writer', Line3_Format=Line3_Format, Line4_Task=Line4_Task, Line1_System_Rule=up.system_Text_ScreenPlay)
+
+            continue
+
+
+        #print(up.breakupOutput)
+
+        # self.UserPromptsCount+=1
+        #
+        # self.UserPrompts += 'User Input #' + str(UserPromptsCount)
+        #
+        # self.UserPrompts += Full_User_Prompt + up.breakupOutput2 + up.breakupOutput2
+
+
+        Title = Mode + '_' + current_time
+        if SaveFile ==True:
+            SaveText = current_time+ up.breakupOutput2 + Full_User_Prompt + up.breakupOutput2 + 'SHAINE SAYS: '+  GPT_Response
+            print(SaveText)
+            SaveCSV(Text=SaveText, SavePath=SavePath, Title = Title)
+        if MakeArt ==True:
+            ArtPrompt = GPTArt2(User_Subject = GPT_Response)
+            print(ArtPrompt)
+            originalFilepath = makeArt(Prompt=ArtPrompt)
+            PicNewPath1 = SavePath + '\\' + Mode
+            Check_Folder_Exists(PicNewPath1)
+            PicNewPath =PicNewPath1 + '\\' + Title + '.png'
+            shutil.copyfile(originalFilepath, PicNewPath)
+        return GPT_Response
+
+
+
+
+
+
 def GPTArt2( crazy=.5,  Model = "gpt-3.5-turbo",prompt=sms.ArtPrompt_Clean_Social_Media_Post_Line2_Prompt,
              User_Subject='Pick a random subject and medium go wild and make it exciting, beautiful and shocking',
              ArtFormat=sms.ArtPrompt_Clean_Social_Media_Post_Line3,

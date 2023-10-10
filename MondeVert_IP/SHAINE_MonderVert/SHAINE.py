@@ -1413,11 +1413,10 @@ class MondeVert():
         if crazy > .9:
             crazy = .7
 
-        Outline = MondeVert.Basic_GPT_Query(self, Line2_Role=Role + Artist_Bio_Details,
-                                            Line3_Format=Line3_Format_outline, Line4_Task=Line4_Task_Outline, crazy=crazy)
+        Outline = cu.Basic_GPT_Query( Line2_Role=Role + Artist_Bio_Details,Line3_Format=Line3_Format_outline, Line4_Task=Line4_Task_Outline, crazy=crazy)
 
         try:
-            Song = MondeVert.Basic_GPT_Query(self, Line2_Role=Role + Artist_Bio_Details, Line3_Format=Format,
+            Song = cu.Basic_GPT_Query( Line2_Role=Role + Artist_Bio_Details, Line3_Format=Format,
                                                 Line4_Task=Task +Outline)
         except:
             dn = 100
@@ -1599,10 +1598,10 @@ class MondeVert():
 
             newline = """\n"""
             newline2 = """\\n"""
-            audioname = cu.SaveText2Audio(Text=Lyrics, Translate=Translate, SavePath=SavePath,
-                                          FileName=Title1, Chunk_Replaces=['.', ')', ':', '?', newline, newline2],
-                                          Chunk_Limit=Chunk_Limit,
-                                          Artist_Persona=Art_Details)
+            # audioname = cu.SaveText2Audio(Text=Lyrics, Translate=Translate, SavePath=SavePath,
+            #                               FileName=Title1, Chunk_Replaces=['.', ')', ':', '?', newline, newline2],
+            #                               Chunk_Limit=Chunk_Limit,
+            #                               Artist_Persona=Art_Details)
             test = 100
         except:
             dn = 100
@@ -5276,7 +5275,7 @@ if __name__ == '__main__':
     #args = ['MVAA']
     #args = ['MVAA','MVAA2']
     #args = ['MVAA', 'MVAA2', 'MVAA_La_Familia']
-    args = [ 'Resume']
+    args = [ 'Music_Shane']
     #args = ['MVAA_La_Familia']
 
 
