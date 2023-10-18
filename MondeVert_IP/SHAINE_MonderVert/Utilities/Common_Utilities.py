@@ -183,10 +183,10 @@ def ReWrite_Transcript(Text, Line3 = SP.ReWriteTranscript_Format, Line2 =SP.ReWr
 
     return NewText
 
-def MovieSubtitles(File, Origin="English", Output=["Spanish"], Rewrite=False, AI_Task = False, Journal = False, Chunk_Limit = 1300, ToDo = False, Journal_Loc = up.Journal_Locs, ToDoFile = up.ToDoFile):
+def MovieSubtitles(File, Origin="English", Output=["Spanish"], Rewrite=False, AI_Task = False, Journal = False, Chunk_Limit = 1300, ToDo = False, Journal_Loc = up.Journal_Locs, ToDoFile = up.ToDoFile, AudioMode = "Both"):
     AudioFile = Movie2Audio(File)
 
-    SavePath_MP4 = TranscribeAudio(AudioFile = AudioFile,File= File, Origin = Origin, Output = Output, Rewrite = Rewrite, AI_Task = AI_Task,Journal = Journal, Chunk_Limit =  Chunk_Limit,Journal_Loc = Journal_Loc, ToDoFile = ToDoFile, ToDo=ToDo)
+    SavePath_MP4 = TranscribeAudio(AudioFile = AudioFile,File= File, Origin = Origin, Output = Output, Rewrite = Rewrite, AI_Task = AI_Task,Journal = Journal, Chunk_Limit =  Chunk_Limit,Journal_Loc = Journal_Loc, ToDoFile = ToDoFile, ToDo=ToDo, AudioMode = AudioMode)
     if Journal ==True:
         try:
             FileName = File[(File.rfind(up.System_Folder_Path_Fix)+ 1):]
@@ -196,7 +196,7 @@ def MovieSubtitles(File, Origin="English", Output=["Spanish"], Rewrite=False, AI
             FileName2 = CleanFileName(FileName2)
             print(FileName2)
             Check_Folder_Exists(SavePath_MP4)
-            SavePath_MP4 = SavePath_MP4 + FileName2 + '_Raw'+ FileType
+            SavePath_MP4 = Path(PureWindowsPath(SavePath_MP4 , str(FileName2 + '_Raw') ,  FileType))
 
 
 
@@ -218,7 +218,7 @@ def CheckFile(File):
         print("CheckFile:")
         print(SavePath)
         SaveCSV(Text = '',FilePath= File,Title = FileName, SavePath = SavePath )
-def TranscribeAudio(File,AudioFile, Origin = "English", Output = ["Spanish"], Rewrite = False,AI_Task = False, Journal = False, Journal_Loc = up.Journal_Locs, Chunk_Limit = 1300, ToDoFile = up.ToDoFile, ToDo = False):
+def TranscribeAudio(File,AudioFile, Origin = "English", Output = ["Spanish"], Rewrite = False,AI_Task = False, Journal = False, Journal_Loc = up.Journal_Locs, Chunk_Limit = 1300, ToDoFile = up.ToDoFile, ToDo = False, AudioMode = "Both"):
     d = 1
     Journal_Original = ''
     Journal_Revised = ''
@@ -240,63 +240,65 @@ def TranscribeAudio(File,AudioFile, Origin = "English", Output = ["Spanish"], Re
     print(SavePath)
     Check_Folder_Exists(SavePath)
 
+    if AudioMode.upper() != "GOOGLE":
+        try:
+            file_stats = os.stat(AudioFile)
+            file_size = file_stats.st_size
+            filesize2 = file_size/1000000
+            print(f"File Size in MegaBytes is {filesize2}")
+        except FileNotFoundError:
+            print("File not found.")
+        except OSError:
+            print("OS error occurred.")
+
+        Transcript2 = ''
+        ReWrite_Transcript2 = ''
+        ReWrite_Transcript1 = ''
+        try:
+            if filesize2 < 38:
+                model = whisper.load_model("tiny")
+            elif filesize2 < 74:
+                model = whisper.load_model("base")
+            elif filesize2 < 244:
+                model = whisper.load_model("small")
+            elif filesize2 < 768:
+                model = whisper.load_model("medium")
+            elif filesize2 >=768:
+                model = whisper.load_model("large")
 
 
-    Transcript = transcribe_Large_audio(AudioFile,Origin = Origin)
+
+            Text= model.transcribe(AudioFile)
+            Transcript2  = Text["text"]
+            Journal_Original = Transcript2
+            if Rewrite ==True:
+
+                if Journal == True:
+                    ReWrite_Transcript2 = ReWrite_Transcript(Transcript2, Line5=RW.Journal_Task)
+                else:
+                    ReWrite_Transcript2 = ReWrite_Transcript(Transcript2)
+
+                SaveCSV(Text=ReWrite_Transcript2, SavePath=SavePath, Title=FileName + '_Transcript_Revised_AI')
+                Journal_Revised = ReWrite_Transcript2
+            SaveCSV(Text=Transcript2, SavePath=SavePath, Title=FileName + '_Transcript_AI')
+
+        except:
+            print("Error Using Whisper")
 
     try:
-        file_stats = os.stat(AudioFile)
-        file_size = file_stats.st_size
-        filesize2 = file_size/1000000
-        print(f"File Size in MegaBytes is {filesize2}")
-    except FileNotFoundError:
-        print("File not found.")
-    except OSError:
-        print("OS error occurred.")
+        if AudioMode.upper() != "CHATGPT":
+            Transcript = transcribe_Large_audio(AudioFile,Origin = Origin)
 
-    Transcript2 = ''
-    ReWrite_Transcript2 = ''
-    ReWrite_Transcript1 = ''
-    try:
-        if filesize2 < 38:
-            model = whisper.load_model("tiny")
-        elif filesize2 < 74:
-            model = whisper.load_model("base")
-        elif filesize2 < 244:
-            model = whisper.load_model("small")
-        elif filesize2 < 768:
-            model = whisper.load_model("medium")
-        elif filesize2 >=768:
-            model = whisper.load_model("large")
+            if Rewrite == True:
+                if Journal ==True:
+                    ReWrite_Transcript1 = ReWrite_Transcript(Transcript, Line5=RW.Journal_Task)
+                else:
+                    ReWrite_Transcript1 = ReWrite_Transcript(Transcript)
+                SaveCSV(Text=ReWrite_Transcript1, SavePath=SavePath, Title=FileName + '_Transcript_Revised')
 
-
-
-        Text= model.transcribe(AudioFile)
-        Transcript2  = Text["text"]
-        Journal_Original = Transcript2
-        if Rewrite ==True:
-
-            if Journal == True:
-                ReWrite_Transcript2 = ReWrite_Transcript(Transcript2, Line5=RW.Journal_Task)
-            else:
-                ReWrite_Transcript2 = ReWrite_Transcript(Transcript2)
-
-            SaveCSV(Text=ReWrite_Transcript2, SavePath=SavePath, Title=FileName + '_Transcript_Revised_AI')
-            Journal_Revised = ReWrite_Transcript2
-        SaveCSV(Text=Transcript2, SavePath=SavePath, Title=FileName + '_Transcript_AI')
-
+            SaveCSV(Text=Transcript, SavePath=SavePath, Title=FileName + '_Transcript')
     except:
-        print("Error Using Whisper")
-
-    if Rewrite == True:
-        if Journal ==True:
-            ReWrite_Transcript1 = ReWrite_Transcript(Transcript, Line5 = RW.Journal_Task)
-        else:
-            ReWrite_Transcript1 = ReWrite_Transcript(Transcript)
-        SaveCSV(Text=ReWrite_Transcript1, SavePath=SavePath, Title=FileName + '_Transcript_Revised')
-
-    SaveCSV(Text=Transcript, SavePath=SavePath, Title=FileName + '_Transcript')
-
+        print("Error Using Google Speech")
 
     if ReWrite_Transcript2 != '' and Rewrite == True:
         Final_Text = ReWrite_Transcript2
@@ -305,6 +307,9 @@ def TranscribeAudio(File,AudioFile, Origin = "English", Output = ["Spanish"], Re
     else:
         Final_Text = Transcript
 
+
+
+#This is where I need to make it so the reformatting puts a delimiter in the response so I can split out the response and have each task be provided by Chat GPT
     if AI_Task ==True:
 
         if Rewrite == True:
@@ -315,13 +320,13 @@ def TranscribeAudio(File,AudioFile, Origin = "English", Output = ["Spanish"], Re
                 Request = Transcript
             else:
                 Request = Transcript2
-
         try:
-
             Response = AI_Task_Audio(Request)
             SaveCSV(Text=Response, SavePath=SavePath, Title=FileName + '_Response')
         except:
             print ('Did not provide answer')
+
+
 
     if ToDo == True:
         try:
@@ -341,6 +346,15 @@ def TranscribeAudio(File,AudioFile, Origin = "English", Output = ["Spanish"], Re
     if Journal ==True:
         Check_Folder_Exists(up.AI_Journal_Inputs_RawAudio)
 
+
+        try:
+            for i in Journal_Loc:
+                CheckFile(i)
+            CheckFile(ToDoFile)
+        except:
+            print('Review potential error with Journal Files')
+
+
         FileName = AudioFile[(AudioFile.rfind(up.System_Folder_Path_Fix)+ 1):]
         FileName2 = AudioFile[(AudioFile.rfind(up.System_Folder_Path_Fix) + 1):File.rfind('.')]
         FileType = AudioFile[AudioFile.rfind('.'):]
@@ -349,7 +363,7 @@ def TranscribeAudio(File,AudioFile, Origin = "English", Output = ["Spanish"], Re
 
         SavePath2 = Path(PureWindowsPath(SavePath,  'Raw' , up.System_Folder_Path_Fix))
         Check_Folder_Exists(SavePath2)
-        shutil.copyfile(AudioFile,SavePath2 + FileName2 + '_Raw' + FileType)
+        shutil.copyfile(AudioFile,Path(PureWindowsPath(SavePath2 , str(FileName2 + '_Raw') , FileType)))
 
 
 
@@ -375,7 +389,7 @@ def TranscribeAudio(File,AudioFile, Origin = "English", Output = ["Spanish"], Re
     else:
 
         try:
-            shutil.copyfile(AudioFile, SavePath + FileName)
+            shutil.copyfile(AudioFile, Path(PureWindowsPath(SavePath,  FileName)))
         except:
             dn = 100
             print('Error moving audio file')
@@ -530,7 +544,7 @@ def Check_Folder_Exists(SavePath):
         if not isExist:
             # Create a new directory because it does not exist
             os.makedirs(SavePath)
-            print("Created new filePath: " + SavePath)
+            print("Created new filePath: " + str(SavePath))
     except:
         dn = True
 
@@ -783,14 +797,14 @@ def Chop4Art(Text, SavePath, FileName,FilePath = '',  Chunk_Limit = 1500,  Chunk
     Text_Chunks = []
     Translate_Folder = r'\Translated'
     Text_New = Text
-    SavePath_Pics = SavePath + r'\SHAINE - Art'
+    SavePath_Pics = Path(PureWindowsPath(SavePath , r'\SHAINE - Art'))
 
     length = len(Text)
     Audio_File_Count= 1
     if 'Audio Chunks' in SavePath:
         SavePath_Chunks= SavePath
     else:
-        SavePath_Chunks = SavePath + r'\SHAINE - Audio'
+        SavePath_Chunks = Path(PureWindowsPath(SavePath , r'\SHAINE - Audio'))
     Check_Folder_Exists(SavePath)
     Check_Folder_Exists(SavePath_Chunks)
     Check_Folder_Exists(SavePath_Pics)
@@ -1226,14 +1240,14 @@ def Split_Audio2(Text, SavePath, FileName,FilePath = '', OpeningSound = up.Monde
     Text_Chunks = []
     Translate_Folder = r'\Translated'
     Text_New = Text
-    SavePath_Pics = SavePath + r'\SHAINE - Art'
+    SavePath_Pics = Path(PureWindowsPath(SavePath , r'\SHAINE - Art'))
 
     length = len(Text)
     Audio_File_Count= 1
     if 'Audio Chunks' in SavePath:
         SavePath_Chunks= SavePath
     else:
-        SavePath_Chunks = SavePath + r'\SHAINE - Audio'
+        SavePath_Chunks = Path(PureWindowsPath(SavePath , r'\SHAINE - Audio'))
     Check_Folder_Exists(SavePath)
     Check_Folder_Exists(SavePath_Chunks)
     Check_Folder_Exists(SavePath_Pics)
@@ -1715,7 +1729,7 @@ def SaveText( df, FileName, tabname):
     SavePath1 = f2
     invalidCharRemoved = re.sub(r"[^a-zA-Z0-9 ]", "", FileName)
     Filename = up.System_Folder_Path_Fix + str(invalidCharRemoved) + "_"
-    SavePath2 = SavePath1 + Filename + ".xlsx"
+    SavePath2 = Path(PureWindowsPath(SavePath1 , Filename, ".xlsx"))
     # SavePath2 = r'D:\ShakeBot Testing\ShaKeBotTest for DA - 12-20-2022.xlsx'
     try:
         with pd.ExcelWriter(SavePath2) as writer:
@@ -1790,7 +1804,7 @@ def NamePoemSavePoem(self, poem, ArtPaths, Prompts_Used, ArtistPoetInfo, title='
             Title1 = Title1[0:60]
 
 
-        Title2 = SavePath + Title1
+        Title2 = Path(PureWindowsPath(SavePath,  Title1))
 
         Check_Folder_Exists(SavePath)
 
@@ -1840,7 +1854,7 @@ def NamePoemSavePoem(self, poem, ArtPaths, Prompts_Used, ArtistPoetInfo, title='
                     image_counter += 1
                     r.add_picture(i)
                     original = i
-                    target = SavePath + Title1 + str(image_counter)  + '.png'
+                    target = Path(PureWindowsPath(SavePath , Title1 , str(image_counter)  , '.png'))
 
 
                     try:
@@ -1859,7 +1873,7 @@ def NamePoemSavePoem(self, poem, ArtPaths, Prompts_Used, ArtistPoetInfo, title='
                     r = p.add_run()
                     r.add_text(i)
                     dfPrompts += i + '|'
-                document.save(Title2 + '_Details.docx')
+                document.save(Path(PureWindowsPath(Title2 , '_Details.docx')))
 
                 document2 = Document()
                 document2.add_heading(Title, 0)
@@ -1868,7 +1882,7 @@ def NamePoemSavePoem(self, poem, ArtPaths, Prompts_Used, ArtistPoetInfo, title='
                 p = document2.add_paragraph()
                 r = p.add_run()
                 r.add_text(poem)
-                document2.save(Title2 + '.docx')
+                document2.save(Path(PureWindowsPath(Title2 , '.docx')))
             except:
                 print('Error saving word doc')
     except:
@@ -1898,7 +1912,7 @@ def MultiThread(self, Functions, Args):
 
 
 
-def send_email_no_attachment_outlook( password = DNC.Outlookpassword, sender = DNC.OutlookEmail, body= DNC.subject + current_time, filename = [up.MasterFilePersona], to= DNC.to, subject= DNC.subject + current_time, smtpHost = 'smtp.office365.com', smtpPort = 587):
+def send_email_no_attachment_outlook( password = DNC.Outlookpassword, sender = DNC.OutlookEmail, body= DNC.subject + current_time, filename = [up.AI_Journal_Combined, up.ToDoFile], to= DNC.to, subject= DNC.subject + current_time, smtpHost = 'smtp.office365.com', smtpPort = 587):
     try:
 
     #smtp
@@ -1923,7 +1937,7 @@ def send_email_no_attachment_outlook( password = DNC.Outlookpassword, sender = D
     except:
         print("Error: unable to send email")
 
-def send_email_w_attachment_gmail(sender = DNC.gmail_user, password = DNC.gmail_pass, body= DNC.subject + current_time, filename = [up.MasterFilePersona], to= DNC.to, subject= DNC.subject + current_time,fType = "txt"):
+def send_email_w_attachment_gmail(sender = DNC.gmail_user, password = DNC.gmail_pass, body= DNC.subject + current_time, filename = [up.AI_Journal_Combined, up.ToDoFile], to= DNC.to, subject= DNC.subject + current_time,fType = "txt"):
     # create message object
     #to = 'sdonovan@mondevert.co'#; RichardDX44@gmail.com'
     try:
@@ -1957,7 +1971,7 @@ def send_email_w_attachment_gmail(sender = DNC.gmail_user, password = DNC.gmail_
         print("Error: unable to send email")
 
 
-def send_email_no_attachment_gmail(sender = DNC.gmail_user, password = DNC.gmail_pass, body= DNC.subject + current_time, filename = [up.MasterFilePersona], to= DNC.to, subject= DNC.subject + current_time,fType = "txt"):
+def send_email_no_attachment_gmail(sender = DNC.gmail_user, password = DNC.gmail_pass, body= DNC.subject + current_time, filename = [up.AI_Journal_Combined, up.ToDoFile], to= DNC.to, subject= DNC.subject + current_time,fType = "txt"):
     # create message object
     #to = 'sdonovan@mondevert.co'#; RichardDX44@gmail.com'
     try:
@@ -1982,7 +1996,7 @@ def send_email_no_attachment_gmail(sender = DNC.gmail_user, password = DNC.gmail
         print("Error: unable to send email")
 
 # !/usr/bin/python
-def send_email_w_attachment_outlook( password = DNC.Outlookpassword, sender = DNC.OutlookEmail, body= DNC.subject + current_time, filename = [up.MasterFilePersona], to= DNC.to, subject= DNC.subject + current_time, server_host = 'smtp.office365.com', server_port = 587,contype = 'application/octet-stream'):
+def send_email_w_attachment_outlook( password = DNC.Outlookpassword, sender = DNC.OutlookEmail, body= DNC.subject + current_time, filename = [up.AI_Journal_Combined, up.ToDoFile], to= DNC.to, subject= DNC.subject + current_time, server_host = 'smtp.office365.com', server_port = 587,contype = 'application/octet-stream'):
 
     # set sender email and password
 
