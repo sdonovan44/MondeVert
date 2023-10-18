@@ -6,29 +6,29 @@ import platform
 
 Name = 'Shane'
 Bot_Name = 'SHAINE'
-SavePath = Path(PureWindowsPath(r"A:\Amini Amor\SHAINE\Requests\Beta"))
+SavePath = Path(PureWindowsPath("A:\Amini Amor\SHAINE\Requests\Beta"))
 
 
-AI_Art_Path = Path(PureWindowsPath(SavePath, r"\AI Art"))
-AI_Poetry_Path = Path(PureWindowsPath(SavePath , r"\AI Poetry"))
-AI_Blog_Path = Path(PureWindowsPath(SavePath , r"\AI Blogs"))
-AI_Music_Path = Path(PureWindowsPath(SavePath , r"\AI Music"))
-AI_Task_Path = Path(PureWindowsPath(SavePath , r"\AI Tasks"))
-AI_Audio_Transcript = Path(PureWindowsPath(SavePath , r"\Audio Transcript"))
+AI_Art_Path = Path(PureWindowsPath(SavePath, "AI Art"))
+AI_Poetry_Path = Path(PureWindowsPath(SavePath , "AI Poetry"))
+AI_Blog_Path = Path(PureWindowsPath(SavePath , "AI Blogs"))
+AI_Music_Path = Path(PureWindowsPath(SavePath , "AI Music"))
+AI_Task_Path = Path(PureWindowsPath(SavePath , "AI Tasks"))
+AI_Audio_Transcript = Path(PureWindowsPath(SavePath , "Audio Transcript"))
 
-AI_AudioBook_Path = Path(PureWindowsPath(SavePath , r"\AI AudioBooks"))
+AI_AudioBook_Path = Path(PureWindowsPath(SavePath , "AI AudioBooks"))
 #AI_Childrens_AudioBook_Path = Path(PureWindowsPath(AI_AudioBook_Path , "\AI_Childrens_AudioBooks"))
 AI_Childrens_AudioBook_Path = AI_AudioBook_Path
-AI_Live_Art_Path = Path(PureWindowsPath(SavePath , r"\AI Live Art Path"))
-AI_Wedding = Path(PureWindowsPath(SavePath , r'\Wedding Bells'))
-AI_Screen_Plays = Path(PureWindowsPath(SavePath , r"\MondeVert Productions\ScreenPlays"))
+AI_Live_Art_Path = Path(PureWindowsPath(SavePath , "AI Live Art Path"))
+AI_Wedding = Path(PureWindowsPath(SavePath , 'Wedding Bells'))
+AI_Screen_Plays = Path(PureWindowsPath(SavePath , "MondeVert Productions\ScreenPlays"))
 
 
-AI_Journal = Path(PureWindowsPath(SavePath , r"\AI Journal"))
-AI_Journal_Inputs = Path(PureWindowsPath(AI_Journal , r"\Inputs"))
-AI_Journal_Inputs_RawVideo = Path(PureWindowsPath(AI_Journal_Inputs , r"\Raw Video"))
-AI_Journal_Inputs_RawAudio = Path(PureWindowsPath(AI_Journal_Inputs , r"\Raw Audio"))
-AI_Journal_Inputs_Raw = Path(PureWindowsPath(AI_Journal_Inputs , r"\Raw Files"))
+AI_Journal = Path(PureWindowsPath(SavePath , "AI Journal"))
+AI_Journal_Inputs = Path(PureWindowsPath(AI_Journal , "Inputs"))
+AI_Journal_Inputs_RawVideo = Path(PureWindowsPath(AI_Journal_Inputs , "Raw Video"))
+AI_Journal_Inputs_RawAudio = Path(PureWindowsPath(AI_Journal_Inputs , "Raw Audio"))
+AI_Journal_Inputs_Raw = Path(PureWindowsPath(AI_Journal_Inputs , "Raw Files"))
 
 
 
@@ -36,10 +36,10 @@ AI_Journal_Inputs_Raw = Path(PureWindowsPath(AI_Journal_Inputs , r"\Raw Files"))
 #Windows specific Fixes
 System_Folder_Path_Fix = '\\'
 
-AI_Journal_Original = Path(PureWindowsPath( AI_Journal ,System_Folder_Path_Fix , r"AI Journal Original.txt"))
-AI_Journal_Revised = Path(PureWindowsPath( AI_Journal ,System_Folder_Path_Fix , r"AI Journal Revised.txt"))
-AI_Journal_Combined =  Path(PureWindowsPath(AI_Journal ,System_Folder_Path_Fix , r"AI Journal Combined.txt"))
-ToDoFile = Path(PureWindowsPath(AI_Journal ,System_Folder_Path_Fix , r"To Do.txt"))
+AI_Journal_Original = Path(PureWindowsPath( AI_Journal ,System_Folder_Path_Fix , "AI Journal Original.txt"))
+AI_Journal_Revised = Path(PureWindowsPath( AI_Journal ,System_Folder_Path_Fix , "AI Journal Revised.txt"))
+AI_Journal_Combined =  Path(PureWindowsPath(AI_Journal ,System_Folder_Path_Fix , "AI Journal Combined.txt"))
+ToDoFile = Path(PureWindowsPath(AI_Journal ,System_Folder_Path_Fix , "To Do.txt"))
 
 
 
@@ -58,12 +58,12 @@ else:
 
 Journal_Locs = [AI_Journal_Original, AI_Journal_Revised, AI_Journal_Combined]
 
-MasterFile = Path(PureWindowsPath(SavePath , r"\Master Tracker Files\MondeVert Master Tracker.xlsx"))
-MasterFile2 = Path(PureWindowsPath(SavePath , r"\Master Tracker Files\MondeVert Master Transcript.xlsx"))
-MasterFile3 = Path(PureWindowsPath(SavePath , r"\Master Tracker Files\MondeVert Master Blog Poem and Song Lyrics.xlsx"))
+MasterFile = Path(PureWindowsPath(SavePath , "Master Tracker Files\MondeVert Master Tracker.xlsx"))
+MasterFile2 = Path(PureWindowsPath(SavePath , "Master Tracker Files\MondeVert Master Transcript.xlsx"))
+MasterFile3 = Path(PureWindowsPath(SavePath , "Master Tracker Files\MondeVert Master Blog Poem and Song Lyrics.xlsx"))
 
-MasterFilePersona = Path(PureWindowsPath(SavePath , r"\Master Tracker Files\MondeVert Master Persona.xlsx"))
-MasterFile_Character = Path(PureWindowsPath(SavePath , r"\Master Tracker Files\MondeVert Master Character List.xlsx"))
+MasterFilePersona = Path(PureWindowsPath(SavePath , "Master Tracker Files\MondeVert Master Persona.xlsx"))
+MasterFile_Character = Path(PureWindowsPath(SavePath , "Master Tracker Files\MondeVert Master Character List.xlsx"))
 
 
 
@@ -86,10 +86,10 @@ Shane_Persona = ' you are a master assistant named Shane, you are skilled at all
 MondeVertIntro =   Path(PureWindowsPath(SavePath , "\MondeVert_Audio_Video_Story\Echoes of the Heart_Miniseries_Ivy_05-17-2023_02.43.mp3"))
 
 
-SHAINE =  Path(PureWindowsPath(r"A:\SHAINE - MondeVert AI Assistant"))
-SHAINE_Requests =  Path(PureWindowsPath(r"A:\MondeVert Productions\SHAINE - MondeVert AI Assistant\SHAINE_Requests"))
+SHAINE =  Path(PureWindowsPath("A:\SHAINE - MondeVert AI Assistant"))
+SHAINE_Requests =  Path(PureWindowsPath("A:\MondeVert Productions\SHAINE - MondeVert AI Assistant\SHAINE_Requests"))
 
-Sample_Request_File =  Path(PureWindowsPath(r'A:\MondeVert Productions\SHAINE - MondeVert AI Assistant\SHAINE - MondeVert AI Assistant.xlsx'))
+Sample_Request_File =  Path(PureWindowsPath('A:\MondeVert Productions\SHAINE - MondeVert AI Assistant\SHAINE - MondeVert AI Assistant.xlsx'))
 
 
 #makes file if it does not already exist
@@ -101,7 +101,7 @@ if not isExist:
 
 #RE Data Configs
 DownloadFolder =  Path(PureWindowsPath(r"C:\Users\sdono\Downloads"))
-REData =  Path(PureWindowsPath(r'A:\RE Data\MA 2022-2023 Data'))
+REData =  Path(PureWindowsPath('A:\RE Data\MA 2022-2023 Data'))
 REDATAURL = 'https://idx.mlspin.com/idx.asp?user=2K7zB9ytn1MtTtUNFeBt92N7rZtjfWdyYmLtNzYRztDhtAnutnNK1mNRHrZhtFoE5A9t4c7vZmtatNxIteOL2ftNqO0oatxUyNt&proptype='
 REDATAURL2 = 'https://idx.mlspin.com/idx.asp?userId=CN229354&user=2K7zB9ytn1MtTtUNFeBt92N7rZtjfWdyYmLtNzYRztDhtAnutnNK1mNRHrZhtFoE5A9t4c7vZmtatNxIteOL2ftNqO0oatxUyNt&filetype='
 REURL_ADD = '&status=SLD'
@@ -118,10 +118,10 @@ RE_File_Names = ['idx_mh_sld.txt', 'idx_OH.txt', 'idx_rn.txt', 'idx_rn_sld.txt',
 
 
 #Instagram info
-POSTED_PICS_FILE =  Path(PureWindowsPath(r'A:\AI Art\Approved Quality Art\Instagram Posts\PostedPics.txt'))
-PICS_PATH =  Path(PureWindowsPath(r'A:\AI Art\Approved Quality Art\Instagram Posts'))
-PNGPath =  Path(PureWindowsPath(r"A:\AI Art\Approved Quality Art\Png"))
-PNGPath_Archive =  Path(PureWindowsPath(r"A:\AI Art\Approved Quality Art\Archive"))
+POSTED_PICS_FILE =  Path(PureWindowsPath('A:\AI Art\Approved Quality Art\Instagram Posts\PostedPics.txt'))
+PICS_PATH =  Path(PureWindowsPath('A:\AI Art\Approved Quality Art\Instagram Posts'))
+PNGPath =  Path(PureWindowsPath("A:\AI Art\Approved Quality Art\Png"))
+PNGPath_Archive =  Path(PureWindowsPath("A:\AI Art\Approved Quality Art\Archive"))
 
 #Switch this regularly and add specific info
 Instagram_Adds = '@Shanedthatsme @MOndeVert_LLC | mondevert.co | thanks for reading! check out my other pages'

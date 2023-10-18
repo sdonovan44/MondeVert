@@ -160,8 +160,8 @@ current_time = current_time1.strftime('%m-%d-%Y_%H.%M.%S')
 
 #cu.MovieSubtitles(Insta, Rewrite = True)
 
-Journal_Video = r"A:\Amini Amor\Live Recordings Raw\2023-10-17 03-34-34.mp4"
-#Journal_Video = r"A:\Amini Amor\Live Recordings Raw\2023-10-17 04-24-29.mp4"
+#Journal_Video = r"A:\Amini Amor\Live Recordings Raw\2023-10-17 03-34-34.mp4"
+Journal_Video = r"A:\Amini Amor\Live Recordings Raw\2023-10-17 04-24-29.mp4"
 
 #Journal_Video = r"A:\Amini Amor\Live Recordings Raw\2023-10-17 14-18-25.mp4"
 #Journal_Video = r"A:\Amini Amor\Live Recordings Raw\2023-10-17 14-39-06.mp4"
@@ -173,7 +173,8 @@ Journal_Video = r"A:\Amini Amor\Live Recordings Raw\2023-10-17 03-34-34.mp4"
 
 
 
-cu.MovieSubtitles(Journal_Video, Rewrite = True , Journal=True, Output=["English"], ToDo= True)
+#cu.MovieSubtitles(Journal_Video, Rewrite = True , Journal=True, Output=["English"], ToDo= True)
+cu.MovieSubtitles(Journal_Video, Rewrite = True , Journal=True, Output=["English"], ToDo= True, AudioMode="CHATGPT")
 
 
 #This needs to be reran for summarizing text

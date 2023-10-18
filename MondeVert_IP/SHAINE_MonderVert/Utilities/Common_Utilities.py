@@ -196,7 +196,7 @@ def MovieSubtitles(File, Origin="English", Output=["Spanish"], Rewrite=False, AI
             FileName2 = CleanFileName(FileName2)
             print(FileName2)
             Check_Folder_Exists(SavePath_MP4)
-            SavePath_MP4 = Path(PureWindowsPath(SavePath_MP4 , str(FileName2 + '_Raw') ,  FileType))
+            SavePath_MP4 = Path(PureWindowsPath(SavePath_MP4 , str(FileName2 + '_Raw' +  FileType)))
 
 
 
@@ -223,7 +223,7 @@ def TranscribeAudio(File,AudioFile, Origin = "English", Output = ["Spanish"], Re
     Journal_Original = ''
     Journal_Revised = ''
     Journal_Combined = ''
-    SavePath = Path(PureWindowsPath(up.AI_Audio_Transcript ,up.System_Folder_Path_Fix , 'Movie2Audio'))
+    SavePath = Path(PureWindowsPath(up.AI_Audio_Transcript  , 'Movie2Audio'))
     if Journal ==True:
         SavePath = up.AI_Journal_Inputs
     Check_Folder_Exists(SavePath)
@@ -236,7 +236,7 @@ def TranscribeAudio(File,AudioFile, Origin = "English", Output = ["Spanish"], Re
 
     FileName = CleanFileName(FileName)
 
-    SavePath = Path(PureWindowsPath(SavePath,up.System_Folder_Path_Fix, FileName))
+    SavePath = Path(PureWindowsPath(SavePath, FileName))
     print(SavePath)
     Check_Folder_Exists(SavePath)
 
@@ -361,9 +361,9 @@ def TranscribeAudio(File,AudioFile, Origin = "English", Output = ["Spanish"], Re
 
 
 
-        SavePath2 = Path(PureWindowsPath(SavePath,  'Raw' , up.System_Folder_Path_Fix))
+        SavePath2 = Path(PureWindowsPath(SavePath,  'Raw'))
         Check_Folder_Exists(SavePath2)
-        shutil.copyfile(AudioFile,Path(PureWindowsPath(SavePath2 , str(FileName2 + '_Raw') , FileType)))
+        shutil.copyfile(AudioFile,Path(PureWindowsPath(SavePath2 , str(FileName2 + '_Raw' +  FileType))))
 
 
 
@@ -610,12 +610,12 @@ def CheckFileLength(SavePath,Title1,current_time_f, FileType):
 
     while len(Title2) > 250:
         if len(SavePath) >= 240 and len(Title2) > 250:
-            Title2 = Path(PureWindowsPath(SavePath , up.System_Folder_Path_Fix , 'BU' , FileType))
+            Title2 = Path(PureWindowsPath(SavePath , 'BU'  + FileType))
 
         elif len(Title2) > 250:
             TitleLen = len(Title2)
             TrimNum = round(TitleLen * .1) + 1
-            Title2 = Path(PureWindowsPath(SavePath , up.System_Folder_Path_Fix , Title1[TrimNum:] , current_time_f , FileType))
+            Title2 = Path(PureWindowsPath(SavePath , up.System_Folder_Path_Fix , str(Title1[TrimNum:] + current_time_f + FileType)))
 
     while isExist == True:
 
@@ -638,7 +638,7 @@ def SaveCSV(Text, Title, SavePath, AddTimeStamp = True, FileType = '.txt', FileP
 
 
     Title1  = CleanFileName(Title)
-    Title2 = Path(PureWindowsPath(SavePath , up.System_Folder_Path_Fix , Title1 , '_' , current_time_f , FileType))
+    Title2 = Path(PureWindowsPath(SavePath , up.System_Folder_Path_Fix , str(Title1 + '_' + current_time_f +  FileType)))
     if len(str(Title2)) > 250 :
         Title2 = Path(PureWindowsPath(CheckFileLength(SavePath=SavePath,Title1=Title1, current_time_f=current_time_f,FileType=FileType)))
     # folder = str(Title1)
