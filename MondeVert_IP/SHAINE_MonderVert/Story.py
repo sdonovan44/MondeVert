@@ -57,7 +57,7 @@ class Story():
         self.transcript_Final = ''
         self.Outline_progression = ''
         self.Character_progression = ''
-        self.SavePath=up.AI_AudioBook_Path + '\\' + Mode
+        self.SavePath=up.AI_AudioBook_Path + up.System_Folder_Path_Fix + Mode
         self.data = ''
         self.AudioBook_Text = ''
         self.Episode_Outline = []
@@ -83,7 +83,7 @@ class Story():
         #This is definitely needed, the stuff above might not be needed
         self.Request_log = []
         openai.api_key = API_Key
-        self.SavePath = SavePath + '\\' + Mode
+        self.SavePath = SavePath + up.System_Folder_Path_Fix + Mode
         self.Mode = Mode
 
         self.Version = []
@@ -403,9 +403,9 @@ class Story():
                     ArtPrompt = Story.GPTArt2(self, ArtFormat=self.Art_Style_For_Story, User_Subject=x, prompt = "Use the following styles as a guide to create a unique piece of art based on the following text. Text: " )
                     print(ArtPrompt)
                     originalFilepath = Story.makeArt(self, Prompt=ArtPrompt)
-                    PicNewPath1 = self.SavePath + '\\' + self.Mode
+                    PicNewPath1 = self.SavePath + up.System_Folder_Path_Fix + self.Mode
                     cu.Check_Folder_Exists(PicNewPath1)
-                    PicNewPath = PicNewPath1 + '\\' + self.Title + '.png'
+                    PicNewPath = PicNewPath1 + up.System_Folder_Path_Fix + self.Title + '.png'
 
                     shutil.copyfile(originalFilepath, PicNewPath)
 
@@ -531,7 +531,7 @@ class Story():
         Title1 = cu.CleanFileName(Title)
         Title1 = Title1.strip()
         self.FileName = Title1
-        self.SavePath = self.SavePath + '\\' + Title1
+        self.SavePath = self.SavePath + up.System_Folder_Path_Fix + Title1
         cu.Check_Folder_Exists(self.SavePath)
         cu.Check_Folder_Exists(self.SavePath + '\\Outlines')
         FileName_Char_Main = Title1 + '_Main Characters_'
@@ -1622,7 +1622,7 @@ class Story():
             Title = cu.CleanFileName(Title)
             Title = Title.strip()
             self.FileName = Title
-            self.SavePath = self.SavePath + '\\' + Title
+            self.SavePath = self.SavePath + up.System_Folder_Path_Fix + Title
             cu.Check_Folder_Exists(self.SavePath)
         except:
             dn = 100
@@ -1748,9 +1748,9 @@ class Story():
                 ArtPrompt = Story.GPTArt2(self,User_Subject = GPT_Response)
                 print(ArtPrompt)
                 originalFilepath = Story.makeArt(self,Prompt=ArtPrompt)
-                PicNewPath1 = SavePath + '\\' + Mode
+                PicNewPath1 = SavePath + up.System_Folder_Path_Fix + Mode
                 cu.Check_Folder_Exists(PicNewPath1)
-                PicNewPath =PicNewPath1 + '\\' + Title + '.png'
+                PicNewPath =PicNewPath1 + up.System_Folder_Path_Fix + Title + '.png'
 
 
                 shutil.copyfile(originalFilepath, PicNewPath)
@@ -1833,9 +1833,9 @@ class Story():
                 ArtPrompt = Story.GPTArt2(self,User_Subject = GPT_Response)
                 print(ArtPrompt)
                 originalFilepath = Story.makeArt(self,Prompt=ArtPrompt)
-                PicNewPath1 = SavePath + '\\' + Mode
+                PicNewPath1 = SavePath + up.System_Folder_Path_Fix + Mode
                 cu.Check_Folder_Exists(PicNewPath1)
-                PicNewPath =PicNewPath1 + '\\' + Title + '.png'
+                PicNewPath =PicNewPath1 + up.System_Folder_Path_Fix + Title + '.png'
 
 
                 shutil.copyfile(originalFilepath, PicNewPath)
@@ -1970,7 +1970,7 @@ class Story():
                 fname_only = FileName
                 #fname = os.path.join(SavePath, '\'',FileName)
 
-                fname = SavePath + '\\' + FileName + '.png'
+                fname = SavePath + up.System_Folder_Path_Fix + FileName + '.png'
                 print(f"Filename: {fname}")
                 with open(fname, 'wb') as f:
 
@@ -2120,7 +2120,7 @@ class Story():
                    Line4_Task=StoryMode.Recipe_Task, Model="gpt-3.5-turbo-16k-0613", Special='',
                    Line1_System_Rule=StoryMode.system_TextJoaT_quick, crazy=.5, Subject='', Outline='', Allowed_Fails=8,
                    SaveFile=True, MakeArt=True, Mode='getBAIKED',
-                   SavePath=up.SavePath + '\\' + 'CookBook', upgradeLimit= 2000):  # use this to create art style for the work
+                   SavePath=up.SavePath + up.System_Folder_Path_Fix + 'CookBook', upgradeLimit= 2000):  # use this to create art style for the work
         if SavePath == '':
             SavePath = self.SavePath
 
@@ -2210,14 +2210,14 @@ class Story():
 
                 SaveText = self.current_time + 'getBAIKED: ' + GPT_Response
                 print(SaveText)
-                cu.SaveCSV(Text=SaveText, SavePath=SavePath + '\\' + Mode+'\\' + Title, Title=Title)
+                cu.SaveCSV(Text=SaveText, SavePath=SavePath + up.System_Folder_Path_Fix + Mode+up.System_Folder_Path_Fix + Title, Title=Title)
             if MakeArt == True:
                 ArtPrompt = Story.GPTArt2(self, User_Subject=GPT_Response)
                 print(ArtPrompt)
                 originalFilepath = Story.makeArt(self, Prompt=ArtPrompt)
-                PicNewPath1 = SavePath + '\\' + Mode + '\\' + Title
+                PicNewPath1 = SavePath + up.System_Folder_Path_Fix + Mode + up.System_Folder_Path_Fix + Title
                 cu.Check_Folder_Exists(PicNewPath1)
-                PicNewPath = PicNewPath1 + '\\' + Title + '.png'
+                PicNewPath = PicNewPath1 + up.System_Folder_Path_Fix + Title + '.png'
 
                 shutil.copyfile(originalFilepath, PicNewPath)
             return GPT_Response

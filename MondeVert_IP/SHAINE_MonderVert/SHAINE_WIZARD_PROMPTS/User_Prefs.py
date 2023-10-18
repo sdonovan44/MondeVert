@@ -1,29 +1,78 @@
 import pandas as pd
 import random
 import os
+from pathlib import Path, PureWindowsPath
+import platform
 
 Name = 'Shane'
 Bot_Name = 'SHAINE'
-SavePath = r"A:\Amini Amor\SHAINE\Requests\Beta"
-AI_Art_Path = SavePath + r"\AI Art"
-AI_Poetry_Path = SavePath + r"\AI Poetry"
-AI_Blog_Path = SavePath + r"\AI Blogs"
-AI_Music_Path = SavePath + r"\AI Music"
-AI_Task_Path = SavePath + r"\AI Tasks"
-AI_Audio_Transcript = SavePath + r"\Audio Transcript"
+SavePath = Path(PureWindowsPath(r"A:\Amini Amor\SHAINE\Requests\Beta"))
 
-AI_AudioBook_Path = SavePath + r"\AI AudioBooks"
-AI_Childrens_AudioBook_Path = AI_AudioBook_Path + r"\AI_Childrens_AudioBooks"
 
-AI_Live_Art_Path = SavePath + r"\AI Live Art Path"
-AI_Wedding = SavePath + r'\Wedding Bells'
-AI_Screen_Plays = SavePath + r"\MondeVert Productions\ScreenPlays"
-MasterFile = SavePath + r"\Master Tracker Files\MondeVert Master Tracker.xlsx"
-MasterFile2 = SavePath + r"\Master Tracker Files\MondeVert Master Transcript.xlsx"
-MasterFile3 = SavePath + r"\Master Tracker Files\MondeVert Master Blog Poem and Song Lyrics.xlsx"
+AI_Art_Path = Path(PureWindowsPath(SavePath, r"\AI Art"))
+AI_Poetry_Path = Path(PureWindowsPath(SavePath , r"\AI Poetry"))
+AI_Blog_Path = Path(PureWindowsPath(SavePath , r"\AI Blogs"))
+AI_Music_Path = Path(PureWindowsPath(SavePath , r"\AI Music"))
+AI_Task_Path = Path(PureWindowsPath(SavePath , r"\AI Tasks"))
+AI_Audio_Transcript = Path(PureWindowsPath(SavePath , r"\Audio Transcript"))
 
-MasterFilePersona = SavePath + r"\Master Tracker Files\MondeVert Master Persona.xlsx"
-MasterFile_Character = SavePath + r"\Master Tracker Files\MondeVert Master Character List.xlsx"
+AI_AudioBook_Path = Path(PureWindowsPath(SavePath , r"\AI AudioBooks"))
+#AI_Childrens_AudioBook_Path = Path(PureWindowsPath(AI_AudioBook_Path , "\AI_Childrens_AudioBooks"))
+AI_Childrens_AudioBook_Path = AI_AudioBook_Path
+AI_Live_Art_Path = Path(PureWindowsPath(SavePath , r"\AI Live Art Path"))
+AI_Wedding = Path(PureWindowsPath(SavePath , r'\Wedding Bells'))
+AI_Screen_Plays = Path(PureWindowsPath(SavePath , r"\MondeVert Productions\ScreenPlays"))
+
+
+AI_Journal = Path(PureWindowsPath(SavePath , r"\AI Journal"))
+AI_Journal_Inputs = Path(PureWindowsPath(AI_Journal , r"\Inputs"))
+AI_Journal_Inputs_RawVideo = Path(PureWindowsPath(AI_Journal_Inputs , r"\Raw Video"))
+AI_Journal_Inputs_RawAudio = Path(PureWindowsPath(AI_Journal_Inputs , r"\Raw Audio"))
+AI_Journal_Inputs_Raw = Path(PureWindowsPath(AI_Journal_Inputs , r"\Raw Files"))
+
+
+
+
+#Windows specific Fixes
+System_Folder_Path_Fix = '\\'
+
+AI_Journal_Original = Path(PureWindowsPath( AI_Journal ,System_Folder_Path_Fix , r"AI Journal Original.txt"))
+AI_Journal_Revised = Path(PureWindowsPath( AI_Journal ,System_Folder_Path_Fix , r"AI Journal Revised.txt"))
+AI_Journal_Combined =  Path(PureWindowsPath(AI_Journal ,System_Folder_Path_Fix , r"AI Journal Combined.txt"))
+ToDoFile = Path(PureWindowsPath(AI_Journal ,System_Folder_Path_Fix , r"To Do.txt"))
+
+
+
+
+SavePath_Mac = r'~/Documents/MondeVert'
+if platform.system() == "Linux":
+     print("Linux")
+elif platform.system() == "Windows":
+    print("Windows")
+    DirSep = '\\'
+else:
+    print("Mac")
+    SavePath = SavePath_Mac
+    DirSep = '/'
+    System_Folder_Path_Fix ='/'
+
+Journal_Locs = [AI_Journal_Original, AI_Journal_Revised, AI_Journal_Combined]
+
+MasterFile = Path(PureWindowsPath(SavePath , r"\Master Tracker Files\MondeVert Master Tracker.xlsx"))
+MasterFile2 = Path(PureWindowsPath(SavePath , r"\Master Tracker Files\MondeVert Master Transcript.xlsx"))
+MasterFile3 = Path(PureWindowsPath(SavePath , r"\Master Tracker Files\MondeVert Master Blog Poem and Song Lyrics.xlsx"))
+
+MasterFilePersona = Path(PureWindowsPath(SavePath , r"\Master Tracker Files\MondeVert Master Persona.xlsx"))
+MasterFile_Character = Path(PureWindowsPath(SavePath , r"\Master Tracker Files\MondeVert Master Character List.xlsx"))
+
+
+
+
+
+
+
+
+
 
 #Shane_Bio = "Shane Donovan is a loving and succefful businessman with skills working with technology and also strong communication and intrapersonal skills. He is family oriented and believes in helping oithers to achieve thier goals and ultimately wants to make the world a better place. My goal is to use the best technology to help the environment and provide positive content and news to the world to help promote positivity, love and respect for the world. I love writing music, writing poetry, being creative and learning about other cultures through travel, reading and meeting new people. I look forward to learning more and helping people along the way"
 Shane_Bio = """Meet Shane Donovan: Shane (born 3/13/1994 from Marshfield,Ma.). Younger Brother Richard (his dad is Named Eddie Reid and was my step dad, my mom is his mom too) and I have two older sisters Micaela is the oldest and Melissa is the middle child and we are the closest. Melissa has 3 kids PJ, Lennon and Charlie (Shane/I look a lot like lennon). My mother is named Carrie Reid, and my Father is Timothy "Timmy D"/"Taz"/"Simon" Donovan. Shane Went to Thayer Acedemy in Braintree for high school and Wesleyan University, in CT,  for college). Shane is a successful businessman with a passion for technology and strong communication and interpersonal skills. He values family and helping others achieve their goals, with a mission to make the world a better place. Shane's goal is to use cutting-edge technology to help the environment and spread positive news and content to promote love, respect, and positivity worldwide. He is also a creative soul, enjoying music and poetry writing, as well as exploring different cultures through travel and meeting new people. Shane looks forward to continuing his journey of learning and helping others along the way."""
@@ -34,13 +83,13 @@ Shane_Persona = ' you are a master assistant named Shane, you are skilled at all
 
 #Children_audio_book =  SavePath +  r"\Children AudioBooks"
 
-MondeVertIntro =  SavePath + "\MondeVert_Audio_Video_Story\Echoes of the Heart_Miniseries_Ivy_05-17-2023_02.43.mp3"
+MondeVertIntro =   Path(PureWindowsPath(SavePath , "\MondeVert_Audio_Video_Story\Echoes of the Heart_Miniseries_Ivy_05-17-2023_02.43.mp3"))
 
 
-SHAINE = r"A:\SHAINE - MondeVert AI Assistant"
-SHAINE_Requests = r"A:\MondeVert Productions\SHAINE - MondeVert AI Assistant\SHAINE_Requests"
+SHAINE =  Path(PureWindowsPath(r"A:\SHAINE - MondeVert AI Assistant"))
+SHAINE_Requests =  Path(PureWindowsPath(r"A:\MondeVert Productions\SHAINE - MondeVert AI Assistant\SHAINE_Requests"))
 
-Sample_Request_File = r'A:\MondeVert Productions\SHAINE - MondeVert AI Assistant\SHAINE - MondeVert AI Assistant.xlsx'
+Sample_Request_File =  Path(PureWindowsPath(r'A:\MondeVert Productions\SHAINE - MondeVert AI Assistant\SHAINE - MondeVert AI Assistant.xlsx'))
 
 
 #makes file if it does not already exist
@@ -51,8 +100,8 @@ if not isExist:
 
 
 #RE Data Configs
-DownloadFolder = r"C:\Users\sdono\Downloads"
-REData = r'A:\RE Data\MA 2022-2023 Data'
+DownloadFolder =  Path(PureWindowsPath(r"C:\Users\sdono\Downloads"))
+REData =  Path(PureWindowsPath(r'A:\RE Data\MA 2022-2023 Data'))
 REDATAURL = 'https://idx.mlspin.com/idx.asp?user=2K7zB9ytn1MtTtUNFeBt92N7rZtjfWdyYmLtNzYRztDhtAnutnNK1mNRHrZhtFoE5A9t4c7vZmtatNxIteOL2ftNqO0oatxUyNt&proptype='
 REDATAURL2 = 'https://idx.mlspin.com/idx.asp?userId=CN229354&user=2K7zB9ytn1MtTtUNFeBt92N7rZtjfWdyYmLtNzYRztDhtAnutnNK1mNRHrZhtFoE5A9t4c7vZmtatNxIteOL2ftNqO0oatxUyNt&filetype='
 REURL_ADD = '&status=SLD'
@@ -69,13 +118,13 @@ RE_File_Names = ['idx_mh_sld.txt', 'idx_OH.txt', 'idx_rn.txt', 'idx_rn_sld.txt',
 
 
 #Instagram info
-POSTED_PICS_FILE = r'A:\AI Art\Approved Quality Art\Instagram Posts\PostedPics.txt'
-PICS_PATH = r'A:\AI Art\Approved Quality Art\Instagram Posts'
-PNGPath = r"A:\AI Art\Approved Quality Art\Png"
-PNGPath_Archive = r"A:\AI Art\Approved Quality Art\Archive"
+POSTED_PICS_FILE =  Path(PureWindowsPath(r'A:\AI Art\Approved Quality Art\Instagram Posts\PostedPics.txt'))
+PICS_PATH =  Path(PureWindowsPath(r'A:\AI Art\Approved Quality Art\Instagram Posts'))
+PNGPath =  Path(PureWindowsPath(r"A:\AI Art\Approved Quality Art\Png"))
+PNGPath_Archive =  Path(PureWindowsPath(r"A:\AI Art\Approved Quality Art\Archive"))
 
 #Switch this regularly and add specific info
-Instagram_Adds = '@Shane_2fames @MOndeVert_LLC | mondevert.co | thanks for reading! check out my other pages'
+Instagram_Adds = '@Shanedthatsme @MOndeVert_LLC | mondevert.co | thanks for reading! check out my other pages'
 Instagram_FrontBack = 'Back'
 
 
@@ -92,9 +141,12 @@ AI_Blogger = "Brick Pulford"
 Song_Writer = 'Bubba D'
 
 
+LineBreak = """
 
 
+"""
 
+LineBreak_Divider = "******************************************************************"
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 

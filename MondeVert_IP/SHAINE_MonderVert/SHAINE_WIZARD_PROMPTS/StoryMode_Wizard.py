@@ -159,6 +159,12 @@ IDEA_Format = 'there needs to be enough details for a full story to be written s
 
 
 
+Summarize_Video = """Rewrite the text so it is easily spoken as a video to post to social media, keep it short and sweet (under 30 seconds) to keep the audience engaged, utilize literary devices using comedy and being witty and/or sarcastic. Be sure to keep the prose and language similar to what the original text uses"""
+
+Summarize_Task = """Create a concise summary of the following text, be sure to include major details and remove fluff and redundancy. Be sure to be interesting and keep the audience entertained while still being relateable and genuine/authentic"""
+
+Summarize_Format = """Provide your response in a similar format that was provided unless otherwise stated"""
+
 
 Story_Background_Task = """Use the following information as reference, do not be repetitive (meaning do not have these same events take place again, choose different wording to descibe the characters and have their personality change over time).  Build the story based off of these prior events (Do Not use have the samee prior event happen twice, make the story have logical continuity). Make sure you do not spoil plot points that are only known to certain characters (if there is a secret plan keep it a secret), do not release spoilers. Background: """
 

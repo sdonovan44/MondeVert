@@ -1,9 +1,13 @@
 from __future__ import unicode_literals
+from pathlib import Path, PureWindowsPath
+import platform
+
 # from ffmpeg import Progress
 # from ffmpeg.asyncio import FFmpeg
 import threading
 import whisper
-
+from secrets import randbelow
+import random
 import platform,subprocess
 import time
 from email.mime.text import MIMEText
@@ -20,7 +24,7 @@ import os
 # import FFProbe.utility
 import random
 from MondeVert_IP.SHAINE_MonderVert import Instagram_Posts as IP
-from MondeVert_IP.SHAINE_MonderVert.SHAINE_WIZARD_PROMPTS import Long_User_Prompts as lup, Social_Media_SHAINE as sms,StoryMode_Wizard as StoryMode, StoryPrompts as SP
+from MondeVert_IP.SHAINE_MonderVert.SHAINE_WIZARD_PROMPTS import Long_User_Prompts as lup, Social_Media_SHAINE as sms,StoryMode_Wizard as StoryMode, StoryPrompts as SP, ReWrites as RW
 import shutil
 from docx import Document
 import pandas as pd
@@ -53,6 +57,7 @@ import youtube_dl
 current_time1 = datetime.datetime.now()
 current_time = current_time1.strftime('%m-%d-%Y_%H.%M')
 
+
 from moviepy.editor import *
 
 
@@ -71,7 +76,7 @@ import argparse
 
 import cv2
 
-def MakeVariationArt(Pic, Size = '512x512', NumVars = 1, SavePath =  up.AI_Audio_Transcript + '\\' + 'Extracted images' , FileName= 'Version'):
+def MakeVariationArt(Pic, Size = '512x512', NumVars = 1, SavePath =   Path(PureWindowsPath(up.AI_Audio_Transcript, up.System_Folder_Path_Fix , 'Extracted images')) , FileName= 'Version'):
 
     response = openai.Image.create_variation(
         image=open(Pic, "rb"),
@@ -96,7 +101,7 @@ def MakeVariationArt(Pic, Size = '512x512', NumVars = 1, SavePath =  up.AI_Audio
 
     fname_only = FileName
 
-    fname = SavePath + '\\' + FileName + '.png'
+    fname = Path(PureWindowsPath(SavePath , up.System_Folder_Path_Fix , FileName + '.png'))
     print(f"Filename: {fname}")
     with open(fname, 'wb') as f:
         f.write(r.content)
@@ -108,10 +113,10 @@ def extractImages(pathIn, pathOut, FileName = '', MakeVar =False, Millisecs = 10
     ExtractedImage = 1
     if FileName =='':
         x = pathIn.rfind('.')
-        x2 = pathIn.rfind('\\')
+        x2 = pathIn.rfind(up.System_Folder_Path_Fix)
         FileName = pathIn[x2:x]
 
-    pathOut = pathOut + '\\' + FileName
+    pathOut = Path(PureWindowsPath(pathOut , up.System_Folder_Path_Fix , FileName))
     Check_Folder_Exists(pathOut)
     count = 1
     vidcap = cv2.VideoCapture(pathIn)
@@ -129,7 +134,7 @@ def extractImages(pathIn, pathOut, FileName = '', MakeVar =False, Millisecs = 10
         count = count + 1
 
 def DownloadYoutubeMovie(video_url):
-    VIDEO_SAVE_DIRECTORY = up.AI_Audio_Transcript + '\\' + "YoutubeVideos"
+    VIDEO_SAVE_DIRECTORY = Path(PureWindowsPath(up.AI_Audio_Transcript, up.System_Folder_Path_Fix , "YoutubeVideos"))
     Check_Folder_Exists(VIDEO_SAVE_DIRECTORY)
 
 
@@ -161,33 +166,83 @@ def AI_Task_Audio(Text):
 
     return NewText
 
-def ReWrite_Transcript(Text):
-    NewText = Basic_GPT_Query2(Line2_Role = SP.ReWriteTranscript_Role, Line3_Format=SP.ReWriteTranscript_Format, Line4_Task= "Use the following Text as your source Text   Source Text: " + Text, Line5_Task=SP.ReWriteTranscript_Task, Big=True)
+def ReWrite_Transcript(Text, Line3 = SP.ReWriteTranscript_Format, Line2 =SP.ReWriteTranscript_Role, Line5 =SP.ReWriteTranscript_Task, Line4 = "Use the following Text as your source Text   Source Text: " , ToDo = False , ToDoPath = up.ToDoFile, ToDoList = '' ):
+    if ToDo == True:
+        with open(ToDoPath, 'r') as file:
+            ToDoList = " ".join(line.rstrip() for line in file)
+
+        Line5 = RW.ToDo_Task
+        Line3 = RW.ToDo_Format
+        if ToDoList != '':
+            Line4 = "Here is the original To Do List : " + ToDoList + "Use the following Text from the latest Journal Entry in order to create the updated To Do List.   Journal Entry Source Text: " + ToDoList + '     '
+        else:
+            Line4 = "Note: There was no original Items on the To Do List, Use the following Text from the latest Journal Entry in order to create a new To Do List.   Journal Entry Source Text: "
+
+
+    NewText = Basic_GPT_Query2(Line2_Role = Line2, Line3_Format= Line3, Line4_Task= Line4 + Text, Line5_Task=Line5, Big=True)
 
     return NewText
 
-def MovieSubtitles(File, Origin="English", Output=["Spanish"], Rewrite=False, AI_Task = False):
+def MovieSubtitles(File, Origin="English", Output=["Spanish"], Rewrite=False, AI_Task = False, Journal = False, Chunk_Limit = 1300, ToDo = False, Journal_Loc = up.Journal_Locs, ToDoFile = up.ToDoFile):
     AudioFile = Movie2Audio(File)
-    TranscribeAudio(AudioFile = AudioFile,File= File, Origin = Origin, Output = Output, Rewrite = Rewrite, AI_Task = AI_Task)
 
-def TranscribeAudio(File,AudioFile, Origin = "English", Output = ["Spanish"], Rewrite = False,AI_Task = False):
+    SavePath_MP4 = TranscribeAudio(AudioFile = AudioFile,File= File, Origin = Origin, Output = Output, Rewrite = Rewrite, AI_Task = AI_Task,Journal = Journal, Chunk_Limit =  Chunk_Limit,Journal_Loc = Journal_Loc, ToDoFile = ToDoFile, ToDo=ToDo)
+    if Journal ==True:
+        try:
+            FileName = File[(File.rfind(up.System_Folder_Path_Fix)+ 1):]
+            FileName2 = File[(File.rfind(up.System_Folder_Path_Fix)+ 1):File.rfind('.')]
+            FileType = File[File.rfind('.'):]
+            FileName = CleanFileName(FileName)
+            FileName2 = CleanFileName(FileName2)
+            print(FileName2)
+            Check_Folder_Exists(SavePath_MP4)
+            SavePath_MP4 = SavePath_MP4 + FileName2 + '_Raw'+ FileType
+
+
+
+            shutil.copyfile(File, SavePath_MP4)
+        except:
+            print("Error Using Shutil for MP4 file")
+
+import os.path
+from os import path
+
+def CheckFile(File):
+    if path.exists(File):
+         dn = 100
+    else:
+        x = File.rfind('.')
+        x2 = File.rfind(up.System_Folder_Path_Fix) + 1
+        FileName = File[x2:x]
+        SavePath = File[:x2]
+        print("CheckFile:")
+        print(SavePath)
+        SaveCSV(Text = '',FilePath= File,Title = FileName, SavePath = SavePath )
+def TranscribeAudio(File,AudioFile, Origin = "English", Output = ["Spanish"], Rewrite = False,AI_Task = False, Journal = False, Journal_Loc = up.Journal_Locs, Chunk_Limit = 1300, ToDoFile = up.ToDoFile, ToDo = False):
     d = 1
-
-    SavePath = up.AI_Audio_Transcript + '\\' + 'Movie2Audio'
+    Journal_Original = ''
+    Journal_Revised = ''
+    Journal_Combined = ''
+    SavePath = Path(PureWindowsPath(up.AI_Audio_Transcript ,up.System_Folder_Path_Fix , 'Movie2Audio'))
+    if Journal ==True:
+        SavePath = up.AI_Journal_Inputs
     Check_Folder_Exists(SavePath)
-    x = File.rfind('.')
-    x2 = File.rfind('\\')
-    FileName = File[x2:x]
+    x = AudioFile.rfind('.')
+    x2 = AudioFile.rfind(up.System_Folder_Path_Fix) + 1
+    FileName = AudioFile[x2:x]
+
+
+    print(FileName)
 
     FileName = CleanFileName(FileName)
 
-    SavePath = SavePath +'\\'+ FileName
-    print(FileName)
+    SavePath = Path(PureWindowsPath(SavePath,up.System_Folder_Path_Fix, FileName))
+    print(SavePath)
     Check_Folder_Exists(SavePath)
 
 
 
-    Transcript = transcribe_Large_audio(File,Origin = Origin)
+    Transcript = transcribe_Large_audio(AudioFile,Origin = Origin)
 
     try:
         file_stats = os.stat(AudioFile)
@@ -218,24 +273,34 @@ def TranscribeAudio(File,AudioFile, Origin = "English", Output = ["Spanish"], Re
 
         Text= model.transcribe(AudioFile)
         Transcript2  = Text["text"]
+        Journal_Original = Transcript2
         if Rewrite ==True:
-            ReWrite_Transcript2 = ReWrite_Transcript(Transcript2)
+
+            if Journal == True:
+                ReWrite_Transcript2 = ReWrite_Transcript(Transcript2, Line5=RW.Journal_Task)
+            else:
+                ReWrite_Transcript2 = ReWrite_Transcript(Transcript2)
+
             SaveCSV(Text=ReWrite_Transcript2, SavePath=SavePath, Title=FileName + '_Transcript_Revised_AI')
+            Journal_Revised = ReWrite_Transcript2
         SaveCSV(Text=Transcript2, SavePath=SavePath, Title=FileName + '_Transcript_AI')
 
     except:
         print("Error Using Whisper")
 
     if Rewrite == True:
-        ReWrite_Transcript1 = ReWrite_Transcript(Transcript)
+        if Journal ==True:
+            ReWrite_Transcript1 = ReWrite_Transcript(Transcript, Line5 = RW.Journal_Task)
+        else:
+            ReWrite_Transcript1 = ReWrite_Transcript(Transcript)
         SaveCSV(Text=ReWrite_Transcript1, SavePath=SavePath, Title=FileName + '_Transcript_Revised')
 
     SaveCSV(Text=Transcript, SavePath=SavePath, Title=FileName + '_Transcript')
 
 
-    if ReWrite_Transcript2 == '' and Rewrite == True:
+    if ReWrite_Transcript2 != '' and Rewrite == True:
         Final_Text = ReWrite_Transcript2
-    elif Transcript2 == '':
+    elif Transcript2 != '':
         Final_Text = Transcript2
     else:
         Final_Text = Transcript
@@ -258,18 +323,72 @@ def TranscribeAudio(File,AudioFile, Origin = "English", Output = ["Spanish"], Re
         except:
             print ('Did not provide answer')
 
+    if ToDo == True:
+        try:
+            ToDo_List = ReWrite_Transcript(Text= Final_Text, ToDo=True)
+            #SaveCSV(Text=ToDo_List, FilePath=ToDoFile, Title=FileName, SavePath=up.AI_Journal)
+            OldToDOPath = Path(PureWindowsPath(up.AI_Journal  , r"\Old To Do", up.System_Folder_Path_Fix))
+            shutil.copyfile(ToDoFile, OldToDOPath + 'To Do ' +current_time  + ".txt")
+            SaveCSV(Text=ToDo_List, FilePath=ToDoFile, Title='To Do', SavePath=up.AI_Journal)
+        except:
+
+            print('Did not update To Do List')
+
+
+
+
+
+    if Journal ==True:
+        Check_Folder_Exists(up.AI_Journal_Inputs_RawAudio)
+
+        FileName = AudioFile[(AudioFile.rfind(up.System_Folder_Path_Fix)+ 1):]
+        FileName2 = AudioFile[(AudioFile.rfind(up.System_Folder_Path_Fix) + 1):File.rfind('.')]
+        FileType = AudioFile[AudioFile.rfind('.'):]
+
+
+
+        SavePath2 = Path(PureWindowsPath(SavePath,  'Raw' , up.System_Folder_Path_Fix))
+        Check_Folder_Exists(SavePath2)
+        shutil.copyfile(AudioFile,SavePath2 + FileName2 + '_Raw' + FileType)
+
+
+
+
+
+        if Origin.upper() != "ENGLISH":
+            Journal_Original = Transcript
+            Journal_Revised = ReWrite_Transcript1
+        Journal_Original =  str(current_time) + '   -   Original ' + up.LineBreak + Journal_Original + up.LineBreak_Divider + up.LineBreak
+        Journal_Revised =  str(current_time) + '   -   Revised ' + up.LineBreak + Journal_Revised + up.LineBreak_Divider+ up.LineBreak
+        if Journal_Revised == '':
+            Journal_Combined = Journal_Original  + up.LineBreak
+        else:
+            Journal_Combined = Journal_Original + Journal_Revised + up.LineBreak
+            with open(Journal_Loc[1], "a") as myfile:
+                myfile.write(Journal_Revised)
+
+        with open(Journal_Loc[0], "a") as myfile:
+            myfile.write(Journal_Original)
+        with open(Journal_Loc[2], "a") as myfile:
+            myfile.write(Journal_Combined)
+
+    else:
+
+        try:
+            shutil.copyfile(AudioFile, SavePath + FileName)
+        except:
+            dn = 100
+            print('Error moving audio file')
+
+
     SaveText2Audio(SavePath=SavePath, FileName=FileName,
                               Neural='Neural',
-                              Mode='AUDIOBOOK', Chunk_Limit=1300, Translate=Output,
+                              Mode='AUDIOBOOK', Chunk_Limit=Chunk_Limit, Translate=Output,
                               Text=Final_Text, Origin_Language= Origin)
 
-    try:
-        shutil.copyfile(AudioFile, SavePath + FileName + '.mp3')
-    except:
-        dn = 100
-        print('Error moving audio file')
 
 
+    return SavePath2
 def Audio_Transcript(File):
     d = 1
 
@@ -307,6 +426,26 @@ def transcribe_audio(path, Origin = 'English'):
         # try converting it to text
         text = r.recognize_google(audio_listened, language=Origin_Recognize)
     return text
+
+
+def SummarizeText(Text, Format = StoryMode.Summarize_Format,Task = StoryMode.Summarize_Task + " " + StoryMode.Summarize_Video, Role = "You are a Master writer and linguist able to copy or emulate any writing style and you are an expert editor master of all common world languages (mostly English)"):
+      c = 1
+      crazy = round((randbelow(520000) + 170000) / 100000, 0)
+      crazy = crazy / 10
+      # print('Crazy Rating: ' + str(crazy))
+      crazy += .2
+      if crazy < .4:
+          crazy = .6
+      if crazy > .9:
+          crazy = .7
+      Summarized_text = Basic_GPT_Query( Line2_Role=Role,
+                                                 Line3_Format=Format,
+                                                 Line4_Task=Task  + """ Use the following text for the source of information Text:###""" + Text ,
+                                                 crazy=crazy,)
+
+
+      return Summarized_text
+
 
 # a function that splits the audio file into chunks on silence
 # and applies speech recognition
@@ -452,17 +591,17 @@ def add2Master2(df1):
 
 def CheckFileLength(SavePath,Title1,current_time_f, FileType):
     isExist = True
-    Title2 = SavePath + '\\' + Title1 + current_time_f + FileType
+    Title2 = Path(PureWindowsPath(SavePath , up.System_Folder_Path_Fix , Title1 , current_time_f , FileType))
     Add_Dupe_File = 0
 
     while len(Title2) > 250:
         if len(SavePath) >= 240 and len(Title2) > 250:
-            Title2 = SavePath + '\\' + 'BU' + FileType
+            Title2 = Path(PureWindowsPath(SavePath , up.System_Folder_Path_Fix , 'BU' , FileType))
 
         elif len(Title2) > 250:
             TitleLen = len(Title2)
             TrimNum = round(TitleLen * .1) + 1
-            Title2 = SavePath + '\\' + Title1[TrimNum:] + current_time_f + FileType
+            Title2 = Path(PureWindowsPath(SavePath , up.System_Folder_Path_Fix , Title1[TrimNum:] , current_time_f , FileType))
 
     while isExist == True:
 
@@ -473,7 +612,7 @@ def CheckFileLength(SavePath,Title1,current_time_f, FileType):
 
     return Title2
 
-def SaveCSV(Text, Title, SavePath, AddTimeStamp = True, FileType = '.txt'):
+def SaveCSV(Text, Title, SavePath, AddTimeStamp = True, FileType = '.txt', FilePath = ''):
 
 
     if AddTimeStamp==True:
@@ -485,15 +624,22 @@ def SaveCSV(Text, Title, SavePath, AddTimeStamp = True, FileType = '.txt'):
 
 
     Title1  = CleanFileName(Title)
-    Title2 = SavePath + '\\' + Title1 + '_' + current_time_f + FileType
-    if len(Title2) > 250 :
-        Title2 = CheckFileLength(SavePath=SavePath,Title1=Title1, current_time_f=current_time_f,FileType=FileType)
+    Title2 = Path(PureWindowsPath(SavePath , up.System_Folder_Path_Fix , Title1 , '_' , current_time_f , FileType))
+    if len(str(Title2)) > 250 :
+        Title2 = Path(PureWindowsPath(CheckFileLength(SavePath=SavePath,Title1=Title1, current_time_f=current_time_f,FileType=FileType)))
     # folder = str(Title1)
     # if len(folder) > 44:
     #     folder = folder[0:44]
 
     Title1 =  str(Title1)
     Check_Folder_Exists(SavePath)
+
+    if FilePath != '':
+        Title2 = FilePath
+
+        SPathCheck = Title2[:Title2.rfind(up.System_Folder_Path_Fix)]
+        Check_Folder_Exists(SPathCheck)
+
     Data1 = [(Text1)]
     try:
         df1 = pd.DataFrame(data=Data1)
@@ -587,7 +733,7 @@ def makeArt( Prompt='', SavePath=up.AI_Art_Path, OpenFile=False):
             fname_only = FileName
             # fname = os.path.join(SavePath, '\'',FileName)
 
-            fname = SavePath + '\\' + FileName + '.png'
+            fname = Path(PureWindowsPath(SavePath , up.System_Folder_Path_Fix , FileName , '.png'))
             print(f"Filename: {fname}")
             with open(fname, 'wb') as f:
 
@@ -761,7 +907,7 @@ def Chop4Art(Text, SavePath, FileName,FilePath = '',  Chunk_Limit = 1500,  Chunk
                 try:
                     PicPath = makeArt(Prompt='Using the following details: ' + Artist_Persona + " Art Prompt:  " + ArtPrompt)
                     print('successfully made a work of art in foreign language')
-                    newPicPath = SavePath_Pics + '\\'+FileName_Chunk + '.png'
+                    newPicPath = Path(PureWindowsPath(SavePath_Pics, up.System_Folder_Path_Fix,FileName_Chunk , '.png'))
                     try:
 
                         shutil.copy(PicPath,newPicPath)
@@ -777,10 +923,10 @@ def Chop4Art(Text, SavePath, FileName,FilePath = '',  Chunk_Limit = 1500,  Chunk
 
 
 
-def Combine_Splitsof_audio(AudioFiles_ordered,FilePath,FileName = 'SHAINE - Audio Combined', SavePath = up.SavePath + 'r/Orphan Audio Files',Opening_Sound = up.MondeVertIntro, Voice = random.choices(SAF.Original_List_of_Voices_English)[0]):
+def Combine_Splitsof_audio(AudioFiles_ordered,FilePath,FileName = 'SHAINE - Audio Combined', SavePath = Path(PureWindowsPath(up.SavePath, 'r/Orphan Audio Files')),Opening_Sound = up.MondeVertIntro, Voice = random.choices(SAF.Original_List_of_Voices_English)[0]):
     Check_Folder_Exists(SavePath)
     Merged_Audio = Opening_Sound
-    FilePath_merge = SavePath + '\\' + FileName + '.mp3'
+    FilePath_merge = Path(PureWindowsPath(SavePath , up.System_Folder_Path_Fix , FileName , '.mp3'))
     counter = 1
     len_Audio = len(AudioFiles_ordered)
     for x in range (0,len_Audio):
@@ -838,7 +984,7 @@ def Combine_Splitsof_audio(AudioFiles_ordered,FilePath,FileName = 'SHAINE - Audi
 
 
 def Resume():
-    Response = Basic_GPT_Query2( SavePath=up.AI_Task_Path + '\\' + "Resume", Line1_System_Rule=up.system_TextJoaT,
+    Response = Basic_GPT_Query2( SavePath=Path(PureWindowsPath(up.AI_Task_Path, up.System_Folder_Path_Fix , "Resume")), Line1_System_Rule=up.system_TextJoaT,
                             Line2_Role=lup.Test_Role_Resume,
                             Line5_Task="Use the following Resume for your edits:" + lup.Resume_Text, Line4_Task=lup.Test_Task_Resume + lup.Test_Special_Resume,
                              Line3_Format=lup.Test_Format_Resume,
@@ -922,9 +1068,9 @@ def Basic_GPT_Query2(   Line2_Role  , Line5_Task,Line3_Format,Line4_Task,Big = F
             ArtPrompt = GPTArt2(User_Subject = GPT_Response)
             print(ArtPrompt)
             originalFilepath = makeArt(Prompt=ArtPrompt)
-            PicNewPath1 = SavePath + '\\' + Mode
+            PicNewPath1 = Path(PureWindowsPath(SavePath , up.System_Folder_Path_Fix , Mode))
             Check_Folder_Exists(PicNewPath1)
-            PicNewPath =PicNewPath1 + '\\' + Title + '.png'
+            PicNewPath =Path(PureWindowsPath(PicNewPath1 , up.System_Folder_Path_Fix , Title , '.png'))
             shutil.copyfile(originalFilepath, PicNewPath)
         return GPT_Response
 
@@ -1025,9 +1171,9 @@ def Basic_GPT_Query(   Line2_Role  ,Line3_Format,Line4_Task,Big = False,Model = 
             ArtPrompt = GPTArt2(User_Subject = GPT_Response)
             print(ArtPrompt)
             originalFilepath = makeArt(Prompt=ArtPrompt)
-            PicNewPath1 = SavePath + '\\' + Mode
+            PicNewPath1 = Path(PureWindowsPath(SavePath, up.System_Folder_Path_Fix , Mode))
             Check_Folder_Exists(PicNewPath1)
-            PicNewPath =PicNewPath1 + '\\' + Title + '.png'
+            PicNewPath =Path(PureWindowsPath(PicNewPath1 , up.System_Folder_Path_Fix , Title , '.png'))
             shutil.copyfile(originalFilepath, PicNewPath)
         return GPT_Response
 
@@ -1248,7 +1394,7 @@ def Split_Audio2(Text, SavePath, FileName,FilePath = '', OpeningSound = up.Monde
                         PicPath = x.makeArt(Prompt='Using the following details: ' + Artist_Persona + " Art Prompt: " + ArtPrompt)
                             #x.makeArt(Prompt="Using the following Art Sytles/Details from the text create a work of art pased on the following Art Prompt:  " + ArtPrompt)
                         # print('successfully made a work of art in foreign language')
-                        newPicPath = SavePath_Pics + '\\'+FileName_Chunk + '.png'
+                        newPicPath = Path(PureWindowsPath(SavePath_Pics , up.System_Folder_Path_Fix,FileName_Chunk , '.png'))
                         try:
 
                             shutil.copy(PicPath,newPicPath)
@@ -1268,7 +1414,7 @@ def Split_Audio2(Text, SavePath, FileName,FilePath = '', OpeningSound = up.Monde
                     ArtPrompt = x.GPTArt2(User_Subject='Create a prompt for an artist to create a work of art based on the following text: ' + Text_Chunk_Final, ArtFormat=aPrompt)
                     try:
                         PicPath = x.makeArt(Prompt='Using the following details: ' + Artist_Persona + " Art Prompt: " + ArtPrompt)
-                        newPicPath = SavePath_Pics + '\\' +FileName_Chunk + '.png'
+                        newPicPath = Path(PureWindowsPath(SavePath_Pics , up.System_Folder_Path_Fix , FileName_Chunk , '.png'))
                         try:
                             shutil.copy(PicPath, newPicPath)
                         except:
@@ -1332,6 +1478,8 @@ def CleanLyrics4audio( text,Chunk_Delimiter_right = ':', Chunk_Delimiter_left= '
     return Text_Final
 
 def CleanFileName(Text):
+    Text = Text.replace('-',' ')
+    Text = Text.replace('_', ' ')
     Text = re.sub(r"[^a-zA-Z0-9 ]", "", Text)
     return Text
 def SaveText2Audio( MultiThread = True,Translate = ["English"],Text = '', SavePath =up.SavePath, FileName="Text2Audio", FilePath = '', Neural='Neural', Mode='Text2Audio', Chunk_Limit = 1500,Voice = random.choices(SAF.Original_List_of_Voices_English)[0], Chunk_Replaces = ['.','?','\n'], Chunk_Delimiter = '!',Artist_Persona = '', Chunk_Mode = False,  aPrompt = sms.ArtPrompt_Clean_Social_Media_Post_Line2_Prompt, Origin_Language = 'English'):
@@ -1344,12 +1492,12 @@ def SaveText2Audio( MultiThread = True,Translate = ["English"],Text = '', SavePa
 
     if Chunk_Mode == True:
         print('Save text to audio for : '+ FileName + ', should be saving to : ' + SavePath)
-        FilePath_m = SavePath + '\\' + FileName + '.mp3'
+        FilePath_m = Path(PureWindowsPath(SavePath, up.System_Folder_Path_Fix, FileName , '.mp3'))
     else:
         if Text == '' and os.path.exists(FilePath) and FilePath != '':
 
             FilePath_m = FilePath[:-4] + '.mp3'
-            SavePath_index = FilePath.rfind('\\')
+            SavePath_index = FilePath.rfind(up.System_Folder_Path_Fix)
             FStart = (SavePath_index+1)
             FileName = FilePath[FStart:-4]
             SavePath = FilePath[:SavePath_index]
@@ -1360,7 +1508,7 @@ def SaveText2Audio( MultiThread = True,Translate = ["English"],Text = '', SavePa
                 Text = f.read()
 
         else:
-            FilePath_m = SavePath + '\\' + FileName + '.mp3'
+            FilePath_m = Path(PureWindowsPath(SavePath , up.System_Folder_Path_Fix , FileName + '.mp3'))
 
     if Artist_Persona == 'embrace the spirit/symbolism and culture of the following text describe it to be illustrated by an artist' or Artist_Persona == '':
         arttext = Text
@@ -1566,7 +1714,7 @@ def SaveText( df, FileName, tabname):
     f2 = up.getPath()
     SavePath1 = f2
     invalidCharRemoved = re.sub(r"[^a-zA-Z0-9 ]", "", FileName)
-    Filename = '\\' + str(invalidCharRemoved) + "_"
+    Filename = up.System_Folder_Path_Fix + str(invalidCharRemoved) + "_"
     SavePath2 = SavePath1 + Filename + ".xlsx"
     # SavePath2 = r'D:\ShakeBot Testing\ShaKeBotTest for DA - 12-20-2022.xlsx'
     try:
@@ -1584,7 +1732,7 @@ def saveTranscript(Transcript,current_time):
 
 
     Filename = 'SHAINE Transcript v1'
-    Filename = '\\' + Filename + "_"
+    Filename = up.System_Folder_Path_Fix + Filename + "_"
     f2 = up.getPath()
     SavePath1 = f2
     data = [(current_time, Transcript)]
@@ -1637,7 +1785,7 @@ def NamePoemSavePoem(self, poem, ArtPaths, Prompts_Used, ArtistPoetInfo, title='
 
         Title1 = CleanFileName(Title)
 
-        Title1 = '\\' + str(Title1) + "_"
+        Title1 = up.System_Folder_Path_Fix + str(Title1) + "_"
         if len(Title1) > 60:
             Title1 = Title1[0:60]
 
@@ -2022,3 +2170,4 @@ def Create_Art_from_String_to_list(self, Text, SavePath, FileName, Art_Style_det
             KeepGoing = True
 
     return ArtPaths #after its returned I append this to the folder with all relevant data
+

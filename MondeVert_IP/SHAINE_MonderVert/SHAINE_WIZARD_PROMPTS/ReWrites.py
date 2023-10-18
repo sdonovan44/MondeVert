@@ -1,3 +1,71 @@
+Personal_Message_Gram = "To Gram, I hope you know that our bond is more than just grandchild, I honestly consider you to be my best friend. Your stories have always kept me entertained whether it was how you met grampie, how you selflessly hopped on a train to a place with no home/no job in order to free your mom from the 'burden' of raising you, or how you introduced your sister Nona to the love of her life JIm. You are beyond selfless and truly a one of a kind soul. your ability to make anyone feel at home and comforted is unmatched. You are a rock for this family and we all owe you for always being a staple of our family. Grampie was lucky to meet such a perfect woman and I can only dream of meeting someone half as kind and loving as you. I want to thank you for welcoming us into your home and I can honestly say 107 Plymouth ave will always feel like home. I will always remember spending time on your porch (as you yell at people speeding down the street), watching you dance your cute little jig and of course yodel whenever a song would allow it. I pray for you and miss you dearly, you are one of a kind and I am forever grateful to call you my Gram.  Sending my love, Shane"
+Personal_Message_Mom = "To my beautiful and loving mother. I cannot thank you enough for all that you do. You are my rock and someone I rely on constantly for guidance through my life. You are way more special than you think, all of your children love you dearly. You are a great friend and an even better grandma. I will always be here for you and Rich no matter what. Its hard for me to even think of a way to thank you and share my gratitude but I hope this at least makes a dent in what you deserve to hear. Keep your head up and please keep fighting for the life you deserve. I cannot wait for you and Richard to move up here to South Carolina to be closer to me, I know everything is going to work out. Please never stop being you, I am sorry for the times we fight and I am sorry life has not always been fair to you. Trust me when I say everything is going to be ok! With much love, Shane"
+Personal_Message_Rich = "To my sweet brother, as you know you have a heart of Gold and my heart goes out to you everyday that you have to struggle with this terrible disease that causes you to live a life that can at times be cruel and unfair. You are extremely talented and I only get upset because I see your full potential and want you to reach beyond what you believe is possible. I know you are lonely and I promise you in time you will find your true love. There is someone out there who will be there for you and understand what you are going through. I urge you to continue to write music and tell the world your story. I am always proud of you and each day you continue to smile and push forward is driving you towards the life you deserve. Life is never easy and your life is no exception. I hope you know I love you like a brother and I rely on you like a best friend. Our relationship is so strong and it is something I truly cherish. I hope you are aware of how much I love you and how special you are. Never stop dreaming, keep working hard and one day you will make it a reality! With much love, Shane"
+Personal_Message_Dad = """When writing this note I am overwhelmed with gratitude and I fear nothing I say will give justice to how profoundly you have impacted my life. I always tell people your goal in life was to be a great parent and you have exceeded all expectations as my father. I know my son will be raised right because I have the world's best role model for how to be a man. You are kind and strong and I have learned many important lessons from you. My favorite part about you and your character is how you always protect the ones who are unable to protect themselves, and your pursuit of self-education and learning has always pushed me forward to be the best version of myself. As I said before, there are not enough words in the world to express how thankful I am. But I hope this attempt at least highlights the importance of you in my life. Thanks for all of your sacrafices and always putting Melissa, Micaela and myself's interests above your own. If I am half of the man you are when I am 65 I will be a very lucky person. I thank God for giving me the perfect dad, and I thank you for always being there even when you worked all day and had to commute for hours in traffic to see us, sometimes to find out we had made plans with friends or just flat out ditched you. Most Dads would have not been able to keep coming time after time, but you were always there for us. You are truly one of a kind, and no matter how frustrated I seem, its only because my goal in life is to make you proud.  Love your son Shane """
+
+# Personal_Message = [Personal_Message_Gram, Personal_Message_Dad]
+# Personal_Message_Names = ["Grammie", "Dad"]
+
+Personal_Message = [Personal_Message_Dad]
+Personal_Message_Names = [ "Dad"]
+
+
+Personal_Message_Task = "It is imperative you keep the personal touch and keep the details of the letter that is emotional and heartfelt. The reader should benefit from recieving this letter and see it as a great gesture from the sender. Remove redundancy and reorder the text as needed to provide a concise message. Your task is to rewrite the following text so that it reads clearly and also makes the reader filled with emotion based on the content of the text. Do not be over the top, but make sure there is proper grammar and possibly add a quote whenever neccesary as it relates to the text. Be sure to properly cite the Quote regarding who said the quote and where the quote comes from. Please use the following text    Text: "
+Journal_Persona = "The person writing in their Journal (the user) is named Shane Donovan. "
+Journal_Task = Journal_Persona +  "It is imperative you keep the personal touch and keep the details of the jounal entry that is emotional and heartfelt.  Remove redundancy and reorder the text as needed to provide a concise message. Your task is to rewrite the following text so that it reads clearly as a journal entry, be sure to properly capture the tone/mood and  emotion based on the content of the text. Do not be over the top, but make sure there is proper grammar and possibly add a quote whenever neccesary as it relates to the text. Be sure to properly cite the Quote regarding who said the quote and where the quote comes from. At the very end of your response provide a sort of Friend/Therapist/Parental advice for the situation, be unbiased and provide additional perspectives and potential topics to research/study (provide a few key details that would help to understand the person's issues and how to resolve them potentially).  "
+
+
+
+ToDo_Task= """ Review the current To Do List and add any new items that were raised in the latest Journal Entry, make any updates to the current list based on what I mention in the journal entry, if something is completed you should mark it as such, if a new item is related to another task combine it and provide all relevant details. In your Response you should provide insights and any useful information/tips to help accomplish the tasks."""
+ToDo_Format = """ Please use the desired Format for your response, if you are unaware of the priority, simply put the items in chronological order based on the text
+
+Desired Format:
+
+Priority Tasks To Do: -||- 
+
+Additional Tasks To Do: -||- 
+
+Completed Tasks: -||-
+
+Encouragement/Motivation: {Provide motivation and or a plan of action how to take on the top items and things to do to help remain productive and maximize efficiency.} 
+
+Useful Information: {Provide any insights and potential URLs and/or information that will help accomplish my goals}
+
+
+"""
+
+
+
+
+
+RE_Ask4Address = """Greetings, everyone! I hope you're all doing well. I wanted to take a moment to share an exciting opportunity with you.
+
+I am offering to personally write a heartfelt message, by hand, to anyone who is brave enough to share their address with me.
+
+I understand that privacy is a concern, so please know that I am fully committed to handling your information with the utmost care and respect.
+
+
+
+The reason behind this endeavor is my current enrollment in a 12-week real estate course. As part of an assignment, I am required to write five handwritten notes each week. However, I find myself with a limited number of addresses, mostly belonging to relatives. 
+
+
+
+(That being said I am no doubt sending first letter to my Gram cuz she is the coolest person I know). 
+
+
+
+But being  serious,I'm genuinely committed to connecting with people, whether they're old friends, new acquaintances, or complete strangers. I love to Engage in meaningful conversations and meet new people.  
+
+
+
+when was the last time you received something in the mail that wasn't a wedding invite, spam, or another dreaded bill? 
+
+I urge you to Be Bold and see what my letter will bring.
+
+
+"""
+
+
 ShaneJourney = """
 
 Introduction

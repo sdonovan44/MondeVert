@@ -13,6 +13,8 @@ from instabot import Bot, utils
 
 import os
 import glob
+from pathlib import Path, PureWindowsPath
+import platform
 
 # importing the required package
 import shutil
@@ -172,7 +174,7 @@ def upload_pictures(Folder = up.PICS_PATH, Caption = ''):
 
 
 
-def onetimeClean(FilePath = up.PNGPath + '/**/*.png', Destination = up.PICS_PATH):
+def onetimeClean(FilePath =  Path(PureWindowsPath(up.PNGPath , '/**/*.png')), Destination = up.PICS_PATH):
     for f in glob.glob(FilePath, recursive=True):
         try:
             print(f)

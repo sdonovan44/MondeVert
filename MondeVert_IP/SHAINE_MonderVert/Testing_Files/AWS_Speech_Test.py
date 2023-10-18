@@ -1,7 +1,7 @@
 from MondeVert_IP.SHAINE_MonderVert import SHAINE as GPT
 
 from MondeVert_IP.SHAINE_MonderVert.Utilities import Common_Utilities as cu
-from MondeVert_IP.SHAINE_MonderVert.SHAINE_WIZARD_PROMPTS import Stories_For_Audio_Files as SFA
+from MondeVert_IP.SHAINE_MonderVert.SHAINE_WIZARD_PROMPTS import Stories_For_Audio_Files as SFA, ReWrites as RW
 from MondeVert_IP.SHAINE_MonderVert.SHAINE_WIZARD_PROMPTS import User_Prefs as up
 import threading
 import pandas as pd
@@ -112,39 +112,80 @@ Runs.append('Social_Media_Clean_Post')
 import datetime
 current_time1 = datetime.datetime.now()
 current_time = current_time1.strftime('%m-%d-%Y_%H.%M.%S')
-Movie = "A:\Amini Amor\SHAINE\Requests\Beta\Test 1\A Tale of Two Kitties (1942).mp4"
-Movie = "A:\Amini Amor\SHAINE\Requests\Beta\Audio Transcript\Movie2Audio\IMG_1966.MOV.crdownload"
-Movie2 ="A:\Amini Amor\SHAINE\Requests\Beta\Audio Transcript\Movie2Audio\LaPardon64.mp4"
-Movie3 = r"A:\Amini Amor\SHAINE\Requests\Beta\Audio Transcript\Movie2Audio\Task 1 2023-09-28 02-16-58.mp4"
-Movie4 = r"A:\Amini Amor\Live Recordings Raw\Task 3.mp4"
-Movie5 = "A:\Amini Amor\Live Recordings Raw\Task4.mp4"
-Movie5 = r"A:\Amini Amor\Live Recordings Raw\2023-10-03 04-22-52.mp4"
-Youtube = "https://youtu.be/skrdyoabmgA?si=fPDFIIqzVp2LE9ia"
-# t = threading.Thread(target=cu.MovieSubtitles, args = (Movie,)).start()
-# t = threading.Thread(target=cu.MovieSubtitles, args = (Movie2,"French", "English")).start()
-# t = threading.Thread(target=cu.YouTube, args = (Youtube,)).start()
+# Movie = "A:\Amini Amor\SHAINE\Requests\Beta\Test 1\A Tale of Two Kitties (1942).mp4"
+# Movie = "A:\Amini Amor\SHAINE\Requests\Beta\Audio Transcript\Movie2Audio\IMG_1966.MOV.crdownload"
+# Movie2 ="A:\Amini Amor\SHAINE\Requests\Beta\Audio Transcript\Movie2Audio\LaPardon64.mp4"
+# Movie3 = r"A:\Amini Amor\SHAINE\Requests\Beta\Audio Transcript\Movie2Audio\Task 1 2023-09-28 02-16-58.mp4"
+# Movie4 = r"A:\Amini Amor\Live Recordings Raw\Task 3.mp4"
+# Movie5 = "A:\Amini Amor\Live Recordings Raw\Task4.mp4"
+# Movie5 = r"A:\Amini Amor\Live Recordings Raw\2023-10-03 04-22-52.mp4"
+# Youtube = "https://youtu.be/skrdyoabmgA?si=fPDFIIqzVp2LE9ia"
+# # t = threading.Thread(target=cu.MovieSubtitles, args = (Movie,)).start()
+# # t = threading.Thread(target=cu.MovieSubtitles, args = (Movie2,"French", "English")).start()
+# # t = threading.Thread(target=cu.YouTube, args = (Youtube,)).start()
+#
+# Richie = r"A:\Amini Amor\Live Recordings Raw\2023-10-11 15-52-34.mp4"
+# #cu.Movie2Audio(Richie)
+#
+#
+#
+# #cu.MovieSubtitles(Movie, Rewrite = True)
+# # cu.MovieSubtitles(Movie5, Rewrite = True , AI_Task=True)
+# Pictures = r"A:\Amini Amor\Live Recordings Raw\2023-09-28 03-59-14.mp4"
+# mili1 = 2000
+# mili = 20000
+# #cu.extractImages(Richie, up.AI_Audio_Transcript + '\\' + 'Extracted images', MakeVar=True, Millisecs=mili)
+# # cu.extractImages(Richie, up.AI_Audio_Transcript + '\\' + 'Extracted images', MakeVar=False, Millisecs=mili1)
+#
+# pic = r"A:\Amini Amor\SHAINE\Requests\Beta\AI Art\Approved Quality Art\Curated\MondeVert Studio\SHAINE Favorites\Art_Blunts_Using_the_classic_style_of_Pablo_Picasso_create_a_unique_work_of_art_that_celebrates_the_creative_combination_of_Snoop_Dogg_and_Back - Copy.png"
+# pic2 = r"A:\Amini Amor\SHAINE\Requests\Beta\AI Art\Approved Quality Art\Curated\MondeVert Studio\SHAINE Favorites\The artwork depicts a woman with flowing blue hair surrounded by a vibrant and colorful cityscape Her eyes are closed and a serene expression is on.png"
+# pic3 = r"A:\Amini Amor\SHAINE\Requests\Beta\AI Art\Approved Quality Art\Curated\MondeVert Studio\SHAINE Favorites\2_stoners_playing_rock_paper_scissors_in_the_style_of_norman_rockwell.png"
+# pic4 = r"A:\Amini Amor\SHAINE\Requests\Beta\AI Art\Approved Quality Art\Curated\MondeVert Studio\SHAINE Favorites\The portrait depicts a young woman with piercing blue eyes surrounded by a dreamlike aura of vibrant colors and intricate details Her face is a mix .png"
+# # Version2 = cu.MakeVariationArt(Pic= pic2, FileName='Favorite Variant1' + current_time)
+# # Version3 = cu.MakeVariationArt(Pic= Version2, FileName='Favorite Variant2' + current_time)
+# # Version4 = cu.MakeVariationArt(Pic= Version3, FileName='Favorite Variant2' + current_time)
+#
+# pic22 = r"A:\Amini Amor\SHAINE\Requests\Beta\Audio Transcript\Extracted images\Blue Hair Variants\Favorite Variant  6  09282023042651.png"
+# pic222 = r"A:\Amini Amor\SHAINE\Requests\Beta\Audio Transcript\Extracted images\Blue Hair Variants\Favorite Variant  6  10142023155339.png"
+# #
+# # Version1 = pic22
+# # for i in range (1,15):
+# #     Version1 = cu.MakeVariationArt(Pic=Version1, FileName='Favorite Variant  ' + str(i) + '  '+ current_time)
+# # Version1 = pic22
+# # for i in range (1,4):
+# #     Version2 = cu.MakeVariationArt(Pic=Version1, FileName='Favorite Variant v2   ' + str(i) + '  '+ current_time)
+#
+#
+# Insta = r"A:\Amini Amor\Live Recordings Raw\2023-10-14 15-09-39.mp4"
+
+#cu.MovieSubtitles(Insta, Rewrite = True)
+
+Journal_Video = r"A:\Amini Amor\Live Recordings Raw\2023-10-17 03-34-34.mp4"
+#Journal_Video = r"A:\Amini Amor\Live Recordings Raw\2023-10-17 04-24-29.mp4"
+
+#Journal_Video = r"A:\Amini Amor\Live Recordings Raw\2023-10-17 14-18-25.mp4"
+#Journal_Video = r"A:\Amini Amor\Live Recordings Raw\2023-10-17 14-39-06.mp4"
+#Journal_Video = r"A:\Amini Amor\Live Recordings Raw\2023-10-17 14-55-01.mp4"
 
 
-# cu.Movie2Audio(Movie5)
-#cu.MovieSubtitles(Movie, Rewrite = True)
-# cu.MovieSubtitles(Movie5, Rewrite = True , AI_Task=True)
-Pictures = r"A:\Amini Amor\Live Recordings Raw\2023-09-28 03-59-14.mp4"
-# cu.extractImages(Pictures, up.AI_Audio_Transcript + '\\' + 'Extracted images', MakeVar=True, Millisecs=5125)
+#Make it so I have folder in the live recordings for Journal and maybe have a script running to trigger this program so it automatically adds the new items and creates the respective files
+#Also make it so all of the ToDo Lists through time are added to the
 
-pic = r"A:\Amini Amor\SHAINE\Requests\Beta\AI Art\Approved Quality Art\Curated\MondeVert Studio\SHAINE Favorites\Art_Blunts_Using_the_classic_style_of_Pablo_Picasso_create_a_unique_work_of_art_that_celebrates_the_creative_combination_of_Snoop_Dogg_and_Back - Copy.png"
-pic2 = r"A:\Amini Amor\SHAINE\Requests\Beta\AI Art\Approved Quality Art\Curated\MondeVert Studio\SHAINE Favorites\The artwork depicts a woman with flowing blue hair surrounded by a vibrant and colorful cityscape Her eyes are closed and a serene expression is on.png"
-pic3 = r"A:\Amini Amor\SHAINE\Requests\Beta\AI Art\Approved Quality Art\Curated\MondeVert Studio\SHAINE Favorites\2_stoners_playing_rock_paper_scissors_in_the_style_of_norman_rockwell.png"
-pic4 = r"A:\Amini Amor\SHAINE\Requests\Beta\AI Art\Approved Quality Art\Curated\MondeVert Studio\SHAINE Favorites\The portrait depicts a young woman with piercing blue eyes surrounded by a dreamlike aura of vibrant colors and intricate details Her face is a mix .png"
-# Version2 = cu.MakeVariationArt(Pic= pic2, FileName='Favorite Variant1' + current_time)
-# Version3 = cu.MakeVariationArt(Pic= Version2, FileName='Favorite Variant2' + current_time)
-# Version4 = cu.MakeVariationArt(Pic= Version3, FileName='Favorite Variant2' + current_time)
 
-# Version1 = pic2
-# for i in range (1,8):
-#     Version1 = cu.MakeVariationArt(Pic=Version1, FileName='Favorite Variant  ' + str(i) + '  '+ current_time)
-# Version1 = pic2
-# for i in range (1,4):
-#     Version1 = cu.MakeVariationArt(Pic=Version1, FileName='Favorite Variant v2   ' + str(i) + '  '+ current_time)
+
+cu.MovieSubtitles(Journal_Video, Rewrite = True , Journal=True, Output=["English"], ToDo= True)
+
+
+#This needs to be reran for summarizing text
+# for i in range(0, len(RW.Personal_Message) ):
+#     Summarized_text = cu.SummarizeText((RW.Personal_Message[i]), Task=RW.Personal_Message_Task)
+#     Name = RW.Personal_Message_Names[i]
+#     Title = "Personal Message"
+#     Title = Title + ' ' + Name
+#     FilePath = cu.SaveCSV(Text= Summarized_text, SavePath=up.AI_Task_Path + '\\Personal Message\\' +Title, Title=Title )
+#     cu.SaveText2Audio(FilePath=FilePath)
+#
+#     print(Summarized_text)
 
 
 
@@ -166,9 +207,9 @@ pic4 = r"A:\Amini Amor\SHAINE\Requests\Beta\AI Art\Approved Quality Art\Curated\
 FilePath = r"A:\Amini Amor\Secret Law of Attraction.txt"
 #Text  = pd.read_csv(FilePath)
 
-
-with open(FilePath,'r') as file:
-	Text = " ".join(line.rstrip() for line in file)
-	#print(Text)
-
-cu.speak(Text)
+#
+# with open(FilePath,'r') as file:
+# 	Text = " ".join(line.rstrip() for line in file)
+# 	#print(Text)
+#
+# cu.speak(Text)
