@@ -38,6 +38,11 @@ Useful Information: {Provide any insights and potential URLs and/or information 
 
 
 
+RE_Listing1 = """Come check out this great opportunity to live 2 miles from Surfside Beach. Two bedrooms, two bath, updated top floor unit with a Carolina room in the Southbridge community. This unit has views of the pond from both bedrooms and the Carolina room. Carpet and LVP cover the floors. The large primary suite offers ceiling fan, walk-in closet, views of the pond, a private bath with vanity, and a shower tub combination. The open concept kitchen and living room has vaulted ceilings, with a ceiling fan, breakfast bar, and dining area. 
+Other features include laundry room, linen closet, storm door, and covered front porch area. The Southbridge community offers outdoor private pool, recreational facilities, long and short-term rental allowed, and much more. Square footage is approximate and not guaranteed, buyer is responsible for verification."""
+
+RE_Listing = [RE_Listing1]
+
 RE_Ask4Address = """Greetings, everyone! I hope you're all doing well. I wanted to take a moment to share an exciting opportunity with you.
 
 I am offering to personally write a heartfelt message, by hand, to anyone who is brave enough to share their address with me.

@@ -5,7 +5,8 @@ from MondeVert_IP.SHAINE_MonderVert.SHAINE_WIZARD_PROMPTS import Stories_For_Aud
 from MondeVert_IP.SHAINE_MonderVert.SHAINE_WIZARD_PROMPTS import User_Prefs as up
 import threading
 import pandas as pd
-
+from pathlib import Path, PureWindowsPath
+import platform
 
 x = GPT.MondeVert()
 #x.Manual_Audio_File(FilePath = r"A:\MondeVert_IP Productions\SHAINE - MondeVert_IP AI Assistant\AI Tasks\MondeVert_Audio_Video_Story\Echoes of the Heart_Miniseries.txt")
@@ -160,14 +161,18 @@ current_time = current_time1.strftime('%m-%d-%Y_%H.%M.%S')
 
 #cu.MovieSubtitles(Insta, Rewrite = True)
 
-#Journal_Video = r"A:\Amini Amor\Live Recordings Raw\2023-10-17 03-34-34.mp4"
+Journal_Video = r"A:\Amini Amor\Live Recordings Raw\2023-10-17 03-34-34.mp4"
 Journal_Video = r"A:\Amini Amor\Live Recordings Raw\2023-10-17 04-24-29.mp4"
 
-#Journal_Video = r"A:\Amini Amor\Live Recordings Raw\2023-10-17 14-18-25.mp4"
-#Journal_Video = r"A:\Amini Amor\Live Recordings Raw\2023-10-17 14-39-06.mp4"
-#Journal_Video = r"A:\Amini Amor\Live Recordings Raw\2023-10-17 14-55-01.mp4"
+Journal_Video = r"A:\Amini Amor\Live Recordings Raw\2023-10-17 14-18-25.mp4"
+Journal_Video = r"A:\Amini Amor\Live Recordings Raw\2023-10-17 14-39-06.mp4"
+Journal_Video = r"A:\Amini Amor\Live Recordings Raw\2023-10-17 14-55-01.mp4"
 
-
+Journal_Video = r"A:\Amini Amor\Live Recordings Raw\2023-10-18 01-38-11.mp4"
+Journal_Video = r"A:\Amini Amor\Live Recordings Raw\2023-10-18 02-56-42.mp4"
+Journal_Video = r"A:\Amini Amor\Live Recordings Raw\2023-10-18 03-15-23.mp4"
+Journal_Video = r"A:\Amini Amor\Live Recordings Raw\2023-10-18 15-41-59.mp4"
+Journal_Video = r"A:\Amini Amor\Live Recordings Raw\2023-10-19 15-30-52.mp4"
 #Make it so I have folder in the live recordings for Journal and maybe have a script running to trigger this program so it automatically adds the new items and creates the respective files
 #Also make it so all of the ToDo Lists through time are added to the
 
@@ -176,14 +181,34 @@ Journal_Video = r"A:\Amini Amor\Live Recordings Raw\2023-10-17 04-24-29.mp4"
 #cu.MovieSubtitles(Journal_Video, Rewrite = True , Journal=True, Output=["English"], ToDo= True)
 cu.MovieSubtitles(Journal_Video, Rewrite = True , Journal=True, Output=["English"], ToDo= True, AudioMode="CHATGPT")
 
+Journal_Audio1 = r"A:\Amini Amor\Live Recordings Raw\Journal Entries\Pegasus Pl.m4a"
+Journal_Audio2 = r"A:\Amini Amor\Live Recordings Raw\Journal Entries\Planet Fitness 2.m4a"
+Journal_Audio3 = r"A:\Amini Amor\Live Recordings Raw\Journal Entries\Planet Fitness.m4a"
+Journal_Audio4 = r"A:\Amini Amor\Live Recordings Raw\Journal Entries\New Recording 2.m4a"
+Journal_Audio5 = r"A:\Amini Amor\Live Recordings Raw\Journal Entries\Pegasus Pl 2.m4a"
 
-#This needs to be reran for summarizing text
-# for i in range(0, len(RW.Personal_Message) ):
+
+Journal_Audio = [Journal_Audio1,Journal_Audio2,Journal_Audio3,Journal_Audio4,Journal_Audio5]
+
+
+# for i in Journal_Audio:
+#     cu.TranscribeAudio(File = i, AudioFile=i, Rewrite = True , Journal=True, Output=["English"], ToDo= True, AudioMode="CHATGPT")
+
+
+
+
+
+
+
+
+
+# #This needs to be reran for summarizing text
+# for i in range(0, len(RW.RE_Listing) ):
 #     Summarized_text = cu.SummarizeText((RW.Personal_Message[i]), Task=RW.Personal_Message_Task)
 #     Name = RW.Personal_Message_Names[i]
 #     Title = "Personal Message"
 #     Title = Title + ' ' + Name
-#     FilePath = cu.SaveCSV(Text= Summarized_text, SavePath=up.AI_Task_Path + '\\Personal Message\\' +Title, Title=Title )
+#     FilePath = cu.SaveCSV(Text= Summarized_text, SavePath=str(Path(PureWindowsPath(up.AI_Task_Path , 'Personal Message',  Title))), Title=Title )
 #     cu.SaveText2Audio(FilePath=FilePath)
 #
 #     print(Summarized_text)

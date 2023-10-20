@@ -36,10 +36,10 @@ AI_Journal_Inputs_Raw = Path(PureWindowsPath(AI_Journal_Inputs , "Raw Files"))
 #Windows specific Fixes
 System_Folder_Path_Fix = '\\'
 
-AI_Journal_Original = Path(PureWindowsPath( AI_Journal ,System_Folder_Path_Fix , "AI Journal Original.txt"))
-AI_Journal_Revised = Path(PureWindowsPath( AI_Journal ,System_Folder_Path_Fix , "AI Journal Revised.txt"))
-AI_Journal_Combined =  Path(PureWindowsPath(AI_Journal ,System_Folder_Path_Fix , "AI Journal Combined.txt"))
-ToDoFile = Path(PureWindowsPath(AI_Journal ,System_Folder_Path_Fix , "To Do.txt"))
+AI_Journal_Original = Path(PureWindowsPath( AI_Journal  , "AI Journal Original.txt"))
+AI_Journal_Revised = Path(PureWindowsPath( AI_Journal  , "AI Journal Revised.txt"))
+AI_Journal_Combined =  Path(PureWindowsPath(AI_Journal  , "AI Journal Combined.txt"))
+ToDoFile = Path(PureWindowsPath(AI_Journal  , "To Do.txt"))
 
 
 
@@ -140,7 +140,8 @@ AI_Poet_Name = 'S. J. Rose'
 AI_Blogger = "Brick Pulford"
 Song_Writer = 'Bubba D'
 
-
+LineBreak_1 = """
+"""
 LineBreak = """
 
 

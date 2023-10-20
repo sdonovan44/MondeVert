@@ -1,6 +1,7 @@
 import datetime
 import sys
-
+from pathlib import Path, PureWindowsPath
+import platform
 import pandas as pd
 global Record
 from  MondeVert_IP.SHAINE_MonderVert.SHAINE_WIZARD_PROMPTS import Wedding_Prompts as WeddingP
@@ -83,7 +84,7 @@ class Story():
         #This is definitely needed, the stuff above might not be needed
         self.Request_log = []
         openai.api_key = API_Key
-        self.SavePath = SavePath + up.System_Folder_Path_Fix + Mode
+        self.SavePath = Path(PureWindowsPath(SavePath, Mode))
         self.Mode = Mode
 
         self.Version = []
