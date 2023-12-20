@@ -891,16 +891,15 @@ Desired Format:
 Music_Persona_Task = """{Task}: ### Write a bio and complete the table as requested in the {Desired Format}###"""
 
 Music_Persona_Role = """You are an expert writer master of all genres of music,poetry, screenplays, novels, short stories, and music production. IN general you are an expert in the entertainment industry specifically you will be taking on the persona you created. Be a master of lyric writing and music theory, also anything else I tell you to be"""
-Music_Persona_Special = """Have fun, you should have a unique brand and style that makes your persona feel one of a kind but still relateable. Pick a unique name for your persona, use uncommon names, then cultural names, then nicknames, try to pick common names only 10% or less of the time. This person should have star potential"""
+# Music_Persona_Special = """Have fun, you should have a unique brand and style that makes your persona feel one of a kind but still relateable. Pick a unique name for your persona, use uncommon names, then cultural names, then nicknames, try to pick common names only 10% or less of the time. This person should have star potential"""
+Music_Persona_Special = """Have fun, you should have a unique brand and style that makes your persona feel one of a kind but still relateable."""
 Music_Persona_Format = """Complete the {Task} provided below, use the {Persona} you created to do all of the tasks. Make sure the result is in the correct format.
 
 
 Desired Format:
-    Persona: Full Name|Age|BirthDate|Personality|Hometown|Current Home|Family
+    Persona: Full Name|Age|Personality|Hometown|Current Home|Family
     Skills:-||-
     Subject of Works:-||-
-    Album Names:-||-
-    Song Names: -||-
     Writing Style: -||-
     Melodies: -||-
     Rhyme Scheme: -||-
@@ -910,23 +909,412 @@ Desired Format:
     genres: -||-
     Tone: -||-
     Themes:-||-
-    Dialogue Style: -||-
+    Lyric/Writing Style: -||-
     Similar Artists: -||-
     Personality: -||-
-    Odd_Facts_or_Fun_Facts: -||-
     Brief Summary: <Short_Description>
-    Quotes:-||-
     Other Important information: -||-
 """
+
+
+# Music_Persona_Format = """Complete the {Task} provided below, use the {Persona} you created to do all of the tasks. Make sure the result is in the correct format.
+#
+#
+# Desired Format:
+#     Persona: Full Name|Age|BirthDate|Personality|Hometown|Current Home|Family
+#     Skills:-||-
+#     Subject of Works:-||-
+#     Album Names:-||-
+#     Song Names: -||-
+#     Writing Style: -||-
+#     Melodies: -||-
+#     Rhyme Scheme: -||-
+#     Song Structures: -||-
+#     Influences (music, literature, film, other): -||-
+#     Audience: -||-
+#     genres: -||-
+#     Tone: -||-
+#     Themes:-||-
+#     Dialogue Style: -||-
+#     Similar Artists: -||-
+#     Personality: -||-
+#     Odd_Facts_or_Fun_Facts: -||-
+#     Brief Summary: <Short_Description>
+#     Quotes:-||-
+#     Other Important information: -||-
+# """
 #************************************************************************************************
 
 Song_Role = """You are an expert writer master of all genres of music,poetry, screenplays, novels, short stories, and music production. IN general you are an expert in the entertainment industry specifically you will be taking on the persona you created. Be a master of lyric writing and music theory, also anything else I tell you to be. Take on the artist persona described"""
 Song_Outline_Task2= """using the musical artist described take on their persona for your role play, Provide me with an outline for a song  make it extensively detailed with  specific lyrics from the song and the metaphors and other literary devices to be incorporated. Be Abstract and not too specific, do not be over repetetive. The topic should be relatable and the chorus should be somewhat catchy. try to tell a story and/or describe some of your 5 senses what they are experiencing to make the story feel real. Reference pop culture and have witty ways of making it all intertwine. Mention famous people in stories about seeing them out or mention a meal you had at a famous restauraunt and make it funny how excited you are about the details of the meal, make allusions and other allegory or alliteration to make it interesting and surprising. """
 Song_Task2= """Write an original hit song based on the following outline.Use lyrics as if you are role playing that you are slick rick, action bronson, joey badass, pink floyd,nas or some other famous songwriter. Be abstract and metaphorical in your stories, witty and funny is ok. The topic should be relatable and the chorus should be somewhat catchy. try to tell a story and/or describe some of your 5 senses what they are experiencing to make the story feel real.  relatable struggles make his lyrics tell an exciting story that draws the audience in. Be Descriptive make the audience feel like they are living the moment you are describing  outline: """
 
+#Subject = """Base your story and song on positive thinking and specifically the law of attraction among other philisophical ideas (also pull from Dale Carnegies 'How to win Friends and influence others'). Make it like a funny how to and explain it in a way that is relatable and understood by audience"""
 
-Song_Outline_Task= """using the musical artist described take on their persona for your role play, Provide me with an outline for a  song (for a male singer)  make it extensively detailed with  specific lyrics from the song and the metaphors and other literary devices to be incorporated. Be Abstract and not too specific. The language should be college level and have impressive references from history and pop culture. Funny and witty lines are ok. The topic should be relatable and the chorus should be somewhat catchy. try to tell a story and/or describe some of your 5 senses what they are experiencing to make the story feel real. Reference pop culture and have witty ways of making it all intertwine. make allusions and other allegory or alliteration to make it interesting and surprising. Base your story and song on positive thinking and specifically the law of attraction among other philisophical ideas (also pull from Dale Carnegies 'How to win Friends and influence others'). Make it like a funny how to and explain it in a way that is relatable and understood by audience"""
-Song_Task= """Write an original hit song based on the following outline.Use lyrics as if you are role playing that you are slick rick, action bronson, joey badass, pink floyd,nas or some other famous songwriter. Be abstract and metaphorical in your stories, witty and funny is ok. The topic should be relatable and the chorus should be somewhat catchy. try to tell a story and/or describe some of your 5 senses what they are experiencing to make the story feel real.  relatable struggles make his lyrics tell an exciting story that draws the audience in. Be Descriptive make the audience feel like they are living the moment you are describing  outline: """
+#Subject = """Creat an intricate story about a girl who goes out on the weekend a lot and wants to settle down but shes so carefree and a heartbreaker its hard to imagine her finding anyone who can tame her wildness, like a female bronco looking for her cowboy, make a slight/subtle allusion to Neil Young's music"""
+
+#Subject = """Create an intricate story (with introduction rising action, climax and falling action, think of it like a short story intended to be sung out loud with a mix of spoken word and rapping like a modern indie band/rapper) make it about a girl who goes out on the weekend a lot and wants to settle down but shes so carefree and a heartbreaker its hard to imagine her finding anyone who can tame her wildness,be Abstract and not too specific. The language should be college level, and or sound human and have impressive references from history and pop culture. Funny and witty lines are ok. The topic should be relatable and the chorus should be somewhat catchy. try to tell a story and/or describe some of your 5 senses what they are experiencing to make the story feel real. Reference pop culture and have witty ways of making it all intertwine. make allusions and other allegory or alliteration to make it interesting and surprising."""
+Subject_General = """Create an intricate story (Have an introduction and some key details about the song you are creating so writing an outline will be easy as a next step. Have literary devices like a Plot with Exposition, Rising Action(Conflict), Climax,  Falling Action and a Resolution.  think of it like a short story intended to be sung out loud with a mix of spoken word and rapping like a modern indie band/rapper).  """
+Subject_Specific = """(without writing the whole song/story), the format should be an outline/summary.  Create a summary/outline for a song/story about a girl who goes out on the weekend a lot and wants to settle down but shes so carefree and a heartbreaker its hard to imagine her finding anyone who can tame her wildness,be Abstract and not too specific. The language should be college level, and or sound human and have impressive references from history and pop culture. Funny and witty lines are ok. The topic should be relatable and the chorus should be somewhat catchy. try to tell a story and/or describe some of your 5 senses what they are experiencing to make the story feel real. Reference pop culture and have witty ways of making it all intertwine. make allusions and other allegory or alliteration to make it interesting and surprising."""
+
+Subject_Lonesome3 = """Make a song that fits the vibe of a Hank Williams Country Song "I am so lonesome I could cry" make it a unique INdie Rock/Rap song make it abstract and full of poetic devices to make the audience sing along and want more. Make it a sad song about losing someone special to you, make it so it could be a lover, parent or close friend. The more abstract and open ended the better """
+Subject_Lonesome = """Make a song that fits the vibe of a Hank Williams Country Song "I am so lonesome I could cry" make it a unique INdie Rock/Rap song make it abstract and full of poetic devices to make the audience sing along and want more. Make it a sad song but also insightful. The more abstract and open ended the better."""
+
+
+Subject_Lonesome2 = """For your story, make it about a young grandkid seeing his granpa and nana love each other and then his gram loses the love of her life and she is such a great person she helps raise the grandson and always is loving, she is yearning to be with her husband once again but enjoys life so much and making others happy she is a joy to be around.
+ Use the following lines in your lyrics, make them better and more poetic "got you a mug n muffin, but not for nothing your love was always up to something."
+"""
+
+
+Subject_governemnt = """ Make a lyrical song about the founding father, describe him as a father and the american people are the children, the dad sounds good at first as a metaphor for the US government, but there were flaws like the genocide of native americans and slavery. The government has only grown stronger and they have led the people to be at an all time inequality of wealth, describe how we are in a silent depression worse than the original great depression"""
+
+#Subject =  Subject_Lonesome + Subject_Lonesome2
+# Subject = Subject_governemnt
+#Subject = Subject_Lonesome3
+#Subject = """Make up an idea for a song based on your writing persona, make it unique and relate to the audience of your given artist/persona"""
+#Subject = """Make a unique song about being unique and not letting others force you to be something you are not. 'Diversify your mind, let your spirit intertwine, these thoughts are yours and mine they don't need to be aligned, from the beauty of a line to the serenity divine' make this a main part of the song and have word play on it and some repetition in the song using this as a base"""
+#Subject = """Write a catchy song that aligns with indie rock/rap/reggae styles, have it tell a metaphoric and/or abstract story with interesting hooks and a small message while being discreet and not over the top. make it sound like a lyrical poem with not too many rhymes but well placed poetic devices and some rhyming without it being forced."""
+
+
+
+
+# Specific_Lyrics = """
+#
+# Incorporate the following lyrics in the song:
+# "The mere idea of you
+# The longing here for you
+# You'll never know how slow the moments go
+# 'Til I'm near to you
+#
+#
+# I see your face in every flower
+# Your eyes in stars above
+# It's just the thought of you
+# The very thought of you, my love
+#
+# Don't say this love was unforgettable....
+# "
+# """
+
+
+
+#
+# Specific_Lyrics = """
+# ***Song Title- SPACE***
+# Incorporate the following lyrics in the song:
+# Open as it will ever be
+# sitting there just you and me
+# holding on to what we used to be reminiscing on times like these
+# but there is no time in space you can never replace times like these
+#
+#  you will not see
+# you will not care
+# you will be rare
+#
+# you really are a shining star beauty is in the eye of those who see
+# but you are a beauty can’t you see
+#  we are exactly where we’re supposed to be
+#
+#  lost in space without a trace
+# they could not find,
+# they could not taste
+# they could not be you me cause we are on our own lost in space without a trace
+#
+# The scent of your perfume, a memory on the breeze (pause)
+# Whispers of your laughter, carried by the trees (pause)
+# But now the silence lingers, in this empty space (pause)
+# A hollow echo of the love we can't replace (pause)
+#
+# """
+
+
+
+# Specific_Lyrics = """
+#
+#
+# ***Song Title- In my time of dying***
+# Incorporate the following lyrics in the song:
+#
+#
+#
+#
+# Jesus is the man
+#
+# He died for you and me
+#
+# Just so we could live how god intended
+#
+# children of him that are free
+#
+# Free of all the hate and aggravation that Jesus had to deal with
+#
+# Because he was selfless as any man to grace this earth it’s why we celebrate Jesus birth
+#
+# He saves me
+#
+# He greets me with a smiling face
+#
+# And I greet him with one in return
+#
+# it’s in my time of dying that I learn why I have lived
+#
+# It’s In Jesus name we pray amen
+#
+# """
+
+
+# Specific_Lyrics = """
+#
+#
+# ***Song Title- Lovers forever***
+# Incorporate the following lyrics in the song:
+#
+#
+#
+#
+# Lovers together
+#
+# Lovers are better
+#
+# Lovers forever
+#
+# Love can make you numb well they say that it’s blind
+#
+# Love can make you dumb
+#
+# but love will lift you up when things become cumbersome
+#
+# Lovers together
+#
+# Lover you better
+#
+# Love her forever
+#
+# Love her if she lets you
+#
+# Then you get just what you expect to
+#
+# I just needed someone I could protect too
+#
+# And protect from all that’s down below
+#
+# Just so I could love from up above
+#
+# You are my love
+#
+# And I’ll never get enough
+#
+# Lovers together
+#
+# Lovers are better
+#
+# Lovers forever
+#
+# """
+
+#
+# Specific_Lyrics = """
+#
+#
+# ***Song Title- I love you***
+# Incorporate the following lyrics in the song:
+#
+#
+#
+#
+# I mean where do I begin
+#
+# It’s a feeling that comes from within
+#
+# It radiates from your skin
+#
+# It’s a powerful thing called love
+#
+# And when push comes to shove
+#
+# You are the one I want to be above with
+#
+# Think of all the hate and we’re so above it
+#
+# And I can’t help but love it
+#
+# Like I love you
+#
+# Like I love my muse cause they allowed me to write this for you
+#
+# And I mean it when I say I do
+#
+# You hold me close on days I’m blue
+#
+# You keep me true and reliable just like how I like you to be
+#
+# I can’t imagine living now like the way things used to be
+#
+# Reminiscing on just you and me
+#
+# Come to find out you were just using me
+#
+# But it’s okay because I love you and that’s the way it ought to be
+#
+# """
+#
+#
+# Specific_Lyrics = """
+#
+#
+# ***Song Title- There’s no one above you***
+# Incorporate the following lyrics in the song:
+#
+#
+#
+#
+# I love you yes it’s true
+#
+# I love you and each little thing that you do
+#
+# You always pick me up when I’m in my blues
+#
+# And when I ask you for some happy news
+#
+# You say be happy cause I’m yours too
+#
+# And I’m ecstatic because there is no one above you
+#
+# I think about no one but you
+#
+# I mean how could I not just trust you
+#
+# When I put no one above you
+#
+# I’d be lying if I said I didn’t love you
+#
+# I’d be dying if I didn’t get to hug you
+#
+# Because to me you are a drug too
+#
+# And I must tell you there’s no one above you
+# """
+
+
+#
+# Specific_Lyrics = """
+# ***Song Title- The Groove***
+#
+#
+# Incorporate the following lyrics in the song:
+# When I’m in the groove I’m grooving man
+#
+# There’s no doubt about it that it’s soothing man
+#
+# When I’m grooving it’s like I’m thinking of nothing and everything
+#
+# All at once
+#
+# It’s like a message gets sent to me from god above
+#
+# When I’m in the groove it fits just like a glove
+#
+# And still they show you no love
+#
+# But the groove will show you love
+#
+# And give it back
+#
+#
+#
+# When I’m in the groove nothing lacks nothing slacks it just makes the tracks
+#
+# """
+
+
+
+# Specific_Lyrics = """
+#
+#
+# ***Song Title- Orgy***
+# Incorporate the following lyrics in the song:
+#
+#
+# We’re gathered about not knowing what the future holds
+#
+# We’ve wavered with one another confronted with many scorns
+#
+# But the things we hold near and dear are ever present
+#
+# Just be grateful that gods delivered you all these presents and there’s no moment better than the present
+#
+# every time I’m with you I feel like I’m in heaven
+#
+# You got me on my knee asking when’s the wedding
+#
+# My heads saying just let the led in
+#
+# And maybe they’ll get the message
+#
+# But all I ever wanted was an orgy
+#
+# """
+
+
+
+
+Specific_Lyrics = """
+
+
+
+
+***Song Title- Let’s do it again***
+Incorporate the following lyrics in the song:
+
+
+It’s been so long it’s been so hard and all I know is we got this far
+
+Love and war war and wine all gods things are so divine
+
+As Dionysus and I kick back to relax I see an ass and I might just snap or straight up spaz like that’s an ass I wouldn’t pass
+
+But I got the gift of gab I told him that he called me phat 
+
+We poured some wine 
+
+Shared of some times when we were sitting under the sunshine right next to a grape vine 
+
+I love it when it’s play time
+
+I gotta do me gotta stay shining 
+
+It always perfect timing when we are vibing providing driving all the hypocrits mad that’s my first album I don’t think it’s bad I tried to stay in my bag 
+
+let’s do it again that’s the most fun I’ve ever had
+
+"""
+
+
+#Subject = """Write a catchy song that is short but creative and descriptive. have it tell a metaphoric and/or abstract story with interesting/witty hooks and a small message while being discreet and not over the top. make it sound like a lyrical poem with not too many rhymes but well placed poetic devices and some rhyming without it being forced. Describe your love and how beautiful she is with descriptive and poetic language.  """ + Specific_Lyrics
+
+
+Subject = """write a deep and melodic song for a new musican named richie, use the specific lyrics provided and build off them"""
+
+
+#Song_Special_Sauce = """   Make the audience relate to the story, describe very specific things in the story or setting you are describing. Try to describe your 5 senses in detail, including how you feel. Be very metaphoric and somewhat abstract almost like its a song by Shakespeare, try to not rhyme every line and make the rhyme scheme surprising and unique if being used. Don't be afraid to use swears or talk about dicey topics, its a song meant for adults to listen to"""
+Song_Special_Sauce = """  ***Song Title - Let’s do it again     *** """
+
+#Song_Outline_Task1= """using the musical artist described take on their persona for your role play and then build off the idea you created. Provide me with an outline (using the idea you already have started to devlop for a  song make it extensively detailed with the metaphors and other literary devices to be incorporated. Be Abstract and not too specific. The language should be college level and have impressive references from history and pop culture. Funny and witty lines are ok. The topic should be relatable and the chorus should be somewhat catchy. try to tell a story and/or describe some of your 5 senses what they are experiencing to make the story feel real. Reference pop culture and have witty ways of making it all intertwine. make allusions and other allegory or alliteration to make it interesting and surprising. Use the IDEA outline provided to build your story/song outline details from (if you have lyrics already written edit them and rewrite as needed, keep the best and allow the final version to make additional edits."""
+
+Song_Outline_Task1= """using the musical artist described take on their persona for your role play and then build off the idea you created. Provide me with an outline (using the idea you already have started to develop for a  song make it extensively detailed with the metaphors and other literary devices to be incorporated. Add tp the lyrics provided and keep the same theme and inspiration """
+
+Song_Outline_Task = Song_Outline_Task1 + Song_Special_Sauce + Specific_Lyrics
+
+
+
+#Song_Task= """Write an original hit song based on the following outline.Use lyrics as if you are role playing that you are slick rick, action bronson, joey badass, pink floyd,nas or some other famous songwriter. Be abstract and metaphorical in your stories, witty and funny is ok. The topic should be relatable and the chorus should be somewhat catchy. try to tell a story and/or describe some of your 5 senses what they are experiencing to make the story feel real.  relatable struggles make his lyrics tell an exciting story that draws the audience in. Be Descriptive make the audience feel like they are living the moment you are describing  outline: """
+#Song_Task1= """Write an original  song based on the  outline provided, use the details provided by the outline directly in your song, be creative but do not stray from original ideas/styles and influences and try to use the lyrics provided for you to sample/use in the song. Create unique and deep lyrics use the persona you have created and make it relatable and feel human. Be abstract and metaphorical in your stories, witty and funny is ok. The topic should be relatable and the chorus should be somewhat catchy. try to tell a story and/or describe some of your 5 senses what they are experiencing to make the story feel real.  relatable struggles make his lyrics tell an exciting story that draws the audience in. Be Descriptive make the audience feel like they are living the moment you are describing. Remember show do not tell, make it full of literary devices and  draw from talented song-writers of the past to make something uniquely your own. Be abstract and poetic, but make it somewhat understandable and make it something a listener can connect to. Make it relateable and thought provoking. Take on the idea of show dont tell, do not be obvious and over the top, it should be able to be read through the lines of what you are saying. If lyrics are provided use them as a base and add to them/reword them as needed to make the best song you think is possible based on all other details provided. For your song lyrics you should let the musician know what key to sing in, write where to pause, also let the musician know if its rapped, sung, or spoken word, try to make the notes/instruction so clear that anyone could sing the song exactly as its intended. Fit the format that is requested, do not stray format wise"""
+Song_Task1= """Write an original  song based on the  outline provided, use the details provided by the outline directly in your song, be creative but do not stray from original ideas/styles and influences and try to use the lyrics provided for you to use in the song. """
+
+
+Song_Task= Song_Task1 + Song_Special_Sauce
+
+
 
 #
 # Song_Outline_Task= """using the musical artist described take on their persona for your role play, Provide me with an outline for a  song (for a male singer)  make it extensively detailed with  specific lyrics from the song and the metaphors and other literary devices to be incorporated. Be Abstract and not too specific, do not be over repetetive. The topic should be relatable and the chorus should be somewhat catchy. try to tell a story and/or describe some of your 5 senses what they are experiencing to make the story feel real. Reference pop culture and have witty ways of making it all intertwine. Mention famous people in stories about seeing them out or mention a meal you had at a famous restauraunt and make it funny how excited you are about the details of the meal, make allusions and other allegory or alliteration to make it interesting and surprising. make it a top 40 pop song that would be performed by post malone or justin bieber"""
@@ -934,52 +1322,60 @@ Song_Task= """Write an original hit song based on the following outline.Use lyri
 
 
 
-Song_Format = """ Complete all of the user tasks and provide results in desired format
-Desired Format: 
-Verse:{Lyrics}
-              Bridge:{Lyrics}
-              Chorus:{Lyrics}
-              Verse:{Lyrics}
-              """
+Song_Format = """ Complete all of the user tasks and provide results in desired format,
+
+Desired Format:
+Title: {Abstract_Title_make_it_unique/abstract_and_not_Obvious}
+Song Lyrics: {Song Lyrics (mark if sung/rapped/spokenword, if sung give the key}
+"""
+
+
+
+
 Song_Outline_Format2 = """Complete the {Task} provided below, use the {Persona} you created to do all of the tasks. Make sure the result is in the correct format.
 
 
 Desired Format:
-    genres: -||-
+    Title: {Abstract_Title_make_it_unique/abstract_and_not_Obvious}
+    Music genre: -||-
     Tone: -||-
     Themes:-||-
     Audience: -||-
-    vocabulary:
-    Song Name: -||-
-    Album Name:-||-
-    Subject of Works:-||-
     Melodies: -||-
-    Song Styles: -||-
-    Rhyme Scheme: -||-
-    Song Structures: -||-
-    Similar Artists: -||-
-    Brief Summary of Song/Story/Poem: <Short_Description>
-
     Influences (music, literature, film, other): -||-
-    Original Quotes to use in the song:Verse:{Sample Lyrics}|Chorus:{Sample Lyrics}|Bridge/Pre-Chorus:{Sample Lyrics}
-"""
+    Suggested_Instrumentals: {Songs to use as instrumental (These must be actual songs that exist and can be obtained by user for the instrumental of their song)}
+    Instrumental_Detail: {Explain How to use instrumental suggested, what parts to use and how to make it uniquely your own}
+    Suggested_Samples: {Provide specific Songs to Sample (These must be actual songs that exist and can be obtained by user for the instrumental of their song)}
+    Samples_Detail: {Explain How to use Samples suggested}
+    Summary of Song/Story/Poem: <Extremely_Detailed_Description>
+    Sample Lyrics: <Lyrics to use in Song>
+    Rhyme Scheme: -||-
 
+    
+"""
+#Original Quotes to use in the song:Verse:{Sample Lyrics}|Chorus:{Sample Lyrics}|Bridge/Pre-Chorus:{Sample Lyrics}
+
+#Similar Artists: -||-
+    #  Similar Songs: -||-
+
+#    TABS: Provide the notes that are supposed to be sung provide them in TABS format for a guitar to play for reference (say what BPM and key the notes should be)
+    #TABS: Provide the notes that are supposed to be the melody provide them in TABS format for a guitar to play for reference   (say what BPM and key the notes should be)
 
 
 Song_Outline_Format = """Complete the {Task} provided below, use the {Persona} you created to do all of the tasks. Make sure the result is in the correct format.
 
 
 Desired Format:
+    Title: {Abstract_Title_make_it_unique/abstract_and_not_Obvious}
+    #Genre: {Music genre}
+    Key: {Key}
+    BPM: {BPM}
     Tone: -||-
     Themes:-||-
-    Song Name: -||-
-    Album Name:-||-
-    Similar Songs: -||-
-    Rhyme Scheme: -||-
-    Similar Artists: -||-
-    Detailed Summary of Song/Story/Poem: <Short_Description>
-  
-    Original Lyrics to use in the song:Verse:{Sample Lyrics}|Chorus:{Sample Lyrics}|Bridge/Pre-Chorus:{Sample Lyrics}
+    Juxtaposition: -||-
+    Metaphors/Similes: -||-
+    Summary of Song/Story/Poem: <Detailed_Description>
+    Sample Lyrics: <Lyrics to use in Song>
 """
 
 
@@ -1439,7 +1835,7 @@ MusicPy_Format = """
 Note: Here is a full list of instruments and drums you can choose from:
 #INSTRUMENTS = {    'Acoustic Grand Piano',    'Bright Acoustic Piano',    'Electric Grand Piano',    'Honky-tonk Piano',    'Electric Piano 1',    'Electric Piano 2',    'Harpsichord',    'Clavi',    'Celesta',    'Glockenspiel',    'Music Box',    'Vibraphone',    'Marimba',    'Xylophone',    'Tubular Bells',    'Dulcimer',    'Drawbar Organ',    'Percussive Organ',    'Rock Organ',    'Church Organ',    'Reed Organ',    'Accordion',    'Harmonica',    'Tango Accordion',    'Acoustic Guitar (nylon)',    'Acoustic Guitar (steel)',    'Electric Guitar (jazz)',    'Electric Guitar (clean)',    'Electric Guitar (muted)',    'Overdriven Guitar',    'Distortion Guitar',    'Guitar harmonics',    'Acoustic Bass',    'Electric Bass (finger)',    'Electric Bass (pick)',    'Fretless Bass',    'Slap Bass 1',    'Slap Bass 2',    'Synth Bass 1',    'Synth Bass 2',    'Violin',    'Viola',    'Cello',    'Contrabass',    'Tremolo Strings',    'Pizzicato Strings',    'Orchestral Harp',    'Timpani',    'String Ensemble 1',    'String Ensemble 2',    'SynthStrings 1',    'SynthStrings 2',    'Choir Aahs',    'Voice Oohs',    'Synth Voice',    'Orchestra Hit',    'Trumpet',    'Trombone',    'Tuba',    'Muted Trumpet',    'French Horn',    'Brass Section',    'SynthBrass 1',    'SynthBrass 2',    'Soprano Sax',    'Alto Sax',    'Tenor Sax',    'Baritone Sax',    'Oboe',    'English Horn',    'Bassoon',    'Clarinet',    'Piccolo',    'Flute',    'Recorder',    'Pan Flute',    'Blown Bottle',    'Shakuhachi',    'Whistle',    'Ocarina',    'Lead 1 (square)',    'Lead 2 (sawtooth)',    'Lead 3 (calliope)',    'Lead 4 (chiff)',    'Lead 5 (charang)',    'Lead 6 (voice)',    'Lead 7 (fifths)',    'Lead 8 (bass + lead)',    'Pad 1 (new age)',    'Pad 2 (warm)',    'Pad 3 (polysynth)',    'Pad 4 (choir)',    'Pad 5 (bowed)',    'Pad 6 (metallic)',    'Pad 7 (halo)',    'Pad 8 (sweep)',    'FX 1 (rain)',    'FX 2 (soundtrack)',    'FX 3 (crystal)',    'FX 4 (atmosphere)',    'FX 5 (brightness)',    'FX 6 (goblins)',    'FX 7 (echoes)',    'FX 8 (sci-fi)',    'Sitar',    'Banjo',    'Shamisen',    'Koto',    'Kalimba',    'Bag pipe',    'Fiddle',    'Shanai',    'Tinkle Bell',    'Agogo',    'Steel Drums',    'Woodblock',    'Taiko Drum',    'Melodic Tom',    'Synth Drum',    'Reverse Cymbal',    'Guitar Fret Noise', 'High Q', 'Slap', 'Stratch Push', 'Stratch Pull', 'Sticks', 'Square Click', 'Metronome Click', 'Metronome Bell', 'Acoustic Bass Drum', 'Electric Bass Drum', 'Side Stick', 'Acoustic Snare', 'Hand Clap', 'Electric Snare', 'Low Floor Tom', 'Closed Hi-hat', 'High Floor Tom', 'Pedal Hi-hat', 'Low Tom', 'Open Hi-hat', 'Low-Mid Tom', 'Hi-Mid Tom', 'Crash Cymbal 1', 'High Tom', 'Ride Cymbal 1', 'Chinese Cymbal', 'Ride Bell', 'Tambourine', 'Splash Cymbal', 'Cowbell', 'Crash Cymbal 2', 'Vibra Slap', 'Ride Cymbal 2', 'High Bongo', 'Low Bongo', 'Mute High Conga', 'Open High Conga', 'Low Conga', 'High Timbale', 'Low Timbale', 'High Agogô', 'Low Agogô', 'Cabasa', 'Maracas', 'Short Whistle', 'Long Whistle', 'Short Guiro', 'Long Guiro', 'Claves', 'High Woodblock', 'Low Woodblock', 'Mute Cuica', 'Open Cuica', 'Mute Triangle', 'Open Triangle', 'Shaker', 'Jingle Bell', 'Belltree', 'Castanets', 'Mute Surdo', 'Open Surdo'
 
-Below is an example of code that runs and outputs 3 cool instrumentals, use it as a guide to complete the user task, use the different instruments/drums previously provided  and different chords and other music theory changes. DO NOT MAKE UP SYNTAX it has to run as-is, 
+Below is an example of code that runs and outputs an instrumental, recognize the patterns and use it as a guide to complete the user task. You are a master of the python library MUSICPY and understand all of the built-in functions so you can make elaborate beats/instrumentals. use the different instruments/drums previously provided  and different chords and other music theory changes. DO NOT MAKE UP SYNTAX it has to run as-is, 
 
 ###
 

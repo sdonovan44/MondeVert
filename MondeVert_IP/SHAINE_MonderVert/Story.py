@@ -1,6 +1,8 @@
 import datetime
 import sys
 from pathlib import Path, PureWindowsPath
+
+from MondeVert_IP.SHAINE_MonderVert.Utilities import TextEdit as TextEdit
 import platform
 import pandas as pd
 global Record
@@ -34,16 +36,17 @@ import threading
 import shutil
 import os
 import MondeVert_IP.SHAINE_MonderVert.SHAINE_WIZARD_PROMPTS.StoryOutlines  as ShaneOriginals
-
+from MondeVert_IP.SHAINE_MonderVert.Utilities import TextEdit as TextEdit
 
 
 #OutputTypes = ["Play","Novel", "ScreenPlay","Song"]
 
 class Story():
-    def __init__(self, IDEA = '' ,Mode = 'MVAA',Writer = '', UserInputs_Config = 'AI Only',OutputTypes = ["Play","Novel", "ScreenPlay"],voice=4, Logic_AI = 0, language_settings=1,Chunk_Limit = 777,  SavePath =up.AI_AudioBook_Path,  Writer_Style = '',Artist = '', Artist_Style = '', Story_Type = 'ScreenPlay', Seasons = 1, Episodes = 3, Books = '', Acts = '', Scenes = '', Movies = '', Text_Output_Config = [''], IDEA_Source = 'AI', Output_Audio_Config = '' ):
+    def __init__(self, IDEA = '' ,UserConfirm = False, ConfirmInput = False, UserMode = 'UI',Mode = 'MVAA',Writer = '', UserInputs_Config = 'AI Only',OutputTypes = ["Play", "Novel"],voice=4, Logic_AI = 0, language_settings=1,Chunk_Limit = 777,  SavePath =up.AI_AudioBook_Path,  Writer_Style = '',Artist = '', Artist_Style = '', Story_Type = 'ScreenPlay', Seasons = 1, Episodes = 3, Books = '', Acts = '', Scenes = '', Movies = '', Text_Output_Config = [''], IDEA_Source = 'AI', Output_Audio_Config = '' ):
         self.voice = voice
         self.language_settings = language_settings
-
+        self.UserMode = UserMode
+        self.ConfirmInput = ConfirmInput
         if  self.language_settings ==1:
             self.Translate = ['English']
 
@@ -58,7 +61,20 @@ class Story():
         self.transcript_Final = ''
         self.Outline_progression = ''
         self.Character_progression = ''
-        self.SavePath=up.AI_AudioBook_Path + up.System_Folder_Path_Fix + Mode
+        self.Full_Transcript = ''
+        self.Prior_Season = ''
+        self.Prior_Episode = ''
+        self.Prior_Scenes = ''
+        self.Prior_Scenes_a = ''
+        self.Prior_Scenes_p = ''
+        self.Prior_Scenes_n = ''
+        self.Prior_Scenes_s = ''
+        self.Prior_Scene = ''
+        self.Prior_Scene_a = ''
+        self.Prior_Scene_p = ''
+        self.Prior_Scene_n = ''
+        self.Prior_Scene_s = ''
+
         self.data = ''
         self.AudioBook_Text = ''
         self.Episode_Outline = []
@@ -72,6 +88,8 @@ class Story():
         self.current_time = self.current_time1.strftime('%m-%d-%Y_%H.%M')
         self.UserPrompts = ''
         self.Backgrounds = ''
+        self.Full_Story = """"""
+        self.UserConfirm = UserConfirm
 
         voice_set = self.voice
         xVoice = 1
@@ -93,7 +111,8 @@ class Story():
         self.Version4 = []
         self.Version5 = []
         self.Version6 = []
-
+        self.Speak = False
+        self.SaveTranscript = False
 
 
 
@@ -138,6 +157,8 @@ class Story():
 
         self.crazy =crazy
 
+        #TE = TextEdit.TextEdit()
+        self.TE = TextEdit.TextEdit( UserConfirm=True)
 
 #"gpt-4"
         if   'COOK' not in Mode.upper():
@@ -182,7 +203,7 @@ class Story():
 
             self.IDEA_Role = self.IDEA_Role + self.Writer_Style_Summary
 
-
+            #self.Speak = True
             if self.IDEA_Source == 'AI':
                 if self.IDEA =='':
                     self.IDEA_Final =  Story.getIDEA(self, Mode = 'AI')
@@ -193,7 +214,12 @@ class Story():
             elif self.UserInputs_Config == 'Exact':
                 self.IDEA_Final = self.IDEA
             else:
-                self.IDEA_Final = Story.getIDEA(self, Mode='Summarize', IDEA=self.IDEA)
+                if self.IDEA =='':
+                    self.IDEA_Final =  Story.getIDEA(self, Mode = 'AI')
+                else:
+                    self.IDEA_Final = Story.getIDEA(self, Mode='Summarize', IDEA=self.IDEA)
+
+
 
 
 
@@ -220,14 +246,104 @@ class Story():
             print(self.IDEA_Final)
 
 
+        if 'MVAA_QUICK' in Mode.upper():
 
+
+
+            Story.NewStoryMode2(self)
+            Story.FinalOutputs(self)
+            
+            
+            print('self.Writer_Summary')
+            print(self.Writer_Summary)
+            print('self.Writer_Style_Summary')
+            print(self.Writer_Style_Summary)
+            print('self.IDEA_Final')
+            print(self.IDEA_Final)
+
+
+
+        elif 'MUSIC'in Mode.upper():
+
+            idea2_Format = """
+                        Desired Format:
+            Writing Style: -||-
+                Influences (music, literature, film, other): -||-
+                Audience: -||-
+                genres: -||-
+                Tone: -||-
+                Themes:-||-
+                Lyric/Writing Style: -||-
+                Brief Summary of IDEA: <Short_Description>
+                        """
+
+            idea2_Task = """Use the Original IDEA you have created and the writing persona you have created to write a succinct summary of the IDEA/Writing Style to make a unique song/story that still incorporates the key parts of the writer. Show do not tell, use literary devices and create a unique personality to draw inspiration from"""
+
+            idea2 = Story.Basic_GPT_Query2(self,
+                                           Line2_Role=self.IDEA_Role,
+                                           Line3_Format=idea2_Format,
+                                           Line4_Task="""Use the following Idea Outline to write your song's outline. Idea  Outline:###""" + self.IDEA_Final,
+                                           Line5_Task=idea2_Task,
+                                           crazy=self.crazy, Big=True, User_Confirm=self.UserConfirm)
+
+            self.IDEA_Role2 = self.Persona_Role + " use the following Idea to expand on your task: " + idea2
+
+            print(self.IDEA_Role2)
+
+            self.Story_Role = self.IDEA_Role2
+
+            self.Song_Outline = Story.getSongOutline(self)
+
+
+            self.Song_Lyrics = Story.getSongLyrics(self)
+
+            try:
+                Title = 'MondeVert Song ' + self.current_time
+                TrimCharR = self.Song_Outline.find("Genre")
+                TrimCharL = self.Song_Outline.find("Title:")
+
+                Title = self.Song_Outline[TrimCharL:TrimCharR]
+
+
+
+            except:
+                try:
+                    Title = 'MondeVert Song ' + self.current_time
+                    TrimCharR = self.Song_Outline.find("#")
+                    TrimCharL = self.Song_Outline.find("Title:")
+
+                    Title = self.Song_Outline[TrimCharL:TrimCharR]
+
+                except:
+
+
+                    Title = 'MondeVert Song ' + self.current_time
+                    try:
+                        Text = self.Song_Lyrics[:200]
+                        Title = Story.Quick_Title(self, Text=Text)
+
+                    except:
+                        Title = 'MondeVert Song ' + self.current_time
+
+
+            Title = Title.replace("Title", "")
+            self.Title = cu.CleanFileName(Title)
+            NewSavePath = Path(PureWindowsPath(self.SavePath ,  self.Title + '  ' +  self.current_time))
+
+            cu.Check_Folder_Exists(NewSavePath)
+
+            print(self.Song_Outline)
+            print(self.Song_Lyrics)
+
+            cu.SaveCSV(Text=self.Writer_Style_Summary + self.Story_Role, SavePath=NewSavePath, Title=self.Title + ' Writer Style', AddTimeStamp=False)
+            cu.SaveCSV(Text=self.IDEA_Final, SavePath=NewSavePath, Title=self.Title + ' IDEA', AddTimeStamp=False)
+            cu.SaveCSV(Text=self.Song_Outline, SavePath=NewSavePath, Title = self.Title + ' Outline', AddTimeStamp= False)
+            cu.SaveCSV(Text=self.Song_Lyrics, SavePath=NewSavePath, Title = self.Title, AddTimeStamp= False)
 
         elif 'MVAA' in Mode.upper():
+
+
             Story.getMainOutlines(self, IDEA=self.IDEA_Final)
-
-
-
-
             self.arttext = self.Outline_Main_Style
             if self.Artist_Style == '':
                 self.Art_Style_For_Story = Story.getArtist_Style(self, arttext = self.arttext)
@@ -274,17 +390,39 @@ class Story():
 
 
 
+    def getSongOutline(self):
+        d = 100
+        Song_Outline = Story.Basic_GPT_Query2(self,
+                                              Line2_Role=self.Story_Role,
+                                              Line3_Format=lup.Song_Outline_Format,
+                                              Line4_Task="""Use the following Idea Outline to write your song's outline. Idea  Outline:###""" + self.IDEA_Final,
+                                              Line5_Task=lup.Song_Outline_Task,
+                                              crazy=self.crazy, Big=True, User_Confirm = self.UserConfirm, WINDOWNAME="SongOutline")
 
+        return Song_Outline
+
+
+
+
+    def getSongLyrics(self):
+        d = 100
+        Song = Story.Basic_GPT_Query2(self,
+                                              Line2_Role=self.Story_Role,
+                                              Line3_Format=lup.Song_Format,
+                                              Line4_Task="""Use the following Outline to write your song's lyrics  Outline:###""" + self.Song_Outline,
+                                              Line5_Task=lup.Song_Task,
+                                              crazy=self.crazy, Big=True, User_Confirm = self.UserConfirm, WINDOWNAME="SongLyric")
+        return Song
 
     def NewStoryMode(self):
 
-        self.Story_Role = 'You are a brillian assistant to the user, Role Play as an award winning writer able to impersonate any genre or style/voice base your persona on the following Writing Style  Writing Style: ' + self.Writer_Style_Summary
+        self.Story_Role = 'You are a brilliant assistant to the user, Role Play as an award winning writer able to impersonate any genre or style/voice base your persona on the following Writing Style  Writing Style: ' + self.Writer_Style_Summary
 
         NewStory_Outline = Story.Basic_GPT_Query(self,
                                                     Line2_Role= self.Story_Role,
                                                     Line3_Format=SP.Story_Outline_Format,
                                                     Line4_Task=SP.Story_Outline_Task +  """Use the following  Text  as a source for your Outline   IDEA:###""" + self.IDEA_Final,
-                                                    crazy=self.crazy, Big=True)
+                                                    crazy=self.crazy, Big=True, User_Confirm = self.UserConfirm, WINDOWNAME="Story Outline")
 
 
         Title = Story.Quick_Title(self,Text = NewStory_Outline)
@@ -306,7 +444,7 @@ class Story():
                                                     Line3_Format=SP.Story_AllScenes_Outline_Format,
                                                     Line4_Task=   """Use the following  Text  as a source for your Story (Expand on the ideas and give a full story based on the requirements provided)  Text:###""" + NewStory_Outline,
                                                     Line5_Task= SP.Story_AllScenes_Outline_Task,
-                                                    crazy=self.crazy, Big=True)
+                                                    crazy=self.crazy, Big=True, User_Confirm = self.UserConfirm, WINDOWNAME="Short Story New")
 
 
 
@@ -314,6 +452,169 @@ class Story():
 
 
 
+#this is where you add code to go scene by scene and update characters etc.
+
+    def NewStoryMode2(self):
+
+        self.Episode1 = True
+        self.Season1 = True
+        self.Scene1 = True
+
+        self.Story_Role = 'You are a brilliant assistant to the user, Role Play as an award winning writer able to impersonate any genre or style/voice base your persona on the following Writing Style  Writing Style: ' + self.Writer_Style_Summary
+
+        self.StoryRoleAdd = Story.Basic_GPT_Query(self,
+                                                               Line2_Role=self.Story_Role,
+                                                               Line3_Format=self.Story_Style_Details_Format,
+
+                                                               Line4_Task=self.Story_Style_Details_Task2 + """Writing Style:### """ + self.Writer_Style_Summary,
+                                                               crazy=self.crazy,
+                                                               Subject='', User_Confirm=self.UserConfirm,
+                                                               WINDOWNAME='Story Writing Style  ' )
+
+        self.Outline_ALL_Seasons = self.IDEA_Final
+        self.Story_Role = 'You are a brilliant assistant to the user, Role Play as an award winning writer able to impersonate any genre or style/voice base your persona on the following Writing Style  Writing Style: ' + self.StoryRoleAdd
+        Story.getCharacters(self)
+
+
+        NewStory_Outline = Story.Basic_GPT_Query(self,
+                                                 Line2_Role=self.Story_Role,
+                                                 Line3_Format=SP.Story_Outline_Format,
+                                                 Line4_Task=SP.Story_Outline_Task + """Use the following  Text  as a source for your Outline   IDEA:###""" + self.IDEA_Final + """### Characters: ###""" + self.Characters +  """###""",
+                                                 crazy=self.crazy, Big=True, User_Confirm=self.UserConfirm,
+                                                 WINDOWNAME="Story Outline")
+
+        try:
+
+            TrimCharR = NewStory_Outline.find("@Part") + 1
+            TrimCharL = NewStory_Outline.find("Title")
+
+            Title = NewStory_Outline[TrimCharL:TrimCharR]
+
+
+
+        except:
+            Title = ''
+            try:
+                Text = NewStory_Outline
+                Title = Story.Basic_GPT_Query(self,
+                                                 Line2_Role=self.Story_Role,
+                                                 Line3_Format=" short 4 word or less abstract title",
+                                                 Line4_Task=  """Use the following  Text  to come up with a short/abstract title for your story, your response should be the title only based on the following text Text:###""" + Text + """###""",
+                                                 crazy=self.crazy, Big=True, User_Confirm=self.UserConfirm,
+                                                 WINDOWNAME="Get Title")
+
+            except:
+                Title = 'New Story ' + self.current_time
+
+        Title = Title.replace("The Title:", "")
+        Title = Title.replace("Title:", "")
+        Title = Title.replace("The Title", "")
+        Title = Title.replace("Title", "")
+
+        TitleOO = Title
+
+        if len(Title) > 90:
+            Title = Title[:44]
+
+        Title1 = cu.CleanFileName(Title)
+        Title1 = Title1.strip()
+        self.FileName = Title1
+        Title = Title1
+        self.SavePath = Path(PureWindowsPath(self.SavePath, Title1))
+        cu.Check_Folder_Exists(self.SavePath)
+        cu.Check_Folder_Exists(Path(PureWindowsPath(self.SavePath, 'Outlines')))
+        self.SaveTranscript = True
+
+
+        cu.SaveCSV(Text=NewStory_Outline, SavePath=self.SavePath, Title=self.FileName + '_New Outline')
+        cu.SaveCSV(Text=self.IDEA_Final, SavePath=self.SavePath, Title=self.FileName + '_New Idea')
+
+        self.arttext = NewStory_Outline
+        if self.Artist_Style == '':
+            self.Art_Style_For_Story = Story.getArtist_Style(self, arttext=self.arttext)
+        elif self.UserInputs_Config == 'Summarize':
+            self.Art_Style_For_Story = Story.getArtist_Style(self, arttext=self.arttext, Artist=self.Artist_Style)
+        elif self.UserInputs_Config == 'Exact':
+            self.Art_Style_For_Story = self.Artist_Style
+        else:
+            self.Art_Style_For_Story = Story.getArtist_Style(self, arttext=self.arttext, Artist=self.Artist_Style)
+        self.Season_num = 1
+
+
+        self.Episode_by_Episode = Story.cutBy(self, Text=NewStory_Outline, upperWord='Part', Delimiter='@@',
+                                              DelimiterCheck='@PART', ReplaceKey='@@PART')
+
+
+
+
+        countPart = len(self.Episode_by_Episode)+1
+        print("CountParts")
+        print(str(countPart))
+        for x1 in range(1,countPart):
+            self.Episodenum = x1
+            self.Episode_Story = ''
+            self.Episode_Story_Audio = ''
+            self.Episode_Story_Novel = ''
+            self.Episode_Story_Play = ''
+            self.Episode_Story_Song = ''
+
+            self.Prior_Episode_Summary = ''
+
+            try:
+                NewStory_Outline1 = self.Episode_by_Episode[x1]
+
+            except:
+                d=100
+
+
+            PartNumFix = ''
+
+            if x1 == 1:
+                PartNumFix = "DO NOT RESOLVE THE STORY, Leave it open ended: This is Part 1 (Beginning) out of 3 parts so have some arc plots resolve but make sure the main plot is not resolved in this section of Scenes. introduce most of the characters and set up a plot twist or something else for the later 2 parts, make sure you set up another 2/3 of the story. Introduce characters and Exposition with rising action/conflict development.  Again, Do not wrap up the entire story leave room for falling action and resolution in part 3"
+            elif x1 == 2 and countPart > 2 :
+                PartNumFix = "DO NOT RESOLVE THE STORY,  Leave it open ended:  this is part 2 (Middle)  out of 3 parts, start to finish building the rising action and reach the climax, but maybe leave the climar for part 3, that is up to you, definitely have all characters introduced and set up the third part. Do not wrap up the entire story leave room for falling action and resolution in part 3"
+            elif x1 == 3 or countPart == 2:
+                PartNumFix = "this is the final part (end) , wrap up the plot and other arc plots and make the story interesting and entertaining, build off the prior details and also use the outline provided for guidance. Your next set of scenes should start where this story/details , use this to make your next set of scenes. "
+
+            Background = PartNumFix + ''
+            if x1 > 1:
+                self.Episode1 = False
+                Background = PartNumFix + " Use the following information for reference, do not repeat the information, but build off it and use it as a reference as to the details of the prior story. this is the summary of the prior part, do your best to not break continuity or ruing the themes/storylines being set up." + self.Prior_Episode
+
+
+
+
+            NewStory_AllScenes_Outline = Story.Basic_GPT_Query2(self,
+                                                                Line2_Role=self.Story_Role,
+                                                                Line3_Format=SP.Story_AllScenes_Outline_Format,
+                                                                Line4_Task=Background + """. Use the following  Text  as a source for your Story (Expand on the ideas and give the details for the part of your story provided in the following text)  Text:###""" + NewStory_Outline1,
+                                                                Line5_Task=SP.Story_AllScenes_Outline_Task,
+                                                                crazy=self.crazy, Big=True,
+                                                                User_Confirm=self.UserConfirm,
+                                                                WINDOWNAME="Short Story New - Part " + str(x1) )
+
+            #Outline_ALL_Episodes =
+
+            self.Outline_Episodes_Details = self.Writer_Style_Summary
+
+            cu.SaveCSV(Text=NewStory_AllScenes_Outline, SavePath=self.SavePath, Title=self.FileName + '_All Scenes Part ' + str(x1))
+
+            self.Story_Role2 =  """You are a brilliant assistant who is Role Playing as an award winning writer able to impersonate any genre or style/voice. Make sure you completely respond to the requests I provide and if I tell you the 'Desired Format:' I expect it to be exact based on your role playing persona on the following details""" + self.Outline_Episodes_Details
+
+
+            self.Scene_by_Scene = Story.cutBy(self, Text= NewStory_AllScenes_Outline , upperWord='Scene', Delimiter='@@',
+                                              DelimiterCheck='@SCENE', ReplaceKey='@@SCENE')
+
+            self.SceneCounts = len(self.Scene_by_Scene)
+            Story.FullScene(self)
+            Story.CreateEpisode(self)
+
+
+
+
+
+
+    # this is where you add code to go scene by scene and update characters etc.
 
     def ReWrite(self, Text):
         self.Story_Role = 'Role Play as an award winning writer able to impersonate any genre or style/voice base your persona on the following Text  Text: '  + self.Writer_Style_Summary
@@ -323,7 +624,7 @@ class Story():
                                                     Line3_Format=self.Rewrite_Format,
                                                     Line4_Task=self.Rewrite_Task + """Use the following  Text  as a source for your rewrite   Text:###""" + Text,
                                                     crazy=self.crazy,
-                                                    Subject='')
+                                                    Subject='', User_Confirm = self.UserConfirm , WINDOWNAME="ReWrite ")
 
         return ReWrite
 
@@ -373,24 +674,25 @@ class Story():
 
     def TheatricalPreview(self, Text):
         d = 100
-        try:
-            Preview = Story.Basic_GPT_Query(self,
-                                                     Line2_Role=self.Story_Role,
-                                                     Line3_Format=StoryMode.Theatrical_Format,
-                                                     Line4_Task=StoryMode.Theatrical_Task + Text,
-
-                                                      crazy=self.crazy)
-
-            cu.SaveCSV(Text=Preview,SavePath=self.SavePath, Title=self.FileName+ '_Theatrical Preview')
-            FileName=self.FileName + '_Theatrical Preview'
-            #Voice = random.choices(SAF.Original_List_of_Voices_English[0])
-            cu.SaveText2Audio(SavePath=self.SavePath, FileName=FileName,
-                              Neural='Neural',
-                              Mode='AUDIOBOOK', Chunk_Limit=self.Chunk_Limit, Artist_Persona=self.Art_Style_For_Story, Translate=self.Translate,
-                              Text=Preview)
-
-        except:
-            print("Error trying to make theatrical preview")
+        Preview = ''
+        # try:
+        #     Preview = Story.Basic_GPT_Query(self,
+        #                                              Line2_Role=self.Story_Role,
+        #                                              Line3_Format=StoryMode.Theatrical_Format,
+        #                                              Line4_Task=StoryMode.Theatrical_Task + Text,
+        #
+        #                                               crazy=self.crazy, User_Confirm = self.UserConfirm, WINDOWNAME="Theatrical")
+        #
+        #     cu.SaveCSV(Text=Preview,SavePath=self.SavePath, Title=self.FileName+ '_Theatrical Preview')
+        #     FileName=self.FileName + '_Theatrical Preview'
+        #     #Voice = random.choices(SAF.Original_List_of_Voices_English[0])
+        #     cu.SaveText2Audio(SavePath=self.SavePath, FileName=FileName,
+        #                       Neural='Neural',
+        #                       Mode='AUDIOBOOK', Chunk_Limit=self.Chunk_Limit, Artist_Persona=self.Art_Style_For_Story, Translate=self.Translate,
+        #                       Text=Preview)
+        #
+        # except:
+        #     print("Error trying to make theatrical preview")
 
 
         return Preview
@@ -404,9 +706,9 @@ class Story():
                     ArtPrompt = Story.GPTArt2(self, ArtFormat=self.Art_Style_For_Story, User_Subject=x, prompt = "Use the following styles as a guide to create a unique piece of art based on the following text. Text: " )
                     print(ArtPrompt)
                     originalFilepath = Story.makeArt(self, Prompt=ArtPrompt)
-                    PicNewPath1 = self.SavePath + up.System_Folder_Path_Fix + self.Mode
+                    PicNewPath1 = Path(PureWindowsPath(self.SavePath , self.Mode))
                     cu.Check_Folder_Exists(PicNewPath1)
-                    PicNewPath = PicNewPath1 + up.System_Folder_Path_Fix + self.Title + '.png'
+                    PicNewPath = Path(PureWindowsPath( PicNewPath1 ,self.Title + '.png'))
 
                     shutil.copyfile(originalFilepath, PicNewPath)
 
@@ -422,7 +724,7 @@ class Story():
                                                           Line3_Format=self.Story_Outline_Main_Format,
                                                           Line4_Task=self.Outline_Main_AddOn_Pre  + self.Story_Outline_Main_Task + IDEA,
                                                           Special='',
-                                                          crazy=self.crazy)
+                                                          crazy=self.crazy, User_Confirm = self.UserConfirm, WINDOWNAME="Outline Main")
 
 
         self.Outline_Main_Style = Story.Basic_GPT_Query(self,
@@ -430,7 +732,7 @@ class Story():
                                                  Line3_Format=self.Story_Style_Details_Format,
                                                  Line4_Task=self.Story_Style_Details_Task + self.Outline_Main,
                                                  Special='',
-                                                  crazy=self.crazy)
+                                                  crazy=self.crazy, User_Confirm = self.UserConfirm, WINDOWNAME="Outline Main Style")
 
         self.Story_Role = """You are a brilliant assistant who is Role Playing as an award winning writer able to impersonate any genre or style/voice. Make sure you completely respond to the requests I provie and if I tell you the 'Desired Format:' I expect it to be exact base your role playing persona on the following details""" + self.Outline_Main_Style
 
@@ -439,7 +741,7 @@ class Story():
                                                  Line3_Format=self.StoryDetails_Format,
                                                  Line4_Task=self.StoryDetails_Task +  self.Outline_Main + IDEA,
                                                  Special='',
-                                                  crazy=self.crazy)
+                                                  crazy=self.crazy, User_Confirm = self.UserConfirm, WINDOWNAME="Outline Main Summary")
 
 
 
@@ -532,9 +834,11 @@ class Story():
         Title1 = cu.CleanFileName(Title)
         Title1 = Title1.strip()
         self.FileName = Title1
-        self.SavePath = self.SavePath + up.System_Folder_Path_Fix + Title1
+        self.SavePath = Path(PureWindowsPath(self.SavePath , Title1))
         cu.Check_Folder_Exists(self.SavePath)
-        cu.Check_Folder_Exists(self.SavePath + '\\Outlines')
+        cu.Check_Folder_Exists(Path(PureWindowsPath(self.SavePath  ,'Outlines')))
+
+        self.SaveTranscript = True
         FileName_Char_Main = Title1 + '_Main Characters_'
         FileName_Char_Minor = Title1 + '_Minor Characters_'
         # Call Character art prompt
@@ -547,12 +851,12 @@ class Story():
 
             Text2Add = 'Writer: ' + self.Writer_Summary + up.breakupOutput + 'Writer Style: ' + self.Writer_Style_Summary + up.breakupOutput + 'ReWrite: ' + self.ReWrite + up.breakupOutput + 'Original IDEA: ' + self.IDEA + up.breakupOutput + 'Final IDEA: ' + self.IDEA_Final
             FileName_Details_Pre = self.FileName + ' PreProduction'
-            cu.SaveCSV(Text=Text2Add, Title=FileName_Details_Pre, SavePath=self.SavePath + '\\Outlines')
+            cu.SaveCSV(Text=Text2Add, Title=FileName_Details_Pre, SavePath=Path(PureWindowsPath(self.SavePath , 'Outlines')))
 
         else:
             Text2Add = 'Story Outline: ' + self.Outline_Main + up.breakupOutput + 'Story Details: ' + self.Outline_Main_Summary + up.breakupOutput2 + 'Story Details(fine): ' + self.Outline_Main_Style + up.breakupOutput2 + 'All Seasons Outline: ' + self.Outline_ALL_Seasons + up.breakupOutput + 'Characters: ' + self.Characters + up.breakupOutput2 + up.breakupOutput + 'Writer Persona: ' + self.Writer_Summary + up.breakupOutput2 + up.breakupOutput + 'Writer Persona Summary: ' + self.Writer_Style_Summary + up.breakupOutput2 + up.breakupOutput + 'Artist Persona: ' + self.Art_Style_For_Story + up.breakupOutput2 + up.breakupOutput + 'Original IDEA: ' + self.IDEA + up.breakupOutput + 'Final IDEA: ' + self.IDEA_Final
             FileName_Details_Pre = self.FileName + ' PreProduction'
-            cu.SaveCSV(Text=Text2Add, Title=FileName_Details_Pre, SavePath=self.SavePath + '\\Outlines')
+            cu.SaveCSV(Text=Text2Add, Title=FileName_Details_Pre, SavePath=Path(PureWindowsPath(self.SavePath ,'Outlines')))
 
 
 
@@ -569,7 +873,7 @@ class Story():
                                                    Line3_Format=StoryMode.Characters_Format_Fine,
                                                    Line4_Task=StoryMode.Characters_Task_Fine + """ Text:###""" + Outline[:2000] + """### based on the prior Text, Pick specific characters from the following list of characters (you can introduce your own characters if needed, but keep the main characters involved): """ + Characterst,
                                                    crazy=self.crazy,
-                                                   Subject='', Big=True)
+                                                   Subject='', Big=True, User_Confirm = self.UserConfirm , WINDOWNAME="Character Summary")
 
         if Episode == 0 and Scene == 0:
             text1 = 'Characters Used for Season ' + str(Season)
@@ -591,7 +895,7 @@ class Story():
                                                     Line3_Format=StoryMode.Characters_Update_Format,
                                                     Line4_Task=StoryMode.Characters_Update_Task + """  Text:###""" + Outline[:3000] + """### Update the following characters based on the prior text: """ + self.Characters,
                                                     crazy=self.crazy,
-                                                    Subject='')
+                                                    Subject='', User_Confirm = self.UserConfirm, WINDOWNAME="Character Update")
 
             try:
                 CheckSize = len(self.Characters) * .44
@@ -605,7 +909,7 @@ class Story():
                         text1 = 'Characters Updated as of Season '  + str(Season) + ' Episode ' + str(Episode)
                     else:
                         text1 = 'Characters Updated as of Season ' + str(Season) + ' Episode ' + str(Episode) +  ' Scene ' + str(Scene)
-                    self.Character_progression += up.breakupOutput2 + + text1  + ': ' + self.Characters
+                    self.Character_progression += up.breakupOutput2 +  text1  + ': ' + self.Characters
             except:
                 print("Could not update the Characters")
         except:
@@ -613,13 +917,13 @@ class Story():
 
 
 
-    def SummarizeText(self, Text):
+    def SummarizeText(self, Text, windowname = "Summarize"):
         c = 1
         Summarized_text = Story.Basic_GPT_Query(self, Line2_Role=self.Story_Role,
                                                    Line3_Format=self.Story_Summarize_Format,
                                                    Line4_Task=self.Story_Summarize_Task + """ Use the following text for the source of information Text:###""" + Text ,
                                                    crazy=self.crazy,
-                                                   Subject='')
+                                                   Subject='', User_Confirm = self.UserConfirm, WINDOWNAME = windowname)
 
 
         return Summarized_text
@@ -632,6 +936,7 @@ class Story():
         Story5 = ''
         Story3 = ''
         PriorScene = ''
+
         PriorScenes = ''
         for type in self.OutputTypes:
             # try:
@@ -659,10 +964,15 @@ class Story():
             try:
 
 
+
+                # SceneDetailinfo = "Season " + str(self.Season_num) + ' Episode ' + str(
+                #         self.Episodenum) + ' Scene ' + str(self.Scene_Num)
+
                 if type == "ScreenPlay_Audio":
                     WritingFormat = StoryMode.Short_Story_Format
                     WritingTask = StoryMode.Short_Story_Task2
                     Prior_Scene = self.Prior_Scene_a
+                    Prior_Scenes = self.Prior_Scenes
                     Details = 'Season ' + str(self.Season_num) + ' Episode #' + str(self.Episodenum) + ' Scene # ' + str(
                         self.Scene_Num)
                     Prior_Scenes = self.Prior_Scenes_a
@@ -670,6 +980,7 @@ class Story():
                     WritingFormat = StoryMode.Short_Story_Format_Novel_Chapter
                     WritingTask = StoryMode.Short_Story_Task_Novel_Chapter
                     Prior_Scene = self.Prior_Scene_n
+
                     Details = 'Book ' + str(self.Season_num) + ' Act ' + str(
                         self.Episodenum) + ' Chapter # ' + str(
                         self.Scene_Num)
@@ -679,6 +990,7 @@ class Story():
                     WritingFormat = StoryMode.Short_Story_Format_Play_Scene
                     WritingTask = StoryMode.Short_Story_Task_Play_Scene
                     Prior_Scene = self.Prior_Scene_p
+
                     Details = 'Part ' + str(self.Season_num) + ' Act' + str(
                         self.Episodenum) + ' Scene # ' + str(
                         self.Scene_Num)
@@ -710,16 +1022,19 @@ class Story():
                     self.Prior_Scenes_n = ''
                     self.Prior_Scenes_s = ''
                 elif self.Episode1 == True and self.Season1 == False and self.Scene1 == True:
-                    Prior_Scenes = self.Prior_Season
-                    self.Background_Scene = self.Story_Background_Task + Prior_Scenes
+                    self.Background_Scene = 'Make sure the Outline you make for this scene makes sense given the past events in the story if the original outline provided is not 100% logical make the neccesary adjustments to make the story you outline make sense and not completely random. ' + self.Story_Background_Task + "### Prior Season (Do Not Repeat, but potentially build off this): " + self.Prior_Season + "###"
+
+                    # self.Background_Scene = self.Story_Background_Task + self.Prior_Season
                     self.Prior_Scenes = ''
                     self.Prior_Scenes_a = ''
                     self.Prior_Scenes_p = ''
                     self.Prior_Scenes_n = ''
                     self.Prior_Scenes_s = ''
                 elif self.Scene1==True:
-                    Prior_Scenes = self.Prior_Episode
-                    self.Background_Scene = self.Story_Background_Task + Prior_Scenes
+
+                    # self.Background_Scene = self.Story_Background_Task + self.Prior_Episode
+                    self.Background_Scene = 'Make sure the Outline you make for this scene makes sense given the past events in the story if the original outline provided is not 100% logical make the neccesary adjustments to make the story you outline make sense and not completely random. ' + self.Story_Background_Task + "### Prior Episode (Do Not Repeat, but potentially build off this): " + self.Prior_Episode + "###"
+
                     self.Prior_Scenes = ''
                     self.Prior_Scenes_a = ''
                     self.Prior_Scenes_p = ''
@@ -727,7 +1042,9 @@ class Story():
                     self.Prior_Scenes_s = ''
 
                 else:
-                    self.Background_Scene = self.Story_Background_Task + PriorScenes
+                    # self.Background_Scene = self.Story_Background_Task + PriorScenes
+
+                    self.Background_Scene = 'Make sure the Outline you make for this scene makes sense given the past events in the story if the original outline provided is not 100% logical make the neccesary adjustments to make the story you outline make sense and not completely random. ' + self.Story_Background_Task  + "### Prior Scene (Do Not Repeat, but potentially build off this): " + self.Prior_Scene + "###"
 
 
                 try:
@@ -750,9 +1067,14 @@ class Story():
                                                        Line3_Format=WritingFormat,
                                                         Line4_Task= self.Background_Scene,
                                                        Line5_Task= WritingTask + """      Scene Outline: """ +  self.Outline_Scene ,
-                                                       crazy=self.crazy,Big=True)
+                                                       crazy=self.crazy,Big=True, User_Confirm = self.UserConfirm, WINDOWNAME= "Writing Story " + Details)
                     Episode_Story = Details +  ': '+ Story1 + up.breakupOutput2
 
+                    try:
+                        cu.SaveCSV(Text=Episode_Story, SavePath=self.SavePath,
+                               Title=self.FileName +' Live - '+ Details + self.current_time)
+                    except:
+                        print("Error Saving File")
 
                     if type == "ScreenPlay_Audio":
                         self.Episode_Story_Audio += Episode_Story
@@ -764,22 +1086,28 @@ class Story():
 
                     elif type == 'Novel':
                         self.Episode_Story_Novel += Episode_Story
-                        self.Prior_Scene_n = Story.SummarizeText(self, Text=Story1)
+                        self.Prior_Scene_n = Story.SummarizeText(self, Text=Story1, windowname = "Summarize Previous Scene - Novel" + Details)
                         if self.Episode1 == False or self.Season1 == False or self.Scene1 ==False:
-                            self.Prior_Scenes_n = Story.SummarizeText(self, Text=Prior_Scenes + self.Prior_Scene_n)
+                            self.Prior_Scenes_n = Story.SummarizeText(self, Text=Prior_Scenes + self.Prior_Scene_n, windowname = "Summarize Previous Scenes - Novel" + Details)
                         else:
                             self.Prior_Scenes_n = self.Prior_Scene_n
 
                         self.Prior_Scene_Golden = self.Prior_Scene_n
-
+                        if "ScreenPlay" not in self.OutputTypes :
+                            self.Prior_Scene = self.Prior_Scene_n
+                            self.Prior_Scenes = self.Prior_Scenes_n
 
                     elif type == 'Play':
                         self.Episode_Story_Play += Episode_Story
-                        self.Prior_Scene_p = Story.SummarizeText(self, Text=Story1)
+                        self.Prior_Scene_p = Story.SummarizeText(self, Text=Story1, windowname = "Summarize Previous Scene - Play " + Details )
                         if self.Episode1 == False or self.Season1 == False or self.Scene1 ==False:
-                            self.Prior_Scenes_p = Story.SummarizeText(self, Text=Prior_Scenes + self.Prior_Scene_p)
+                            self.Prior_Scenes_p = Story.SummarizeText(self, Text=Prior_Scenes + self.Prior_Scene_p, windowname = "Summarize Previous Scenes - Play " + Details)
                         else:
-                            self.Prior_Scenes_p =  self.Prior_Scene_p
+                            self.Prior_Scenes_p =  "Note The Following Details have already happened for reference only: " + self.Prior_Scene_p
+
+                        if "ScreenPlay" not in self.OutputTypes and "Novel" not in self.OutputTypes :
+                            self.Prior_Scene = self.Prior_Scene_p
+                            self.Prior_Scenes = self.Prior_Scenes_p
 
 
                     elif type == 'ScreenPlay':
@@ -802,6 +1130,18 @@ class Story():
                     dn = 100
 
 
+                try:
+                    cu.SaveCSV(Text=self.Prior_Scene, SavePath=self.SavePath,
+                               Title=self.FileName + ' Live Prior Scene '+ Details + self.current_time)
+                except:
+                    print("Error Saving File")
+
+
+                try:
+                    cu.SaveCSV(Text=self.Prior_Scenes, SavePath=self.SavePath,
+                               Title=self.FileName + ' Live Prior Scenes '+ Details + self.current_time)
+                except:
+                    print("Error Saving File")
 
 
 
@@ -830,7 +1170,9 @@ class Story():
                         self.Episodenum) + ' Novel'
                     Text2Add3 = "Amini Amor in partnership with MondeVert Presents: " + up.breakupOutput + self.Episode_Story_Novel
                     csv3 = cu.SaveCSV(Text=Text2Add3, Title=FileName_Episode3, SavePath=self.SavePath)
-
+                    PriorEpisodeText = self.Episode_Story_Novel
+                    if "ScreenPlay" not in self.OutputTypes :
+                        PriorEpisodeText = self.Episode_Story_Novel
 
                 elif type == 'Play':
 
@@ -839,7 +1181,8 @@ class Story():
                         self.Episodenum) + ' Play'
                     Text2Add4 = "Amini Amor in partnership with MondeVert Presents: " + up.breakupOutput + self.Episode_Story_Play
                     csv4 = cu.SaveCSV(Text=Text2Add4, Title=FileName_Episode4, SavePath=self.SavePath)
-
+                    if "ScreenPlay" not in self.OutputTypes and  "Novel" not in self.OutputTypes:
+                        PriorEpisodeText = self.Episode_Story_Play
 
                 elif type == 'ScreenPlay':
                     self.Version.append(self.Episode_Story)
@@ -847,6 +1190,7 @@ class Story():
                     FileName_Episode = self.FileName + ' Season ' + str(self.Season_num) + ' EPISODE ' + str(
                         self.Episodenum)
                     csv1 = cu.SaveCSV(Text=Text2Add, Title=FileName_Episode, SavePath=self.SavePath)
+                    PriorEpisodeText = self.Episode_Story
 
                 elif type == 'Song':
                     self.Version6.append(self.Episode_Story_Song)
@@ -862,26 +1206,30 @@ class Story():
             Text2Add5 = 'Outline_Scene(s): ' + self.Episode_Construction + up.breakupOutput
             FileName_Episode5 = self.FileName + ' Season ' + str(self.Season_num) + ' Episode ' + str(self.Episodenum) + ' Outline '
             try:
-                cu.SaveCSV(Text=Text2Add5, Title=FileName_Episode5, SavePath=self.SavePath + '\\Outlines')
+                cu.SaveCSV(Text=Text2Add5, Title=FileName_Episode5, SavePath=Path(PureWindowsPath(self.SavePath , 'Outlines')))
             except:
                 cu.SaveCSV(Text=Text2Add5, Title=FileName_Episode5, SavePath=self.SavePath)
 
 
 #this is the new part where it looks at prior story to not repeat
-            self.Prior_Episode = Story.SummarizeText(self, Text=self.Episode_Story_Novel)
+            self.Prior_Episode = Story.SummarizeText(self, Text=PriorEpisodeText, windowname="Summarize -  Prior Episode" + str(self.Season_num) + ' EPISODE ' + str(
+                        self.Episodenum))
 
             print(up.breakupOutput)
-            print("self.Prior_Season")
-            print(self.Prior_Season)
+            print("self.Prior_Episode")
 
-            self.Prior_Season = Story.SummarizeText(self, Text=self.Prior_Season +  self.Prior_Episode)
+            if self.Prior_Episode == None:
+                self.Prior_Episode = ' '
+            print(self.Prior_Episode)
+
+
+
+
 
             self.Outline_progression += "Prior Episode Details as of  " + str(self.Season_num) + ' Episode ' + str(
                 self.Episodenum) + ' Scene ' + str(self.Scene_Num) + ": " + self.Prior_Episode
 
-            print(up.breakupOutput)
-            print("self.Prior_Episode")
-            print(self.Prior_Episode)
+
 
         except:
             dn= 100
@@ -969,17 +1317,17 @@ class Story():
         for x in range(0, RunLen):
             self.Episode_Outlines += self.Episode_Outline[x]
         Text2Add5 = "Outline Details: " + up.breakupOutput + self.Outline_progression
-        csv5 = cu.SaveCSV(Text=Text2Add5, Title=FileName_5, SavePath=self.SavePath + '\\Outlines')
+        csv5 = cu.SaveCSV(Text=Text2Add5, Title=FileName_5, SavePath=Path(PureWindowsPath(self.SavePath, 'Outlines')))
 
 
         FileName_7 = self.FileName + ' Character progression '
         Text2Add7 = ' Character progression: ' + up.breakupOutput + self.Character_progression
-        csv7 = cu.SaveCSV(Text=Text2Add7, Title=FileName_7, SavePath=self.SavePath + '\\Outlines')
+        csv7 = cu.SaveCSV(Text=Text2Add7, Title=FileName_7, SavePath=Path(PureWindowsPath(self.SavePath , 'Outlines')))
 
         FileName_8 = self.FileName + ' Background info Used '
 
         Text2Add8 = ' All Summaries/Background info: ' + up.breakupOutput + self.Character_progression
-        csv8 = cu.SaveCSV(Text=Text2Add7, Title=FileName_8, SavePath=self.SavePath + '\\Outlines')
+        csv8 = cu.SaveCSV(Text=Text2Add7, Title=FileName_8, SavePath=Path(PureWindowsPath(self.SavePath , 'Outlines')))
 
 
 
@@ -1045,10 +1393,21 @@ class Story():
 
             self.CharactersTrim = Story.Character_Summary(self, Outline_Fine, Season= self.Season_num, Episode= self.Episodenum, Scene= self.Scene_Num)
 
-            if self.Episode1 == True and self.Season1 == True:
-                self.Background_Scene = 'This is the first episode/pilot and its the opening scene, be sure to draw in the audience, make it exciting and peak the curiosity of the audience use the following characters for reference: ' + self.CharactersTrim[:1300]
+            if self.Episode1 == True and self.Season1 == True and self.Scene_Num == 1:
+                self.Background_Scene = 'This is the first episode/pilot and its the opening scene, be sure to draw in the audience, make it exciting and peak the curiosity of the audience use the following characters for reference: ' + self.CharactersTrim[:1800]
             else:
-                self.Background_Scene = self.Story_Background_Task + self.CharactersTrim + self.Prior_Scene
+                self.Background_Scene = 'Make sure the Outline you make for this scene makes sense given the past events in the story if the original outline provided is not 100% logical make the neccesary adjustments to make the story you outline make sense and not completely random. ' + self.Story_Background_Task + 'Characters: ###' + self.CharactersTrim + "### Prior Scenes (Do Not Repeat, but potentially build off this): " + self.Prior_Scenes + "###"
+
+            #
+            # try:
+            #     self.UpdatedOutlineScene = Story.Basic_GPT_Query2(self,
+            #                                               Line2_Role=self.Story_Role2,
+            #                                               Line3_Format=self.Story_Scene_Outline_Format,
+            #                                               Line4_Task = self.Background_Scene,
+            #                                               Line5_Task=self.Story_Scene_Outline_Task + """Use the following  Text Outline as a source for your more detailed/new formatted Outline    Text: :###""" + Outline_Fine,
+            #                                               crazy=self.crazy, User_Confirm = self.UserConfirm, WINDOWNAME= "Outline Story (Scene) Revision "  +   str(self.Season_num) + ' Episode ' + str(self.Episodenum) +  ' Scene ' + str(self.Scene_Num) + ": ")
+            #
+            #
 
             try:
                 self.Outline_Scene = Story.Basic_GPT_Query2(self,
@@ -1056,7 +1415,7 @@ class Story():
                                                           Line3_Format=self.Story_Scene_Outline_Format,
                                                           Line4_Task = self.Background_Scene,
                                                           Line5_Task=self.Story_Scene_Outline_Task + """Use the following  Text Outline as a source for your more detailed/new formatted Outline    Text: :###""" + Outline_Fine,
-                                                          crazy=self.crazy)
+                                                          crazy=self.crazy, User_Confirm = self.UserConfirm, WINDOWNAME= "Outline Story"  +   str(self.Season_num) + ' Episode ' + str(self.Episodenum) +  ' Scene ' + str(self.Scene_Num) + ": ")
 
             except:
                 self.Outline_Scene = Outline_Fine
@@ -1106,9 +1465,9 @@ class Story():
 
 
                 if self.Episode1 ==True and self.Season1==True:
-                    self.Background_Episode = 'This is the first episode/pilot, be sure to captivate the audience, its ok if not everything makes sense yet, its ok to be mysterious use the following characters for reference: ' + self.CharactersTrim
+                    self.Background_Episode = 'This is the first episode/pilot, be sure to captivate the audience, its ok if not everything makes sense yet, its ok to be mysterious. You should make sure your story fits the number of seasons/episodes provided in the outline. use the following characters for reference: ' + self.CharactersTrim
                 else:
-                    self.Background_Episode = self.Story_Background_Task + self.CharactersTrim + self.Prior_Episode
+                    self.Background_Episode = self.Story_Background_Task  + 'Characters: ###' + self.CharactersTrim + "### Prior Season: " + self.Prior_Episode + "###"
 
 
 
@@ -1119,7 +1478,7 @@ class Story():
                                                             Line5_Task=self.Story_Episode_Outline_Task + """Use the following {Text}     Text:###""" + Outline_All ,
 
                                                             crazy=self.crazy,
-                                                            Subject='')
+                                                            Subject='', User_Confirm = self.UserConfirm, WINDOWNAME= 'High level Outline -  Season ' + str(self.Season_num) + ' Episode ' + str(episode_num2))
 
                 #newChars = Story.Character_Update(self, Outline=Outline_Episode, Season=self.Season_num, Episode=self.Episodenum)
 
@@ -1130,16 +1489,16 @@ class Story():
                                                                         Line4_Task=self.Background_Episode,
                                                                         Line5_Task=self.Story_Full_Episode_Outline_Task + """Episode Outline:### """ + Outline_Episode,
                                                                         crazy=self.crazy,
-                                                                        Subject='', Big=True)
+                                                                        Subject='', Big=True, User_Confirm = self.UserConfirm, WINDOWNAME= 'Detailed Outline -  Season ' + str(self.Season_num) + ' Episode ' + str(episode_num2))
 
                 self.Outline_Episodes_Details = Story.Basic_GPT_Query2(self,
                                                                         Line2_Role=self.Story_Role,
                                                                         Line3_Format=self.Story_Style_Details_Format,
-                                                                     Line4_Task='Use the prior writing style and character info to create a similar, but unique writing style for this episode  Background: ' + self.Outline_Main_Style + self.CharactersTrim,
+                                                                     Line4_Task='Use the prior writing style and character info to create a similar, but unique background/context for this episode  Background: ' + self.Outline_Main_Style + self.CharactersTrim,
                                                                      Line5_Task=self.Story_Style_Details_Task2 + """Episode Outline:### """ + Outline_Episode,crazy=self.crazy,
-                                                                        Subject='')
+                                                                        Subject='', User_Confirm = self.UserConfirm, WINDOWNAME= 'Episode Writing Style  ' + str(self.Season_num) + ' Episode ' + str(episode_num2))
 
-                self.Story_Role2 =self.Story_Role = """You are a brilliant assistant who is Role Playing as an award winning writer able to impersonate any genre or style/voice. Make sure you completely respond to the requests I provie and if I tell you the 'Desired Format:' I expect it to be exact base your role playing persona on the following details""" +self.Outline_Episodes_Details
+                self.Story_Role2 =self.Story_Role = """You are a brilliant assistant who is Role Playing as an award winning writer able to impersonate any genre or style/voice. Make sure you completely respond to the requests I provide and if I tell you the 'Desired Format:' I expect it to be exact based on your role playing persona on the following details""" +self.Outline_Episodes_Details
 
                 self.Outline_progression += up.breakupOutput2 + 'High level Outline -  Season ' + str(self.Season_num) + ' Episode ' + str(episode_num2) + ': ' + Outline_Episode
                 self.Outline_progression += up.breakupOutput2 + 'Detailed Outline -  Season ' + str(self.Season_num) + ' Episode ' + str(episode_num2) + ': ' + Outline_Full_Episode
@@ -1171,6 +1530,13 @@ class Story():
             self.Season_num = x
             Season_num = x
 
+
+            if x > 1 :
+                self.Prior_Season = Story.SummarizeText(self, Text=self.Prior_Season + self.Prior_Episode,windowname="Summarize = Prior Season" + str(self.Season_num) )
+                print(up.breakupOutput)
+                print("self.Prior_Season")
+                print(self.Prior_Season)
+
             try:
                 if len (self.Season_By_Season) >= Season_num:
                     Outline_AllS = self.Season_By_Season[Season_num]
@@ -1198,16 +1564,16 @@ class Story():
             #Add new code here#############
 
             if self.Episode1 == True and self.Season1 == True:
-                self.Background_Season = self.Story_Background_Task + CharactersTrim
+                self.Background_Season = "use the following characters along with the outline provided to come up with your response. Characters:  " + CharactersTrim
             else:
-                self.Background_Season = self.Story_Background_Task + CharactersTrim + self.Prior_Season
+                self.Background_Season = "Using the events that have happened make the story make sense logically and when you make this season's outline make it follow the story based on background information, use the original outline as a guide but do not ruin the story by being bound by the outline, make the best story possible." + self.Story_Background_Task +'Characters: ###' + CharactersTrim +"### Prior Season: " +self.Prior_Season + "###"
 
             Outline_Season = Story.Basic_GPT_Query2(self, Line2_Role=self.Story_Role,
                                                              Line3_Format=self.Story_Season_Outline_Format,
                                                             Line4_Task=self.Background_Season ,
                                                              Line5_Task=self.Story_Season_Outline_Task + """ Use the following text for the source of information Text:###""" + Outline_AllS ,
                                                              crazy=self.crazy,
-                                                             Subject='')
+                                                             Subject='', User_Confirm = self.UserConfirm, WINDOWNAME='Detailed Outline -  Season ' + str(Season_num))
 
             self.Outline_progression += up.breakupOutput2 + 'Detailed Outline -  Season ' + str(Season_num) + ': ' +  Outline_Season
 
@@ -1220,7 +1586,7 @@ class Story():
                                                              Line3_Format=self.Story_Full_Season_Outline_Format,
                                                              Line4_Task=self.Story_Full_Season_Outline_Task + 'Keep the number of episodes according to the following restrictions: ' + str(self.numEpisode) + """ Use the following text for the source of information Text:###""" + Outline_Season + """### Use the following characters: """ + CharactersTrim,
                                                               crazy=self.crazy,
-                                                             Subject='')
+                                                             Subject='', User_Confirm = self.UserConfirm, WINDOWNAME='Outline - All Episodes - High Level Episodes Outlines (Full Season ' + str(Season_num) + '):')
 
             self.Outline_progression += up.breakupOutput2 + 'Outline - All Episodes - High Level Episodes Outlines (Full Season ' + str(Season_num) + '):'+ Outline_ALL_Episodes
 
@@ -1239,7 +1605,7 @@ class Story():
                 Writer_Art_Details =   'Writer_Persona: ' + self.Writer_Summary + 'Writer_Persona_Summary: ' + self.Writer_Style_Summary + 'Art_Style_For_Story: '+self.Art_Style_For_Story
                 Text2Add = Writer_Art_Details +  up.breakupOutput2 + self.Outline_progression + up.breakupOutput2 + 'Character progression Details: ' +  self.Character_progression
                 FileName_Details_Pre = self.FileName + ' Season ' + str(Season_num) + ' Outlines'
-                cu.SaveCSV(Text=Text2Add, Title=FileName_Details_Pre, SavePath=self.SavePath + '\\Outlines')
+                cu.SaveCSV(Text=Text2Add, Title=FileName_Details_Pre, SavePath=Path(PureWindowsPath(self.SavePath, 'Outlines')))
             except:
                 print('Did not save preproduction file #2')
 
@@ -1278,7 +1644,7 @@ class Story():
                                                          Line3_Format=self.Story_Full_Series_Outline_Format,
                                                          Line4_Task=self.Story_Full_Series_Outline_Task + """Use the following High level {Main Outline} as a source for the creating the season by season specific outline you are working on  Outline for each Season in the Series   (It is imperative create descriptions/outlines for    """ +  str(self.numSeasons) + """ @Seasons ) Story Details:"""  + self.Outline_Main_Summary,
                                                           crazy=self.crazy,
-                                                          Big=True)
+                                                          Big=True, User_Confirm = self.UserConfirm, WINDOWNAME= 'Outline - All Seasons - High Level Full Series Outlines: ' )
         self.Outline_progression += up.breakupOutput2 + 'Outline - All Seasons - High Level Full Series Outlines: ' + self.Outline_ALL_Seasons
 
         self.Season_By_Season = Story.cutBy(self, Text=self.Outline_ALL_Seasons, upperWord='Season', Delimiter='@@',
@@ -1370,7 +1736,7 @@ class Story():
 
 
         # Make sure to start a master tracker with this information, use the writer persona as part of the data stored (TimeStamp, WriterPersona, Outline, Format, and/or put the prompt together for reference
-        Character_Personas = Story.Basic_GPT_Query(self, Line2_Role=Role, Line4_Task=Task, Line3_Format=Format, Big=True)
+        Character_Personas = Story.Basic_GPT_Query(self, Line2_Role=Role, Line4_Task=Task, Line3_Format=Format, Big=True, User_Confirm=self.UserConfirm, WINDOWNAME='Create Characters Short Story')
 
 
         return Character_Personas
@@ -1403,7 +1769,7 @@ class Story():
                                                          Line2_Role='You are an expert artist master of all disciplines and art styles',
                                                          Line3_Format=StoryMode.artDetailsFormat,
                                                          Line4_Task="Pick a random artist based on the following Text" + arttext,
-                                                          crazy=self.crazy, Subject='')
+                                                          crazy=self.crazy, Subject='', User_Confirm = self.UserConfirm, WINDOWNAME='Artist Persona For Art')
         return Artist_Persona
 
 
@@ -1414,20 +1780,31 @@ class Story():
     def getIDEA(self, IDEA='', Writer_Style = '', Mode = 'AI'):
         x = 1
         self.Subject_Details = ''
+        if "MUSIC" in self.Mode.upper():
+            self.IDEA_Format = """there needs to be enough details for a full Song to be written, use the details provided and add to it to make it uniquely your own."""
+            self.IDEA_Format = lup.Song_Outline_Format2
+            self.IDEA_Task = "You are to use the information given to you to come up with an idea for a song, it can be a story or a general message, do not make it too long but try to make the topics relateable and witty and complex. make the audience think a little but also make the song entertaining"
+
+
+
         Subject_Summary = IDEA
         if IDEA =='':
             IDEA_Task = self.IDEA_Task_AI
         else:
-            Subject_trim = IDEA[:3000]
+            Subject_trim = IDEA[:4000]
             IDEA_Task = self.IDEA_Task + Subject_trim
-
             self.Subject_Details += 'Subject Trimmed and summary created below:'
+
+
+
+
+
 
         Subject_Summary = Story.Basic_GPT_Query(self,
                                                         Line2_Role=self.IDEA_Role,
                                                         Line3_Format=self.IDEA_Format,
                                                         Line4_Task=IDEA_Task, Special='',
-                                                         crazy=self.crazy, Big=True)
+                                                         crazy=self.crazy, Big=True, User_Confirm = self.UserConfirm, WINDOWNAME='Subject Summary - Get IDEA')
         self.Subject_Details += Subject_Summary
         Story.quickArt1(self, Subject_Summary)
         return Subject_Summary
@@ -1442,18 +1819,27 @@ class Story():
         else:
             Persona_Role = self.Persona_Role
 
-        Writer_Summary = Story.Basic_GPT_Query(self,Line2_Role = Persona_Role,Line4_Task= self.Persona_Task, Line3_Format = self.Persona_Format,  crazy = self.crazy)
+        Writer_Summary = Story.Basic_GPT_Query(self,Line2_Role = Persona_Role,Line4_Task= self.Persona_Task, Line3_Format = self.Persona_Format,  crazy = self.crazy, User_Confirm = self.UserConfirm, WINDOWNAME='Get Writer info')
         Story.quickArt1(self, Writer_Summary)
         return Writer_Summary
 
 
     def getWriter_Style(self, Writer_Style = ''):
         x = 1
-        if Writer_Style != '':
-            Persona_Role = self.Personal_Role + 'use/incorporate the following writing styles in your response: ' + Writer_Style
+        self.Persona_Role = "You are a brilliant assistant for the user, You are a gifted writer and have a high EQ, despite this you are relateable and understand how to entertain people. you excel at writing lyrics, stories and are a master at any task you are requested"
+        # if Writer_Style != '':
+        #     Persona_Role =  Persona_Role + 'use/incorporate the following writing styles in your response: ' + Writer_Style
+        #
+
+
+        if  'SONG' not in self.Mode:
+
+            Writer_Style_Summary = Story.Basic_GPT_Query(self, Line2_Role=self.Persona_Role, Line4_Task=self.Persona_Summary_Task + self.Writer_Summary,Line3_Format=self.Persona_Summary_Format, crazy=self.crazy, User_Confirm = self.UserConfirm, WINDOWNAME='Get Writer Style')
         else:
-            Persona_Role = self.Persona_Role
-        Writer_Style_Summary = Story.Basic_GPT_Query(self, Line2_Role=Persona_Role, Line4_Task=self.Persona_Summary_Task + self.Writer_Summary,Line3_Format=self.Persona_Summary_Format, crazy=self.crazy)
+            Writer_Style_Summary = Story.Basic_GPT_Query(self, Line2_Role=self.Persona_Role,
+                                                     Line4_Task= lup.Music_Persona_Task + self.Writer_Summary,
+                                                     Line3_Format=lup.Music_Persona_Format, crazy=self.crazy, User_Confirm = self.UserConfirm, WINDOWNAME='Get Song Writer Style')
+
         Story.quickArt1(self, Writer_Style_Summary)
 
         return Writer_Style_Summary
@@ -1501,6 +1887,11 @@ class Story():
         self.IDEA_Role = StoryMode.IDEA_Role
         self.IDEA_Format = StoryMode.IDEA_Format
         self.IDEA_Task = StoryMode.IDEA_Task
+
+        # if "MUSIC" in self.Mode.upper():
+        #     self.IDEA_Format = """Provide enough details for the IDEA to be summarized into a masterpiece lyrically, this should have all info needed to write a song based on the writing persona and/or the original idea provided."""
+        #     self.IDEA_Task = """Summarize and expand on the IDEA provided to you and provide enough details to make a lyrical masterpeice (Do not write the song yet, provide details so the lyrics can be written later on with all key details and enough information for AI to use as a base for a song. Use details that are provided and pull from the writing persona to make it original and relateable"""
+
         self.IDEA_Task_AI = StoryMode.IDEA_Task_AI
 
         self.Characters_Task = StoryMode.Characters_Task
@@ -1516,8 +1907,8 @@ class Story():
         self.StoryDetails_Format = StoryMode.StoryDetails_Format
 
         self.Story_Style_Details_Task = StoryMode.Story_Style_Details_Task
-        self.Story_Style_Details_Task2 = StoryMode.Story_Style_Details_Task2
-        self.Story_Style_Details_Format = StoryMode.Story_Style_Details_Format
+        self.Story_Style_Details_Task2 = StoryMode.Story_Episode_Writing_Style_Task
+        self.Story_Style_Details_Format = StoryMode.Story_Episode_Writing_Style_Format
 
         self.Story_length_Details_Task = StoryMode.Story_length_Details_Task
         self.Story_length_Details_Format = StoryMode.Story_length_Details_Format
@@ -1623,7 +2014,7 @@ class Story():
             Title = cu.CleanFileName(Title)
             Title = Title.strip()
             self.FileName = Title
-            self.SavePath = self.SavePath + up.System_Folder_Path_Fix + Title
+            self.SavePath = Path(PureWindowsPath(self.SavePath, Title))
             cu.Check_Folder_Exists(self.SavePath)
         except:
             dn = 100
@@ -1668,7 +2059,7 @@ class Story():
             print('Silent Mode Activated: ' + audio)
 
 
-    def Basic_GPT_Query2(self,   Line2_Role  , Line5_Task,Line3_Format,Line4_Task,Line1_System_Rule = SP.System,Big = False,Model = "gpt-3.5-turbo",upgradeLimit = 3000, Special = '', crazy = .5, Subject= '', Outline = '', Allowed_Fails = 8, SaveFile = False,MakeArt = False, Mode = 'SHAINE SAYS', SavePath= ''):#use this to create art style for the work
+    def Basic_GPT_Query2(self,   Line2_Role  , Line5_Task,Line3_Format,Line4_Task,Line1_System_Rule = SP.System,Big = False,Model = "gpt-3.5-turbo",upgradeLimit = 3000, Special = '', crazy = .5, Subject= '', Outline = '', Allowed_Fails = 8, SaveFile = False,MakeArt = False, Mode = 'SHAINE SAYS', SavePath= '',  User_Confirm = True, WINDOWNAME = "SHAINE Advanced - "):#use this to create art style for the work
         if SavePath == '':
             SavePath = self.SavePath
 
@@ -1692,7 +2083,7 @@ class Story():
             Model = "gpt-3.5-turbo"
 
 
-
+        TryCount = 0
         if Big ==True:
             Model = "gpt-3.5-turbo-16k-0613"
         KeepGoing = False
@@ -1718,7 +2109,163 @@ class Story():
                 )
                 GPT_Response = str(response.choices[0].message.content)
 
-                KeepGoing = True
+                self.UserPromptsCount += 1
+
+                self.UserPrompts += 'User Input #' + str(self.UserPromptsCount)
+
+                self.UserPrompts += Full_User_Prompt + up.breakupOutput2 + up.breakupOutput2
+                self.Full_Transcript += 'User Input #' + str(self.UserPromptsCount) + Full_User_Prompt + up.breakupOutput2 + up.breakupOutput2
+                self.Full_Story += up.breakupOutput + "****Original GPT Response****" + GPT_Response
+                self.Full_Transcript += up.breakupOutput + "****Original GPT Response****" + up.breakupOutput + GPT_Response
+
+                if User_Confirm == True:
+                    self.promptB = False
+                    while self.promptB == False:
+
+                        speak1 = self.Speak
+
+                        TryCount += 1
+                        if self.promptB == False:
+                            print("""
+                            Do you want to 
+                            1). Small Edit, Take the text and switch a few things
+                            2). ReWrite With Edits (Big Edit)
+                            3). Rewrite No Edits
+
+                            """)
+
+                            print(self.UserMode)
+                            UserMode1 = -1
+                            if self.UserMode == "UI":
+                                # try:
+                                #     example = self.TE.MakeWindow(self.UserPrompts)
+                                # except:
+                                #     print("error with example window")
+
+                                query = self.TE.MakeWindow(GPT_Response, UserConfirm=True, WindowName = WINDOWNAME + str(TryCount))
+                                UserMode1 = -1
+                                UserMode1 = self.TE.GetUserResponseMode()
+                                print("UserMode1:")
+                                print(UserMode1)
+
+                            else:
+                                query = cu.getUserResponse()
+                                self.promptB = cu.ConfirmBOT(GPT_Response, speak1)
+
+                            if (( 'one' in query or 'small' in query or 'few' in query or 'mini') and self.UserMode != "UI") or UserMode1 == 1:
+                                self.promptB = False
+                                promptB2 = True
+                                if self.UserMode == "UI":
+                                    EDIT = query
+                                else:
+                                    EDIT = cu.editBotPrompt()
+                                response = openai.ChatCompletion.create(
+                                    model=Model,
+                                    messages=[
+                                        {"role": "system", "content": Line1_System_Rule},
+                                        {"role": "user", "content": Line2_Role},
+                                        {"role": "user", "content": Line3_Format},
+                                        {"role": "user",
+                                         "content": "Use the following guidance when completing your task: " + EDIT},
+                                        {"role": "user",
+                                         "content": """Rewrite the following text using the edits provided and make it in the respective formate described.  Text: """ + GPT_Response},
+                                    ]
+                                    , temperature=crazy
+                                )
+                                GPT_Response = str(response.choices[0].message.content)
+
+                                self.Full_Story += up.breakupOutput + "****Small Edit****" + EDIT + up.breakupOutput + GPT_Response
+                                self.Full_Transcript +=  up.breakupOutput + "****Small Edit****" + EDIT + up.breakupOutput + GPT_Response
+
+
+                                WINDOWNAME = WINDOWNAME + " - Small Edit"
+
+
+                            elif (('rewrite' in query or 'with edits' in query or 'redo' in query or 'two' in query) and self.UserMode != "UI") or UserMode1 == 2:
+
+                                self.promptB = False
+                                if self.UserMode == "UI":
+                                    EDIT = query
+                                else:
+                                    EDIT = cu.editBotPrompt()
+                                response = openai.ChatCompletion.create(
+                                    model=Model,
+                                    messages=[
+                                        {"role": "system", "content": Line1_System_Rule},
+                                        {"role": "user", "content": Line2_Role},
+                                        {"role": "user", "content": Line3_Format},
+                                        {"role": "user",
+                                         "content": "Use the following guidance when completing your task: " + EDIT},
+                                        {"role": "user", "content": Line4_Task},
+                                        {"role": "user", "content": Line5_Task},
+                                    ]
+                                    , temperature=crazy
+                                )
+                                GPT_Response = str(response.choices[0].message.content)
+
+                                self.UserPrompts += up.breakupOutput + "****Rewrite with Edits***:" + EDIT +  up.breakupOutput
+                                self.Full_Transcript += up.breakupOutput + "****Rewrite with Edits***:" + EDIT +  up.breakupOutput
+                                self.Full_Story += up.breakupOutput +  "****Rewrite with Edits***:" + EDIT + up.breakupOutput + GPT_Response
+                                self.Full_Transcript += up.breakupOutput +  "****Rewrite with Edits***:" + EDIT + up.breakupOutput + GPT_Response
+                                WINDOWNAME = WINDOWNAME + " - ReWrite with Edit"
+
+                                WINDOWNAME = WINDOWNAME + " - ReWrite With Edit"
+
+                            elif (('full' in query or 'try new' in query or 'new' in query or 'three' in query) and self.UserMode != "UI") or UserMode1 == 3:
+                                promptB2 = False
+                                self.promptB = False
+                                response = openai.ChatCompletion.create(
+                                    model=Model,
+                                    messages=[
+                                        {"role": "system", "content": Line1_System_Rule},
+                                        {"role": "user", "content": Line2_Role},
+                                        {"role": "user", "content": Line3_Format},
+                                        {"role": "user", "content": Line4_Task},
+                                        {"role": "user", "content": Line5_Task},
+                                    ]
+                                    , temperature=crazy
+                                )
+                                GPT_Response = str(response.choices[0].message.content)
+                                self.UserPrompts += up.breakupOutput + "****Rewrite***:" +   up.breakupOutput
+                                self.Full_Transcript += up.breakupOutput + "****Rewrite***:" +   up.breakupOutput
+                                self.Full_Story += up.breakupOutput +  "****Rewrite***:"  + up.breakupOutput + GPT_Response
+                                self.Full_Transcript += up.breakupOutput +  "****Rewrite***:"  + up.breakupOutput + GPT_Response
+                                WINDOWNAME = WINDOWNAME + " - Full ReWrite"
+
+                            elif UserMode1 == 0:
+                                self.promptB = True
+                                print("self.promptB:")
+                                print(self.promptB)
+
+
+
+                            elif UserMode1 == 4:
+                                if self.UserMode == "UI":
+                                    EDIT = query
+                                else:
+                                    EDIT = cu.editBotPrompt()
+                                self.promptB = True
+                                GPT_Response = EDIT
+                                WINDOWNAME = WINDOWNAME + " - Used User Text"
+
+
+                            print("Used the following Text  for Response??: " + str(
+                            UserMode1) + up.breakupOutput + GPT_Response)
+
+
+
+
+                        else:
+                            self.Full_Story +=  up.breakupOutput +"Used the following Text  for Response: " + GPT_Response
+                            print(
+                                "Used the following Text  for Response: " + str(UserMode1) + up.breakupOutput + GPT_Response)
+
+                            self.Full_Story += up.breakupOutput
+                            KeepGoing = True
+                else:
+                    KeepGoing = True
+
+
             except:
                 print(' Error ChatGPT failed, trying to rerun prompt now.... if this happens too many times we will kill the script')
                 KillSwitch += 1
@@ -1733,12 +2280,15 @@ class Story():
 
             #print(up.breakupOutput)
 
-            self.UserPromptsCount+=1
+            if self.SaveTranscript == True:
+                try:
+                    cu.SaveCSV(Text=WINDOWNAME + self.Full_Story, SavePath=self.SavePath,
+                               Title=self.FileName + ' All Responses Transcript (no Prompts)')
+                    cu.SaveCSV(Text=WINDOWNAME + self.Full_Transcript, SavePath=self.SavePath,
+                               Title=self.FileName + ' All Responses and prompts')
 
-            self.UserPrompts += 'User Input #' + str(self.UserPromptsCount)
-
-            self.UserPrompts += Full_User_Prompt + up.breakupOutput2 + up.breakupOutput2
-
+                except:
+                    print("could not save files")
 
             Title = Mode + '_' + self.current_time
             if SaveFile ==True:
@@ -1749,29 +2299,30 @@ class Story():
                 ArtPrompt = Story.GPTArt2(self,User_Subject = GPT_Response)
                 print(ArtPrompt)
                 originalFilepath = Story.makeArt(self,Prompt=ArtPrompt)
-                PicNewPath1 = SavePath + up.System_Folder_Path_Fix + Mode
+                PicNewPath1 = Path(PureWindowsPath(SavePath, Mode))
                 cu.Check_Folder_Exists(PicNewPath1)
-                PicNewPath =PicNewPath1 + up.System_Folder_Path_Fix + Title + '.png'
+                PicNewPath =Path(PureWindowsPath(PicNewPath1,Title + '.png'))
 
 
                 shutil.copyfile(originalFilepath, PicNewPath)
             return GPT_Response
 
 
-    def Basic_GPT_Query(self,   Line2_Role  , Line3_Format,Line4_Task,Big = False,Model = "gpt-3.5-turbo",upgradeLimit = 3000,Special = '',Line1_System_Rule = StoryMode.system_TextJoaT_quick, crazy = .5, Subject= '', Outline = '', Allowed_Fails = 8, SaveFile = False,MakeArt = False, Mode = 'SHAINE SAYS', SavePath= ''):#use this to create art style for the work
+    def Basic_GPT_Query(self,   Line2_Role  , Line3_Format,Line4_Task,Big = False,Model = "gpt-3.5-turbo",upgradeLimit = 3000,Special = '',Line1_System_Rule = SP.System, crazy = .5, Subject= '', Outline = '', Allowed_Fails = 8, SaveFile = False,MakeArt = False, Mode = 'SHAINE SAYS', SavePath= '', User_Confirm = True, WINDOWNAME = "SHAINE Basic - "):#use this to create art style for the work
         if SavePath == '':
             SavePath = self.SavePath
 
         if Subject != '':
             Line2_Role = Line2_Role + """Your role and subject matter expertise should fit the following Subject and or style and mood in the {Text} provided by the user Text:###""" + Subject + """###"""
 
-        Line1_System_Rule = Line2_Role
+        #Line1_System_Rule = Line2_Role
         #Line2_Role = Line2_Role + Special
         #Line2_Role = ''
         Full_User_Prompt = """User Inputs to Chat GPT: 
         1). """ + Line1_System_Rule +"""
-        2).""" + Line3_Format+ """
-        3).""" + Line4_Task
+        2).""" + Line2_Role+ """
+        3).""" + Line3_Format+ """
+        4).""" + Line4_Task
 
         if len(Full_User_Prompt) > upgradeLimit:
             Model = "gpt-3.5-turbo-16k-0613"
@@ -1781,7 +2332,7 @@ class Story():
         if Big ==True:
             Model = "gpt-3.5-turbo-16k-0613"
 
-
+        TryCount = 0
         KeepGoing = False
         KillSwitch = 0
         while KeepGoing == False and KillSwitch < Allowed_Fails:
@@ -1790,12 +2341,12 @@ class Story():
             try:
 
 
-
                 # This is for the result if you let the AI describe project and details and then make the response
                 response = openai.ChatCompletion.create(
                     model=Model,
                     messages=[
                         {"role": "system", "content": Line1_System_Rule},
+                        {"role": "user", "content": Line2_Role},
                         {"role": "user", "content": Line3_Format},
                         {"role": "user", "content": Line4_Task },
                     ]
@@ -1803,7 +2354,170 @@ class Story():
                 )
                 GPT_Response = str(response.choices[0].message.content)
 
-                KeepGoing = True
+                self.UserPromptsCount += 1
+
+                self.UserPrompts += 'User Input #' + str(self.UserPromptsCount)
+
+                self.UserPrompts += Full_User_Prompt + up.breakupOutput2 + up.breakupOutput2
+                self.Full_Transcript += 'User Input #' + str(self.UserPromptsCount) + Full_User_Prompt + up.breakupOutput2 + up.breakupOutput2
+                self.Full_Story += up.breakupOutput + "****Original GPT Response****" + GPT_Response
+                self.Full_Transcript += up.breakupOutput + "****Original GPT Response****"  + up.breakupOutput + GPT_Response
+                #
+                # try:
+                #     example = self.TE.MakeWindow(Text=self.UserPrompts)
+                # except:
+                #     print("error with example window")
+
+
+                if User_Confirm == True:
+                    self.promptB = False
+                    while self.promptB == False:
+
+                        speak1 = self.Speak
+                        TryCount+=1
+
+
+
+                        if self.promptB ==False:
+
+                            UserMode1 = -1
+                            if self.UserMode == "UI":
+
+                                try:
+                                    self.TE = TextEdit.TextEdit(UserConfirm=True)
+                                    query = self.TE.MakeWindow(Text=GPT_Response, UserConfirm=True,WindowName = WINDOWNAME+ str(TryCount))
+                                    UserMode1 = -1
+                                    UserMode1 = self.TE.GetUserResponseMode()
+                                    print("UserMode1:")
+                                    print(UserMode1)
+
+                                except:
+                                    TE = TextEdit.TextEdit()
+                                    UserMode1 = -1
+                                    query = TE.MakeWindow(Text=GPT_Response, UserConfirm=True)
+
+                            else:
+                                print("""
+                                                           Do you want to 
+                                                           1). Small Edit, Take the text and switch a few things
+                                                           2). ReWrite With Edits (Big Edit)
+                                                           3). Rewrite No Edits
+
+                                                           """)
+                                self.promptB = cu.ConfirmBOT(GPT_Response, speak1)
+                                query = cu.getUserResponse()
+
+
+                            if (('one' in query or 'small' in query or 'few' in query or 'mini') and self.UserMode != "UI") or UserMode1 == 1:
+                                promptB2 = True
+                                self.promptB = False
+                                if self.UserMode == "UI":
+                                    EDIT = query
+                                else:
+                                    EDIT = cu.editBotPrompt()
+
+                                print("EDIT")
+                                print(EDIT)
+                                response = openai.ChatCompletion.create(
+                                    model=Model,
+                                    messages=[
+                                        {"role": "system", "content": Line1_System_Rule},
+                                        {"role": "user", "content": Line2_Role},
+                                        {"role": "user", "content": Line3_Format},
+                                        {"role": "user",
+                                         "content": "Use the following guidance when completing your task: " + EDIT},
+                                        {"role": "user", "content": """Rewrite the following text using the edits provided and make it in the respective formate described.  Text: """ + GPT_Response},
+                                    ]
+                                    , temperature=crazy
+                                )
+                                GPT_Response = str(response.choices[0].message.content)
+                                WINDOWNAME = WINDOWNAME + " - Small Edit"
+                                self.Full_Story += up.breakupOutput + "****Small Edit****" + EDIT + up.breakupOutput + GPT_Response
+                                self.Full_Transcript +=  up.breakupOutput + "****Small Edit****" + EDIT + up.breakupOutput + GPT_Response
+
+
+                            elif (('rewrite' in query or 'with edits' in query or 'redo' in query or 'two' in query) and self.UserMode != "UI") or UserMode1 == 2:
+                                self.promptB = False
+                                if self.UserMode == "UI":
+                                    EDIT = query
+                                else:
+                                    EDIT = cu.editBotPrompt()
+                                print("EDIT")
+                                print(EDIT)
+                                response = openai.ChatCompletion.create(
+                                    model=Model,
+                                    messages=[
+                                        {"role": "system", "content": Line1_System_Rule},
+                                        {"role": "user", "content": Line2_Role},
+                                        {"role": "user", "content": Line3_Format},
+                                        {"role": "user",
+                                         "content": "Use the following guidance when completing your task: " + EDIT},
+                                        {"role": "user", "content": Line4_Task},
+                                    ]
+                                    , temperature=crazy
+                                )
+                                GPT_Response = str(response.choices[0].message.content)
+                                self.UserPrompts += up.breakupOutput + "****Rewrite with Edits***:" + EDIT +  up.breakupOutput
+                                self.Full_Transcript += up.breakupOutput + "****Rewrite with Edits***:" + EDIT +  up.breakupOutput
+                                self.Full_Story += up.breakupOutput +  "****Rewrite with Edits***:" + EDIT + up.breakupOutput + GPT_Response
+                                self.Full_Transcript += up.breakupOutput +  "****Rewrite with Edits***:" + EDIT + up.breakupOutput + GPT_Response
+                                WINDOWNAME = WINDOWNAME + " - ReWrite with Edit"
+
+
+                            elif (('full' in query or 'try new' in query or 'new' in query or 'three'  in query) and self.UserMode != "UI") or UserMode1 == 3:
+                                promptB2 = False
+                                self.promptB = False
+                                response = openai.ChatCompletion.create(
+                                    model=Model,
+                                    messages=[
+                                        {"role": "system", "content": Line1_System_Rule},
+                                        {"role": "user", "content": Line2_Role},
+                                        {"role": "user", "content": Line3_Format},
+                                        {"role": "user", "content": Line4_Task},
+                                    ]
+                                    , temperature=crazy
+                                )
+                                GPT_Response = str(response.choices[0].message.content)
+                                self.UserPrompts += up.breakupOutput + "****Rewrite***" + up.breakupOutput
+                                self.Full_Transcript += up.breakupOutput + "****Rewrite***" + up.breakupOutput
+                                WINDOWNAME = WINDOWNAME + " - ReWrite"
+                                self.Full_Story += up.breakupOutput + "****Rewrite***" + up.breakupOutput + GPT_Response
+                                self.Full_Transcript += up.breakupOutput + "****Rewrite***" + up.breakupOutput + GPT_Response
+
+                            elif UserMode1 == 0:
+                                self.promptB = True
+                                print("self.promptB:")
+                                print(self.promptB)
+
+                            elif UserMode1 == 5:
+                                self.promptB = True
+                                self.UserConfirm=False
+                                print("self.promptB:")
+                                print(self.promptB)
+
+
+                            elif UserMode1 == 4:
+                                if self.UserMode == "UI":
+                                    EDIT = query
+                                else:
+                                    EDIT = cu.editBotPrompt()
+                                self.promptB = True
+                                GPT_Response = EDIT
+                                WINDOWNAME = WINDOWNAME + " - Used User Text"
+
+                            print("Used the following Text  for Response??: " + str(
+                            UserMode1) + up.breakupOutput + GPT_Response)
+
+
+                        else:
+                            self.Full_Story += GPT_Response
+                            print("Used the following Text  for Response: " + str(UserMode1) + up.breakupOutput+GPT_Response)
+                            KeepGoing = True
+
+                else:
+                    KeepGoing = True
+
+
             except:
                 print(' Error ChatGPT failed, trying to rerun prompt now.... if this happens too many times we will kill the script')
                 KillSwitch += 1
@@ -1818,11 +2532,15 @@ class Story():
 
             #print(up.breakupOutput)
 
-            self.UserPromptsCount+=1
+            if self.SaveTranscript == True:
+                try:
+                    cu.SaveCSV(Text=WINDOWNAME + self.Full_Story, SavePath=self.SavePath,
+                               Title=self.FileName + ' All Responses Transcript (no Prompts)')
+                    cu.SaveCSV(Text=WINDOWNAME + self.Full_Transcript, SavePath=self.SavePath,
+                               Title=self.FileName + ' All Responses and prompts')
 
-            self.UserPrompts += 'User Input #' + str(self.UserPromptsCount)
-
-            self.UserPrompts += Full_User_Prompt + up.breakupOutput2 + up.breakupOutput2
+                except:
+                    print("could not save files")
 
 
             Title = Mode + '_' + self.current_time
@@ -1834,13 +2552,18 @@ class Story():
                 ArtPrompt = Story.GPTArt2(self,User_Subject = GPT_Response)
                 print(ArtPrompt)
                 originalFilepath = Story.makeArt(self,Prompt=ArtPrompt)
-                PicNewPath1 = SavePath + up.System_Folder_Path_Fix + Mode
+                PicNewPath1 = Path(PureWindowsPath(SavePath , Mode))
                 cu.Check_Folder_Exists(PicNewPath1)
-                PicNewPath =PicNewPath1 + up.System_Folder_Path_Fix + Title + '.png'
+                PicNewPath =Path(PureWindowsPath(PicNewPath1 , Title + '.png'))
 
 
                 shutil.copyfile(originalFilepath, PicNewPath)
             return GPT_Response
+
+
+
+
+
 
 
 
@@ -1971,7 +2694,7 @@ class Story():
                 fname_only = FileName
                 #fname = os.path.join(SavePath, '\'',FileName)
 
-                fname = SavePath + up.System_Folder_Path_Fix + FileName + '.png'
+                fname = Path(PureWindowsPath(SavePath, FileName + '.png'))
                 print(f"Filename: {fname}")
                 with open(fname, 'wb') as f:
 
@@ -2121,7 +2844,7 @@ class Story():
                    Line4_Task=StoryMode.Recipe_Task, Model="gpt-3.5-turbo-16k-0613", Special='',
                    Line1_System_Rule=StoryMode.system_TextJoaT_quick, crazy=.5, Subject='', Outline='', Allowed_Fails=8,
                    SaveFile=True, MakeArt=True, Mode='getBAIKED',
-                   SavePath=up.SavePath + up.System_Folder_Path_Fix + 'CookBook', upgradeLimit= 2000):  # use this to create art style for the work
+                   SavePath=up.SavePath , upgradeLimit= 2000):  # use this to create art style for the work
         if SavePath == '':
             SavePath = self.SavePath
 
@@ -2211,14 +2934,14 @@ class Story():
 
                 SaveText = self.current_time + 'getBAIKED: ' + GPT_Response
                 print(SaveText)
-                cu.SaveCSV(Text=SaveText, SavePath=SavePath + up.System_Folder_Path_Fix + Mode+up.System_Folder_Path_Fix + Title, Title=Title)
+                cu.SaveCSV(Text=SaveText, SavePath=Path(PureWindowsPath(SavePath , Mode, Title)), Title=Title)
             if MakeArt == True:
                 ArtPrompt = Story.GPTArt2(self, User_Subject=GPT_Response)
                 print(ArtPrompt)
                 originalFilepath = Story.makeArt(self, Prompt=ArtPrompt)
-                PicNewPath1 = SavePath + up.System_Folder_Path_Fix + Mode + up.System_Folder_Path_Fix + Title
+                PicNewPath1 = Path(PureWindowsPath(SavePath , Mode, Title))
                 cu.Check_Folder_Exists(PicNewPath1)
-                PicNewPath = PicNewPath1 + up.System_Folder_Path_Fix + Title + '.png'
+                PicNewPath = Path(PureWindowsPath(PicNewPath1 , Title + '.png'))
 
                 shutil.copyfile(originalFilepath, PicNewPath)
             return GPT_Response
@@ -2260,8 +2983,87 @@ def SHAINEBootUP( Order = 1):
                       UserInputs_Config='Summarize',Seasons=2, Episodes=2)
 
         elif Order == 13:
-            x = Story(IDEA=ShaneOriginals.Fever_Dream_Scary, Mode='MVAA',
-                      UserInputs_Config='Summarize', Seasons=2, Episodes=2)
+            x = Story(IDEA=ShaneOriginals.Fever_Dream_Scary, Mode='MVAA', Writer=ShaneOriginals.ShaneBioDark,
+                      UserInputs_Config='Summarize', Seasons=1, Episodes=3, UserConfirm=True)
+
+        elif Order == 113:
+            x = Story(IDEA=ShaneOriginals.Universe25, Mode='MVAA', Writer=ShaneOriginals.ShaneBioDark,
+                      UserInputs_Config='Summarize', Seasons=1, Episodes=3, UserConfirm=True)
+        elif Order == 1133:
+            x = Story(IDEA=ShaneOriginals.Universe25_trippy, Mode='MVAA', Writer=ShaneOriginals.ShaneBioDark,
+                      UserInputs_Config='Summarize', Seasons=1, Episodes=3, UserConfirm=True)
+
+        elif Order == 11333:
+            x = Story(IDEA=ShaneOriginals.Gritty_Historic4, Mode='MVAA', Writer=ShaneOriginals.ShaneBioDark,
+                      UserInputs_Config='Summarize', Seasons=1, Episodes=3, UserConfirm=False)
+
+        elif Order == 11133:
+            x = Story(IDEA=ShaneOriginals.KillingDrake, Mode='MVAA', Writer=ShaneOriginals.ShaneBioDark,
+                      UserInputs_Config='Summarize', Seasons=1, Episodes=3, UserConfirm=True)
+
+
+        elif Order == 44444444:
+            x = Story(IDEA=ShaneOriginals.Universe44, Mode='MVAA_QUICK', Writer=ShaneOriginals.ShaneBioDark,
+                      UserInputs_Config='Summarize', Seasons=1, Episodes=3, UserConfirm=True)
+        elif Order == 111333:
+            x = Story(IDEA=ShaneOriginals.AllenPoe, Mode='MVAA_QUICK', Writer=ShaneOriginals.ShaneBioDark,
+                      UserInputs_Config='Summarize', Seasons=1, Episodes=3, UserConfirm=True)
+
+        elif Order == 1113333:
+            x = Story(IDEA=ShaneOriginals.Historical, Mode='MVAA_QUICK', Writer=ShaneOriginals.ShaneBioDark,
+                      UserInputs_Config='Summarize', Seasons=1, Episodes=3, UserConfirm=True)
+
+        elif Order == 444411333:
+            x = Story(IDEA=ShaneOriginals.Gritty_Bricktop2, Mode='MVAA_QUICK', Writer=ShaneOriginals.ShaneBioDark,
+                      UserInputs_Config='Summarize', Seasons=1, Episodes=3, UserConfirm=False)
+
+
+        elif Order == 4444113332:
+            x = Story(IDEA=ShaneOriginals.Magnolia_Like, Mode='MVAA_QUICK', Writer=ShaneOriginals.ShaneBioDark,
+                      UserInputs_Config='Summarize', Seasons=1, Episodes=3, UserConfirm=False)
+
+        elif Order == 4444113333:
+            x = Story(IDEA=ShaneOriginals.Universe44, Mode='MVAA_QUICK', Writer=ShaneOriginals.ShaneBioDark,
+                      UserInputs_Config='Summarize', Seasons=1, Episodes=3, UserConfirm=False)
+
+
+
+        elif Order == 4444113334:
+            x = Story(IDEA=ShaneOriginals.Underground_War, Mode='MVAA_QUICK', Writer=ShaneOriginals.ShaneBioDark,
+                      UserInputs_Config='Summarize', Seasons=1, Episodes=3, UserConfirm=False)
+
+
+        elif Order == 4444113336:
+            x = Story(IDEA=ShaneOriginals.Gritty_Fever, Mode='MVAA_QUICK', Writer=ShaneOriginals.ShaneBioDark,
+                      UserInputs_Config='Summarize', Seasons=1, Episodes=3, UserConfirm=False)
+
+
+        elif Order == 4444113337:
+            x = Story(IDEA=ShaneOriginals.AllenPoe, Mode='MVAA_QUICK', Writer=ShaneOriginals.ShaneBioDark,
+                      UserInputs_Config='Summarize', Seasons=1, Episodes=3, UserConfirm=False)
+
+
+
+        elif Order == 4444113338:
+            x = Story(IDEA=ShaneOriginals.KillingDrake, Mode='MVAA_QUICK', Writer=ShaneOriginals.ShaneBioDark,
+                      UserInputs_Config='Summarize', Seasons=1, Episodes=3, UserConfirm=False)
+
+
+
+        elif Order == 4444113339:
+            x = Story(IDEA=ShaneOriginals.Gritty_Comedy, Mode='MVAA_QUICK', Writer=ShaneOriginals.ShaneBioDark,
+                      UserInputs_Config='Summarize', Seasons=1, Episodes=3, UserConfirm=False)
+#KillingDrake
+#Magnolia_Like
+        #Gritty_Bricktop2
+        #Universe25_trippy2
+        #Gritty_PulpNoir
+#Stripper1
+#Stripper_Gritty
+
+#Timmy_D_Story
+        #Stripper
+#Gritty_DoubtFire
 
         elif Order == 14:
             x = Story(IDEA=ShaneOriginals.Gritty_Historic2, Mode='MVAA2',
@@ -2272,6 +3074,30 @@ def SHAINEBootUP( Order = 1):
                       UserInputs_Config='Summarize', Seasons=2, Episodes=2)
 
 
+        elif Order == 444:
+            x = Story(IDEA=lup.Subject, Mode='Music_Shane',
+                      UserInputs_Config='Summarize', Writer=up.Artist_Bio_DetailsSD, SavePath= up.AI_Music_Path)
+
+
+
+        elif Order == 910:
+            x = Story(IDEA=lup.Subject, Mode='Music_Shane',
+                      UserInputs_Config='Summarize', Writer=up.Artist_Bio_DetailsRR, SavePath= up.AI_Music_Path)
+
+
+        elif Order == 4444:
+            x = Story(IDEA=lup.Subject, Mode='Music_Shane',
+                      UserInputs_Config='Summarize', SavePath= up.AI_Music_Path)
+
+
+
+        elif Order == 443:
+            x = Story( IDEA = ShaneOriginals.Gritty_Historic4 , Mode='Music_Shane',
+                      UserInputs_Config='Summarize', Writer=up.Artist_Bio_DetailsSD, SavePath= up.AI_Music_Path)
+
+        elif Order == 4443:
+            x = Story( IDEA = ShaneOriginals.Alejandro_in_wonderland , Mode='Music_Shane',
+                      UserInputs_Config='Summarize', Writer=up.Artist_Bio_DetailsSD, SavePath= up.AI_Music_Path)
 
 
     # except:
@@ -2298,7 +3124,9 @@ if __name__ == '__main__':
 
     #arg = [1,2]
     #arg = [5,0]
-    arg = [15]
+   # arg = [444, 443]
+    #4444113335, 4444113334, 4444113333, 4444113332, 444411333
+    arg = [4444113339]
     #arg = [44, 13,10]
     #arg = [7,44]
     number_of_commands = len(arg)

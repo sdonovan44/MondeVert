@@ -3,11 +3,29 @@ Personal_Message_Mom = "To my beautiful and loving mother. I cannot thank you en
 Personal_Message_Rich = "To my sweet brother, as you know you have a heart of Gold and my heart goes out to you everyday that you have to struggle with this terrible disease that causes you to live a life that can at times be cruel and unfair. You are extremely talented and I only get upset because I see your full potential and want you to reach beyond what you believe is possible. I know you are lonely and I promise you in time you will find your true love. There is someone out there who will be there for you and understand what you are going through. I urge you to continue to write music and tell the world your story. I am always proud of you and each day you continue to smile and push forward is driving you towards the life you deserve. Life is never easy and your life is no exception. I hope you know I love you like a brother and I rely on you like a best friend. Our relationship is so strong and it is something I truly cherish. I hope you are aware of how much I love you and how special you are. Never stop dreaming, keep working hard and one day you will make it a reality! With much love, Shane"
 Personal_Message_Dad = """When writing this note I am overwhelmed with gratitude and I fear nothing I say will give justice to how profoundly you have impacted my life. I always tell people your goal in life was to be a great parent and you have exceeded all expectations as my father. I know my son will be raised right because I have the world's best role model for how to be a man. You are kind and strong and I have learned many important lessons from you. My favorite part about you and your character is how you always protect the ones who are unable to protect themselves, and your pursuit of self-education and learning has always pushed me forward to be the best version of myself. As I said before, there are not enough words in the world to express how thankful I am. But I hope this attempt at least highlights the importance of you in my life. Thanks for all of your sacrafices and always putting Melissa, Micaela and myself's interests above your own. If I am half of the man you are when I am 65 I will be a very lucky person. I thank God for giving me the perfect dad, and I thank you for always being there even when you worked all day and had to commute for hours in traffic to see us, sometimes to find out we had made plans with friends or just flat out ditched you. Most Dads would have not been able to keep coming time after time, but you were always there for us. You are truly one of a kind, and no matter how frustrated I seem, its only because my goal in life is to make you proud.  Love your son Shane """
 
+
+Micaela = """Thank you so much Micaela for always being a strong influence in my life and thank you for always supporting me to be the best version of myself. Life has not always been easy for us and we may not have always gotten along, but I can honestly say my memories of us are loving and I know that if I need you for anything you will always be there. I hope you know I will always be here for you as well. I love you so much and look forward to continuing to grow with you and learn from your wisdom. Much Love your favorite sibling 'Shanita'"""
+Walter = """Walter, I appreciate you sending me your address and I look forward to hearing from you in the near future. Your influence on my career and personal journey has been far greater than you can imagine. Seeing how your tenure at Harbourvest was handled made me realize how important your friends and family are and also I truly admire your relationship with your wife and long for someone to complete me in a similar manner. I know you are a huge fan of handwritten messages, my favorite story is how you met your wife and the daring move you made by leaving her a note/writing her a personal christmas card. Walt, I want to thank you again and I wish you and your family the best. Much Respect, Shane"""
+Derek = """Derek, I am always shocked by your kindness and I am grateful I always get to see your vulnerable side. I know that caroline is a lucky lady because not only are you a stud, but you are also a caring and thoughtful person. You have always been someone I look up to and I appreciate your love and support throughout the years. I am committed to always being there for you and your family and I hope we can remain close in the future. Please reach out anytime, I look forward to you coming to visit (you are invited any time!). The last thing I will mention is that I am currently focusing all of my attention into Real Estate and I hope to be a resource for you/your network even if I can help with questions about hiring labor/purchasing in a State I am not licensed (FYI I am currently licensed in MA/SC/RI)  Much Love, your cousin Shane!"""
+Elizabeth = """Hi Elizabeth, thanks again for being bold and providing me your address so I could send this letter. I hope it finds you well, you are clearly a caring person and I definitely remember you always being a great friend and loving sister/daughter. I Hope all is well with your family, and I hope you can say hello to Phillip for me as we always had such a great time playing football in your yard. I also fondly remember waiting at the bus stop outside of your house and most vividly I remember playing pokemon and having no idea the actual rules. I would be remissed to not mention, I am shifting my career from a typical 9-5 into Real Estate, I am currently licensed in MA, SC and RI. I hope to be a resource for you and your family with any of your real estate questions, including any sort of refferal you need for a Handyman/Attorney/Lender I would love to assist you on your journey! Our friendship is honestly one of my oldest if I look back, and I hope to reconnect with you in the future! I acknowledge you for taking the risk of reaching out to me, and I hope this letter leaves you feeling appreciated and remembered with a kind heart. Feel free to write back anytime, thanks for your time. Best Shane"""
+Jamie = """Jamie, thanks again for being bold and providing me your address so I could send this letter. I hope it finds you well, you are clearly a caring person and I remember you always being a great friend. I hope your journey in the past few years has been great, and I am sorry we fell out of communication. I still creep on you and the family on facebook from time to time and I always look forward to seeing you post with you and your family enjoying life! I miss our experiences with landmark and constantly finding myself reflecting on what I learned through those classes and the lessons I learned from the connections I made. I hope you know you were a tremendous influence on me and my journey has not always been easy but I feel like I am truly on the path of realizing my purpose in life. I love learning new things and meeting new people and I hope you have gotten to continue growing over these years. I want to mention that I am happily shifting my career from the traditional 9-5 to being a Realtor. I am currently licensed in MA/SC/RI and I look forward to obtaining more licenses in the future. I am currently manifesting that saying "if you love what you do then you will never work a day in your life". I am so blessed to be in Myrtle Beach, SC close to my dad and realizing my true self while making new friends and enjoying around 220 days of sunshine! Thanks again for reaching out, I encourage you to be bold and return a personal letter, I know I have found it therapuetic and fun to take the time to write these messages to my old friends. Thanks Shane"""
+Max = """Max, thanks again for being bold and providing me your address so I could send this letter. I hope it finds you well, you are clearly a caring person and I remember you always being a great friend. My fondest memories are the days when I would walk over to your house with 'Bmey' and we would play endlessly around kent park causing any sort of mayhem we could. The other memory I have is playing baseball and although we rarely played on the same team, you were always a fierce competiter and I was glad to see your baseball career turned into such an important part of your life. Although we have been out of contact, I am grateful for social media for keeping me up to date with your tremendous career at Franklin Pierce. I definitely miss the glory days, and I am happy to see you enjoying it so many years later. As you likely remember I was too big to play football and I was lucky to stay involved in football as a coach for the Falcons with my dad. I remember we would often hang out especially when your brother Luke was a defensive stud and one of my dad's favorite players. I thank you for sending me your info and hope we can reconnect in the future! Thanks again, Shane!"""
+Lawler = """Lawler, I want to thank you for reaching out and potentially working with me on your future in Real Estate. I think you are a very wise person and I find myself learning from you and your experiences. I look forward to adding my own insights to help you get you another potential investment and eventually find you and Brenna that perfect home for you to raise your kids in Massachuesetts. I want to thank you for always being a great friend and I agree with Brenna it is strange how we can go so long without connecting (this is obviously on me as well). I am committed to staying connected, I miss having the relationship we once had as captains of Football/Wrestling and also the one year of me being a FOGO (or as I joke a FOGTFO). I hope this letter finds you well, and I am excited to be reconnected and I hope you take me up on my offer to stay at my house anytime you want to travel down to myrtle beach! Thanks 'Big Fat Shano' aka Bubba"""
+Anil = """Anil, Thank you so much for taking the time to speak with me, I always enjoyed working with you and the team at HarbourVest. You were always a pleasure to work with and I hope to continue building our relationship on the journey to finding you a great investment for you and your family. I hope my skills can bring you the best investment possible and I look forward to the opportunity to help you build your wealth. The buying process is a slow process and I expect over the next several months to be in contact in order to find you the perfect home! If there is ever anything I can help with including hiring contractors for your current home etc. I strongly urge you to use me and my network in both MA and SC. Thanks again for trusting me, I look forward to hearing from you. Thanks, Shane"""
+
+
+Personal_Message = [Micaela, Walter, Derek, Elizabeth, Jamie, Max, Lawler, Anil]
+Personal_Message_Names = ["Micaela", "Walter", "Derek", "Elizabeth", "Jamie", "Max", "Lawler", "Anil"]
+
+
+
+
+
 # Personal_Message = [Personal_Message_Gram, Personal_Message_Dad]
 # Personal_Message_Names = ["Grammie", "Dad"]
 
-Personal_Message = [Personal_Message_Dad]
-Personal_Message_Names = [ "Dad"]
+# Personal_Message = [Personal_Message_Dad]
+# Personal_Message_Names = [ "Dad"]
 
 
 Personal_Message_Task = "It is imperative you keep the personal touch and keep the details of the letter that is emotional and heartfelt. The reader should benefit from recieving this letter and see it as a great gesture from the sender. Remove redundancy and reorder the text as needed to provide a concise message. Your task is to rewrite the following text so that it reads clearly and also makes the reader filled with emotion based on the content of the text. Do not be over the top, but make sure there is proper grammar and possibly add a quote whenever neccesary as it relates to the text. Be sure to properly cite the Quote regarding who said the quote and where the quote comes from. Please use the following text    Text: "
@@ -16,30 +34,65 @@ Journal_Task = Journal_Persona +  "It is imperative you keep the personal touch 
 
 
 
-ToDo_Task= """ Review the current To Do List and add any new items that were raised in the latest Journal Entry, make any updates to the current list based on what I mention in the journal entry, if something is completed you should mark it as such, if a new item is related to another task combine it and provide all relevant details. In your Response you should provide insights and any useful information/tips to help accomplish the tasks."""
-ToDo_Format = """ Please use the desired Format for your response, if you are unaware of the priority, simply put the items in chronological order based on the text
 
+Journal_Summary_Task = """Take the New Journal Entry and the Prior Journal Summary and make a new Summary with prior details and the new details"""
+Journal_Summary_Format = """ Please use the desired Format for your response, if you are unaware of the priority, simply put the items in chronological order based on the text. 
 Desired Format:
+Summary of All Journal Entries:
+Family/Friend/Therapist Comments and thoughts: {Details with advice and information that will help with what I am dealing with, be positive and focus on constructive critism and embrace radical candor}
 
-Priority Tasks To Do: -||- 
+Key Events (Ordered by Date for chronological order): -||-
 
-Additional Tasks To Do: -||- 
+Pending Items To Do: -||-
 
-Completed Tasks: -||-
-
-Encouragement/Motivation: {Provide motivation and or a plan of action how to take on the top items and things to do to help remain productive and maximize efficiency.} 
-
-Useful Information: {Provide any insights and potential URLs and/or information that will help accomplish my goals}
-
-
+Upcoming Goals: {Tomorrow, Next Week, Next Month, Next Year}
 """
 
+#ToDo_Task= """ Review the text and organize any tasks in a To Do list. Use the format provided to complete your response """
+ToDo_Task= """ Review the current To Do List and add any new items that were raised in the latest Journal Entry, make any updates to the current list based on what I mention in the journal entry, if something is completed you should mark it as such, if a new item is related to another task combine it and provide all relevant details. Make sure the latest items are captured and the prior items are included in the new version"""
+# ToDo_Format = """ Please use the desired Format for your response, if you are unaware of the priority, simply put the items in chronological order based on the text
+#
+# Desired Format:
+#
+# Priority Tasks To Do: -||-
+#
+# Additional Tasks To Do: -||-
+#
+# Completed Tasks: -||-
+#
+# Encouragement/Motivation: {Provide motivation and or a plan of action how to take on the top items and things to do to help remain productive and maximize efficiency.}
+#
+# Useful Information: {Provide any insights and potential URLs and/or information that will help accomplish my goals}
+#
+#
+# """
 
 
 
+ToDo_Format = """ Please use the desired Format for your response, if you are unaware of the priority, simply put the items in chronological order based on the text. 
+Desired Format:
+{Format the data into a CSV formatted table}
 
-RE_Listing1 = """Come check out this great opportunity to live 2 miles from Surfside Beach. Two bedrooms, two bath, updated top floor unit with a Carolina room in the Southbridge community. This unit has views of the pond from both bedrooms and the Carolina room. Carpet and LVP cover the floors. The large primary suite offers ceiling fan, walk-in closet, views of the pond, a private bath with vanity, and a shower tub combination. The open concept kitchen and living room has vaulted ceilings, with a ceiling fan, breakfast bar, and dining area. 
-Other features include laundry room, linen closet, storm door, and covered front porch area. The Southbridge community offers outdoor private pool, recreational facilities, long and short-term rental allowed, and much more. Square footage is approximate and not guaranteed, buyer is responsible for verification."""
+
+Priority # | Company/Business | Category | Sub Category | Sub Category Detailed | Status | Added to Calendar | Start Date | Last Update Date | Due Date | Complete Date | Details | Notes | Action Required | Additional Information | Contacts involved | Monetary Gain/Charity/Fun | Impact | Urgency | AI Insights/Tip
+"""
+
+#
+
+
+
+#Create a task for instagram/social media caption with the num of characters allowed and hashtag option
+
+
+
+RE_Listing1 = """ 
+If you are looking for a reliable real estate professional who is passionate about helping you find the best investment, I am here to help! 
+
+
+
+I am committed to finding you the best deal that fits your budget. I look forward to sharing my expertise and knowledge with you in order to find you the perfect home or investment.  
+"""
+
 
 RE_Listing = [RE_Listing1]
 

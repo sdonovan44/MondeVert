@@ -34,6 +34,13 @@ Other Ways to enjoy the leftovers, fun twists on the recipe:
 
 """
 
+
+
+Role_Podcast = """You are an expert podcast director and content creator. Role play you are a podcast host and expert content creator skilled at making interesting content and asking interesting questions. Your podcast is about  living a life you love, self development, manifesting your destiny and other positive vibes"""
+Task_Podcast = """Come up with a format for a new podcast about good vibes, being woke and navigating life being a male 30 year old. Come up with 5 episodes worth of topics and format between different guests and styles of doing the podcast """
+#"""write 10-15 open ended questions and separately come up with 3-8 topics  to discuss on your  weekly podcast. Provide the nexccesary details/information.references/research that helps to answer the questions and/or inform the audience about the topics Try to keep the content related to new ideas and newsworthy material."""
+Format_Podcast = """complete the task as expected, and provide in the necessary format"""
+
 #********************************************************************************************************************************************************************************
 #********************************************************************************************************************************************************************************
 
@@ -75,38 +82,47 @@ Short_Story_Config = """The following Instruction from user must be followed, In
 
 
 
-Persona_Task1 = """{Task}: ### Write a short bio and complete the table as requested in the {Desired Format}###"""
-Persona_Task = """Create a persona for your writer to use as an alias be extremely creative and make the person completely unique. It should feel like a real person completely unique with all of their own personal details to be shared with the world. I want them to  feel real and cover many genres but pick a specific few they are specialists at and also the tone""" + Persona_Task1
+Persona_Task1 = """{Task}: ### Write a short bio (keep it under 1000 words)  and complete the table as requested in the {Desired Format}###"""
+Persona_Task = """Create a brief and concise persona for your writer to use as an alias be extremely creative and make the person completely unique. It should feel like a real person completely unique with all of their own personal details to be shared with the world. I want them to  feel real and cover many genres but pick a specific few they are specialists at and also the tone""" + Persona_Task1
 
 Persona_Role = """You are an expert writer master of poetry, screenplays, novels, short stories, children's books etc. specifically you will be taking on the persona you created. Be a master of writing and also anything else I tell you to be"""
 Persona_Role_Music  = """You are an expert writer master of all genres of music,poetry, screenplays, novels, short stories, and music production. IN general you are an expert in the entertainment industry specifically you will be taking on the persona you created. Be a master of lyric writing and music theory, also anything else I tell you to be"""
 
 Persona_Format = Default_Format + """
 Desired Format:
-    Persona: Full Name|Age|BirthDate|Personality|Hometown|Current Home|Family
-    Skills:-||-
-    Subject of Works:-||-
-    Writing Style: -||-
-    Influences (music, literature, film, other): -||-
-    Audience: -||-
-    genres: -||-
-    Tone: -||-
-    Themes:-||-
-    Dialogue Style: -||-
-    Personality: -||-
+Skills:{Skills}|Subject_of_Works:{Subject_of_Works}|Writing Style:{Writing Style}|Influences:{Influences}|Audience:{Audience}|genres:{genres}|Tone:{Tone}|Themes:{Themes}|Dialogue Style:{Dialogue Style}|Writing Personality:{Writing Personality}|Signature:{what makes their writing unique}
 """
+
+
+
+
+#
+# """
+# Desired Format:
+#     Persona: Full Name|Age|BirthDate|Personality|Hometown|Current Home|Family
+#     Skills:-||-
+#     Subject of Works:-||-
+#     Writing Style: -||-
+#     Influences (music, literature, film, other): -||-
+#     Audience: -||-
+#     genres: -||-
+#     Tone: -||-
+#     Themes:-||-
+#     Dialogue Style: -||-
+#     Personality: -||-
+# """
 
 
 
 
 Persona_Summary_Role = "You are a master of all skills and talents, specifically you are an award winning writer."
 Persona_Summary_Format = Default_Format + """
-Desired Format:
-Skills:{Skills}|Subject_of_Works:{Subject_of_Works}|Writing Style:{Writing Style}|Influences:{Influences}|Audience:{Audience}|genres:{genres}|Tone:{Tone}|Themes:{Themes}|Dialogue Style:{Dialogue Style}|Writing Personality:{Writing Personality}|Signature:{what makes their writing unique}
+Desired Format: 
+Writing Style:{Writing Style}|Influences:{Influences}|Audience:{Audience}|Tone:{Tone}|Themes:{Themes}|Dialogue Style:{Dialogue Style}|Signature:{what makes their writing unique}
 """
-Persona_Summary_Task = "Task: ###  Reformat the details provided and fit them into a more condensed format. Be creative and make them feel real and human. Follow the format I provided and give me a complete response ('N/A' is not the correct response). ###   Persona: ###"
+Persona_Summary_Task = """Task:  ###  Using the details you have been provided come up with a way of describing a prose, language, what time period, what style of language they use and the skills they posses or like to incorporate into their writing, be descriptive and use more definitions and words to describe rather than comparing to people. be unique and concise. Keep this under 100-150 words total.  ###   Persona: ###"""
 
-
+#"Task: ###  Reformat the details provided and fit them into a more condensed format. Be creative and make them feel real and human. Follow the format I provided and give me a complete response ('N/A' is not the correct response). ###   Persona: ###"
 
 
 StoryArt = "Come up with a short prompt [less than 250 characters] to for an artist to render a work of art Based on the respective style/details/and content of the text provided.  Make the prompt concise and easy for the artist to interpret, use the following text as your subject Text:  "
@@ -122,40 +138,45 @@ Similar Artist and Details: <Artists that art is similar to>,<Art_Style> <Tone>,
 #Character Outline to build the story (do this after you have details)
 Character_Task_add_on1 = """ When creating the {character} details use the following {outline}  as a guide to create your characters. Outline:###"""
 Characters_Role = Persona_Summary_Role
-Characters_Task1 ="""{Task}: ###Describe/create the details for the respective  Main Characters and Minor Characters for the respective story outline that is to be provided.  be creative and pick a diverse mix of characters, or if there is a specific time period or theme you are picking you can use names and characters that fit accordingly. Come up with at least 10 or more roles for your story and its ok to have waitress#1 or policeman#2 and so forth. Use the {Persona} you created to come up with the inspiration   """
-Characters_Special = """Create 4 or more Main characters and 10 or more minor characters, feel free to give less info for minor characters and more details for main characters, use random uncommon names (stop using Blackwood) be as random as possible with names, then cultural names, then nicknames, try to pick common names only 10% or less of the time"""
+Characters_Task1 ="""{Task}: ###Create 5 or more Main characters and also create 15 or more minor characters (20+ total characters). Provide the details for the respective  Main Characters and Minor Characters for the respective story outline that is to be provided.  be creative and pick a diverse mix of characters and names (make sure they are appropriate names for the story, make your characters fit the story and vice versa), or if there is a specific time period or theme you are picking you can use names and characters that fit accordingly.  feel free to give less info for minor characters and more details for main characters. Make sure your names are unique, use a randomizer so if I asked you 1000 times   you would not repeat the name once """
+Characters_Special = """Create 5 or more Main characters and also create 15 or more minor characters, feel free to give less info for minor characters and more details for main characters, use random uncommon names (stop using Blackwood) be as random as possible with names, then cultural names, then nicknames, try to pick common names only 10% or less of the time. It is imperative you have at least 15 people mentioned"""
 Characters_Format = """Complete the {Task} provided, use the {Persona} you created to do all of the tasks. Make sure the result is in the correct format.
 
-#Major Characters:{@Name:{First Name Last Name}Age:{Age}|Voice:{Voice}|Personality:{Personality}|Home:{Current:{City State}|origin:{Country}}|Language:{Language}|Role:{Minor_Major_Protaganist_Antagonist_Unknown}|Career:{Current:{Current Job}|Dream Job:{Dream Job}}|strengths:{strengths,strengths,strengths}|weakness:{weakness,weakness,weakness}|Physical Description}
-
-#Minor Characters:{@Name:{Name}Age:{Age}|Voice/Personality:{Personality}|Home:{Current:{City State} Role:{Role}|Career:{Current:{Current Job}|Physical Description}
+#Characters:{@Name:{First Name Last Name}|Age:{Age}|Physical Description:{Physical Description}|Wants:{Wants}|Needs:{Needs}|Drive:{Drive}|Secret:{Secret}}
 """
+
+#Role:{Minor_Major_Protaganist_Antagonist_Unknown}|Career:{Current Job}}|strengths:{strengths,strengths,strengths}|weakness:{weakness,weakness,weakness}
 Characters_Task = Characters_Task1 + Character_Task_add_on1
-
-
+#
+# Characters_Format = """Complete the {Task} provided, use the {Persona} you created to do all of the tasks. Make sure the result is in the correct format.
+#
+# #Major Characters:{@Name:{First Name Last Name}Age:{Age}|Voice:{Voice}|Personality:{Personality}|Home:{Home}|Role:{Minor_Major_Protaganist_Antagonist_Unknown}|Career:{Current Job}}|strengths:{strengths,strengths,strengths}|weakness:{weakness,weakness,weakness}|Physical Description|Wants|Needs}
+#
+# #Minor Characters:{@Name:{Name}Age:{Age}|Wants:{Wants}|Needs:{Needs}}
+# """
 
 #Character Outline to build the story (do this after you have details)
 Characters_Role = Persona_Role
 
 
-Characters_Task ="""{Task}: Create the a Short description of the relevant characters in the given text based on the Character Description Provided. Your response should be less than 150 words in total keep each character description concise  Character Description: """
-Characters_Task_Fine = """ Use the following Text to pick the relevant characters, only pick the characters that are in the respective text, do not describe every character. Your response should be less than 30 words for each character, keep the description concise """
+#Characters_Task ="""{Task}: Create the a Short description of the relevant characters in the given text based on the Character Description Provided. Your response should be less than 150 words in total keep each character description concise  Character Description: """
+Characters_Task_Fine = """ Use the following Text to pick out the relevant characters that are needed for this section of the story (DO NOT PICK any CHARACTERS NOT MENTIONED, does not matter if major/main/minor). Base your description/characters you choose on the current context and plot points. Be extensive and pull all neccesary characters., only pick the characters that are in the respective text, do not describe every character. Your response should be less than 60 words for each character, keep the description concise """
 Characters_Format_Fine = Default_Format + """
-Desired Format: Characters_in_Text:{@Name|Protagonist/Antagonist/relationship to protagonist|How they move the plot forward in this part of the story|6 word or less desctiption of body language/mood/outfit}"""
+Desired Format: Characters_in_Text:{@Name:{Role:{Role}|How they move the storyline/plot/arc plot/story forward in this part of the story/text (make this detailed and specific to this part of the story/text)|6 word or less description of body language/mood/outfit}}}"""
 
-Characters_Update_Task ="""{Task}: Take the original Character descriptions and Update the respective details based on the text provided.  (Add details for new main characters and significant character development) based on the text that is to be provided. Keep all known characters in your response so we do not lose information, but keep details based on latest text where appplicable  Text:"""
+Characters_Update_Task ="""{Task}: Take the original Character descriptions and Update the respective details based on the text provided.  (Add details for new main characters and significant character development) based on the text that is to be provided. Keep all known characters in your response so we do not lose information (do not lose characters only add new ones and update current ones), but keep details based on latest text where appplicable  Text:"""
 Characters_Update_Format = """Complete the {Task} provided, use the {Persona} you created to do all of the tasks. Make sure the result is in the correct format.
 Desired Format:
-#Characters:{@Name:{First Name Last Name}Age:{Age}|Voice:{Voice}|Personality:{Personality}|Role:{Role in the Story}|Career:{Current Job}|strengths:{strengths,strengths}|weakness:{weakness,weakness}|Physical Description: {<less_than_50_Characters>}|Status in Story: Status (Dead/Alive/Presumed Dead/Missing/Hurt}"""
+#Characters:{@Name:{First Name Last Name}|Age:{Age}|Physical Description:{Physical Description}|Wants:{Wants}|Needs:{Needs}|Drive:{Drive}|Secret:{Secret}}"""
 
 
 
 
 
 IDEA_Role = Persona_Summary_Role + ' Use the following Writing Styles to formulate a unique Idea for a story. There does not have to be a narator, if there is one it does not have to be the writer it can be someone from the story or never disclosed (vary between honest and unreliable narrators when you have them sometimes make them omnicient but not always reveal things too early to the audience - Make them guess about whats going on for a bit) Writing Style: '
-IDEA_Task = "Use the following Idea to create your own detailed outline with enough characters, plots and arc plots that can be converted into a full feature length film or a novel. "
+IDEA_Task = "Use the following Idea to create your own detailed outline with enough characters, plots and arc plots that can be converted into a full feature length film or a novel. Be detailed and make the story interesting, try to have multiple storylines that intertwine. Have at least one main plot and a few arc plots detailed. Give a ton of information for your story "
 IDEA_Task_AI = "Use the Writing Style you have created to come up with a unique idea for a story, be entertaining and make the story appropriate for the respective audience. The story should be something the reader instantly connects with and draws them into the subject matter"
-IDEA_Format = 'there needs to be enough details for a full story to be written so try to have a large response with between 1300 and 4000 tokens.'
+IDEA_Format = 'there needs to be enough details for a full story to be written so try to have a large response with between 3000 and 5000 tokens. (Have 40-60 main actions) Make it detailed'
 
 
 
@@ -166,7 +187,7 @@ Summarize_Task = """Create a concise summary of the following text, be sure to i
 Summarize_Format = """Provide your response in a similar format that was provided unless otherwise stated"""
 
 
-Story_Background_Task = """Use the following information as reference, do not be repetitive (meaning do not have these same events take place again, choose different wording to descibe the characters and have their personality change over time).  Build the story based off of these prior events (Do Not use have the samee prior event happen twice, make the story have logical continuity). Make sure you do not spoil plot points that are only known to certain characters (if there is a secret plan keep it a secret), do not release spoilers. Background: """
+Story_Background_Task = """Use the following information as reference, do not be repetitive (meaning do not have these same events take place again,  Build the story based off of these prior events (Do Not use have the same prior event happen twice, make the story have logical continuity). Make sure you do not spoil plot points that are only known to certain characters (if there is a secret plan keep it a secret), do not release spoilers. Background: """
 
 Story_Summarize_Task = """Create a concise summary of the following text, be sure to include major events but remove fluff and redundancy. Be responsible about what has happened and what is yet to happen, the narrator/audience may know something that is not public info, mark in your summary if this is not publically known information (also mark if its something only the audience knows and why) Make sure it is clear if someone is faking their own death no one knows except people in the plan. Make sure if something is only clear to the audience mark it that way"""
 
@@ -193,7 +214,7 @@ Desired Format:
     Point of view:{Point of view}
     Reliable Narrator: {Yes/No}
     Language(s):{Language(s)}
-    Music:{genres:{song genre}|songs:{song by artist,song by artist}}
+   
 
 #Literary Devices:
     Plot:{Exposition:{Exposition}|Rising Action (Conflict){Rising Action (Conflict)}|Climax:{Climax}|Falling Action:{Falling Action}|Resolution:{Resolution}}
@@ -211,6 +232,7 @@ Desired Format:
     Irony:{Irony}
     Imagery:{Imagery}
     Similes_Metaphors:{Similes_Metaphors}
+    Other Key Details:{Key Details}
 """
 
 # This will give  a summary of things that need to be consistent in the story to make it flow better (Maybe I wont use this IDK?)
@@ -234,15 +256,15 @@ StoryDetails_Task = """Create a Detailed Outline that fits in the format describ
 StoryDetails_Format = Default_Format + """
 Desired Format:
  
-    @StoryLine#:{Plot/ArcPlot:{Exposition:{Exposition}|Rising Action(Conflict){Rising Action (Conflict)}|Climax:{Climax}|Falling Action:{Falling Action}|Resolution:{Resolution}}|Foreshadowing:{Foreshadowing} | Red Herrings:{Red Herrings}| Plot Twists:{Plot Twists be specific}}
+    @StoryLines:{StoryLine#:{Plot/ArcPlot:{Exposition:{Exposition}|Rising Action(Conflict){Rising Action (Conflict)}|Climax:{Climax}|Falling Action:{Falling Action}|Resolution:{Resolution}}|Foreshadowing:{Foreshadowing} | Red Herrings:{Red Herrings}| Plot Twists:{Plot Twists be specific}}}
     
-    |Symbolism:{Symbolism}|Juxtapositions:{Juxtapositions}|Irony:{Irony}|Allusion:{Allusion}| Allegory:{Allegory}|Imagery:{Imagery}|Similes_Metaphors:{Similes_Metaphors}}
+    Symbolism:{Symbolism}|Juxtapositions:{Juxtapositions}|Irony:{Irony}|Allusion:{Allusion}| Allegory:{Allegory}|Imagery:{Imagery}|Similes_Metaphors:{Similes_Metaphors}
     | How the StoryLine(s) Connect together: Explanation
     | Story_Opening: Details
-    | Story Conflicts
-    | Story Climax
-    | Story_Ending: Details}
-
+    | Story Conflicts: Story Conflicts
+    | Story Climax: Story Climax
+    | Story_Ending: Details
+    | Other Key Details:{Key Details}
 
 """
 
@@ -275,7 +297,7 @@ Desired Format:
    @Season Number:{genre:{genre}| mood:{mood}|Theme:{Theme}|Setting:{List of Settings}|Narrative:{Narrative}|Point of view:{Point of view}|Imagery:{Imagery}|Symbolism:{Symbolism}|
    Plot:{Exposition:{Exposition}|Conflict:{Conflict}|Climax:{Climax}|Falling Action:{Falling Action}|Resolution:{Resolution}}
    |Arc-Plots:{Arc-Plots}|Foreshadowing:{Foreshadowing}|Red Herrings:{Red Herrings}|Plot Twists:{Plot Twists be specific}
-   |Season Significant Quotes:{Season Significant_Quotes - Character}}
+   |Other Key Details:{Key Details}}
 
    """
 
@@ -284,29 +306,30 @@ Desired Format:
 
 # @Season#: Plot/Arc Plot|Exposition|Conflict|Climax|Resolution|Plot Twist|Imagery|Characters|Settings|
 
-Story_Full_Season_Outline_Task = """Task: ### Using  the {Outline} you created and the {Characters} you created, write a detailed outline for all of the episodes in the respective season. In your outline Give a  description of each episode in the respective season."""
+Story_Full_Season_Outline_Task = """Task: ### Using  the {Outline} you created and the {Characters} you created, write a detailed outline for all of the episodes in the respective season. Come up with more detailed and elaborate plots to play out in your story. In your outline Give a description of each episode (with distinct literary devices and a continuation or flashback/set up of previous scenes). It should make sense and not be repetetive. in the respective season."""
 Story_Full_Season_Outline_Format = Default_Format + """
 
 Desired Format:
-   @Episode Number:{#Title:{<short_Abstract_Title>}|Setting:{List of Settings}| Plot:{Exposition:{Exposition}|Rising_Action_Conflict:{Rising_Action_Conflict}|Climax:{Climax}|Falling Action:{Falling Action}|Resolution:{Resolution}|Foreshadowing:{Foreshadowing}|Red Herrings:{Red Herrings}|Plot Twists:{Plot Twists be specific}}|Arc Plots:{Arc Plots}}"""
+   @Episode Number:{#Title:{<short_Abstract_Title>}|Setting:{List of Settings}|Episode Description: {How does the plot move forward, what does this set up, any arc plots moving forward, talk about some scenes} |Other Key Details:{Key Details}}"""
 
 # (Episode Outline) - Detailed outline
 # ****************************************************************
 
-Story_Episode_Outline_Task = """Task: ### Using  the {Outline} you created and the {Characters} you created, write a detailed outline For the respective Episode using the background information as well as the episode specific outline. make it interesting and either close out a prior arc plot or push forward the main plot or create a new arc story to follow."""
+Story_Episode_Outline_Task = """Task: ### Using  the {Outline} you created write a more detailed outline. Provide a ton of details and information to write the story. For the respective Episode (be sure to build your story off of the background information as well as the episode specific outline). make it interesting and either close out a prior arc plot or push forward the main plot or create a new arc story to follow."""
 Story_Episode_Outline_Format = Default_Format + """
 Desired Format:
-   @Episode Number:{#Title:{<short_Abstract_Title>}|Episode Length:{Number of Scenes}|Writing Style:{Writing Style}|Setting:{Setting}|mood:{mood}|Theme:{Theme}|Narrative:{Narrative}|Point of view:{Episode Specific Point of view}|Episode Significant Quotes:{'Episode Specific Quote' - Character}|
+   @Episode Number:{#Title:{<short_Abstract_Title>}|Episode Length:{Number of Scenes}|Writing Style:{Writing Style}|Setting:{Setting}|mood:{mood}|Theme:{Theme}|Narrative:{Narrative}|Point of view:{Episode Specific Point of view}|
 
    Plot:{Exposition:{Exposition}|Rising_Action_Conflict:{Rising_Action_Conflict}|Climax:{Climax}|Falling Action:{Falling Action}|Resolution:{Resolution}|Foreshadowing:{Foreshadowing}|Red Herrings:{Red Herrings}|Plot Twists:{Plot Twists be specific}
-   |Arc Plots:{Arc Plots}}
+   |Arc Plots:{Arc Plots}
+   |Other Key Details:{Key Details}}
    """
 
 
 # Scene By Scene (Most Granular)
 
-Story_Full_Episode_Outline_Task = """ write a detailed scene by scene outline for The respective story. Use a good mix of dialogue and action or both, continue to drive the plots/arc plots. Make the story exciting and have interesting plot twists and stories. each episode should only have 2-4 intense scenes where other scenes help provide context and set up other parts of the story."""
-Story_Full_Episode_Outline_Format = """Make sure the result is in the correct format, keep each Scene's description under 120 Words for this outline and have at least 5 scenes in the Episode. you can go to characters in another location and come back to continue the scene later in the episode.
+Story_Full_Episode_Outline_Task = """ write an extremely detailed scene by scene outline for The respective story. Use the outline provided and build a Scene by Scene Version of the story. Have unique ideas for each scene, have them build off each other in an exciting way and draw the reader in."""
+Story_Full_Episode_Outline_Format = """Make sure the result is in the correct format, keep each Scene's description under 120 Words for this outline and have between 6 and 13  scenes in the Episode. you can go to characters in another location and come back to continue the scene later in the episode. You can also split up large scenes into two back to back, you can have flashbacks and other sort of set ups for later if it makes sense.
 
 Desired Format:
 @Scene:{Setting:{Setting}|Length of Scene:{Short/Medium/Long}|Characters:{Characters_in_Scene}|Scene_Details:{Scene_Details}}
@@ -316,9 +339,9 @@ Story_Scene_Outline_Task = """Task:  write a detailed outline for The respective
 Story_Scene_Outline_Format = """Complete the {Task} provided , Role play that you are the {Persona} and use the {Characters} you created to do provide your response in the format shown below.
 
 Desired Format:
-@Scene:{Setting:{Setting}|Length of Scene:{Short/Medium/Long}|Action/Dialog/Both| genre:{genre}| mood:{mood}|Theme:{Theme}|Narrative:{Narrative}|Point of view:{Point of view}|Reliable Narrator: {Yes/No}|Language(s):{Language(s)}| Significant Quotes for this Scene (Vary them up, do not repeat):{'Quote' - Character}|Characters:{Characters_in_Scene_By_Name}|
+@Scene:{Setting:{Setting}|Length of Scene:{Short/Medium/Long}|genre:{genre}|mood:{mood}|Theme:{Theme}|Narrative:{Narrative}|Point of view:{Point of view}|Reliable Narrator: {Yes/No}|Language(s):{Language(s)}|Characters:{Characters_in_Scene_By_Name}|
 Plot Notes: How does it drive the plot/arc plot
-Scene Description:-||-}
+Scene Description: {Detailed Scene Description}
 
 """
 
@@ -326,8 +349,8 @@ Scene Description:-||-}
 
 # Episode/Scene High Level Details for Scene by scene
 # ****************************************************************
-Story_Episode_Writing_Style_Task = """Task:  Using the {Persona} you created, and most importantly the {Season Outline} you created and the {Characters} you created, write a detailed outline for one episode in from the story."""
-Story_Episode_Writing_Style_Format = """Make sure the result is in the correct format, if there is a N/A or None in your results remove the respective category/line from your result to save on tokens write a detailed outline (under 1444 Character limit) used in your results
+Story_Episode_Writing_Style_Task = """Task:  Using the details you have been provided come up with a way of describing a prose, language, what time period, what style of language they use and the skills they posses or like to incoporate into their writing, be descriptive and use more definitions and words to describe rather than comparing to people. be unique and concise"""
+Story_Episode_Writing_Style_Format = """Make sure the result is in the correct format,
 
 Desired Format:
 Writing Style:{Writing Style}
@@ -408,19 +431,19 @@ Desired Format:
 
 Output_Fix2 = "Do not put a 'CHARACTER DETAILS:' section or 'Note:' section in the output/result"
 #Output_Fix = "Do not be repetitive, make the story interesting something that someone will want to read and it will make sense. Make it exciting or funny do not make it boring. Do not always give the deeper meaning to the audience but rather paint a vivid scene with actions and dialogue and let the audience interpret what they see/hear for themselves. Do not over-expain the deeper meanings, have the symoblism but do not explicitly state what it is. Do not break the 4th wall this is crucial (Do not break the 4th wall). Do not break the 4th wall more than 1 time out of 1000000. Try not to mention anything about the reader/audience (hence do not break the 4th wall)"
-Output_Fix = "Do not be repetitive, make the story interesting something that someone will want to read and it will make sense. Do not make it boring, keep the audience on the edge of their seat with anticipation. Do not always give the deeper meaning to the audience but rather paint a vivid scene with actions and dialogue and let the audience interpret what they see/hear for themselves. Do not break the 4th wall this is crucial (Do not break the 4th wall). Try not to mention anything about the reader/audience (hence do not break the 4th wall)"
+Output_Fix = "DO NOT ADD ANY NOTES or ADDITIONAL CONTEXT TO READER THIS IS THE FINAL VERSION of the Story,  this is the final version of your Story so do not add notes or anything you do not want the audience/reader to see. ###DO NOT MENTION THE AUDIENCE OR THE READER IN YOUR RESPONSE! (do not mention them at all). ###  Do not be repetitive, make the story interesting something that someone will want to read and it will make sense. Do not make it boring, keep the audience on the edge of their seat with anticipation. Do not always give the deeper meaning to the audience but rather paint a vivid scene with actions and dialogue and let the audience interpret what they see/hear for themselves. Do not break the 4th wall this is crucial (Do not break the 4th wall). Try not to mention anything about the reader/audience (hence do not break the 4th wall). Use the Outline as a guide and build off the vivid details and best parts of the outline and make it tie into the story you are creating"
 
 #****************************************************************************************************************************************************************************************************************************************************************
 #****************************************************************************************************************************************************************************************************************************************************************
 #****************************************************************************************************************************************************************************************************************************************************************
 ## User Config type things and also prework like characters
 
-Short_Story_Role = """role play that you are an award winning writer and director with all the talents neccesary to make a succesful screenplay/audio book that is exciting and draws the audience for more and more"""
+Short_Story_Role = """use the outline provided for most of the details (build on them but most of them have been provided already) your task is to w role play that you are an award winning writer and director with all the talents neccesary to make a succesful screenplay/audio book that is exciting and draws the audience for more and more"""
 Short_Story_Special = """Have fun, be creative and follow the rules. It is imperative that you understand that You are currently writing the story/screenplay using the information  I provided  for Episode #:"""
-Short_Story_Task = """Task: write a Scene for the respective movie's screenplay.   We want the audience to be hooked by the story and it should be relatable but also unpredictable enough to drive the audience to be dying to keep watching for the climax and resolution (if there is a big climactic part make it so exciting they can't help but watch it again and again)The Story should read like an award winning ScreenPlay  {Detailed Outline}:"""
-Short_Story_Task2 = """Task: write a Scene for the respective movie's screenplay.   We want the audience to be hooked by the story and it should be relatable but also unpredictable enough to drive the audience to be dying to keep watching for the climax and resolution (if this scene is climactic then make it so exciting they can't help but watch it again and again). The Story should read like an award winning Hollywoord ScreenPlay Do not mention episodes/Seasons, Use the respective Detailed Outline Text and background info to make a continuous story (follow the outline for reference)  {Detailed Outline}: """
-Short_Story_Task_Novel_Chapter =   """Task: write a Scene for a chapter in an award winning novel  We want the audience to be hooked by the story and it should be relatable but also unpredictable enough to drive the reader to be dying to keep reading for the climax and resolution (if this scene is climactic then make it so exciting they can't help but watch it again and again). The Story should read like an award winning Novel. Do not mention episodes/Seasons, Use the respective Detailed Outline Text and background info to make a continuous story (follow the detailed outline ). Try not to say the words 'Chapter' or 'Scene' to give additional insights,tell with the actual story and no additional notes in your response   {Detailed Outline}: """
-Short_Story_Task_Play_Scene =   """Task: write a scene for the respective play to be performed on stage. We want the audience to be hooked by the story and it should be relatable but also unpredictable enough to drive the reader to be dying to keep reading for the climax and resolution (if this scene is climactic then make it so exciting they can't help but watch it again and again). The Story should read like an award winning Play/Musical (and/or Script) Use the respective Detailed Outline Text and background info to make a continuous story (follow the detailed outline ).  {Detailed Outline}: """
+Short_Story_Task = """Task:  use the outline provided for most of the details (build on them but most of them have been provided already) your task is to w write a Scene (Final Version)  for the respective movie's screenplay.   We want the audience to be hooked by the story and it should be relatable but also unpredictable enough to drive the audience to be dying to keep watching for the climax and resolution (if there is a big climactic part make it so exciting they can't help but watch it again and again)The Story should read like an award winning ScreenPlay  {Detailed Outline}:"""
+Short_Story_Task2 = """Task: use the outline provided for most of the details (build on them but most of them have been provided already) your task is to w write a Scene (Final Version)  for the respective movie's screenplay.   We want the audience to be hooked by the story and it should be relatable but also unpredictable enough to drive the audience to be dying to keep watching for the climax and resolution (if this scene is climactic then make it so exciting they can't help but watch it again and again). The Story should read like an award winning Hollywoord ScreenPlay Do not mention episodes/Seasons, Use the respective Detailed Outline Text and background info to make a continuous story (follow the outline for reference)  {Detailed Outline}: """
+Short_Story_Task_Novel_Chapter =   """Task: use the outline provided for most of the details (build on them but most of them have been provided already) your task is to write a Scene (Final Version)  for a chapter in an award winning novel. Do not break the fourth wall, and do not explain the scene at the end like a summary, write the text as a final version of this excerpt. (Do Not mention the audience or the reader in your response, This is important* DO NOT MENTION THE AUDIENCE and do not add notes, do not talk about the camera). Add dialogue where its needed and be specific.  Be Abstract and show don't tell, make it up to the reader to interpret.   We want the audience to be hooked by the story and it should be relatable but also unpredictable enough to drive the reader to be dying to keep reading for the climax and resolution (if this scene is climactic then make it so exciting they can't help but watch it again and again). The Story should read like an award winning Novel. Do not mention episodes/Seasons, Use the respective Detailed Outline Text and background info to make a continuous story (follow the detailed outline ). Try not to say the words 'Chapter' or 'Scene' to give additional insights,tell with the actual story and no additional notes in your response   {Detailed Outline}: """
+Short_Story_Task_Play_Scene =   """Task: use the outline provided for most of the details (build on them but most of them have been provided already) your task is to w write a unique scene (Final Version) for the respective play to be performed on stage based on the details you have been provided . Do not break the fourth wall, and do not explain the scene at the end like a summary, write the text as a final version of this excerpt. (Do Not mention the audience or the reader in your response, This is important* DO NOT MENTION THE AUDIENCE and do not add notes, do not talk about the camera). Add dialogue where its needed and be specific.  Be Abstract and show don't tell, make it up to the reader to interpret. (Do Not mention the audience or the reader in your response).  The Story should read like an award winning Play/Musical (and/or Script) Use the respective Detailed Outline Text and background info to make a continuous story (follow the detailed outline ). Do Not make notes that spoil the plot etc., it should read like a script that can also be sold as a book for readers to enjoy. {Detailed Outline}: """
 
 #For the results, you should format the text as a screen play where the Narrator is written like one of the characters named 'NARRATOR'. The Narrator will say the non verbal words from the text, for example the mood, the actions happening, the scenery, the smells etc. anything not spoken should be 'spoken' by the NARRATOR.  All of the Narrator non-verbal parts should be in parenthesis so the reader knows it is not being spoken aloud.
 
@@ -436,8 +459,8 @@ Short_Story_Format_Screenplay =  Output_Fix + 'For your response use the basic s
 
 
 Short_Story_Format_Screenplay_Scene = Output_Fix +  ' For your response use the basic screen play format with proper narration, description of setting, and dialog, make it look like a real movie/TV script. Put quotes on spoken words'
-Short_Story_Format_Play_Scene = Output_Fix +  ' For your response format the text as a Play that is sure to win an award for being such an entertaining. Keep the details in tact but format the text tp be a Scene or musical number in a play script to be acted out on a stage'
-Short_Story_Format_Novel_Chapter =  Output_Fix +  """
+Short_Story_Format_Play_Scene = Output_Fix +  ' For your response format the text as a Final Draft of a script for a Play. Include dialogue, settings, and narration etc.. Do not have plot notes or any other spoilers, make it read like a script that is also a good read for someone to enjoy'
+Short_Story_Format_Novel_Chapter =  Output_Fix +  """ For your response format the text as a Final Draft of a Novel (this is an excerpt based on details provided, do not mention the audience, make the audience feel it and experience it with your writing)
 Desired Format:
 {Text_Formatted_as_Novel}"""
 
@@ -489,14 +512,14 @@ Character_Art_Task_Minor=  "write a  short descriptive art prompt for an DALL-E 
 #****************************************************************************************************************************************************************************************************************************************************************
 #Character Template
 
-#Character Outline to build the story (do this after you have details)
-Characters_Role = Short_Story_Role
-Characters_Task ="""{Task}: Create the details for the respective  Main Characters and Minor Characters for the respective outline that is to be provided. be creative and pick a diverse mix of characters, or if there is a specific time period or theme you are picking you can use names and characters that fit accordingly.Keep the descriptions short with no fluff words and only info relevant to story###"""
-Characters_Special = """Have fun, be creative and follow the rules. Use the characters mentioned in the Main Outline Pick unique names for your characters (that are not described in the outline directly), use uncommon names, then cultural names, then nicknames, try to pick common names only 10% or less of the time"""
-Characters_Format = """Complete the {Task} provided, use the {Persona} you created to do all of the tasks. Make sure the result is in the correct format.
-Desired Format:
-#Characters:{@Name:{First Name Last Name}Age:{Age}|Voice:{Voice}|Personality:{Personality}|Home:{Current/origin|Language:{Language}|Role:{Role in Story}|Career:{Current Job|Dream Job}|strengths:{strengths,strengths}|weakness:{weakness,weakness}|Physical Description: {<less_than_50_Characters>}}"""
-
+# #Character Outline to build the story (do this after you have details)
+# Characters_Role = Short_Story_Role
+# Characters_Task ="""{Task}: Create the details for the respective  Main Characters and Minor Characters (20+ Characters total) for the respective outline that is to be provided. be creative and pick a diverse mix of characters, or if there is a specific time period or theme you are picking you can use names and characters that fit accordingly.Keep the descriptions short with no fluff words and only info relevant to story###"""
+# Characters_Special = """Have fun, be creative and follow the rules. Use the characters mentioned in the Main Outline Pick unique names for your characters (that are not described in the outline directly), use uncommon names, then cultural names, then nicknames, try to pick common names only 10% or less of the time"""
+# Characters_Format = """Complete the {Task} provided, use the {Persona} you created to do all of the tasks. Make sure the result is in the correct format.
+# Desired Format:
+# #Characters:{@Name:{First Name Last Name}Age:{Age}|Voice:{Voice}|Personality:{Personality}|Home:{Current/origin|Language:{Language}|Role:{Role in Story}|Career:{Current Job|Dream Job}|strengths:{strengths,strengths}|weakness:{weakness,weakness}|Physical Description: {<less_than_50_Characters>}}"""
+#
 
 
 #Below is step 2

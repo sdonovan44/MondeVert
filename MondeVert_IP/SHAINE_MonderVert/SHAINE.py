@@ -2,7 +2,7 @@ import datetime
 import sys
 
 import pandas as pd
-
+from pathlib import Path, PureWindowsPath
 global Record
 from MondeVert_IP.SHAINE_MonderVert.SHAINE_WIZARD_PROMPTS import Wedding_Prompts as WeddingP
 from MondeVert_IP.SHAINE_MonderVert.SHAINE_WIZARD_PROMPTS import Social_Media_SHAINE as sms
@@ -1300,6 +1300,7 @@ class MondeVert():
 
         except:
             print('email not send, its possible file was not created')
+            cu.send_email_no_attachment_outlook(body=Song)
 
         # MondeVert.speak(self, "Making the art, painting yo picture")
         Art_Prompt1 = openai.ChatCompletion.create(
@@ -1356,8 +1357,8 @@ class MondeVert():
         ReWrite = '*Did not create'
         DJMondeVert = '*Did not create'
 
-        if Mode not in SavePath:
-            SavePath = SavePath + up.System_Folder_Path_Fix + Mode
+        if Mode not in str(SavePath):
+            SavePath = Path(PureWindowsPath(SavePath , Mode))
         cu.Check_Folder_Exists(SavePath)
 
         if Artist_Bio_Details == '' or Make_Persona == True:
@@ -1486,17 +1487,17 @@ class MondeVert():
                 if len(folder) > 40:
                     folder = folder[0:40]
 
-        SavePath = SavePath + up.System_Folder_Path_Fix + folder
-        FullFilePath = SavePath + up.System_Folder_Path_Fix + Title1
-        SavePath_Details = SavePath + up.System_Folder_Path_Fix + 'SHAINE - Details'
-        SavePath_Pics = SavePath + r'\SHAINE - Art'
+        SavePath = Path(PureWindowsPath(SavePath , folder))
+        FullFilePath = Path(PureWindowsPath(SavePath , Title1))
+        SavePath_Details = Path(PureWindowsPath(SavePath  , 'SHAINE - Details'))
+        SavePath_Pics = Path(PureWindowsPath(SavePath , r'\SHAINE - Art'))
 
         cu.Check_Folder_Exists(SavePath)
         cu.Check_Folder_Exists(SavePath_Details)
         cu.Check_Folder_Exists(SavePath_Pics)
 
         originalFilepath = self.PersonaArtPath
-        PicNewPath = SavePath_Pics + up.System_Folder_Path_Fix + Title1 + '_Persona Pic.png'
+        PicNewPath = Path(PureWindowsPath(SavePath_Pics , Title1 + '_Persona Pic.png'))
         try:
             shutil.copyfile(originalFilepath, PicNewPath)
         except:
@@ -1793,9 +1794,9 @@ class MondeVert():
                 ArtPrompt = MondeVert.GPTArt2(self, User_Subject=GPT_Response)
                 print(ArtPrompt)
                 originalFilepath = MondeVert.makeArt(self, Prompt=ArtPrompt)
-                PicNewPath1 = SavePath + up.System_Folder_Path_Fix + Mode
+                PicNewPath1 = Path(PureWindowsPath(SavePath, Mode))
                 cu.Check_Folder_Exists(PicNewPath1)
-                PicNewPath = PicNewPath1 + up.System_Folder_Path_Fix + Title + '.png'
+                PicNewPath =  Path(PureWindowsPath(PicNewPath1,  Title + '.png'))
 
                 shutil.copyfile(originalFilepath, PicNewPath)
             return GPT_Response
@@ -3974,11 +3975,11 @@ class MondeVert():
         elif Mode == 'Music_Shane':
             MondeVert.Make_a_Song_2(self, Make_Persona=True, SavePath=up.AI_Music_Path, System=up.system_TextRR,
                                     Mode='Music_Shane', Artist_Bio_Details=up.Artist_Bio_DetailsSD,
-                                    Song_Subject=up.Song_Subject)
+                                    Song_Subject=up.Song_Subject,Task=lup.Song_Task)
         elif Mode == 'Music_Rich':
             MondeVert.Make_a_Song_2(self, Make_Persona=True,
-                                    SavePath=up.AI_Music_Path + up.System_Folder_Path_Fix + Mode, Mode='Music_Rich',
-                                    Artist_Bio_Details=up.Artist_Bio_DetailsRR, Song_Subject=up.Song_Subject)
+                                    SavePath=Path(PureWindowsPath(up.AI_Music_Path)), Mode='Music_Rich',
+                                    Artist_Bio_Details=up.Artist_Bio_DetailsRR, Song_Subject=up.Song_Subject_RR, Line4_Task_Outline=lup.Song_Outline_Task2, Task= lup.Song_Task2)
         elif Mode == 'Skit':
             MondeVert.MondeVertTask(self, SavePath=up.AI_Screen_Plays + up.System_Folder_Path_Fix + Mode,
                                     System=up.system_TextJoaT, Role=up.Test_Role_Skit,
@@ -5375,7 +5376,8 @@ if __name__ == '__main__':
     # args = ['MVAA','MVAA2']
     # args = ['MVAA', 'MVAA2', 'MVAA_La_Familia']
     args = ['Music_Shane']
-    # args = ['MVAA_La_Familia']
+
+    #args = ['Music_Rich','Music_Shane']
 
     #
 

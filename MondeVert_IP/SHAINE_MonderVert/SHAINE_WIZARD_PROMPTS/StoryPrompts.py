@@ -1,5 +1,5 @@
 
-System = "You are a brilliant assistant to the user, role play according to the role you are provided and be a master of any neccessary skills and knowledge needed to complete the task. Complete all User tasks to the best of your ability."
+System = "You are a brilliant assistant to the user, role play according to the role you are provided and be a master of any neccessary skills and knowledge needed to complete the task. Complete all User tasks to the best of your ability. Be concise and really embrace the persona you are asked to assume, you are a genius capable of understanding the user and completing his tasks as a master assistant"
 Default_Format = """Complete the task the user has requested and Make sure the result is in the correct format, """
 Story_Outline_Task2 ="""Using the IDEA you have already, write a story that has 3+ fully detailed storylines with some characters that overlap directly and indirectly. Make the story unique and entertaining, have good dialogue, but also strong actions in the scenes. Provide extensive details, the more detailed the better. It is critical for you to format your response as per The desired format """
 Story_Outline_Format2 = Default_Format + """ Use at between 1000 and 3000 tokens in your response
@@ -10,18 +10,18 @@ Desired Format:
 |How the StoryLine(s) Connect together: Explanation
     """
 
-Story_AllScenes_Outline_Task2 = """Write an extensive outline for all of the scenes needed to tell the respective story you have come up with based on the following Text.  (do not cut it short, you must tell the full story with your outline, have over 40 Scenes if possible, make the descriptions as detailed as needed) and order it as per the Scene #s so that respectively they are ascending (do not have the same Scene# twice). Provide which storyline it is for and the actions/characters in the scene make the story exciting and logically make sense as per the continuation of the story. Make the story unique and entertaining, provide enough details to create vivid scenes. Absolutely Do not be repetitive, make each scene unique (they can build off other scenes but do not repeat the same actions or wording). If you have fewer scenes make the desctriptions more detailed, either way the plot should be clearly shown and resolved in the outline you make"""
-Story_AllScenes_Outline_Format2 = Default_Format + """
+Story_AllScenes_Outline_Task = """Write an extensive outline for all of the scenes (30+ Scenes) needed to tell the respective part of the story you have come up with based on the Outline previously  provided (should be between 26 and 33 scenes, NO LESS,  in each part).  (do not cut the number of SCENES short for any reason, you can make the details less words but keep it at least 27 scenes,  (use artistic license to make new scenes up to hit the 26+ scene requirement), provide details for  30 Scenes (between 27 and 35 scenes), make the descriptions as detailed as needed and order it as per the Scene #s so that respectively they are ascending (do not have the same Scene# twice). Provide which storyline it is for and the actions/characters in the scene make the story exciting and logically make sense as per the continuation of the story. Make the story unique and entertaining, provide enough details to create vivid scenes. Absolutely Do not be repetitive, make each scene unique (they can build off other scenes but do not repeat the same actions or wording). You do not need to come to a conclusion unless this is the final part, otherwise follow the outline given to you"""
+Story_AllScenes_Outline_Format = Default_Format + """
 
 Desired Format:
-@Scene#:{@StoryLine#:{Setting:{Setting}|Characters:{Characters}|Actions:{Actions_Description}}}
+@Scene#:{@StoryLine#:{Scene Name:{Scene Name}|Setting:{Setting}|Characters:{Characters, names only}|Actions:{Actions_and_Description_and_Key_Details_importance_under_30_words}}}
     """
 
 
 
 
-Story_AllScenes_Outline_Task = """Using the Persona you have created write a complete story using the text/outline provided (expand on the elements and ideas provided and write the actual story), make it interesting and try to use 10000 tokens in your response (the more the better). Use the style and be unique, make the story exciting it can be tragic if neccesary. Do not be corny and have it over the top. This should be in the proper format for a novel or screenplay depending on the story being developed"""
-Story_AllScenes_Outline_Format = Default_Format + """
+Story_AllScenes_Outline_Task2 = """Using the Persona you have created write a complete story using the text/outline provided (expand on the elements and ideas provided and write the actual story), make it interesting and try to use 10000 tokens in your response (the more the better). Use the style and be unique, make the story exciting it can be tragic if neccesary. Do not be corny and have it over the top. This should be in the proper format for a novel or screenplay depending on the story being developed"""
+Story_AllScenes_Outline_Format2 = Default_Format + """
 
 Desired Format:
 Title: {Title}
@@ -30,11 +30,12 @@ Story:{Text_Full_Story}
 
 
 
-Story_Outline_Task ="""Using the IDEA you have already, create an outline for story that has enough details for a short novel. The story should have one or more main plots and several character arcs/and arc-plots with some characters that overlap directly and indirectly. Describe how the characters are introduced and make the outline extremely detailed with enough info to write a full story. Make the story unique and entertaining, have good dialogue, but also strong actions in the scenes. Provide extensive details, the more detailed the better. It is critical for you to format your response as per The desired format """
-Story_Outline_Format = Default_Format + """ Use at between 1000 and 3000 tokens in your response
+Story_Outline_Task ="""Using the IDEA you have already, create an outline for story that has enough details for a short novel (break it out into 3 parts). YOU MUST HAVE MORE THAN 1 PART  Make sure you break it into at least two parts, but preferably 3 parts with just enough detail to fit it all in your response (do not leave parts with just the title we need some details as to how the story moves forward etc.), its important you have Exposition, Rising Action, Climax, falling action and resolution for all plot/arc plots for your characters, try to make your characters adjust over time and not just be static, make your writing feel relateable and use raunchy/gritty text/language as needed. The story should have one or more main plots and several character arcs/and arc-plots with some characters that overlap directly and indirectly. Describe how the characters are introduced and make the outline extremely detailed with enough info to write a full story. Make the story unique and entertaining, have good dialogue, but also strong actions in the scenes. Provide extensive details, the more detailed the better. It is critical for you to format your response as per The desired format """
+Story_Outline_Format = Default_Format + """ 
 Desired Format:
-@Abstract_Title:{<4_word_or_less_unique_abstract_title>}
-Outline: {Use roman numerals in a detailed outline format according to the task}
+Title: {Title}
+
+@Part#:{Settings:{Settings}|Characters:{Characters}|Story Details: {Key Plot Points, Arc Plots and any other important details (this should be detailed, but leave enough room for all 3 parts to have the plot revealed)|Other Details:{Imagery, Similies/Metaphors , Alliteration, juxtaposition,Allusion, Allegory }}
     """
 
 

@@ -1,12 +1,16 @@
 from MondeVert_IP.SHAINE_MonderVert import SHAINE as GPT
 
 from MondeVert_IP.SHAINE_MonderVert.Utilities import Common_Utilities as cu
-from MondeVert_IP.SHAINE_MonderVert.SHAINE_WIZARD_PROMPTS import Stories_For_Audio_Files as SFA, ReWrites as RW
-from MondeVert_IP.SHAINE_MonderVert.SHAINE_WIZARD_PROMPTS import User_Prefs as up
+from MondeVert_IP.SHAINE_MonderVert.SHAINE_WIZARD_PROMPTS import Stories_For_Audio_Files as SFA, ReWrites as RW, StoryPrompts as SP
+from MondeVert_IP.SHAINE_MonderVert.SHAINE_WIZARD_PROMPTS import User_Prefs as up, StoryMode_Wizard as SW
 import threading
 import pandas as pd
 from pathlib import Path, PureWindowsPath
 import platform
+
+
+from MondeVert_IP.SHAINE_MonderVert.Utilities import TextEdit as TextEdit
+
 
 x = GPT.MondeVert()
 #x.Manual_Audio_File(FilePath = r"A:\MondeVert_IP Productions\SHAINE - MondeVert_IP AI Assistant\AI Tasks\MondeVert_Audio_Video_Story\Echoes of the Heart_Miniseries.txt")
@@ -126,6 +130,8 @@ current_time = current_time1.strftime('%m-%d-%Y_%H.%M.%S')
 # # t = threading.Thread(target=cu.YouTube, args = (Youtube,)).start()
 #
 # Richie = r"A:\Amini Amor\Live Recordings Raw\2023-10-11 15-52-34.mp4"
+Shane = r"C:\Users\sdono\Downloads\12CCB92F-D044-4EC3-B3C5-E3E0A5102B50.MOV"
+#cu.Movie2Audio(Shane)
 # #cu.Movie2Audio(Richie)
 #
 #
@@ -148,14 +154,22 @@ current_time = current_time1.strftime('%m-%d-%Y_%H.%M.%S')
 #
 # pic22 = r"A:\Amini Amor\SHAINE\Requests\Beta\Audio Transcript\Extracted images\Blue Hair Variants\Favorite Variant  6  09282023042651.png"
 # pic222 = r"A:\Amini Amor\SHAINE\Requests\Beta\Audio Transcript\Extracted images\Blue Hair Variants\Favorite Variant  6  10142023155339.png"
+
+#pic22 = r"A:\Amini Amor\SHAINE\Requests\Beta\Audio Transcript\Extracted images\Random New Favorites\e Alchemists Gambit depicts a twisted world where reality and delusion intertwine revealing the consequences of obsession and the pursuit of power.png"
+#pic22 = r"A:\Amini Amor\SHAINE\Requests\Beta\Audio Transcript\Extracted images\Random New Favorites\reamlike Bold colors A mind bending masterpiece that explores the depths of self discovery through abstract symbolism and thought provoking imagery.png"
 # #
-# # Version1 = pic22
-# # for i in range (1,15):
-# #     Version1 = cu.MakeVariationArt(Pic=Version1, FileName='Favorite Variant  ' + str(i) + '  '+ current_time)
-# # Version1 = pic22
-# # for i in range (1,4):
-# #     Version2 = cu.MakeVariationArt(Pic=Version1, FileName='Favorite Variant v2   ' + str(i) + '  '+ current_time)
-#
+#pic22 = r"A:\Amini Amor\SHAINE\Requests\Beta\Audio Transcript\Extracted images\Blue Hair Variants\The artwork depicts a woman with flowing blue hair surrounded by a vibrant and colorful cityscape Her eyes are closed and a serene expression is on.png"
+
+pic22 = r"A:\Amini Amor\SHAINE\Requests\Beta\Audio Transcript\Extracted images\Blue Hair Variants\Favorite Variant  2  10142023155953.png"
+Version1 = pic22
+# for i in range (1,3):
+#     Version1 = cu.MakeVariationArt(Pic=Version1, FileName='Favorite Variant  ' + str(i) + '  '+ current_time)
+# Version1 = pic22
+# for i in range (1,3):
+#     Version1 = pic22
+#     for j in range(1, 4):
+#         Version1 = cu.MakeVariationArt(Pic=Version1, FileName='Favorite Variant v2   ' + str(i) + '-  ' + str(j)+ '  '  + current_time)
+
 #
 # Insta = r"A:\Amini Amor\Live Recordings Raw\2023-10-14 15-09-39.mp4"
 
@@ -173,13 +187,15 @@ Journal_Video = r"A:\Amini Amor\Live Recordings Raw\2023-10-18 02-56-42.mp4"
 Journal_Video = r"A:\Amini Amor\Live Recordings Raw\2023-10-18 03-15-23.mp4"
 Journal_Video = r"A:\Amini Amor\Live Recordings Raw\2023-10-18 15-41-59.mp4"
 Journal_Video = r"A:\Amini Amor\Live Recordings Raw\2023-10-19 15-30-52.mp4"
+Journal_Video = r"A:\Amini Amor\Live Recordings Raw\2023-10-27 03-50-38.mp4"
+Journal_Video = r"A:\Amini Amor\Live Recordings Raw\2023-11-13 17-23-01.mp4"
 #Make it so I have folder in the live recordings for Journal and maybe have a script running to trigger this program so it automatically adds the new items and creates the respective files
 #Also make it so all of the ToDo Lists through time are added to the
 
 
 
 #cu.MovieSubtitles(Journal_Video, Rewrite = True , Journal=True, Output=["English"], ToDo= True)
-cu.MovieSubtitles(Journal_Video, Rewrite = True , Journal=True, Output=["English"], ToDo= True, AudioMode="CHATGPT")
+# cu.MovieSubtitles(Journal_Video, Rewrite = True , Journal=True, Output=["English"], ToDo= True, AudioMode="CHATGPT")
 
 Journal_Audio1 = r"A:\Amini Amor\Live Recordings Raw\Journal Entries\Pegasus Pl.m4a"
 Journal_Audio2 = r"A:\Amini Amor\Live Recordings Raw\Journal Entries\Planet Fitness 2.m4a"
@@ -199,11 +215,11 @@ Journal_Audio = [Journal_Audio1,Journal_Audio2,Journal_Audio3,Journal_Audio4,Jou
 
 
 
-
-
+# x = cu.ReWrite_Transcript(RW.RE_Listing1, Line3= " Keep the response under 300 characters, " + SP.ReWriteTranscript_Format)
+# print(x)
 
 # #This needs to be reran for summarizing text
-# for i in range(0, len(RW.RE_Listing) ):
+# for i in range(0, len(RW.Personal_Message) ):
 #     Summarized_text = cu.SummarizeText((RW.Personal_Message[i]), Task=RW.Personal_Message_Task)
 #     Name = RW.Personal_Message_Names[i]
 #     Title = "Personal Message"
@@ -230,12 +246,32 @@ Journal_Audio = [Journal_Audio1,Journal_Audio2,Journal_Audio3,Journal_Audio4,Jou
 
 
 
-FilePath = r"A:\Amini Amor\Secret Law of Attraction.txt"
-#Text  = pd.read_csv(FilePath)
+#FilePath = r"A:\Amini Amor\Secret Law of Attraction.txt"
+FilePath = r"A:\Amini Amor\SHAINE\Requests\Beta\AI Music\Music_Shane\ Lets Do It Again  12-07-2023_03.09\ Lets Do It Again_.txt"
+Text  = pd.read_csv(FilePath)
 
-#
-# with open(FilePath,'r') as file:
-# 	Text = " ".join(line.rstrip() for line in file)
-# 	#print(Text)
-#
-# cu.speak(Text)
+
+with open(FilePath,'r') as file:
+	Text = """         
+	 """.join(line.rstrip() for line in file)
+	#print(Text)
+
+
+
+# Text = cu.Basic_GPT_Query(Line2_Role = SW.Role_Podcast, Line4_Task=SW.Task_Podcast, Line3_Format=SW.Format_Podcast, User_Confirm= False)
+# print (Text)
+
+
+
+x = TextEdit.TextEdit(Text = Text, UserConfirm= True)
+#TextEdit.TextEdit2()
+Args = """Text = Text, UserConfirm= True"""
+
+t = x.MakeWindow(Text)
+#t = threading.Thread(target= x.MakeWindow, args = (Text,)).start()
+print(t)
+t1 = x.GetUserResponseMain()
+print(t1)
+
+#x = TextEdit.TextEdit(Text = Text, UserConfirm= True)
+#print(x.GetUserResponseMain)

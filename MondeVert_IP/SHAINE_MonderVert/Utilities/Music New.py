@@ -11,7 +11,7 @@ import midiutil
 from pydub import AudioSegment
 from music21 import *
 
-
+from pathlib import Path, PureWindowsPath
 
 # piece(tracks,
 #       instruments=None,
@@ -620,6 +620,61 @@ Amber_cover = mp.piece(tracks=[C1, C2, C3, C4, C5, C6, C7, C8, C9, C10, C11, C12
 
 
 new_piece_name = 'original_piece'
+
+
+
+
+# Chords and notes for the instrumental
+C1 = mp.chord('B2, D3, G3') % (1, 1/8) * 16
+C2 = (mp.chord('B2, D3, G3') % (1,1)) * 16
+C3 = (mp.chord('G2, B2, D3') % (1/4, 1/4, 1/2) * 8 | mp.chord('B2, D3, G3') % (1/8, 1/8, 1/4) * 8) * 8
+C4 = mp.chord('B2, D3, G3') % ([3/8,1/8,1/4], [3/8,1/8,1/4]) * 16
+C5 = mp.chord('B2, D3, G3') % ([3/8,1/8,1/4], [3/8,1/8,1/4]) * 16
+C6 = mp.chord('G2, B2, D3') % ([3/8,1/8,1/4], [3/8,1/8,1/4]) * 16
+C7 = mp.chord('G2, B2, D3') % ([3/8,1/8,1/4], [3/8,1/8,1/4]) * 16
+C8 = mp.chord('B2, D3, G3') % ([3/8,1/8,1/4], [3/8,1/8,1/4]) * 16
+C9 = mp.chord('B2, D3, G3') % (1,1) * 2
+C10 = mp.chord('G2, B2, D3') % ([3/8,1/8,1/4], [3/8,1/8,1/4]) * 16
+C11 = mp.chord('G2, B2, D3') %  (1,1) * 8
+C12 = mp.chord('C2, E2, G2') %  (1,1) * 8
+C13 = mp.chord('D2, G2, A2') %  (1,1) * 8
+C14 = mp.chord('D2, G2, A2') % (1/4,1/4,1/2) * 16
+C15 = mp.chord('C2, E2, G2') %  (1,1) * 8
+
+# Create a new piece with the above chords and notes
+gravity_instrumental2 = mp.piece(tracks=[C1, C2, C3, C4, C5, C6, C7, C8, C9, C10, C11, C12, C13, C14, C15],
+                               instruments=['Acoustic Guitar (steel)', 'Electric Guitar (clean)', 'Electric Bass (finger)', 'Alto Sax', 'SynthStrings 1', 'Acoustic Grand Piano', 'Trumpet', 'Synth Voice', 'Synth Bass 1', 'Alto Sax', 'Distortion Guitar', 'Sitar', 'Kalimba', 'String Ensemble 1', 'SynthStrings 2'],
+                               bpm=80,
+                               start_times=[0, 2, 2, 0, 4, 6, 8, 10,10, 12, 2, 12, 4, 6, 24],
+                               track_names=['clean_guitar', 'electric_guitar', 'electric_bass', 'drum', 'synth_strings', 'piano', 'trumpet', 'synth1', 'synth2', 'synth_bass', 'distortion_guitar', 'sitar', 'kalimba', 'string', 'synthstrings'])
+
+# Chords and notes for the instrumental
+C1 = mp.chord('G2, B2, D3') % (1, 1/8) * 16
+C2 = (mp.chord('G2, B2, D3') % (1, 1)) * 16
+C3 = (mp.chord('G2, B2, D3') % (1/4, 1/4, 1/2) * 8 | mp.chord('D2, G2, B2') % (1/8, 1/8, 1/4) * 8) * 8
+C4 = mp.chord('G2, B2, D3') % ([3/8, 1/8, 1/4], [3/8, 1/8, 1/4]) * 16
+C5 = mp.chord('G2, B2, D3') % ([3/8, 1/8, 1/4], [3/8, 1/8, 1/4]) * 16
+C6 = mp.chord('D2, G2, B2') % ([3/8, 1/8, 1/4], [3/8, 1/8, 1/4]) * 16
+C7 = mp.chord('D2, G2, B2') % ([3/8, 1/8, 1/4], [3/8, 1/8, 1/4]) * 16
+C8 = mp.chord('G2, B2, D3') % ([3/8, 1/8, 1/4], [3/8, 1/8, 1/4]) * 16
+C9 = mp.chord('G2, B2, D3') % (1, 1) * 2
+C10 = mp.chord('D2, G2, B2') % ([3/8, 1/8, 1/4], [3/8, 1/8, 1/4]) * 16
+C11 = mp.chord('D2, G2, B2') % (1, 1) * 8
+C12 = mp.chord('A1, D2, F#2') % (1, 1) * 8
+C13 = mp.chord('B1, E2, G#2') % (1, 1) * 8
+C14 = mp.chord('B1, E2, G#2') % (1/4, 1/4, 1/2) * 16
+C15 = mp.chord('A1, D2, F#2') % (1, 1) * 8
+
+# Create a new piece with the above chords and notes
+gravity_instrumental = mp.piece(tracks=[C1, C2, C3, C4, C5, C6, C7, C8, C9, C10, C11, C12, C13, C14, C15],
+                               instruments=['Electric Guitar (clean)', 'Acoustic Bass', 'Electric Piano 1', 'Woodblock', 'Violin', 'Acoustic Guitar (steel)', 'Trumpet', 'Synth Voice', 'Synth Bass 2', 'Alto Sax', 'Slap Bass 1', 'Distortion Guitar', 'Sitar', 'Kalimba', 'String Ensemble 1'],
+                               bpm=80,
+                               start_times=[0, 2, 2, 0, 4, 6, 8, 10, 10, 12, 2, 12, 4, 6, 24],
+                               track_names=['clean_guitar', 'bass', 'electric_piano', 'drum', 'grand_piano', 'jazz_guitar', 'trumpet', 'synth1', 'synth2', 'synth_bass', 'distortion_guitar', 'sitar', 'kalimba', 'string', 'synthstrings'])
+
+
+
+
 # new_pieces.append(new_piece)
 # new_pieces.append(new_piece2)
 # new_pieces.append(new_piece3)
@@ -651,10 +706,12 @@ new_piece_name = 'original_piece'
 # new_pieces.append(Dank_midz_SD)
 # new_pieces.append(My_Instrumental3)
 # new_pieces.append(My_new_song)
-new_pieces.append(Amber_cover)
+new_pieces.append(gravity_instrumental)
 
 
-SavePath = up.AI_Music_Path + r'\Raw_Midz'
+SavePath = up.AI_Music_Path
+
+SavePath = Path(PureWindowsPath(SavePath, 'Raw_Midz'))
 cu.Check_Folder_Exists(SavePath)
 counter = 0
 for m in new_pieces:
@@ -669,7 +726,7 @@ for m in new_pieces:
     tempfile = 'temp.mid'
     fType1 = tempfile.rfind('.')
     fType = tempfile[fType1:]
-    fullPath = SavePath + '\\' + fName + fType
+    fullPath =Path(PureWindowsPath(SavePath,  fName + fType))
     print(fName)
     print(fType)
 

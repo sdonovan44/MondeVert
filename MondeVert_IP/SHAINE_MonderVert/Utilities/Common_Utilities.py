@@ -25,6 +25,8 @@ import os
 import random
 from MondeVert_IP.SHAINE_MonderVert import Instagram_Posts as IP
 from MondeVert_IP.SHAINE_MonderVert.SHAINE_WIZARD_PROMPTS import Long_User_Prompts as lup, Social_Media_SHAINE as sms,StoryMode_Wizard as StoryMode, StoryPrompts as SP, ReWrites as RW
+from MondeVert_IP.SHAINE_MonderVert.Utilities import TextEdit as TextEdit
+
 import shutil
 from docx import Document
 import pandas as pd
@@ -75,6 +77,17 @@ import sys
 import argparse
 
 import cv2
+
+
+import tkinter as tk
+from tkinter.filedialog import askopenfilename
+
+
+import tkinter as tk
+import tkinter as tk
+
+
+
 
 def MakeVariationArt(Pic, Size = '512x512', NumVars = 1, SavePath =   Path(PureWindowsPath(up.AI_Audio_Transcript, 'Extracted images')) , FileName= 'Version'):
 
@@ -166,27 +179,50 @@ def AI_Task_Audio(Text):
 
     return NewText
 
-def ReWrite_Transcript(Text, Line3 = SP.ReWriteTranscript_Format, Line2 =SP.ReWriteTranscript_Role, Line5 =SP.ReWriteTranscript_Task, Line4 = "Use the following Text as your source Text   Source Text: " , ToDo = False , ToDoPath = up.ToDoFile, ToDoList = '' ):
+def ReWrite_Transcript(Text, Line3 = SP.ReWriteTranscript_Format, Line2 =SP.ReWriteTranscript_Role, Line5 =SP.ReWriteTranscript_Task, Line4 = "Use the following Text as your source Text   Source Text: " , ToDo = False , ToDoPath = up.ToDoFile, ToDoList = '', SummarizePath ='', Summarize = False ):
     if ToDo == True:
-        with open(ToDoPath, 'r') as file:
-            ToDoList = " ".join(line.rstrip() for line in file)
+
+        if ToDoPath == '':
+            ToDoList = ''
+        else:
+            with open(ToDoPath, 'r') as file:
+                ToDoList = " ".join(line.rstrip() for line in file)
 
         Line5 = RW.ToDo_Task
         Line3 = RW.ToDo_Format
         if ToDoList != '':
             Line4 = "Here is the original To Do List : " + ToDoList + "Use the following Text from the latest Journal Entry in order to create the updated To Do List.   Journal Entry Source Text: " + ToDoList + '     '
         else:
-            Line4 = "Note: There was no original Items on the To Do List, Use the following Text from the latest Journal Entry in order to create a new To Do List.   Journal Entry Source Text: "
+            Line4 = "Use the following Text from the latest Journal Entry in order to create a new To Do List.   Journal Entry Source Text: "
+
+
+
+    if Summarize == True:
+
+        if SummarizePath == '':
+            Summary = ''
+        else:
+            with open(SummarizePath, 'r') as file:
+                Summary = " ".join(line.rstrip() for line in file)
+
+        Line5 = RW.Journal_Summary_Task
+        Line3 = RW.Journal_Summary_Format
+        if Summary != '':
+            Line4 = "Here is the original Journal Summary: " + Summary + "Use the following Text from the latest Journal Entry in order to create the updated Journal Summary.   Journal Entry Source Text: " + ToDoList + '     '
+        else:
+            Line4 = "Use the following Text from the latest Journal Entry in order to create a Journal Summary according to the expected format.   Journal Entry Source Text: "
+
+
 
 
     NewText = Basic_GPT_Query2(Line2_Role = Line2, Line3_Format= Line3, Line4_Task= Line4 + Text, Line5_Task=Line5, Big=True)
 
     return NewText
 
-def MovieSubtitles(File, Origin="English", Output=["Spanish"], Rewrite=False, AI_Task = False, Journal = False, Chunk_Limit = 1300, ToDo = False, Journal_Loc = up.Journal_Locs, ToDoFile = up.ToDoFile, AudioMode = "Both"):
+def MovieSubtitles(File, Origin="English", Output=["Spanish"], Rewrite=False, AI_Task = False, Journal = False, Chunk_Limit = 1300, ToDo = False, Journal_Loc = up.Journal_Locs, ToDoFile = up.ToDoFile, AudioMode = "Both", Summarize_Journal = False):
     AudioFile = Movie2Audio(File)
 
-    SavePath_MP4 = TranscribeAudio(AudioFile = AudioFile,File= File, Origin = Origin, Output = Output, Rewrite = Rewrite, AI_Task = AI_Task,Journal = Journal, Chunk_Limit =  Chunk_Limit,Journal_Loc = Journal_Loc, ToDoFile = ToDoFile, ToDo=ToDo, AudioMode = AudioMode)
+    SavePath_MP4 = TranscribeAudio(AudioFile = AudioFile,File= File, Origin = Origin, Output = Output, Rewrite = Rewrite, AI_Task = AI_Task,Journal = Journal, Chunk_Limit =  Chunk_Limit,Journal_Loc = Journal_Loc, ToDoFile = ToDoFile, ToDo=ToDo, AudioMode = AudioMode, Summarize_Journal = Summarize_Journal)
     if Journal ==True:
         try:
             FileName = File[(File.rfind(up.System_Folder_Path_Fix)+ 1):]
@@ -222,7 +258,7 @@ def CheckFile(File):
         # print("CheckFile:")
         # print(SavePath)
         SaveCSV(Text = '',FilePath= File,Title = FileName, SavePath = SavePath )
-def TranscribeAudio(File,AudioFile, Origin = "English", Output = ["Spanish"], Rewrite = False,AI_Task = False, Journal = False, Journal_Loc = up.Journal_Locs, Chunk_Limit = 1300, ToDoFile = up.ToDoFile, ToDo = False, AudioMode = "Both"):
+def TranscribeAudio(File,AudioFile, Origin = "English", Output = ["Spanish"], Rewrite = False,AI_Task = False, Journal = False, Journal_Loc = up.Journal_Locs, Chunk_Limit = 1300, ToDoFile = up.ToDoFile, ToDo = False, AudioMode = "Both", Summarize_Journal = False):
     d = 1
     Journal_Original = ''
     Journal_Revised = ''
@@ -387,20 +423,38 @@ def TranscribeAudio(File,AudioFile, Origin = "English", Output = ["Spanish"], Re
             print('Error moving audio file')
 
 
+    if Summarize_Journal ==True:
+        try:
+
+            NewToDoPath = Path(PureWindowsPath(up.AI_Journal, "Journal Summaries"))
+            Journal_Summary = ReWrite_Transcript(Text=Final_Text, ToDo=False, Summarize=True, SummarizePath=up.AI_Journal_Revised, ToDoPath='')
+
+            NewPath_Daily = Path(PureWindowsPath(NewToDoPath, str('To Do (Daily)' + current_time + ".txt")))
+
+
+            SaveCSV(Text=Journal_Summary, FilePath=NewPath_Daily, Title='Journal Summary (All) ' + current_time,
+                    SavePath=NewToDoPath, AddTimeStamp=False)
+        except:
+
+            print('Did not update To Do List')
 
 
 
     if ToDo == True:
         try:
-            ToDo_List = ReWrite_Transcript(Text= Final_Text, ToDo=True)
+            ToDo_List = ReWrite_Transcript(Text= Final_Text, ToDo=True, ToDoPath=ToDoFile)
+            NewToDoPath  = Path(PureWindowsPath(up.AI_Journal  , "New To Do"))
+            ToDo_List_New = ReWrite_Transcript(Text=Final_Text, ToDo=True, ToDoPath='')
             #SaveCSV(Text=ToDo_List, FilePath=ToDoFile, Title=FileName, SavePath=up.AI_Journal)
             OldToDOPath = Path(PureWindowsPath(up.AI_Journal  , "Old To Do"))
             Check_Folder_Exists(OldToDOPath)
             NewPath =  Path(PureWindowsPath(OldToDOPath , str('To Do ' +current_time  + ".txt")))
+            NewPath_Daily = Path(PureWindowsPath(NewToDoPath, str('To Do (Daily)' + current_time + ".txt")))
 
 
             shutil.copyfile(ToDoFile,NewPath)
-            SaveCSV(Text=ToDo_List, FilePath=ToDoFile, Title='To Do', SavePath=up.AI_Journal)
+            SaveCSV(Text=ToDo_List, FilePath=ToDoFile, Title='To Do', SavePath=up.AI_Journal, AddTimeStamp=False)
+            SaveCSV(Text=ToDo_List_New, FilePath=NewPath_Daily, Title='To Do (Daily) ' + current_time, SavePath=NewToDoPath, AddTimeStamp=False)
         except:
 
             print('Did not update To Do List')
@@ -622,12 +676,12 @@ def CheckFileLength(SavePath,Title1,current_time_f, FileType):
     Title2 = Path(PureWindowsPath(SavePath  , Title1 + current_time_f + FileType))
     Add_Dupe_File = 0
 
-    while len(Title2) > 250:
-        if len(SavePath) >= 240 and len(Title2) > 250:
+    while len(str(Title2)) > 250:
+        if len(str(SavePath)) >= 240 and len(str(Title2)) > 250:
             Title2 = Path(PureWindowsPath(SavePath , 'BU'  + FileType))
 
         elif len(Title2) > 250:
-            TitleLen = len(Title2)
+            TitleLen = len(str(Title2))
             TrimNum = round(TitleLen * .1) + 1
             Title2 = Path(PureWindowsPath(SavePath  , str(Title1[TrimNum:] + current_time_f + FileType)))
 
@@ -675,6 +729,8 @@ def SaveCSV(Text, Title, SavePath, AddTimeStamp = True, FileType = '.txt', FileP
 
 
     Data1 = [(Text1)]
+    if AddTimeStamp == False:
+        print(Text1)
     try:
         df1 = pd.DataFrame(data=Data1)
         df1.to_csv(Title2)
@@ -692,6 +748,68 @@ def SaveCSV(Text, Title, SavePath, AddTimeStamp = True, FileType = '.txt', FileP
 
 
     return Title2
+
+
+
+
+def getUserResponse( pause =.5, Response = 'You Said' ):
+    r = sr.Recognizer()
+    with sr.Microphone() as source:
+        print('Listening...')
+        r.pause_threshold = pause
+        audio = r.listen(source)
+        try:
+            Query = r.recognize_google(audio, language='en-in')
+
+            print(Response+ ": ", Query)
+
+        except Exception as e:
+            print(e)
+            print("Please repeat Words not understood...")
+            Query = getUserResponse()
+            #Event().wait(2)
+        return Query
+
+
+
+
+
+def ConfirmUR(prompt):
+    speak('You Said ' + prompt + ' is this correct?')
+    query = getUserResponse()
+
+    if 'yes' in query or 'correct' in query or 'yeah' in query or 'submit' in query:
+        promptB =True
+
+def editBotPrompt():
+    speak( 'Edit Mode Activated', voice = 4)
+    speak('What do you want to use for a prompt?',voice = 4)
+    query = getUserResponse()
+
+
+
+
+def ConfirmBOT(message, Speak = False):
+    print(up.breakupOutput2)
+
+    print('Chat GPT responded with: ' + message + ' do you want to use this prompt?')
+
+    print(up.breakupOutput2)
+    if Speak == True:
+        speak('Chat GPT responded with: ' + message ,voice = 4)
+
+
+    speak( ' do you want to use this Text?', voice=4)
+
+    query = getUserResponse()
+
+    if 'yes' in query or 'correct' in query or 'yeah' in query or 'submit' in query:
+        promptB =True
+
+    elif 'edit' in query or 'change' in query or 'redo' in query or 'try again' in query or 'no' in query:
+        promptB = False
+
+    return promptB
 
 
 # ********************************
@@ -933,7 +1051,7 @@ def Chop4Art(Text, SavePath, FileName,FilePath = '',  Chunk_Limit = 1500,  Chunk
 
             if len(Text_Chunk_Final) > 44:
                 try:
-                    ArtPrompt = x.GPTArt2( User_Subject='Create a prompt for an artist to create a work of art based on the following text: '  +Text_Chunk_Final, ArtFormat=aPrompt)
+                    ArtPrompt = GPTArt2( User_Subject='Create a prompt for an artist to create a work of art based on the following text: '  +Text_Chunk_Final, ArtFormat=aPrompt)
                 except:
                     ArtPrompt = Artist_Persona + Text_Chunk_Final
                     ArtPrompt[:313]
@@ -1024,8 +1142,8 @@ def Resume():
                              Line3_Format=lup.Test_Format_Resume,
                            SaveFile=True, MakeArt=True, Mode = 'Resume')
 
-def Basic_GPT_Query2(   Line2_Role  , Line5_Task,Line3_Format,Line4_Task,Big = False,Model = "gpt-3.5-turbo",upgradeLimit = 3000, Special = '',Line1_System_Rule = StoryMode.system_TextJoaT_quick, crazy = .5, Subject= '', Outline = '', Allowed_Fails = 8, SaveFile = False,MakeArt = False, Mode = 'SHAINE SAYS', SavePath= ''):#use this to create art style for the work
-
+def Basic_GPT_Query2(   Line2_Role  , Line5_Task,Line3_Format,Line4_Task,Big = False,Model = "gpt-3.5-turbo",upgradeLimit = 3000, Special = '',Line1_System_Rule = StoryMode.system_TextJoaT_quick, crazy = .5, Subject= '', Outline = '', Allowed_Fails = 8, SaveFile = False,MakeArt = False, Mode = 'SHAINE SAYS', SavePath= '', User_Confirm = True):#use this to create art style for the work
+    Full_Story = """"""
 
     if Subject != '':
         Line2_Role = Line2_Role + """Your role and subject matter expertise should fit the following Subject and or style and mood in the {Text} provided by the user Text:###""" + Subject + """###"""
@@ -1071,7 +1189,91 @@ def Basic_GPT_Query2(   Line2_Role  , Line5_Task,Line3_Format,Line4_Task,Big = F
             )
             GPT_Response = str(response.choices[0].message.content)
 
-            KeepGoing = True
+            Full_Story += GPT_Response
+
+            if User_Confirm == True:
+                Full_Story = """"""
+                promptB = False
+                while promptB == False:
+
+                    promptB = ConfirmBOT(GPT_Response)
+
+                    if promptB == False:
+                        print("""
+                        Do you want to 
+                        1). Small Edit, Take the text and switch a few things
+                        2). ReWrite With Edits (Big Edit)
+                        3). Rewrite No Edits
+
+                        """)
+                        query = getUserResponse()
+
+                        if 'one' in query or 'small' in query or 'few' in query or 'mini' in query:
+                            promptB2 = True
+                            EDIT = editBotPrompt()
+                            response = openai.ChatCompletion.create(
+                                model=Model,
+                                messages=[
+                                    {"role": "system", "content": Line1_System_Rule},
+                                    {"role": "user", "content": Line3_Format},
+                                    {"role": "user",
+                                     "content": "Use the following guidance when completing your task: " + EDIT},
+                                    {"role": "user",
+                                     "content": """Rewrite the following text using the edits provided and make it in the respective formate described.  Text: """ + GPT_Response},
+                                ]
+                                , temperature=crazy
+                            )
+                            GPT_Response = str(response.choices[0].message.content)
+                            Full_Story += up.breakupOutput2
+                            Full_Story += "Small Rewrite with Edits:"
+
+
+
+                        elif 'rewrite' in query or 'with edits' in query or 'redo' in query or 'two' in query:
+                            promptB2 = True
+                            EDIT = editBotPrompt()
+                            response = openai.ChatCompletion.create(
+                                model=Model,
+                                messages=[
+                                    {"role": "system", "content": Line1_System_Rule},
+                                    {"role": "user", "content": Line3_Format},
+                                    {"role": "user",
+                                     "content": "Use the following guidance when completing your task: " + EDIT},
+                                    {"role": "user", "content": Line4_Task},
+                                    {"role": "user", "content": Line5_Task},
+                                ]
+                                , temperature=crazy
+                            )
+                            GPT_Response = str(response.choices[0].message.content)
+                            Full_Story += up.breakupOutput2
+                            Full_Story += "Full Rewrite with Edits:"
+
+                        elif 'full' in query or 'try new' in query or 'new' in query or 'three' in query:
+                            promptB2 = False
+                            promptB2 = True
+                            response = openai.ChatCompletion.create(
+                                model=Model,
+                                messages=[
+                                    {"role": "system", "content": Line1_System_Rule},
+                                    {"role": "user", "content": Line3_Format},
+                                    {"role": "user", "content": Line4_Task},
+                                    {"role": "user", "content": Line5_Task},
+                                ]
+                                , temperature=crazy
+                            )
+                            GPT_Response = str(response.choices[0].message.content)
+                            Full_Story += up.breakupOutput2
+                            Full_Story += "Full Rewrite:"
+
+                    Full_Story += GPT_Response
+                    Full_Story += up.breakupOutput
+
+
+
+
+
+            else:
+                KeepGoing = True
         except:
             print(' Error ChatGPT failed, trying to rerun prompt now.... if this happens too many times we will kill the script')
             KillSwitch += 1
@@ -1106,6 +1308,8 @@ def Basic_GPT_Query2(   Line2_Role  , Line5_Task,Line3_Format,Line4_Task,Big = F
             Check_Folder_Exists(PicNewPath1)
             PicNewPath =Path(PureWindowsPath(PicNewPath1 ,  Title +  '.png'))
             shutil.copyfile(originalFilepath, PicNewPath)
+
+        #print(Full_Story)
         return GPT_Response
 
 
@@ -1128,8 +1332,8 @@ def speak( audio, Add2T=True, voice=4, SilentMode = False):
         print('Silent Mode Activated: ' + audio)
 
 
-def Basic_GPT_Query(   Line2_Role  ,Line3_Format,Line4_Task,Big = False,Model = "gpt-3.5-turbo",upgradeLimit = 3000, Special = '',Line1_System_Rule = StoryMode.system_TextJoaT_quick, crazy = .5, Subject= '', Outline = '', Allowed_Fails = 8, SaveFile = False,MakeArt = False, Mode = 'SHAINE SAYS', SavePath= ''):#use this to create art style for the work
-
+def Basic_GPT_Query(   Line2_Role  ,Line3_Format,Line4_Task,Big = False,Model = "gpt-3.5-turbo",upgradeLimit = 3000, Special = '',Line1_System_Rule = StoryMode.system_TextJoaT_quick, crazy = .5, Subject= '', Outline = '', Allowed_Fails = 8, SaveFile = False,MakeArt = False, Mode = 'SHAINE SAYS', SavePath= '', User_Confirm = True):#use this to create art style for the work
+    Full_Story = """"""
 
     if Subject != '':
         Line2_Role = Line2_Role + """Your role and subject matter expertise should fit the following Subject and or style and mood in the {Text} provided by the user Text:###""" + Subject + """###"""
@@ -1174,7 +1378,90 @@ def Basic_GPT_Query(   Line2_Role  ,Line3_Format,Line4_Task,Big = False,Model = 
             )
             GPT_Response = str(response.choices[0].message.content)
 
-            KeepGoing = True
+            Full_Story += GPT_Response
+
+            if User_Confirm == True:
+                Full_Story = """"""
+                promptB = False
+                while promptB == False:
+
+                    promptB = ConfirmBOT(GPT_Response)
+
+                    if promptB == False:
+                        print("""
+                                    Do you want to 
+                                    1). Small Edit, Take the text and switch a few things
+                                    2). ReWrite With Edits (Big Edit)
+                                    3). Rewrite No Edits
+
+                                    """)
+                        query = getUserResponse()
+
+                        if 'one' in query or 'small' in query or 'few' in query or 'mini' in query:
+                            promptB2 = True
+                            EDIT = editBotPrompt()
+                            response = openai.ChatCompletion.create(
+                                model=Model,
+                                messages=[
+                                    {"role": "system", "content": Line1_System_Rule},
+                                    {"role": "user", "content": Line3_Format},
+                                    {"role": "user",
+                                     "content": "Use the following guidance when completing your task: " + EDIT},
+                                    {"role": "user",
+                                     "content": """Rewrite the following text using the edits provided and make it in the respective formate described.  Text: """ + GPT_Response},
+                                ]
+                                , temperature=crazy
+                            )
+                            GPT_Response = str(response.choices[0].message.content)
+                            Full_Story += up.breakupOutput2
+                            Full_Story += "Small Rewrite with Edits:"
+
+
+
+                        elif 'rewrite' in query or 'with edits' in query or 'redo' in query or 'two' in query:
+                            promptB2 = True
+                            EDIT = editBotPrompt()
+                            response = openai.ChatCompletion.create(
+                                model=Model,
+                                messages=[
+                                    {"role": "system", "content": Line1_System_Rule},
+                                    {"role": "user", "content": Line3_Format},
+                                    {"role": "user",
+                                     "content": "Use the following guidance when completing your task: " + EDIT},
+                                    {"role": "user", "content": Line4_Task},
+                                ]
+                                , temperature=crazy
+                            )
+                            GPT_Response = str(response.choices[0].message.content)
+                            Full_Story += up.breakupOutput2
+                            Full_Story += "Full Rewrite with Edits:"
+
+                        elif 'full' in query or 'try new' in query or 'new' in query or 'three' in query:
+                            promptB2 = False
+                            promptB2 = True
+                            response = openai.ChatCompletion.create(
+                                model=Model,
+                                messages=[
+                                    {"role": "system", "content": Line1_System_Rule},
+                                    {"role": "user", "content": Line3_Format},
+                                    {"role": "user", "content": Line4_Task},
+
+                                ]
+                                , temperature=crazy
+                            )
+                            GPT_Response = str(response.choices[0].message.content)
+                            Full_Story += up.breakupOutput2
+                            Full_Story += "Full Rewrite:"
+
+                    Full_Story += GPT_Response
+                    Full_Story += up.breakupOutput
+
+
+
+
+
+            else:
+                KeepGoing = True
         except:
             print(' Error ChatGPT failed, trying to rerun prompt now.... if this happens too many times we will kill the script')
             KillSwitch += 1
@@ -1419,13 +1706,13 @@ def Split_Audio2(Text, SavePath, FileName,FilePath = '', OpeningSound = up.Monde
 
                 if len(tempTranslate) > 44:
                     try:
-                        ArtPrompt = x.GPTArt2( User_Subject='Create a prompt for an artist to create a work of art based on the following text (Use the original language for inspiration/context/Location of artwork): '  +tempTranslate, ArtFormat=StoryMode.StoryArt)
+                        ArtPrompt = GPTArt2( User_Subject='Create a prompt for an artist to create a work of art based on the following text (Use the original language for inspiration/context/Location of artwork): '  +tempTranslate, ArtFormat=StoryMode.StoryArt)
                     except:
                         ArtPrompt = tempTranslate
                         ArtPrompt[:313]
 
                     try:
-                        PicPath = x.makeArt(Prompt='Using the following details: ' + Artist_Persona + " Art Prompt: " + ArtPrompt)
+                        PicPath = makeArt(Prompt='Using the following details: ' + Artist_Persona + " Art Prompt: " + ArtPrompt)
                             #x.makeArt(Prompt="Using the following Art Sytles/Details from the text create a work of art pased on the following Art Prompt:  " + ArtPrompt)
                         # print('successfully made a work of art in foreign language')
                         newPicPath = Path(PureWindowsPath(SavePath_Pics ,FileName_Chunk + '.png'))
@@ -1445,9 +1732,9 @@ def Split_Audio2(Text, SavePath, FileName,FilePath = '', OpeningSound = up.Monde
                 FilePathc = SaveText2Audio(Text = Text_Chunk_Final, SavePath = SavePath_Chunks, FileName=FileName +'_' + l +'_' + Voice +'_Chunk_' + str(Audio_File_Count), Voice = v , Chunk_Mode=True, FilePath=FilePath, Translate=[l], Chunk_Delimiter=Chunk_Delimiter,Chunk_Replaces=Chunk_Replaces,Chunk_Limit=Chunk_Limit + 10 ,Artist_Persona=Artist_Persona,  aPrompt = aPrompt, Origin_Language = Origin_Language)
                 FilePaths.append(FilePathc)
                 if len(Text_Chunk_Final)>44:
-                    ArtPrompt = x.GPTArt2(User_Subject='Create a prompt for an artist to create a work of art based on the following text: ' + Text_Chunk_Final, ArtFormat=aPrompt)
+                    ArtPrompt = GPTArt2(User_Subject='Create a prompt for an artist to create a work of art based on the following text: ' + Text_Chunk_Final, ArtFormat=aPrompt)
                     try:
-                        PicPath = x.makeArt(Prompt='Using the following details: ' + Artist_Persona + " Art Prompt: " + ArtPrompt)
+                        PicPath = makeArt(Prompt='Using the following details: ' + Artist_Persona + " Art Prompt: " + ArtPrompt)
                         newPicPath = Path(PureWindowsPath(SavePath_Pics , FileName_Chunk + '.png'))
                         try:
                             shutil.copy(PicPath, newPicPath)
@@ -1533,8 +1820,8 @@ def SaveText2Audio( MultiThread = True,Translate = ["English"],Text = '', SavePa
             FilePath_m = str(FilePath)[:-4] + '.mp3'
             SavePath_index = str(FilePath).rfind(up.System_Folder_Path_Fix)
             FStart = (SavePath_index+1)
-            FileName = str(FilePath[FStart:-4])
-            SavePath = str(FilePath[:SavePath_index])
+            FileName = str(FilePath)[FStart:-4]
+            SavePath = str(FilePath)[:SavePath_index]
             # print('SavePath: ' + SavePath)
             # print('FileName: ' + FileName)
 
@@ -1552,7 +1839,7 @@ def SaveText2Audio( MultiThread = True,Translate = ["English"],Text = '', SavePa
             dn = 100
         try:
             x = GPT.MondeVert()
-            Artist_Persona = x.GPTArt2(User_Subject=arttext,ArtFormat = lup.artDetailsFormat, prompt=lup.artDetailsPrompt)
+            Artist_Persona = GPTArt2(User_Subject=arttext,ArtFormat = lup.artDetailsFormat, prompt=lup.artDetailsPrompt)
             # print(Artist_Persona)
         except:
             Artist_Persona = 'embrace the spirit/symbolism and culture of the following text describe it to be illustrated by an artist'
@@ -1953,9 +2240,27 @@ def send_email_no_attachment_outlook( password = DNC.Outlookpassword, sender = D
             smtpObj.quit()
             print ("Successfully sent email")
         except:
+            smtpObj = smtplib.SMTP(smtpHost, smtpPort)
+            #smtpObj.set_debuglevel(1)
+            smtpObj.ehlo()
+            smtpObj.starttls()
+            smtpObj.ehlo()
+            smtpObj.login(sender,password)
+            smtpObj.sendmail(sender, to, message)
+            smtpObj.quit()
+            print ("Successfully sent email")
             print ("Error: unable to send email")
     except:
         print("Error: unable to send email")
+        smtpObj = smtplib.SMTP(smtpHost, smtpPort)
+        # smtpObj.set_debuglevel(1)
+        smtpObj.ehlo()
+        smtpObj.starttls()
+        smtpObj.ehlo()
+        smtpObj.login(sender, password)
+        smtpObj.sendmail(sender, to, message)
+        smtpObj.quit()
+        print("Successfully sent email")
 
 def send_email_w_attachment_gmail(sender = DNC.gmail_user, password = DNC.gmail_pass, body= DNC.subject + current_time, filename = [up.AI_Journal_Combined, up.ToDoFile], to= DNC.to, subject= DNC.subject + current_time,fType = "txt"):
     # create message object
