@@ -9,6 +9,8 @@ import whisper
 from secrets import randbelow
 import random
 import platform,subprocess
+
+import re
 import time
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
@@ -87,6 +89,12 @@ import tkinter as tk
 import tkinter as tk
 
 
+
+
+
+def check_numeric(x):
+    if not isinstance(x, (int, float, complex)):
+        return False
 
 
 def MakeVariationArt(Pic, Size = '512x512', NumVars = 1, SavePath =   Path(PureWindowsPath(up.AI_Audio_Transcript, 'Extracted images')) , FileName= 'Version'):
@@ -2075,10 +2083,207 @@ def Add2MasterLyrics(self, current_time2, Mode, title, ArtistPoetInfo, poem, Tag
                                      'Quality', 'Folder_Path', 'Prompts_Used'])
     add2Master3(df)
 
+def WordCount(Text):
+    WordCount = len(re.findall(r'\w+', Text))
+    return WordCount
+
+
+def ASKGPT(Format, Task,USER = '', Goal ='',Background = '',Background2 = '',Background3 = '' ,crazy = .5, Model = "gpt-3.5-turbo", System = up.system_Input, Role = up.system_Input, version = 2):
+
+    if version ==1:
+        GPT_Response = ASKGPT1(Format=Format , Task= Task,Background = Background,Background2 = Background2,Background3 = Background3 ,crazy = crazy, Model = Model, System = System, Role = Role)
+
+    elif version == 2:
+        GPT_Response = ASKGPTnew(Format=Format, Task=Task, Background=Background, Background2=Background2, Background3=Background3,
+                crazy=crazy, Model=Model, System=System, Role=Role, Goal = Goal, USER = USER)
+
+    return GPT_Response
+
+
+
+def Version2GPTSetUp(Role = '', Format= '', Task= '',USER = '',Background = '',Background2 = '',Background3 = '' ,Goal = '', System = ''):
+    BackgroundNew = Background + Background2 + Background3
+
+    if BackgroundNew != '':
+        BackgroundNew = """ ##### Background Information (for reference): ##### """ + BackgroundNew + "##### "
+
+    if Format != '':
+        Format = """ ##### Format For Your Response   Desired Format: ##### """ + Format + "##### "
+
+    if Goal != '':
+        Goal = """ ##### Goal: ##### """ + Goal + "##### "
+
+    if Role != '':
+        Role = """ ##### Role/Persona For Your Response: ##### """ + Role + "##### "
+
+
+
+    NewSystem = """System Settings: ##### """ + System + Role + Goal + Format + BackgroundNew
+
+    return NewSystem
+def ASKGPTnew(Format= '', Task= '',USER = '',Background = '',Background2 = '',Background3 = '' ,Goal = '',crazy = .5, Model = "gpt-3.5-turbo", System = up.system_Input, Role = up.system_Input, version = 2):
+    try:
+
+
+        if version == 2:
+
+
+
+            NewSystem = Version2GPTSetUp()
+
+            if Task != '' and USER == '':
+                    USER = """ ##### TASK/REQUEST: ##### """ + Task + "##### "
+            elif Task != '' and USER != '':
+                    USER = """ ##### TASK/REQUEST: ##### """ + Task + """##### Additional TASKS/REQUESTS:##### """ + USER + " ##### "
+
+
+
+            response = openai.ChatCompletion.create(
+                        model = Model,
+                        messages = [
+                            {"role": "system", "content": NewSystem},
+                            {"role": "user", "content": USER}
+                        ]
+                            , temperature = crazy
+                        )
+            GPT_Response = str(response.choices[0].message.content)
+
+
+    except:
+        print("Error Running new ASK GPT")
+
+
+    return GPT_Response
+
+def ASKGPT1(Format, Task,Background = '',Background2 = '',Background3 = '' ,crazy = .5, Model = "gpt-3.5-turbo", System = up.system_Input, Role = up.system_Input):
+    try:
+
+
+
+        if Background == '' and Background3 != '':
+            Background = Background3
+            Background3 = ''
+        elif Background == '' and Background2 != '':
+            Background = Background2
+            Background2 = ''
+        elif Background2 == "" and Background3 != "":
+            Background2 = Background3
+            Background3 = ''
+
+
+
+        if Background == '' and Background2 =='' and Background3 == '':
+        # This is for the result if you let the AI describe project and details and then make the response
+            response = openai.ChatCompletion.create(
+                model=Model,
+                messages=[
+                    {"role": "system", "content": System},
+                    {"role": "user", "content": Role},
+                    {"role": "user", "content": Format},
+                    {"role": "user", "content": Task},
+                ]
+                , temperature=crazy
+            )
+            GPT_Response = str(response.choices[0].message.content)
+
+        # This should never happen
+        elif Background =='' and Background3 == '':
+
+            response = openai.ChatCompletion.create(
+                model=Model,
+                messages=[
+                    {"role": "system", "content": System},
+                    {"role": "user", "content": Role},
+                    {"role": "user", "content": Format},
+                    {"role": "user", "content": Background2},
+                    {"role": "user", "content": Task},
+                ]
+                , temperature=crazy
+            )
+            GPT_Response = str(response.choices[0].message.content)
+
+        elif Background2 ==''and Background3 == '':
+            response = openai.ChatCompletion.create(
+                model=Model,
+                messages=[
+                    {"role": "system", "content": System},
+                    {"role": "user", "content": Role},
+                    {"role": "user", "content": Format},
+                    {"role": "user", "content": Background},
+                    {"role": "user", "content": Task},
+                ]
+                , temperature=crazy
+            )
+            GPT_Response = str(response.choices[0].message.content)
+            #This should never happen
+        elif Background ==''and Background2 == '':
+            response = openai.ChatCompletion.create(
+                model=Model,
+                messages=[
+                    {"role": "system", "content": System},
+                    {"role": "user", "content": Role},
+                    {"role": "user", "content": Format},
+                    {"role": "user", "content": Background3},
+                    {"role": "user", "content": Task},
+                ]
+                , temperature=crazy
+            )
+            GPT_Response = str(response.choices[0].message.content)
+
+
+        elif Background != '' and Background2 != '' and Background3 == '' :
+            response = openai.ChatCompletion.create(
+                model=Model,
+                messages=[
+                    {"role": "system", "content": System},
+                    {"role": "user", "content": Role},
+                    {"role": "user", "content": Format},
+                    {"role": "user", "content": Background},
+                    {"role": "user", "content": Background2},
+                    {"role": "user", "content": Task},
+                ]
+                , temperature=crazy
+            )
+            GPT_Response = str(response.choices[0].message.content)
+        elif Background != '' and Background3 != '' and Background2 == '' :
+            response = openai.ChatCompletion.create(
+                model=Model,
+                messages=[
+                    {"role": "system", "content": System},
+                    {"role": "user", "content": Role},
+                    {"role": "user", "content": Format},
+                    {"role": "user", "content": Background},
+                    {"role": "user", "content": Background3},
+                    {"role": "user", "content": Task},
+                ]
+                , temperature=crazy
+            )
+            GPT_Response = str(response.choices[0].message.content)
+        else:
+            response = openai.ChatCompletion.create(
+                model=Model,
+                messages=[
+                    {"role": "system", "content": System},
+                    {"role": "user", "content": Role},
+                    {"role": "user", "content": Format},
+                    {"role": "user", "content": Background2},
+                    {"role": "user", "content": Background3},
+                    {"role": "user", "content": Task},
+                ]
+                , temperature=crazy
+            )
+            GPT_Response = str(response.choices[0].message.content)
 
 
 
 
+
+
+    except:
+        print("Error with ASKGPT Function, review")
+
+
+    return GPT_Response
 
 def NamePoemSavePoem(self, poem, ArtPaths, Prompts_Used, ArtistPoetInfo, title='', SavePath=up.AI_Poetry_Path,
                      Mode='SHAINE', current_time = current_time ):

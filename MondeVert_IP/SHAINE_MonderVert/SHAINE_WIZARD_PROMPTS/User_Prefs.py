@@ -14,6 +14,7 @@ AI_Poetry_Path = Path(PureWindowsPath(SavePath , "AI Poetry"))
 AI_Blog_Path = Path(PureWindowsPath(SavePath , "AI Blogs"))
 AI_Music_Path = Path(PureWindowsPath(SavePath , "AI Music"))
 AI_Task_Path = Path(PureWindowsPath(SavePath , "AI Tasks"))
+AI_Comedy_Path = Path(PureWindowsPath(SavePath , "AI Comedy"))
 AI_Audio_Transcript = Path(PureWindowsPath(SavePath , "Audio Transcript"))
 
 AI_AudioBook_Path = Path(PureWindowsPath(SavePath , "AI AudioBooks"))
@@ -141,6 +142,7 @@ AI_Blogger = "Brick Pulford"
 Song_Writer = 'Bubba D'
 
 LineBreak_1 = """
+
 """
 LineBreak = """
 

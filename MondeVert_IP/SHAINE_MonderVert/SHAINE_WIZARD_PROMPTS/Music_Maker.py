@@ -1,5 +1,5 @@
 
-
+from MondeVert_IP.SHAINE_MonderVert.SHAINE_WIZARD_PROMPTS import  Music_Wizard as MW, Music_Lyrics as ML
 
 
 

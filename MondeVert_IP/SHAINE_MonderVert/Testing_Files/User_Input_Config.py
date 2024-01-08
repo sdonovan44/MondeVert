@@ -2,7 +2,8 @@ from MondeVert_IP.SHAINE_MonderVert import SHAINE as GPT
 
 from MondeVert_IP.SHAINE_MonderVert.Utilities import Common_Utilities as cu
 from MondeVert_IP.SHAINE_MonderVert.SHAINE_WIZARD_PROMPTS import Stories_For_Audio_Files as SFA, ReWrites as RW, StoryPrompts as SP
-from MondeVert_IP.SHAINE_MonderVert.SHAINE_WIZARD_PROMPTS import User_Prefs as up, StoryMode_Wizard as SW
+from MondeVert_IP.SHAINE_MonderVert.SHAINE_WIZARD_PROMPTS import User_Prefs as up, StoryMode_Wizard as SW, StoryOutlines  as ShaneOriginals
+from MondeVert_IP.SHAINE_MonderVert.SHAINE_WIZARD_PROMPTS import Long_User_Prompts as lup, User_Prefs as up,Poetry_Wizard as PW, SuperSHAINE_WIZARD  as SSW
 import threading
 import pandas as pd
 from pathlib import Path, PureWindowsPath
@@ -159,16 +160,17 @@ Shane = r"C:\Users\sdono\Downloads\12CCB92F-D044-4EC3-B3C5-E3E0A5102B50.MOV"
 #pic22 = r"A:\Amini Amor\SHAINE\Requests\Beta\Audio Transcript\Extracted images\Random New Favorites\reamlike Bold colors A mind bending masterpiece that explores the depths of self discovery through abstract symbolism and thought provoking imagery.png"
 # #
 #pic22 = r"A:\Amini Amor\SHAINE\Requests\Beta\Audio Transcript\Extracted images\Blue Hair Variants\The artwork depicts a woman with flowing blue hair surrounded by a vibrant and colorful cityscape Her eyes are closed and a serene expression is on.png"
-
-pic22 = r"A:\Amini Amor\SHAINE\Requests\Beta\Audio Transcript\Extracted images\Blue Hair Variants\Favorite Variant  2  10142023155953.png"
-Version1 = pic22
-# for i in range (1,3):
-#     Version1 = cu.MakeVariationArt(Pic=Version1, FileName='Favorite Variant  ' + str(i) + '  '+ current_time)
+#
+# pic22 = r"A:\Amini Amor\SHAINE\Requests\Beta\Audio Transcript\Extracted images\Blue Hair Variants\Favorite Variant  2  10142023155953.png"
+# pic22= r"A:\Amini Amor\QR Code and ads\Logo 2.PNG"
+# Version1 = pic22
+# for i in range (1,10):
+#     Version1 = cu.MakeVariationArt(Pic=pic22, FileName='Favorite Variant  ' + str(i) + '  '+ current_time, SavePath=r"A:\Amini Amor\SHAINE\Marketing\Logo Work\Variations")
 # Version1 = pic22
 # for i in range (1,3):
 #     Version1 = pic22
 #     for j in range(1, 4):
-#         Version1 = cu.MakeVariationArt(Pic=Version1, FileName='Favorite Variant v2   ' + str(i) + '-  ' + str(j)+ '  '  + current_time)
+#         Version1 = cu.MakeVariationArt(Pic=Version1, FileName='Favorite Variant v2   ' + str(i) + '-  ' + str(j)+ '  '  + current_time, SavePath=r"A:\Amini Amor\SHAINE\Marketing\Logo Work\Variations")
 
 #
 # Insta = r"A:\Amini Amor\Live Recordings Raw\2023-10-14 15-09-39.mp4"
@@ -246,32 +248,36 @@ Journal_Audio = [Journal_Audio1,Journal_Audio2,Journal_Audio3,Journal_Audio4,Jou
 
 
 
-#FilePath = r"A:\Amini Amor\Secret Law of Attraction.txt"
+# #FilePath = r"A:\Amini Amor\Secret Law of Attraction.txt"
 FilePath = r"A:\Amini Amor\SHAINE\Requests\Beta\AI Music\Music_Shane\ Lets Do It Again  12-07-2023_03.09\ Lets Do It Again_.txt"
 Text  = pd.read_csv(FilePath)
 
-
+#
 with open(FilePath,'r') as file:
-	Text = """         
+	Text = """
 	 """.join(line.rstrip() for line in file)
 	#print(Text)
 
 
+#
+# # Text = cu.Basic_GPT_Query(Line2_Role = SW.Role_Podcast, Line4_Task=SW.Task_Podcast, Line3_Format=SW.Format_Podcast, User_Confirm= False)
+# # print (Text)
+#
+#
+#
+# x = TextEdit.TextEdit(Text = Text, UserConfirm= True)
+# #TextEdit.TextEdit2()
+# Args = """Text = Text, UserConfirm= True"""
+#
+# t = x.MakeWindow(Text)
+# #t = threading.Thread(target= x.MakeWindow, args = (Text,)).start()
+# print(t)
+# t1 = x.GetUserResponseMain()
+# print(t1)
 
-# Text = cu.Basic_GPT_Query(Line2_Role = SW.Role_Podcast, Line4_Task=SW.Task_Podcast, Line3_Format=SW.Format_Podcast, User_Confirm= False)
-# print (Text)
 
-
-
+Text = ShaneOriginals.Gritty
 x = TextEdit.TextEdit(Text = Text, UserConfirm= True)
-#TextEdit.TextEdit2()
-Args = """Text = Text, UserConfirm= True"""
-
-t = x.MakeWindow(Text)
-#t = threading.Thread(target= x.MakeWindow, args = (Text,)).start()
-print(t)
-t1 = x.GetUserResponseMain()
-print(t1)
-
-#x = TextEdit.TextEdit(Text = Text, UserConfirm= True)
-#print(x.GetUserResponseMain)
+# x.MakeWindow2(str(Text + Text + Text + Text),str(Text + Text + Text + Text),str(Text + Text + Text + Text),str(Text + Text + Text + Text)  , Text , Text, "Test 1333333333333333333333333", crazy=.5, Text=Text)
+x.MakeWindow(Text = str(Text + Text + Text + Text), UserConfirm = True)
+print(x.GetUserResponseMain)
