@@ -70,6 +70,47 @@ def png2JPG(FilePath,NewPath,NewName = '',ArchivePath = up.PNGPath_Archive, Del 
 
 
 
+def JPG2PNG(FilePath,NewPath,NewName = '',ArchivePath = up.PNGPath_Archive, Del = False ):
+    try:
+        # # open image in png format
+        # img_png = Image.open(FilePath)
+        # # The image object is used to save the image in jpg format
+        #
+
+
+        isExist = os.path.exists(NewPath)
+        if not isExist:
+            # Create a new directory because it does not exist
+            os.makedirs(NewPath)
+
+        isExist = os.path.exists(ArchivePath)
+        if not isExist:
+            # Create a new directory because it does not exist
+            os.makedirs(ArchivePath)
+    except:
+        print('Error could not create file path)')
+
+
+    try:
+        image = cv2.imread(FilePath)
+        NewFilePath = NewPath + '/' +  NewName + '.png'
+        cv2.imwrite(NewFilePath, image, [int(cv2.IMWRITE_JPEG_QUALITY), 100])
+
+        ArchivePath2 = ArchivePath +  '' +NewName + '.jpg'
+        try:
+            print(FilePath)
+            print(ArchivePath2)
+            if Del == True:
+                shutil.move(FilePath, ArchivePath2)
+            else:
+                shutil.copy(FilePath, ArchivePath2)
+        except:
+            print('Error could not move file from old to new directory')
+    except:
+        print('Error could not convert file')
+
+
+
 
 def upload_pictures_error():
     bot = Bot()

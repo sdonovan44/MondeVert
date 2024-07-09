@@ -50,8 +50,12 @@ from MondeVert_IP.SHAINE_MonderVert import SHAINE as GPT
 from MondeVert_IP.SHAINE_MonderVert.SHAINE_WIZARD_PROMPTS import Stories_For_Audio_Files as sfa
 
 from pydub import AudioSegment
-import openai
+
 from MondeVert_IP.SHAINE_MonderVert.Utilities.DoNotCommit import API_Key
+from openai import OpenAI
+client = OpenAI(
+    api_key = API_Key,
+)
 import requests
 import argparse
 from pytube import YouTube
@@ -95,6 +99,44 @@ import tkinter as tk
 def check_numeric(x):
     if not isinstance(x, (int, float, complex)):
         return False
+
+
+
+def ReviewVoices(self, Quick=False):
+    if Quick == False:
+        engine = pyttsx3.init()
+        voices = engine.getProperty('voices')
+        index = 0
+        indexCount = 0
+        # load_dotenv()
+        # Set up the OpenAI API client :
+        client.api_key = API_Key
+
+
+        speak1 = 'Do you want to set this voice as active?'
+
+        # Print the generated text
+        message1 = "   THIS IS A TEST FOR  VOICE NUMBER   "
+        message2 =  "   Welcome to the realm of linguistic complexity. In this auditory journey, explore the enigmatic symphony of intricate lexicons and labyrinthine phonetics. Behold the kaleidoscope of erudition, where sesquipedalianism converges with mellifluous articulation. Experience the confluence of eloquence and complexity. Unleash the cadence of cognitive acrobatics."
+
+
+
+        set1 = False
+
+        for voice in voices:
+            indexCount += 1
+
+        while set1 == False:
+            if index <= indexCount:
+                print(f'index-> {index} -- {voices[index].name}')
+                engine.setProperty('voice', voices[index].id)
+                engine.say(message1 + indexCount+ message2 + message1 + indexCount)
+                # MondeVert.speak(self, speak1)
+
+    else:
+        #self.voice = int(input('What Voice do you want to make active?'))
+        print("done")
+        # MondeVert.speak(self, 'Voice Set')
 
 
 def MakeVariationArt(Pic, Size = '512x512', NumVars = 1, SavePath =   Path(PureWindowsPath(up.AI_Audio_Transcript, 'Extracted images')) , FileName= 'Version'):
@@ -745,13 +787,13 @@ def SaveCSV(Text, Title, SavePath, AddTimeStamp = True, FileType = '.txt', FileP
         print(Title1 + ' - File Saved in the following location: ' + Title2)
     except:
         print('Review Error File did not save ')
-    try:
+    # try:
 
         # MondeVert_IP.SaveText(self,df1,'MondeVert_IP Assistant', 'Full Transcript')
-        add2Master2(df1)
-
-    except:
-        print('Review  did not save to master df2 file ')
+    #     add2Master2(df1)
+    #
+    # except:
+    #     print('Review  did not save to master df2 file ')
 
 
 
@@ -825,8 +867,41 @@ def ConfirmBOT(message, Speak = False):
 
 # Create a client using the credentials and region defined in the [adminuser]
 # section of the AWS credentials file (~/.aws/credentials).
+def quickArt1( Text='', SavePath = up.AI_Art_Path, filename = ''):
+    if Text != '':
+        try:
+            ArtPrompt = GPTArt2( User_Subject=Text,
+                                      prompt='Pick a completely random artist or photographer| art style| theme| mood |and your task is to write a short prompt for DALL-E (AI-Art generator) to create a work of art/photograph',
+                                      ArtFormat=' <Short description of a Work of art inspired by text in  under 200 characters>')
+            try:
+                ArtPath = makeArt( Prompt=ArtPrompt, SavePath=SavePath,filename=filename)
+                PersonaArtPath = ArtPath
+            except:
+                dn = 100
+        except:
+            dn = 100
 
-def makeArt( Prompt='', SavePath=up.AI_Art_Path, OpenFile=False):
+        try:
+            add2Master_Persona(
+                Text=str(current_time + '  ' + Text + ' Art File location: ' + ArtPath))
+
+        except:
+            dn = 100
+
+
+def quickArt2( Text='', SavePath = up.AI_Art_Path, filename = ''):
+    if Text != '':
+        try:
+            ArtPrompt = GPTArt2( User_Subject="TEXT: ### " + Text + "###",
+                                      prompt='Using the text provided, Pick an artist or use one provided to you and the respective art style| theme| mood |and your task is to write a short prompt for DALL-E (AI-Art generator) to create a work of art', ArtFormat=' <Short description of a Work of art inspired by text in  under 313 characters only describe the art, there should be no specific text to be added to the art>')
+
+        except:
+            dn = 100
+
+    return ArtPrompt
+
+
+def makeArt( Prompt='', SavePath=up.AI_Art_Path, OpenFile=False, filename = ''):
     try:
 
 
@@ -852,12 +927,12 @@ def makeArt( Prompt='', SavePath=up.AI_Art_Path, OpenFile=False):
 
 
         # Set up the OpenAI API client :
-        openai.api_key = API_Key
+        client.api_key = API_Key
         print("Sending to OpenAI...")
         print()
 
         try:
-            response = openai.Image.create(
+            response = client.Image.create(
                 prompt=prompt,
                 n=1,
                 size="1024x1024"
@@ -875,7 +950,12 @@ def makeArt( Prompt='', SavePath=up.AI_Art_Path, OpenFile=False):
             # the HTTP response in a response object called r
 
             # Commented out for testing
-            FileName = prompt
+            if filename =='':
+                FileName = prompt
+            else:
+                FileName = filename
+
+
             print('Length of File Name: ' + str(len(FileName)))
             if len(FileName) >= 80:
                 FileName = FileName[-80:]
@@ -2138,7 +2218,7 @@ def ASKGPTnew(Format= '', Task= '',USER = '',Background = '',Background2 = '',Ba
 
 
 
-            response = openai.ChatCompletion.create(
+            response = client.chat.completions.create(
                         model = Model,
                         messages = [
                             {"role": "system", "content": NewSystem},
@@ -2174,7 +2254,7 @@ def ASKGPT1(Format, Task,Background = '',Background2 = '',Background3 = '' ,craz
 
         if Background == '' and Background2 =='' and Background3 == '':
         # This is for the result if you let the AI describe project and details and then make the response
-            response = openai.ChatCompletion.create(
+            response = client.chat.completions.create(
                 model=Model,
                 messages=[
                     {"role": "system", "content": System},
@@ -2189,7 +2269,7 @@ def ASKGPT1(Format, Task,Background = '',Background2 = '',Background3 = '' ,craz
         # This should never happen
         elif Background =='' and Background3 == '':
 
-            response = openai.ChatCompletion.create(
+            response = client.chat.completions.create(
                 model=Model,
                 messages=[
                     {"role": "system", "content": System},
@@ -2203,7 +2283,7 @@ def ASKGPT1(Format, Task,Background = '',Background2 = '',Background3 = '' ,craz
             GPT_Response = str(response.choices[0].message.content)
 
         elif Background2 ==''and Background3 == '':
-            response = openai.ChatCompletion.create(
+            response = client.chat.completions.create(
                 model=Model,
                 messages=[
                     {"role": "system", "content": System},
@@ -2217,7 +2297,7 @@ def ASKGPT1(Format, Task,Background = '',Background2 = '',Background3 = '' ,craz
             GPT_Response = str(response.choices[0].message.content)
             #This should never happen
         elif Background ==''and Background2 == '':
-            response = openai.ChatCompletion.create(
+            response = client.chat.completions.create(
                 model=Model,
                 messages=[
                     {"role": "system", "content": System},
@@ -2232,7 +2312,7 @@ def ASKGPT1(Format, Task,Background = '',Background2 = '',Background3 = '' ,craz
 
 
         elif Background != '' and Background2 != '' and Background3 == '' :
-            response = openai.ChatCompletion.create(
+            response = client.chat.completions.create(
                 model=Model,
                 messages=[
                     {"role": "system", "content": System},
@@ -2246,7 +2326,7 @@ def ASKGPT1(Format, Task,Background = '',Background2 = '',Background3 = '' ,craz
             )
             GPT_Response = str(response.choices[0].message.content)
         elif Background != '' and Background3 != '' and Background2 == '' :
-            response = openai.ChatCompletion.create(
+            response = client.chat.completions.create(
                 model=Model,
                 messages=[
                     {"role": "system", "content": System},
@@ -2260,7 +2340,7 @@ def ASKGPT1(Format, Task,Background = '',Background2 = '',Background3 = '' ,craz
             )
             GPT_Response = str(response.choices[0].message.content)
         else:
-            response = openai.ChatCompletion.create(
+            response = client.chat.completions.create(
                 model=Model,
                 messages=[
                     {"role": "system", "content": System},
@@ -2279,7 +2359,8 @@ def ASKGPT1(Format, Task,Background = '',Background2 = '',Background3 = '' ,craz
 
 
 
-    except:
+    except Exception as e:
+        print(e)
         print("Error with ASKGPT Function, review")
 
 

@@ -6,9 +6,13 @@ from MondeVert_IP.SHAINE_MonderVert.SHAINE_WIZARD_PROMPTS import User_Prefs as u
 from MondeVert_IP.SHAINE_MonderVert.SHAINE_WIZARD_PROMPTS import Long_User_Prompts as lup, User_Prefs as up,Poetry_Wizard as PW, SuperSHAINE_WIZARD  as SSW
 import threading
 import pandas as pd
+import random
+from MondeVert_IP.SHAINE_MonderVert import Instagram_Posts as IP
 from pathlib import Path, PureWindowsPath
 import platform
-
+from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QPushButton, QTextEdit, QMenu, QAction
+from PyQt5.QtGui import QColor, QPalette, QIcon
+from PyQt5.QtCore import Qt
 
 from MondeVert_IP.SHAINE_MonderVert.Utilities import TextEdit as TextEdit
 
@@ -148,7 +152,7 @@ Shane = r"C:\Users\sdono\Downloads\12CCB92F-D044-4EC3-B3C5-E3E0A5102B50.MOV"
 # pic = r"A:\Amini Amor\SHAINE\Requests\Beta\AI Art\Approved Quality Art\Curated\MondeVert Studio\SHAINE Favorites\Art_Blunts_Using_the_classic_style_of_Pablo_Picasso_create_a_unique_work_of_art_that_celebrates_the_creative_combination_of_Snoop_Dogg_and_Back - Copy.png"
 # pic2 = r"A:\Amini Amor\SHAINE\Requests\Beta\AI Art\Approved Quality Art\Curated\MondeVert Studio\SHAINE Favorites\The artwork depicts a woman with flowing blue hair surrounded by a vibrant and colorful cityscape Her eyes are closed and a serene expression is on.png"
 # pic3 = r"A:\Amini Amor\SHAINE\Requests\Beta\AI Art\Approved Quality Art\Curated\MondeVert Studio\SHAINE Favorites\2_stoners_playing_rock_paper_scissors_in_the_style_of_norman_rockwell.png"
-# pic4 = r"A:\Amini Amor\SHAINE\Requests\Beta\AI Art\Approved Quality Art\Curated\MondeVert Studio\SHAINE Favorites\The portrait depicts a young woman with piercing blue eyes surrounded by a dreamlike aura of vibrant colors and intricate details Her face is a mix .png"
+pic4 = r"A:\Amini Amor\SHAINE\Requests\Beta\AI Art\Approved Quality Art\Curated\MondeVert Studio\SHAINE Favorites\The portrait depicts a young woman with piercing blue eyes surrounded by a dreamlike aura of vibrant colors and intricate details Her face is a mix .png"
 # # Version2 = cu.MakeVariationArt(Pic= pic2, FileName='Favorite Variant1' + current_time)
 # # Version3 = cu.MakeVariationArt(Pic= Version2, FileName='Favorite Variant2' + current_time)
 # # Version4 = cu.MakeVariationArt(Pic= Version3, FileName='Favorite Variant2' + current_time)
@@ -161,18 +165,153 @@ Shane = r"C:\Users\sdono\Downloads\12CCB92F-D044-4EC3-B3C5-E3E0A5102B50.MOV"
 # #
 #pic22 = r"A:\Amini Amor\SHAINE\Requests\Beta\Audio Transcript\Extracted images\Blue Hair Variants\The artwork depicts a woman with flowing blue hair surrounded by a vibrant and colorful cityscape Her eyes are closed and a serene expression is on.png"
 #
-# pic22 = r"A:\Amini Amor\SHAINE\Requests\Beta\Audio Transcript\Extracted images\Blue Hair Variants\Favorite Variant  2  10142023155953.png"
-# pic22= r"A:\Amini Amor\QR Code and ads\Logo 2.PNG"
-# Version1 = pic22
-# for i in range (1,10):
-#     Version1 = cu.MakeVariationArt(Pic=pic22, FileName='Favorite Variant  ' + str(i) + '  '+ current_time, SavePath=r"A:\Amini Amor\SHAINE\Marketing\Logo Work\Variations")
+#pic22 = r"A:\Amini Amor\SHAINE\Requests\Beta\Audio Transcript\Extracted images\Blue Hair Variants\Favorite Variant  2  10142023155953.png"
+#pic22= r"A:\Amini Amor\SHAINE\Requests\Beta\Audio Transcript\Extracted images\Moody Black Varient\Capture.PNG"
+#pic22 = r"A:\Amini Amor\SHAINE\Requests\Beta\Audio Transcript\Extracted images\Moody Black Varient\Favorite Variant  4  01 30 2024 223041.png"
+#pic22 = r"A:\Amini Amor\SHAINE\Requests\Beta\Audio Transcript\Extracted images\Moody Black Varient\Favorite Variant  2  01 30 2024 223041.png"
+#pic22 = r"A:\Amini Amor\SHAINE\Requests\Beta\Audio Transcript\Extracted images\Moody Black Varient\Favorite Variant v2   1   2  01 30 2024 223410.png"
+#pic22 = r"A:\Amini Amor\SHAINE\Requests\Beta\Audio Transcript\Extracted images\Moody Black Varient\Favorite Variant v2   2   2  01 30 2024 223724.png"
+
+
+#pic22 = r"A:\Amini Amor\SHAINE\Requests\Beta\Audio Transcript\Extracted images\Moody Black Varient\Favorite Variant  3  01 30 2024 224027.png"
+#pic22 = r"A:\Amini Amor\SHAINE\Requests\Beta\Audio Transcript\Extracted images\Moody Black Varient\Favorite Variant  4  01 30 2024 224027.png"
+
+#pic22 = r"A:\Amini Amor\SHAINE\Requests\Beta\Audio Transcript\Extracted images\Moody Black Varient\Capture22.PNG"
+
+
+#pic22= r"A:\Amini Amor\SHAINE\Requests\Beta\Audio Transcript\Extracted images\Moody Black Varient\Favorite Variant  5  01 30 2024 224455.png"
+
+# path22 = r"A:\Amini Amor\SHAINE\Requests\Beta\Audio Transcript\Extracted images\Germany Pics\Pic 1"
+# pic22 = r"A:\Amini Amor\SHAINE\Requests\Beta\Audio Transcript\Extracted images\Germany Pics\Pic 1\Capture2.PNG"
+
+#
+pic22 = r"A:\Amini Amor\SHAINE\Requests\Beta\Audio Transcript\Extracted images\Germany Pics\Bananas - Germany\Capture.PNG"
+path22 = r"A:\Amini Amor\SHAINE\Requests\Beta\Audio Transcript\Extracted images\Germany Pics\Bananas - Germany"
+
+
+#pic22 = r"A:\Amini Amor\SHAINE\Requests\Beta\Audio Transcript\Extracted images\Germany Pics\Pic 1\Capture.png"
+pic22 = r"A:\Amini Amor\SHAINE\Requests\Beta\Audio Transcript\Extracted images\Germany Pics\House\Sad House.PNG"
+path22 = r"A:\Amini Amor\SHAINE\Requests\Beta\Audio Transcript\Extracted images\Germany Pics\House"
+
+
+pic22 = r"A:\Amini Amor\SHAINE\Requests\Beta\Audio Transcript\Extracted images\Myrtle look alike\ate waltz between beauty and darkness that dances in the heart of Myrtle Beach.png"
+path22 = r"A:\Amini Amor\SHAINE\Requests\Beta\Audio Transcript\Extracted images\Myrtle look alike"
+
+
+pic22 = r"A:\Amini Amor\SHAINE\Requests\Beta\Audio Transcript\Extracted images\2024-02-14\1\GGUc_nOWQAEo_Ny.png"
+path22 = r"A:\Amini Amor\SHAINE\Requests\Beta\Audio Transcript\Extracted images\2024-02-14\1"
+
+pic22 = r"A:\Amini Amor\SHAINE\Requests\Beta\Audio Transcript\Extracted images\A Tale of Two Kitties (1942)\frame 14Variation.png"
+path22 = r'A:\Amini Amor\SHAINE\Requests\Beta\Audio Transcript\Extracted images\2024-02-17'
+
+Version1 = pic22
+
+#use a color scheme that pops out and draws the attention of the audience.
+#the cartoon should be of a slightly overweight but still athletic built man with long black hair that curls at the end. He also has a goatee and wears square framed glasses. He is overall good looking
+#  DO NOT ADD ANY TEXT to the picture.
+#str1 = "Pick a famous artist to Imitate they should be a famous caricature artist (like Carlo Pellegrini) and Draw a work of art. Make the character unique and good looking (with beautiful flowing wavy black hair (above his shoulders) and a short trimmed goatee with square framed the guy is white/Caucasian). he is somewhat big/overweight but also athletic, show his full body. The character has a goatee he does not have a beard! The more animated the character the better it should not be realism The description of character is most important "
+
+str1 = "Draw a a large slightly overweight but athletically built man (he is not fat/obese) with long wavy black hair down to his shoulders and a well trimmed goatee  (DO NOT DRAW A FULL BUSHY BEARD THIS IS MOST IMPORTANT), he is white and wearing a backwards hat."
+art1 = str1 + " the picture should be aesthetically pleasing"
+
+art3 = "An incredibly artistically rendered oil painting in vibrant colors that's full of personality and detail. The character, is a slightly overweight male with flowing wavy black hair and a short trimmed goatee, he exudes confidence and charm. "
+art3 = "iN THE STYLE OF THE  SIMPSONS, dRAW A PORTAIT OF A  Caucasian stand up comic with wavy black hair and a goatee. He should have a mustache and a beard on his chin, the rest of his face is clean shaved. The goatee is well trimmed. He is handsome but a larger built man"
+
+
+art55 = art3
+art2 = " Your work of art should include  a Train in the picture,  add graffiti art to the train. Make it a beautiful work of art that shows both the train and your character standing by the train or on the train" + art55
+
+
+art1 = "Draw a photo-realistic snowy mountain landscape. It should look real"
+path22 = r'A:\Amini Amor\SHAINE\Requests\Beta\Audio Transcript\Extracted images\2024-02-17'
+
+ArtContext = "Do not mention specific text or try to add words to your art from the quote, come up with a short prompt with an art style, colors, similar artist and other descriptive information to make a vivid work of art inspired by the quote.  Describe a work of art based on the quote and the underlying meaning/theme/emotion or describe a work of art based on the author of the quote: "
+filename1 = "Daily Shane D " 
+Arts = ['"The future belongs to those who believe in the beauty of their dreams." - Eleanor Roosevelt', '"Do not wait to strike till the iron is hot, but make it hot by striking." - William Butler Yeats', '"Success is stumbling from failure to failure with no loss of enthusiasm." - Winston Churchill', '"Two things are infinite: the universe and human stupidity; and Im not sure about the universe." - Albert Einstein', '"The best preparation for tomorrow is doing your best today." - H. Jackson Brown Jr.', '"Your time is limited, dont waste it living someone elses life." - Steve Jobs', '''"It's not the years in your life that count. It's the life in your years." - Abraham Lincoln''']
+Arts= ["""Let LoveYourLawn.Care be the Blades of Glory your lawn deserves!"""]
+Arts = [
+    """"Success is not the key to happiness. Happiness is the key to success. If you love what you are doing, you will be successful." - Albert  Schweitzer""",
+    """"The difference between a successful person and others is not a lack of strength, not a lack of knowledge, but rather a lack in will." - Vince Lombardi""",
+    """"Success is stumbling from failure to failure with no loss of enthusiasm." - Winston Churchill"""
+]
+
+path22 = r'A:\Amini Amor\Social Media Posts\2024-03  March 6 - March 12'
+for f in Arts:
+	current_time1 = datetime.datetime.now()
+	current_time = current_time1.strftime('%M.%S')
+	art1 = f
+	Art1 = cu.quickArt2(art1)
+	Art2 = cu.quickArt2(ArtContext + art1)
+	TrimCharR = art1.find(' - ')
+	#TrimCharL = self.Song_Outline.find("Title:")
+
+	filename = filename1 + art1[TrimCharR:]
+
+	pic22 = cu.makeArt(Prompt=Art1, SavePath=path22, filename=filename +  current_time )
+	pic22 = cu.makeArt(Prompt= Art2, SavePath=path22, filename=filename + current_time + 'v2')
+	#pic22 = cu.makeArt(Prompt=ArtContext + art1, SavePath=path22, filename=filename + current_time + 'v3')
+
+
+
+
+#
+# print(art1)
+# print(up.breakupOutput)
+# print(art2)
+# filename = "Shane Character " + current_time
+#
+# #
+# Art1 = cu.quickArt2(art1)
+# # Art2 = cu.quickArt2(art2)
+# # Art3 =cu.quickArt2(art3)
+# #
+# pic22 = cu.makeArt(Prompt = Art1, SavePath=path22, filename=filename + '1')
+# pic22 = cu.makeArt(Prompt = art1, SavePath=path22, filename=filename + '11')
+# pic22 = cu.makeArt(Prompt = Art3, SavePath=path22, filename=filename + '3')
+# pic22 = cu.makeArt(Prompt = art3, SavePath=path22, filename=filename + '33')
+#
+# pic21 = cu.makeArt(Prompt = Art2, SavePath=path22, filename=filename + '2')
+# pic21 = cu.makeArt(Prompt = art2, SavePath=path22, filename=filename + '22')
+#
+
+
+pic22 = r"A:\Amini Amor\SHAINE\Requests\Beta\Audio Transcript\Extracted images\2024-02-15\Shane Show\Shane Character 02 15 2024 16364122.png"
+pic22 = r"A:\Amini Amor\SHAINE\Requests\Beta\Audio Transcript\Extracted images\2024-02-15\Shane Show\Simpsons.PNG"
+
+pic22= r"A:\Amini Amor\SHAINE\Requests\Beta\Audio Transcript\Extracted images\2024-02-17\birds transport the viewer into this moment of tranquil beauty amidst hard work.png"
+
+
+pic22 =  r"A:\Amini Amor\Social Media Posts\2024-02-19\1\Capture1.PNG"
+pic21 = r"A:\Amini Amor\Social Media Posts\2024-02-19\2\Capture2.PNG"
+path21 = r"A:\Amini Amor\Social Media Posts\2024-02-19\2"
+path22 = r"A:\Amini Amor\Social Media Posts\2024-02-19\1"
+
+
+path21 = r"A:\Amini Amor\Social Media Posts\2024-02-23\2"
+pic21 = r"A:\Amini Amor\Social Media Posts\2024-02-23\2\and the duality of human nature in a captivating and thought provoking manner.png"
+
+
+path22 = r"A:\Amini Amor\Social Media Posts\2024-02-26"
+pic22 = r"A:\Amini Amor\Social Media Posts\2024-02-26\Jim M.PNG"
+
+# IP.JPG2PNG(pic22, path22, "Moody Black New", path22, Del=False)
+#
+# Version1 = path22 + '\\' + "Moody Black New"
+#
+# for i in range (1,9):
+#     Version1 = cu.MakeVariationArt(Pic=pic22, FileName='Variant  ' + str(i) + '  '+ current_time, SavePath= path22)
+# # for i in range (1,9):
+# #     Version1 = cu.MakeVariationArt(Pic=pic21, FileName='Variant Add on  ' + str(i) + '  '+ current_time, SavePath= path21)
+#
 # Version1 = pic22
 # for i in range (1,3):
 #     Version1 = pic22
-#     for j in range(1, 4):
-#         Version1 = cu.MakeVariationArt(Pic=Version1, FileName='Favorite Variant v2   ' + str(i) + '-  ' + str(j)+ '  '  + current_time, SavePath=r"A:\Amini Amor\SHAINE\Marketing\Logo Work\Variations")
-
-#
+#     for j in range(1, 7):
+#         Version1 = cu.MakeVariationArt(Pic=Version1, FileName='Variant v2   ' + str(i) + '-  ' + str(j)+ '  '  + current_time, SavePath= path22)
+#         for k in range(1,5):
+#             Version2 = Version1
+#             Version3 = cu.MakeVariationArt(Pic=Version2, FileName='Variant v3  ' + str(i) + '-  ' + str(j)+ '  '  + str(k)+ '  '  + current_time, SavePath= path22)
+# #
 # Insta = r"A:\Amini Amor\Live Recordings Raw\2023-10-14 15-09-39.mp4"
 
 #cu.MovieSubtitles(Insta, Rewrite = True)
@@ -258,8 +397,14 @@ with open(FilePath,'r') as file:
 	 """.join(line.rstrip() for line in file)
 	#print(Text)
 
+# def ttttt():
+	# x = TextEdit.TextEdit(Text=Text, UserConfirm=True)
+	# x.MakeWindow(Text = str(Text + Text + Text + Text), UserConfirm = True)
+	# print(x.GetUserResponseMain)
+	# print("test")
 
-#
+
+
 # # Text = cu.Basic_GPT_Query(Line2_Role = SW.Role_Podcast, Line4_Task=SW.Task_Podcast, Line3_Format=SW.Format_Podcast, User_Confirm= False)
 # # print (Text)
 #
@@ -274,10 +419,148 @@ with open(FilePath,'r') as file:
 # print(t)
 # t1 = x.GetUserResponseMain()
 # print(t1)
+# from multiprocessing import Process
+# from multiprocessing import freeze_support
 
 
-Text = ShaneOriginals.Gritty
-x = TextEdit.TextEdit(Text = Text, UserConfirm= True)
-# x.MakeWindow2(str(Text + Text + Text + Text),str(Text + Text + Text + Text),str(Text + Text + Text + Text),str(Text + Text + Text + Text)  , Text , Text, "Test 1333333333333333333333333", crazy=.5, Text=Text)
-x.MakeWindow(Text = str(Text + Text + Text + Text), UserConfirm = True)
-print(x.GetUserResponseMain)
+# if __name__ == '__main__':
+# 	freeze_support()
+
+
+
+def tt2():
+	# Text = ShaneOriginals.Gritty
+	#
+	# # x.MakeWindow2(str(Text + Text + Text + Text),str(Text + Text + Text + Text),str(Text + Text + Text + Text),str(Text + Text + Text + Text)  , Text , Text, "Test 1333333333333333333333333", crazy=.5, Text=Text)
+	# xxx = str(Text + Text + Text + Text)
+	#
+	# # t = Process(target=testt)
+	# t = threading.Thread(target=testt)
+	# t.start()
+	# # t.start()
+	#
+	# print(" x ")
+	#
+	# t.join()
+	#
+	# Create an instance of the application
+	# app =QApplication([])
+	#
+	# # Create an instance of the custom window
+	# window = TextEdit.CustomWindow()
+	#
+	# # Run the event loop
+	# app.exec_()
+
+
+	# app = QApplication([])
+	#
+	# # Create an instance of the custom window
+	# window = TextEdit.CustomWindow2()
+	#
+	# # Run the event loop
+	# app.exec_()
+
+	#
+	# app = QApplication([])
+	#
+	# # Create an instance of the custom window
+	# window = TextEdit.CustomWindow7()
+	#
+	# # Run the event loop
+	# app.exec_()
+
+	# window_info = [
+	# 	("Window 1", ["Button 1", "Button 2", "Button 3"]),
+	# 	("Window 2", ["Button A", "Button B", "Button C"]),
+	# 	("Window 3", ["Button X", "Button Y", "Button Z"])
+	# ]
+	# #
+	# # text_fields = [
+	# # 	("Test 1"),
+	# # 	("Test 2"),
+	# # 	("Test 3"),
+	# # ]
+	#
+	# TextEdit.create_windows(window_info)
+	#
+	#
+
+	# window_info = [
+	# 	("Window 1", [("Title 1", "Default text 1"), ("Title 2", "Default text 2"), ("Title 3", "Default text 3")])]
+	#
+	# TextEdit.create_windows2(window_info)
+
+	# window_info = [
+	# 	("Window 1", "Template A", "medium", [
+	# 		("Frame 1", "Default text 1", ["Button 1", "Button 2"], ["Checkbox 1", "Checkbox 2"], "lightblue"),
+	# 		("Frame 2", "Default text 2", ["Button A", "Button B"], [], "lightgreen"),
+	# 	]),
+	# 	("Window 2", "Template B", "large", [
+	# 		("Frame X", "Default text X", ["Button X", "Button Y", "Button Z"], ["Checkbox X"], "lightyellow"),
+	# 		("Frame Y", "Default text Y", [], [], "lightpink"),
+	# 	]),
+	# ]
+	#
+	# TextEdit.create_windows3(window_info)
+
+	# window_info = [
+	# 	("Window 1", "Template A", "medium", [
+	# 		("Frame 1", "Default text 1", ["Button 1", "Button 2"], ["Checkbox 1", "Checkbox 2"], "orchid"),
+	# 		("Frame 2", "Default text 2", ["Button A", "Button B"], [], "lightgreen"),
+	# 	]),
+	# 	("Window 2", "Template B", "large", [
+	# 		("Frame X", "Default text X", ["Button X", "Button Y", "Button Z"], ["Checkbox X"], "lightyellow"),
+	# 		("Frame Y", "Default text Y", [], [], "black"),
+	# 	]),
+	# ]
+	#
+	# TextEdit.create_windows4(window_info)
+	#
+	# window_info = [
+	# 	("Window 1", "Template A", "medium", [
+	# 		("Frame 1", "Default text 1", ["Button 1", "Button 2"], ["Checkbox 1", "Checkbox 2"], "lightblue"),
+	# 		("Frame 2", "Default text 2", ["Button A", "Button B"], [], "lightgreen"),
+	# 	]),
+	# 	("Window 2", "Template B", "large", [
+	# 		("Frame X", "Default text X", ["Button X", "Button Y", "Button Z"], ["Checkbox X"], "lightyellow"),
+	# 		("Frame Y", "Default text Y", [], [], "lightpink"),
+	# 	]),
+	# ]
+	#
+	# # Create a separate thread to run the GUI
+	# gui_thread = threading.Thread(target=TextEdit.create_windows4, args=(window_info,))
+	# gui_thread.start()
+	#
+	GPTResponse = "Default text 1"
+	main_buttons1 = ["Continue", "Cancel", "ReGenerate", "ReGenerate with Edit", "ReWrite Edit" , "Review Prompts",	"SPEAK"]
+	main_buttons2 = ["Continue", "Cancel", "<", ">", "SAVE ALL", "OG","SPEAK"]
+	FrameButtons = ["<", ">", "OG", "Save"]
+	FrameButtons2 = FrameButtons.copy()
+	FrameButtons2.append("Optimize Prompt")
+	CurrentTest = "Prompt Test1"
+
+	WindowInfo1 = "Test1"
+	WindowInfo2 = "Test2"
+
+
+	window_info = [
+		("SHAINE", WindowInfo1, "full_screen",main_buttons1, [
+			("CHAT GPT", GPTResponse,FrameButtons , [], "black"),
+			("USER EDITS", "", FrameButtons, [], "lightgreen")]),
+		("SHAINE PROMPTS", WindowInfo2, "large", main_buttons2,[
+			("System Prompt", CurrentTest, FrameButtons2, [], "lightyellow"),
+			("Role Prompt", CurrentTest, FrameButtons2, [], "lightpink"),
+			("Format Prompt", CurrentTest,  FrameButtons2, [], "green"),
+			("Task Prompt", CurrentTest, FrameButtons2, [], "lightgreen"),
+			("Background Prompt", CurrentTest, FrameButtons2, [], "lightblue"),
+			("Background2 Prompt", CurrentTest, FrameButtons2, [], "blue"),
+			("Background3 Prompt", CurrentTest, FrameButtons2, [], "purple")])
+	]
+
+	# Create a separate thread to run the GUI
+	# gui_thread = threading.Thread(target=TextEdit.create_windows6, args=(window_info,))
+	# gui_thread.start()
+
+
+#tt2()

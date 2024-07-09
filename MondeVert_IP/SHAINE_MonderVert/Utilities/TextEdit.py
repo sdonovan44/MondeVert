@@ -6,396 +6,868 @@ import threading
 from tkinter import filedialog, messagebox, Scrollbar
 from tkinter import *
 import time
+import matplotlib
+matplotlib.use('Qt5Agg')
 from MondeVert_IP.SHAINE_MonderVert.Utilities import Common_Utilities as cu
 from MondeVert_IP.SHAINE_MonderVert.SHAINE_WIZARD_PROMPTS import User_Prefs as up
 from idlelib.tooltip import Hovertip
+import os
 import re
+import random
+from functools import partial
+from multiprocessing import Process
+import sys
+import tkinter as tk
+from tkinter.filedialog import askopenfilename, asksaveasfilename
+import tkinter as tk
+import threading
+from tkinter import filedialog, messagebox, Scrollbar
+from tkinter import *
+import time
+from MondeVert_IP.SHAINE_MonderVert.Utilities import Common_Utilities as cu
+from MondeVert_IP.SHAINE_MonderVert.SHAINE_WIZARD_PROMPTS import User_Prefs as up
+from idlelib.tooltip import Hovertip
+import os
+
+LOGO =r"A:\Amini Amor\SHAINE\Marketing\Logo Work\18.png"
+
 #import ScrolledText
 
-# def TextEdit2():
-#     def open_file():
-#         """Open a file for editing."""
-#         filepath = askopenfilename(
-#             filetypes=[("Text Files", "*.txt"), ("All Files", "*.*")]
-#         )
-#         if not filepath:
-#             return
-#         txt_edit.delete("1.0", tk.END)
-#         with open(filepath, mode="r", encoding="utf-8") as input_file:
-#             text = input_file.read()
-#             txt_edit.insert(tk.END, text)
-#         window.title(f"Simple Text Editor - {filepath}")
-#
-#     def save_file():
-#         """Save the current file as a new file."""
-#         filepath = asksaveasfilename(
-#             defaultextension=".txt",
-#             filetypes=[("Text Files", "*.txt"), ("All Files", "*.*")],
-#         )
-#         if not filepath:
-#             return
-#         with open(filepath, mode="w", encoding="utf-8") as output_file:
-#             text = txt_edit.get("1.0", tk.END)
-#             output_file.write(text)
-#         window.title(f"Simple Text Editor - {filepath}")
-#
-#
-#     window = tk.Tk()
-#     window.title("Simple Text Editor")
-#
-#     window.rowconfigure(0, minsize=800, weight=1)
-#     window.columnconfigure(1, minsize=800, weight=1)
-#
-#     txt_edit = tk.Text(window)
-#     frm_buttons = tk.Frame(window, relief=tk.RAISED, bd=2)
-#     btn_open = tk.Button(frm_buttons, text="Open", command=open_file)
-#     btn_save = tk.Button(frm_buttons, text="Save As...", command=save_file)
-#
-#     btn_open.grid(row=0, column=0, sticky="ew", padx=5, pady=5)
-#     btn_save.grid(row=1, column=0, sticky="ew", padx=5)
-#
-#     frm_buttons.grid(row=0, column=0, sticky="ns")
-#     txt_edit.grid(row=0, column=1, sticky="nsew")
-#
-#     window.mainloop()
 
-class GUI:
+
+
+
+
+from PyQt5.QtWidgets import QMainWindow, QApplication, QVBoxLayout, QHBoxLayout, QPushButton, QWidget, QLabel, QTextEdit, QCheckBox, QStatusBar
+from PyQt5.QtGui import QIcon
+from PyQt5.QtCore import Qt
+import threading
+import sys
+
+from PyQt5.QtWidgets import QMainWindow, QApplication, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QWidget, QStatusBar, QTextEdit, QCheckBox,QGridLayout
+from PyQt5.QtGui import QIcon
+from PyQt5.QtCore import Qt
+
+
+#
+from PyQt5.QtWidgets import QMainWindow, QApplication, QGridLayout, QWidget, QVBoxLayout, QHBoxLayout, QCheckBox, QPushButton
+from PyQt5.QtWidgets import QButtonGroup
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QMainWindow
+#
+#
+#
+# class CustomWindow11(QMainWindow):
+#     def __init__(self, window_title, window_type, window_size, main_buttons,main_checkboxes,internal_frames):
+#         self.main_buttons = main_buttons
+#         self.main_checkboxes = main_checkboxes
+#         self.internal_frame = internal_frames
+#         self.window_title = window_title
+#         self.window_type = window_type
+#         self.window_size = window_size
+#         self.FrameText = {}
+#         self.FrameCount = 0
+#
+#         try:
+#             super().__init__()
+#             self.WINDOWNAME = str(self.WindowName + " - " + self.window_type)
+#         except:
+#             print('error super')
+#             self.WINDOWNAME = 'SHAINE'
+#
+#
+#         #window_size = self.WindowSize
+#
+#         #self.setWindowTitle(window_title + " - " + window_type)
+#
+#
+#         try:
+#             self.setWindowTitle(self.WINDOWNAME)
+#             self.setGeometry(100, 100, *self.get_window_size(window_size))
+#         except:
+#             print("error")
+#             try:
+#                 self.setGeometry(100, 100,500,500)
+#             except:
+#                 print("error")
+#         #
+#         self.setup_ui(internal_frames)
+#         self.SHAINELOG = "SHAINE Actions Taken: "
+#         self.SHAINELOGCounter = 0
+#         self.UserResponseProvided = False
+# #        self.UserResponseProvided2 = False
+#
+#     def get_window_size(self, window_size):
+#         try:
+#             if window_size == "small":
+#                 return 300, 200
+#             elif window_size == "medium":
+#                 return 500, 300
+#             elif window_size == "large":
+#                 return 800, 500
+#             elif window_size == "XL":
+#                 screen = QApplication.primaryScreen()
+#                 screen_geometry = screen.availableGeometry()
+#                 return screen_geometry.width(), screen_geometry.height()
+#             elif window_size == "full_screen":
+#                 return QApplication.desktop().screenGeometry().width(), QApplication.desktop().screenGeometry().height()
+#             else:
+#                 return 600, 400
+#         except:
+#             return 800, 500
+#
+#     def setup_ui(self, internal_frames):
+#         # Create the main layout
+#         layout = QGridLayout()
+#
+#         # Create the dropdown menu
+#         menu_bar = self.menuBar()
+#         file_menu = menu_bar.addMenu('File')
+#         edit_menu = menu_bar.addMenu('Edit')
+#         shaine_menu = menu_bar.addMenu('SHAINE')
+#         help_menu = menu_bar.addMenu('Help')
+#
+#         # Create the buttons on the main screen
+#         main_buttons_layout = QHBoxLayout()
+#
+#         # Create the checkboxes
+#         checkbox_layout = QVBoxLayout()
+#         checkbox_group = QButtonGroup()
+#
+#
+#
+#         # Create the functions for each button
+#         # button_functions = {
+#         #     'Last': self.last_function,
+#         #     'Next': self.next_function,
+#         #     'Original': self.original_function,
+#         #     'Save': self.save_function,
+#         #     'Use User Text': self.use_user_text_function,
+#         #     'Rewrite With Edits': self.rewrite_with_edits_function,
+#         #     'Generate': self.generate_function,
+#         #     'User Edits': self.user_edits_function,
+#         #     'Rewrite': self.rewrite_function,
+#         #     'Speak': self.speak_function,
+#         #     'Speak Input': self.speak_input_function,
+#         #     'Continue': self.continue_function,
+#         #     'Review Prompt': self.review_prompt_function,
+#         #     'Review Outlines': self.review_outlines_function,
+#         #     'Review Story(s)': self.review_stories_function,
+#         #     'See Full Prompt': self.see_full_prompt_function,
+#         #     'Prompt History': self.prompt_history_function
+#         # }
+#
+#         # Create the checkboxes
+#         checkbox_layout = QHBoxLayout()
+#         for checkbox_text in self.main_checkboxes:
+#             checkbox = QCheckBox(checkbox_text)
+#             checkbox_layout.addWidget(checkbox)
+#             checkbox_group.buttonClicked.connect(self.checkbox_function)
+#
+#         for button_text in self.main_buttons:
+#             button = QPushButton(button_text)
+#             #button.clicked.connect(lambda checked, btn=button_text, Frame = "Main": self.update_status_bar(btn, Frame))
+#             #button.clicked.connect(lambda checked, btn=button_text: self.update_status_bar(btn))
+#             button.clicked.connect(partial(self.update_status_bar, button_text, "Main", "Test Window"))
+#
+#             main_buttons_layout.addWidget(button)
+#
+#         # Set the checkbox functionality
+#
+#
+#     # Define the functions for each button
+#
+#
+#
+#         #Not ready for this option yet, it is buggy and causes it to crash
+#         # internet_button = QPushButton("Internet")
+#         # internet_button.clicked.connect(self.open_web_browser)
+#         # main_buttons_layout.addWidget(internet_button)
+#         #layout.addLayout(checkbox_layout)
+#         #layout.addLayout(main_buttons_layout)
+#         #layout.addLayout(checkbox_layout, 0, 0, 2, 2)
+#         layout.addLayout(main_buttons_layout, 0, 0, 1, 2)  # Add main buttons layout to grid layout
+#
+#         # Create the internal frames
+#         self.frames = []
+#         num_columns = 2 if len(internal_frames) > 1 else 1
+#         for i, frame in enumerate(internal_frames):
+#             frame_widget = self.create_internal_frame(frame)
+#             layout.addWidget(frame_widget, i // num_columns + 1, i % num_columns)  # Add frame widget to grid layout
+#             self.frames.append(frame_widget)
+#
+#         # Create the total word count label
+#         self.total_word_count_label = QLabel("Total Word Count: 0")
+#         layout.addWidget(self.total_word_count_label, len(internal_frames) // num_columns + 1, 0, 1,
+#                          num_columns)  # Add total word count label to grid layout
+#
+#         # Create a status bar
+#         self.statusBar = QStatusBar()
+#         self.setStatusBar(self.statusBar)
+#
+#         # Create a central widget and set the layout
+#         self.central_widget = QWidget()
+#         self.central_widget.setLayout(layout)
+#         self.setCentralWidget(self.central_widget)
+#
+#         # Set window icon
+#         self.setWindowIcon(QIcon(LOGO))
+#
+#         # Set desktop thumbnail
+#         self.setWindowFlags(Qt.Window | Qt.WindowStaysOnTopHint)
+#
+#         self.show()
+
+
+from PyQt5.QtCore import QThread
+from PyQt5.QtWidgets import QApplication, QMainWindow, QTextEdit
+from PyQt5.QtCore import pyqtSignal, pyqtSlot
+class CustomWindow11(QMainWindow):
     def __init__(self):
-        of = [None] *5
-        for bdw in range(5):
-            of[bdw] = Frame(self.root, borderwidth=0)
-            Label(of[bdw], text='borderwidth = %d' % bdw).pack(side=LEFT)
-            for relief in [RAISED, SUNKEN, FLAT, RIDGE, GROOVE, SOLID]:
-                Button(of[bdw], text=relief,
-                 borderwidth=bdw, relief=relief, width=10,
-                 command=lambda s=self, r=relief, b=bdw: s.prt(r,b))\
-                .pack(side=LEFT, padx=7-bdw, pady=7-bdw)
-            of[bdw].pack()
-    def prt(self, relief, border):
-        print ('%s:%d' % (relief, border))
-class TextEdit():
-    def __init__(self, Text= '', UserConfirm = False,Mode = 'Story',Current_PROMTS_ALL = ''):
-        d = 100
-        self.UserResponseProvided = False
-        self.UserConfirm = UserConfirm
-        self.Text = Text
-        #Note if I make update later on I will need to make sure to fix this so the prompts are more dynamic/real time, this is an assumption that is was right when I passed it in
-        self.Current_PROMTS_ALL = Current_PROMTS_ALL
-
-    def GetWordCountsSHAINE(self):
+        # t = threading.Thread(target=self.TE.CreateWindow,args=())
         d = 1
-        TextEdit.GetUserText(self)
-
-
-    def WordCount_SHAINE(self):
-        TextEdit.GetWordCountsSHAINE
-        self.CountCharacters  = len(self.Current_PROMTS_ALL)
-        self.CountWords = cu.WordCount(self.Current_PROMTS_ALL)
-
-        self.CountCharacters_w_EDIT = len(self.Current_PROMTS_ALL + self.UserEdits)
-        self.CountWords_w_EDIT = cu.WordCount(self.Current_PROMTS_ALL + self.UserEdits)
-
-        self.CountCharacters_RESPONSE= len(self.Text)
-        self.CountWords_RESPONSE = cu.WordCount(self.Text)
+          # Start the application
+        self.SHAINELOGCounter = 0
 
 
 
-    def keyPress( self, event ):
-        TextEdit.WordCount_SHAINE(self)
 
-        self.WordCountField = tk.Text(self.window, wrap=WORD, )
 
-        if len(self.UserEdits) >0:
-            self.WordCountField.insert(tk.END, "WORDS(Current GPT Response): " + str(self.CountWords_RESPONSE) + " TOTAL CHARACTERS: "  +str(self.CountCharacters_RESPONSE)  + " WORDS (with prompts): " + str(self.CountWords) + " CHARACTERS: " + str(self.CountCharacters) + ' WORDS (w.USER EDITs): '+ str(self.CountWords_w_EDIT) + ' TOTAL CHARACTERS: ' +  str(self.CountCharacters_w_EDIT))
+
+        #CustomWindow11.CreateWindow(self)
+
+    def CreateWindow(self ,window_title, window_type, window_size, main_buttons, main_checkboxes, internal_frames):
+        self.TE_APP = QApplication([])
+        self.UserResponseProvided = False
+        self.CloseWindow = False
+        text_changed = pyqtSignal(str)
+        try:
+            super().__init__()
+            #print('super successful')
+        except:
+            print('error super')
+        self.main_buttons = main_buttons
+        self.main_checkboxes = main_checkboxes
+        self.internal_frame = internal_frames
+        self.window_title = window_title
+        self.window_type = window_type
+        self.window_size = window_size
+        self.FrameText = {}
+        self.FrameCount = 0
+
+
+        try:
+
+            self.WINDOWNAME = str(self.WindowName + " - " + self.window_type)
+        except:
+            #print('error WindowName')
+            self.WINDOWNAME = 'SHAINE'
+
+        try:
+            if window_size == "full_screen" or  window_size == "large":
+                self.showFullScreen()
+            else:
+                self.setFixedSize(*self.get_window_size(window_size))
+                self.center_window()
+
+            self.setWindowTitle(self.WINDOWNAME)
+            self.setGeometry(100, 100, *self.get_window_size(window_size))
+        except:
+            print("error")
+            try:
+                self.setGeometry(100, 100, 500, 500)
+            except:
+                print("error")
+
+
+        self.SHAINELOG = "SHAINE Actions Taken: "
+        self.setup_ui(self.internal_frame )
+        if self.CloseWindow == True:
+            self.close()
+        #     self.central_widget.close()
+        #     self.TE_APP.quit()
+
+
+
+# from kivy.app import App
+# from kivy.uix.gridlayout import GridLayout
+# from kivy.uix.boxlayout import BoxLayout
+# from kivy.uix.label import Label
+# from kivy.uix.textinput import TextInput
+# from kivy.uix.button import Button
+# from kivy.uix.checkbox import CheckBox
+#
+# class CustomWindow11(App):
+#     def __init__(self):
+#         self.SHAINELOGCounter = 0
+#         self.window_layouts = {}  # Dictionary to store window layouts
+#
+#     def build(self):
+#         layout = BoxLayout(orientation='vertical')
+#         label = Label(text='Hello, Kivy!')
+#         text_input = TextInput()
+#         button = Button(text='Create Window')
+#         button.bind(on_press=self.create_window)  # Bind the button press to the create_window method
+#         layout.add_widget(label)
+#         layout.add_widget(text_input)
+#         layout.add_widget(button)
+#         return layout
+#
+#     def CreateWindow(self, window_title, window_type, window_size, main_buttons, main_checkboxes, internal_frames):
+#
+#
+#         # Create the main window layout
+#         main_layout = GridLayout(cols=1)
+#         main_label = Label(text=window_title)
+#         main_layout.add_widget(main_label)
+#
+#         # Create the main buttons
+#         main_buttons_layout = BoxLayout(orientation='horizontal')
+#         for button_text in main_buttons:
+#             button = Button(text=button_text)
+#             main_buttons_layout.add_widget(button)
+#         main_layout.add_widget(main_buttons_layout)
+#
+#         # Create the main checkboxes
+#         main_checkboxes_layout = BoxLayout(orientation='horizontal')
+#         try:
+#             for checkbox_text in main_checkboxes:
+#                 checkbox = CheckBox(active=False, label=checkbox_text)
+#                 main_checkboxes_layout.add_widget(checkbox)
+#             main_layout.add_widget(main_checkboxes_layout)
+#         except:
+#             print("No Checkboxes")
+#
+#         # Create the internal frames
+#         for frame_info in internal_frames:
+#             frame_layout = GridLayout(cols=1)
+#             frame_title, frame_text, frame_buttons, frame_checkboxes, frame_color = frame_info
+#
+#             frame_label = Label(text=frame_title)
+#             frame_layout.add_widget(frame_label)
+#
+#             frame_text_input = TextInput(text=frame_text)
+#             frame_layout.add_widget(frame_text_input)
+#
+#             frame_buttons_layout = BoxLayout(orientation='horizontal')
+#             for button_text in frame_buttons:
+#                 button = Button(text=button_text)
+#                 frame_buttons_layout.add_widget(button)
+#             frame_layout.add_widget(frame_buttons_layout)
+#
+#             frame_checkboxes_layout = BoxLayout(orientation='horizontal')
+#             for checkbox_text in frame_checkboxes:
+#                 checkbox = CheckBox(active=False, label=checkbox_text)
+#                 frame_checkboxes_layout.add_widget(checkbox)
+#             frame_layout.add_widget(frame_checkboxes_layout)
+#
+#             frame_layout.background_color = frame_color
+#             main_layout.add_widget(frame_layout)
+#
+#             # Store the window layout in the dictionary with the frame title as the key
+#             self.window_layouts[frame_title] = frame_layout
+#
+#         # Create the 'Continue' button to close the window and quit the program
+#         continue_button = Button(text='Continue')
+#         continue_button.bind(on_press=self.close_window)
+#         main_layout.add_widget(continue_button)
+#
+#         # Set the main window as the root widget
+#         self.root = main_layout
+
+    def close_window(self, instance):
+        self.stop()  # Close the window and quit the program
+
+    def update_frame_text(self, frame_title, new_text):
+        if frame_title in self.window_layouts:
+            for widget in self.window_layouts[frame_title].children:
+                if isinstance(widget, TextInput):
+                    widget.text = new_text
+                    break  # Assuming there's only one TextInput in each frame
+
+    def update_frame_buttons(self, frame_title, new_buttons):
+        if frame_title in self.window_layouts:
+            for widget in self.window_layouts[frame_title].children:
+                if isinstance(widget, BoxLayout):
+                    if widget.orientation == 'horizontal':
+                        for button in widget.children:
+                            widget.remove_widget(button)
+                        for button_text in new_buttons:
+                            new_button = Button(text=button_text)
+                            widget.add_widget(new_button)
+                    break  # Assuming there's only one BoxLayout in each frame
+
+
+
+    def get_window_size(self, window_size):
+        try:
+            if window_size == "small":
+                return 300, 200
+            elif window_size == "medium":
+                return 500, 300
+            elif window_size == "large":
+                return 800, 500
+            elif window_size == "XL":
+                screen = QApplication.primaryScreen()
+                screen_geometry = screen.availableGeometry()
+                return screen_geometry.width(), screen_geometry.height()
+            elif window_size == "full_screen":
+                return QApplication.desktop().screenGeometry().width(), QApplication.desktop().screenGeometry().height()
+            else:
+                return 600, 400
+        except:
+            return 800, 500
+
+    def setup_ui(self, internal_frames):
+        # Create the main layout
+        layout = QGridLayout()
+
+        # Create the dropdown menu
+        menu_bar = self.menuBar()
+        file_menu = menu_bar.addMenu('File')
+        edit_menu = menu_bar.addMenu('Edit')
+        shaine_menu = menu_bar.addMenu('SHAINE')
+        help_menu = menu_bar.addMenu('Help')
+
+        # Create the buttons on the main screen
+        main_buttons_layout = QHBoxLayout()
+
+        # Create the checkboxes
+        checkbox_layout = QVBoxLayout()
+        checkbox_group = QButtonGroup()
+
+        # Create the checkboxes
+        try:
+            checkbox_layout = QHBoxLayout()
+            for checkbox_text in self.main_checkboxes:
+                checkbox = QCheckBox(checkbox_text)
+                checkbox_layout.addWidget(checkbox)
+                checkbox_group.buttonClicked.connect(self.checkbox_function)
+        except:
+            dn = 100
+
+
+        for button_text in self.main_buttons:
+            button = QPushButton(button_text)
+            button.clicked.connect(partial(self.update_status_bar, button_text, "Main", "Test Window"))
+            main_buttons_layout.addWidget(button)
+
+        layout.addLayout(main_buttons_layout, 0, 0, 1, 2)  # Add main buttons layout to grid layout
+
+        # Create the internal frames
+        self.frames = []
+        num_columns = 2 if len(internal_frames) > 1 else 1
+        for i, frame in enumerate(internal_frames):
+            frame_widget = self.create_internal_frame(frame)
+            layout.addWidget(frame_widget, i // num_columns + 1, i % num_columns)  # Add frame widget to grid layout
+            self.frames.append(frame_widget)
+
+        # Create the total word count label
+
+        #word_count_label = QLabel(f"Word Count: {word_count}" + "  " + f"Character Count: {character_count}")
+        self.total_word_count_label = QLabel("Total Word Count: 0")
+        layout.addWidget(self.total_word_count_label, len(internal_frames) // num_columns + 1, 0, 1,
+                         num_columns)  # Add total word count label to grid layout
+
+        # Create a status bar
+        self.statusBar = QStatusBar()
+        self.setStatusBar(self.statusBar)
+
+        # Create a central widget and set the layout
+        self.central_widget = QWidget()
+        self.central_widget.setLayout(layout)
+        self.setCentralWidget(self.central_widget)
+
+        # Set window icon
+        self.setWindowIcon(QIcon(LOGO))
+
+        # Set desktop thumbnail
+        self.setWindowFlags(Qt.Window | Qt.WindowStaysOnTopHint)
+
+
+
+          # Run the application event loop
+
+
+        self.show()
+
+        #while(self.CloseWindow==False):
+        self.TE_APP.exec_()
+
+
+
+        # while True:
+        #     QApplication.processEvents()
+        #     # Continue with other code execution
+        #
+        #     # Check if you want to exit the loop and stop the GUI
+        #     if self.CloseWindow==True:
+        #         break
+
+
+
+
+
+
+
+
+    def closeEvent(self, event):
+        # Add your code here to handle the close event
+        # For example, you can save any unsaved data or perform cleanup tasks
+        event.accept()  # Accept the close event
+    def WindowShow(self):
+        #self.show()
+        d = 100
+
+
+    def checkbox_function(self, checkbox):
+        checkbox_text = checkbox.text()
+        checkbox_state = checkbox.isChecked()
+        # Implement the desired functionality based on the checkbox state and text
+
+    def create_internal_frame(self, frame_info):
+
+        frame_widget = QWidget()
+        frame_layout = QVBoxLayout()
+
+        title, text_value, buttons, checkboxes, color = frame_info
+        #print(frame_info)
+
+        # Create the text widget
+        text_edit = QTextEdit(text_value)
+        text_edit.setObjectName(title)
+        text_edit.setStyleSheet("background-color: white;")  # Set text field background color
+        text_edit.textChanged.connect(lambda: self.update_word_count(text_edit))
+
+        # Create the word count label
+        word_count =len(text_value.split())
+        character_count=  len(text_value)
+        word_count_label = QLabel(f"Word Count: {word_count}" + "  " + f"Character Count: {character_count}")
+        word_count_label.setStyleSheet("font-weight: bold;")  # Set label font weight
+        word_count_label.setStyleSheet("background-color: #f0f0f0;")  # Set text field background color
+
+
+
+
+        # Create the buttons
+        button_layout = QHBoxLayout()
+        for button_text in buttons:
+            button = QPushButton(button_text)
+            button.setStyleSheet("background-color: #f0f0f0;")  # Set button background color
+            #button.clicked.connect(lambda checked, btn=button_text, Frame = title: self.update_status_bar( btn, Frame))
+            button.clicked.connect(partial(self.update_status_bar, button_text, title, self.WINDOWNAME))
+            button_layout.addWidget(button)
+
+
+        # Create the checkboxes
+        checkbox_layout = QHBoxLayout()
+        for checkbox_text in checkboxes:
+            checkbox = QCheckBox(checkbox_text)
+            checkbox_layout.addWidget(checkbox)
+
+        # Set the color scheme
+        if color:
+            frame_widget.setStyleSheet(
+                f"background-color: {color}; border: 4px solid black;")  # Set frame background color and border
+
+        TITLE = QLabel(title)
+        TITLE.setStyleSheet("font-weight: bold; color: white;")  # Set label font weight and color
+        TITLE.setStyleSheet("background-color: #f0f0f0;")  # Set text field background color
+
+
+
+        # Add the title, text widget, word count label, character count label, buttons, and checkboxes to the frame layout
+        frame_layout.addWidget(TITLE)
+        frame_layout.addLayout(checkbox_layout)
+        frame_layout.addLayout(button_layout)
+        # print("text title:")
+        # print(title)
+        # print( "self.FrameText[title]")
+        self.FrameText[title] = text_edit
+        # print( self.FrameText[title])
+
+        frame_layout.addWidget(text_edit)
+        frame_layout.addWidget(word_count_label)
+        #frame_layout.addWidget(character_count_label)
+
+
+        # Set the frame layout to the frame widget
+        frame_widget.setLayout(frame_layout)
+        self.FrameCount += 1
+        return frame_widget
+
+    def update_word_count(self, text_edit):
+        word_count = len(text_edit.toPlainText().split())
+        character_count = len(text_edit.toPlainText())
+        for label in text_edit.parent().findChildren(QLabel):
+            # if label.text().startswith("Word Count:"):
+            #     label.setText()
+            if label.text().startswith("Word Count:"):
+                label.setText(f"Word Count: {word_count}" + f"Character Count: {character_count}")
+
+        total_word_count = sum([len(text_edit1.toPlainText().split()) for text_edit1 in self.findChildren(QTextEdit)])
+        total_Char_count = sum([len(text_edit1.toPlainText()) for text_edit1 in self.findChildren(QTextEdit)])
+        self.total_word_count_label.setText(f"Total Word Count: {total_word_count}" + "   "+ f"Total Char Count: {total_Char_count}")
+
+    def update_text_edit(self, text_edit, button_text):
+        self.SHAINELOGCounter +=1
+        self.SHAINELOG += str(self.SHAINELOGCounter) + '). ' + button_text + up.LineBreak_1
+        current_text = text_edit.toPlainText()
+        if current_text:
+            current_text += f" {button_text}"
         else:
-            self.WordCountField.insert(tk.END,"WORDS(Current GPT Response): " + str(self.CountWords_RESPONSE) + " TOTAL CHARACTERS: "  +str(self.CountCharacters_RESPONSE)  + "CURRENT PROMPTS - WORDS: " + str(self.CountWords) + " CHARACTERS: " + str(self.CountCharacters) )
+            current_text = button_text
+        text_edit.setText(current_text)
+
+    def getClose(self):
+        f = self.CloseWindow
+        return f
+
+    def update_status_bar(self, button_name, Frame, Window):
+
+        #self.RestoreLastUserText
+
+        #self.RestoreUserInput
+        #self.EndUserInput
+        #self.EndUserInputSmall
+        #self.EndUserInputMain
+        #self.MakeArt
+
+        #status_message = f"SHAINE: {button_name} - {Frame}"
+
+        #status_message = f"SHAINE: {button_name}"
+        status_message = f"SHAINE: {button_name} - {Frame} - {Window}"
+        print(status_message)
+        #self.statusBar.showMessage(status_message)
+        # Call the respective function based on the button name
+        if self.UserResponseProvided == False:
+            if button_name == "<":
+                #self.last_function()
+
+                if "GPT" in Frame.upper():
+                    self.ReturnLast()
+                elif "PROMPT" in Window.upper():
+                    self.RestorePrompt()
+
+            elif button_name == "OG":
+                #self.original_function()
+                if "GPT" in Frame.upper():
+                    self.ReturnOrig()
+                elif "PROMPT" in Window.upper():
+                    self.RestorePrompt_original()
+
+
+            elif button_name == "Use User Text":
+                self.UseUserText()
+                #self.use_user_text_function()
+            elif button_name == "Rewrite with User Edits":
+                self.ReWriteWithEdit()
+                #self.rewrite_with_edits_function()
+
+            elif button_name == "User Edits":
+                #self.user_edits_function()
+                self.SmallEdit()
+            elif button_name == "ReWrite":
+                #self.rewrite_function()
+                self.ReWrite()
+            elif button_name == "Speak":
+                #self.speak_function()
+                if "PROMPT" in Window.upper():
+                    self.Speak2()
+                else:
+                    if 'GPT' in Frame.upper():
+                        self.FINALGPTOUTPUT = self.FrameText["CHAT GPT"].toPlainText()
+                        self.Speak(Text= self.FINALGPTOUTPUT)
+                    else:
+                        self.UserEdits = self.FrameText["USER EDITS"].toPlainText()
+                        self.Speak(Text=self.UserEdits)
+                    #self.Speak()
+
+            elif button_name == "Continue":
+                #self.continue_function()
+                if "PROMPT" in Window.upper():
+                    self.Continue_Button2()
+                else:
+                    # print("Frame")
+                    # print(Frame)
+                    self.Continue_Button()
+
+            elif button_name == "Review Prompts":
+                self.ReviewPrompt()
+                #self.review_prompt_function()
+
+
+            elif button_name == "Next":
+                self.next_function()
+            elif button_name == ">":
+                dn = 100
+            # elif button_name == "<":
+            #     dn = 100
+            elif button_name == "Save":
+                self.save_function()
+            elif button_name == "Generate":
+                self.generate_function()
+            elif button_name == "Speak Input":
+                self.speak_input_function()
+            elif button_name == "Review Outlines":
+                self.review_outlines_function()
+            elif button_name == "Review Story(s)":
+                self.review_stories_function()
+            elif button_name == "See Full Prompt":
+                self.see_full_prompt_function()
+            elif button_name == "Prompt History":
+                self.prompt_history_function()
 
-        #self.WordCountField.grid( row=3, sticky="nsew")
-        CrazyTip = Hovertip(self.WordCountField,
-                            'WORD COUNT/CHARACTER COUNT/OTHER KEY STATS, KEEP AN EYE ON THIS, IF RESULTS ARE WONKY TRY TO GET THIS NUMBER DOWN. ALSO IF ITS TOO LOW, YOU PROBABLY NEED TO ADD MORE INFO TO MAKE THE TOOL WORK PROPER')
+            elif button_name == "IGNORE SMALL":
+                self.EndUserInputSmall()
 
-    def keyPress2(self, event):
-        TextEdit.GetPrompts(self)
+            # elif button_name == "MEDIUM":
+            #     self.EndUserInputSmall()
 
-        self.WordCountField = tk.Text(self.window, wrap=WORD, )
-        self.WordCountField.insert(tk.END,
-                                   "WORD COUNT: " + str(self.CountWords) + " CHARACTER COUNT: " + str(
-                                       self.CountCharacters))
-        #self.WordCountField.grid( row=3, sticky="nsew")
-        CrazyTip = Hovertip(self.WordCountField,
-                            'WORD COUNT/CHARACTER COUNT/OTHER KEY STATS, KEEP AN EYE ON THIS, IF RESULTS ARE WONKY TRY TO GET THIS NUMBER DOWN. ALSO IF ITS TOO LOW, YOU PROBABLY NEED TO ADD MORE INFO TO MAKE THE TOOL WORK PROPER')
+            elif button_name == "IGNORE BIG":
+                self.EndUserInputMain()
+            elif button_name == "IGNORE ALL":
+                self.EndUserInput()
 
-        #
-        # self.CharCountField = tk.Text(self.window, wrap=WORD, )
-        # self.CharCountField.insert(tk.END, "CHARACTER COUNT: " + str(self.CountCharacters))
-        # self.CharCountField.grid(column=3, row=0, sticky="nsew")
-        # CrazyTip = Hovertip(self.UserInput_fld_Crazy,'WORD COUNT, KEEP AN EYE ON THIS, IF RESULTS ARE WONKY TRY TO GET THIS NUMBER DOWN. ALSO IF ITS TOO LOW, YOU PROBABLY NEED TO ADD MORE INFO TO MAKE THE TOOL WORK PROPER')
-        #
+            elif button_name == "RESTORE ALL":
+                self.RestoreUserInput()
 
 
-        # self.window.label.config( text = f'Words: {self.CountWords}'  + f'      Characters: {self.CountCharacters}' )
 
 
+    def last_function(self):
+        # Add your code here
+        pass
 
+    def next_function(self):
+        # Add your code here
+        pass
 
+    def original_function(self):
+        # Add your code here
+        pass
 
-    def MakeWindow(self,Text= "",UserConfirm = False, WindowName = "SHAINE", USERINPUTDEFAULT = """ ### USER EDIT/REQUIREMENT PLEASE TAKE ACTION:      ###""", USERLASTEDIT = '', Current_Prompt = '', version = ''):
-        self.UIversion = 1
-        self.UserConfirm = UserConfirm
-        self.Text = Text
-        self.current_file = None
-        self.window = tk.Tk()
+    def save_function(self):
+        # Add your code here
+        pass
 
-        #self.window = Frame(self.window,borderwidth = 2, relief = tk.SOLID)
-        self.USERLASTEDIT = USERLASTEDIT
+    # def use_user_text_function(self):
+    #     # Add your code here
+    #     pass
 
-        width =  self.window .winfo_screenwidth()
-        height =  self.window .winfo_screenheight()
-        self.window.geometry(f'{width}x{height}')
+    # def rewrite_with_edits_function(self):
+    #     # Add your code here
+    #     pass
 
-        self.window.title(WindowName)
-        # self.window.state('zoomed')
-        self.text_widget = tk.Text(self.window, wrap=CHAR)
+    def generate_function(self):
+        # Add your code here
+        pass
 
-        # self.window.rowconfigure("all", minsize=1)
-        # self.window.rowconfigure(0, minsize=10, weight=2)
-        # self.window.rowconfigure(2, minsize=1, weight=1)
-        # self.window.rowconfigure(1, minsize=1200, weight=10)
+    # def user_edits_function(self):
+    #     # Add your code here
+    #     CustomWindow11.UseUserText(self)
+    #     pass
 
+    # def rewrite_function(self):
+    #     # Add your code here
+    #     pass
 
-        self.UserEdits = ''
-        self.window.bind( '<KeyRelease>',  self.keyPress )
-        self.window.focus()
+    # def speak_function(self):
+    #     # Add your code here
+    #     pass
 
-        Colors = ['Dark Orchid','Orchid','plum','Blue Violet','Light Pink','Deep Pink', 'Dark Magenta','Pink', 'Misty Rose', 'Medium Violet Red', 'Medium Spring Green','Medium Orchid' , 'green yellow','Dark Goldenrod' ]
+    def speak_input_function(self):
+        # Add your code here
+        pass
 
+    def continue_function(self):
+        # Add your code here
+        print('Exit')
+        self.CloseWindow = True
 
+        pass
 
+    # def review_prompt_function(self):
+    #     # Add your code here
+    #     self.ReviewPrompt()
+    #     pass
 
-        # self.window.rowconfigure(1, minsize=1000, weight=10)
+    def review_outlines_function(self):
+        # Add your code here
+        pass
 
+    def review_stories_function(self):
+        # Add your code here
+        pass
 
+    #def see_full_prompt_function(self):
+        # Add your code here
+        #self.ReviewPrompt()
 
-        #txt_edit2 = tk.Text(self.window)
-        frm_buttons = tk.Frame(self.window, relief=tk.RAISED, bg=Colors[0], pady=2, padx=2, height=44)
-        frm_buttons.pack(side='top', fill="x")
-        #frm_Text = tk.Frame(self.window, relief=tk.RAISED, bg='yellow'+ ' 4', pady=8, padx=8)
-        Middle_Screen = tk.Frame(self.window, relief=tk.RAISED, bg=Colors[7], pady=8, padx=8)
-        Middle_Screen.pack(ipadx=1600,padx=3,pady=3)
-        frm_User = tk.Frame(Middle_Screen, relief=tk.RAISED, bg=Colors[2], pady=8, padx=8)
-        frm_Text = tk.Frame(Middle_Screen, relief=tk.RAISED, bg=Colors[1], pady=8, padx=8)
-        WordCounter = tk.Frame(self.window, relief=tk.SUNKEN, bg=Colors[4])
+    def prompt_history_function(self):
+        # Add your code here
+        pass
 
-        frm_buttons.rowconfigure("all", weight=1, height=44)
-        Middle_Screen.columnconfigure("all",weight=10, width=1000, height=250)
-        Middle_Screen.rowconfigure("all", weight=10, height=100)
-        WordCounter.rowconfigure(0, weight=1)
 
-        #frm_Text.master.maxsize(1000,400)
-        #frm_Text.master.minsize(150, 400)
-        #frm_User.master.minsize(150, 400)
-        #frm_Text.master.maxsize(1800, 1600)
-        #frm_User.master.maxsize(1800, 1600)
-        #frm_buttons.master.maxsize = (1300, 10)
-        WordCounter.master.maxsize = (1,1)
-        WordCounter.pack(fill="x", expand=0)
+    def handle_all_checkbox(self, state):
+        if state == 0:
+            self.big_checkbox.setChecked(False)
+            self.medium_checkbox.setChecked(False)
+            self.small_checkbox.setChecked(False)
+            self.RestoreUserInput = False
+            #self.EndUserInput()
 
+        else:
+            self.big_checkbox.setChecked(True)
+            self.medium_checkbox.setChecked(True)
+            self.small_checkbox.setChecked(True)
+            #self.RestoreUserInput()
 
 
-        btn_open = tk.Button(frm_buttons, text="Open", command=self.open_file)
-        btn_save = tk.Button(frm_buttons, text="Save As...", command=self.save_file)
-        btn_new = tk.Button(frm_buttons, text="New Window...", command=self.openNewWindow)
-        btn_KeepRunning = tk.Button(frm_buttons, text="Keep Running", command=self.KeepRunning_Button)
+    def handle_other_checkbox(self, state):
+        if state == 0:
+            self.all_checkbox.setChecked(False)
+        else:
+           # if state ==1:
 
-        # btn_open.grid(row=0, column=0, sticky="ew", padx=5)
-        # btn_save.grid(row=0, column=1, sticky="ew", padx=5)
-        # btn_new.grid(row=0, column=2, sticky="ew", padx=5)
-        # btn_KeepRunning.grid(row=0, column=3, sticky="ew", padx=5)
+            if self.big_checkbox.isChecked() and self.medium_checkbox.isChecked() and self.small_checkbox.isChecked():
+                self.all_checkbox.setChecked(True)
 
-        if self.UserConfirm == True:
-            #self.window.columnconfigure(1, minsize=1400, weight=1)
-            #self.window.columnconfigure(0, minsize=500, weight=2)
-            #self.window.columnconfigure(1, minsize=700, weight=1)
-            # btn_Continue = tk.Button(frm_buttons, text="***Continue***", command=self.Continue_Button,highlightbackground= 'green', highlightcolor = 'white',style="Custom.TLabel")
-            # btn_SmallEdit = tk.Button(frm_buttons, text="User Small Edit**", command=self.SmallEdit,highlightbackground= 'gray', highlightcolor = 'yellow',style="Custom.TLabel")
-            # btn_ReWriteWithEdit = tk.Button(frm_buttons, text="ReWrite with Edit", command=self.ReWriteWithEdit,highlightbackground= 'yellow', highlightcolor = 'cyan',style="Custom.TLabel")
-            # btn_ReWrite = tk.Button(frm_buttons, text="ReWrite",command=self.ReWrite,highlightbackground= 'cyan', highlightcolor = 'red',style="Custom.TLabel")
-            # btn_UseUserText = tk.Button(frm_buttons, text="*User Text provided*", command=self.UseUserText,highlightbackground= 'red', highlightcolor = 'black',style="Custom.TLabel")
 
-            btn_Continue = tk.Button(frm_buttons, text="***Continue***", command=self.Continue_Button)
-            btn_SmallEdit = tk.Button(frm_buttons, text="Small USER Edit", command=self.SmallEdit)
-            btn_ReWriteWithEdit = tk.Button(frm_buttons, text="ReWrite with Edit", command=self.ReWriteWithEdit)
-            btn_ReWrite = tk.Button(frm_buttons, text="ReWrite", command=self.ReWrite)
-            btn_UseUserText = tk.Button(frm_buttons, text="*User Text provided*", command=self.UseUserText)
-            btn_PullLastEdit= tk.Button(frm_buttons, text="Pull Last Edit (REUSE)", command=self.RestoreLastUserText)
 
+        #self.RestoreUserInput
+        #self.EndUserInput
+        #self.EndUserInputSmall
+        #self.EndUserInputMain
 
 
-            btn_ReviewPrompt = tk.Button(frm_buttons, text="~REVIEW PROMPT USED BY GPT~", command=self.ReviewPrompt)
-            btn_ReturnLast = tk.Button(frm_buttons, text="Revert to Prior GPT Response", command=self.ReturnLast)
-            btn_ReturnOrig = tk.Button(frm_buttons, text="Revert to Original GPT Response", command=self.ReturnOrig)
+    # def open_web_browser(self):
+    #     web_browser_thread = threading.Thread(target=create_web_browser_window)
+    #     web_browser_thread.start()
 
-            btn_RestoreUserInputs = tk.Button(frm_buttons, text="Activate GPT FULL Review Mode",
-                                                      command=self.RestoreUserInput)
-            btn_NoMoreUserInputs_RuntoEnd = tk.Button(frm_buttons, text="RUN TO COMPLETION", command=self.EndUserInput)
-            btn_NoMoreUserInputs_RuntoEnd2 = tk.Button(frm_buttons, text="QUICK MODE - IGNORE Small Inquiries",command=self.EndUserInputSmall)
-            btn_NoMoreUserInputs_RuntoEnd3 = tk.Button(frm_buttons, text="SKIP  (All Scene Outline/Next Part)",command=self.EndUserInputMain)
-            btn_MakeArt = tk.Button(frm_buttons, text="Make Art",command=self.MakeArt)
-            btn_Speak = tk.Button(frm_buttons, text="Speak Text", command=self.Speak)
 
 
 
+    # def update_status_bar(self, button_text):
+    #     status_message = f"SHAINE: {button_text}"
+    #     self.statusBar.showMessage(status_message)
 
-
-
-            btn_Continue.grid(row=0, column=14, sticky="ew", padx=10, pady=10)
-            btn_UseUserText.grid(row=0, column=13, sticky="ew", padx=10, pady=10)
-            btn_PullLastEdit.grid(row=0, column=12, sticky="ew", padx=10, pady=10)
-            btn_SmallEdit.grid(row=0, column=9, sticky="ew", padx=5, pady=5)
-            btn_ReWriteWithEdit.grid(row=0, column=10, sticky="ew", padx=5)
-            btn_ReWrite.grid(row=0, column=11, sticky="ew", padx=5)
-
-            btn_ReviewPrompt.grid(row=0, column=8, sticky="ew", padx=5)
-            btn_ReturnLast.grid(row=0, column=7, sticky="ew", padx=5)
-            btn_ReturnOrig.grid(row=0, column=6, sticky="ew", padx=5)
-
-            btn_RestoreUserInputs.grid(row=0, column=2, sticky="ew", padx=5)
-            btn_NoMoreUserInputs_RuntoEnd.grid(row=0, column=5, sticky="ew", padx=5)
-            btn_NoMoreUserInputs_RuntoEnd2.grid(row=0, column=4, sticky="ew", padx=5)
-            btn_NoMoreUserInputs_RuntoEnd3.grid(row=0, column=3, sticky="ew", padx=5)
-            btn_Speak.grid(row=0, column=0, sticky="ew", padx=5)
-            btn_MakeArt.grid(row=0, column=1, sticky="ew", padx=5)
-
-
-            # self.UserInput = tk.StringVar()
-            # self.UserInput = tk.Entry(self.window, textvariable = self.UserInput)
-            # #self.UserInput.set(USERINPUTDEFAULT)
-
-
-            # self.UserInput.pack()
-            # self.UserInput.grid(row=0, column=2, sticky="nsew")
-            #
-
-
-            self.UserInput = tk.Text(frm_User, wrap=CHAR)
-            #self.UserInput.insert(tk.END,USERINPUTDEFAULT )
-            #self.UserInput.grid( row=1, sticky="nsew", columnspan=1, column=1, rowspan=2)
-            self.UserInput.pack(fill="both",ipady=(333),ipadx=(333))
-
-
-            # txt_edit.grid(row=0, column=1, sticky="nsew")
-            #columnspan=1, column=0, rowspan=2
-            self.Printtxt = tk.Text(frm_Text, wrap=CHAR)
-            self.Printtxt.insert(tk.END, self.Text)
-            #self.Printtxt.grid(row=1, sticky="nsew")
-            self.Printtxt.pack(fill="both", ipady=(333), ipadx=(333))
-            TextEdit.WordCount_SHAINE(self)
-
-
-            # Create a scrollbar
-            # scroll_bar = tk.Scrollbar(self.window)
-
-            # # Pack the scroll bar
-            # # Place it to the right side, using tk.RIGHT
-            # scroll_bar.pack(side=tk.RIGHT)
-            #
-            # # Pack it into our tkinter application
-            # # Place the text widget to the left side
-            # self.text_widget.pack(side=tk.LEFT)
-
-            TextEdit.WordCount_SHAINE(self)
-
-            self.WordCountField = tk.Text(WordCounter, wrap=CHAR)
-            self.WordCountField.insert(tk.END, "WORDS(GPT Response): " + str(self.CountWords_RESPONSE) + " CHARACTERS: "  +str(self.CountCharacters_RESPONSE)  + " WORDS (GPT prompts): " + str(self.CountWords) + " CHARACTERS: " + str(self.CountCharacters) + up.LineBreak + "Current Prompt: "+  up.LineBreak + Current_Prompt )
-            #self.WordCountField.grid( row=2, sticky="nsew")
-
-            #self.WordCountField.master.maxsize = (1, 1)
-
-            self.WordCountField.pack(side= "left", expand=0, anchor="nw", fill="x")
-            #side= "left", expand=0, anchor="sw"
-
-            CrazyTip = Hovertip(self.WordCountField,
-                                'WORD COUNT, KEEP AN EYE ON THIS, IF RESULTS ARE WONKY TRY TO GET THIS NUMBER DOWN. ALSO IF ITS TOO LOW, YOU PROBABLY NEED TO ADD MORE INFO TO MAKE THE TOOL WORK PROPER')
-
-            frm_User.pack( side='right', expand=0, fill="both")
-            frm_Text.pack(side='left', expand=0, fill="both")
-            WordCounter.pack(expand=0, fill="x" )
-            # frm_User.pack(side= 'right',fill = "both")
-            # frm_Text.pack(side= 'left',fill = "both")
-            #frm_buttons.pack(side='top', fill="none")
-
-           #  frm_User.master.state('zoomed')
-           #  frm_Text.master.state('zoomed')
-            #self.window.state('zoomed')
-
-
-
-
-        #self.text_widget.grid(row=1, column=2, sticky="nsew")
-
-
-
-
-        menu_bar = tk.Menu(self.window)
-
-        # File menu
-        file_menu = tk.Menu(menu_bar, tearoff=0)
-        file_menu.add_command(label="New", command=self.new_file)
-        file_menu.add_command(label="Open", command=self.open_file)
-        file_menu.add_command(label="Save", command=self.save_file)
-        file_menu.add_command(label="Save As", command=self.save_file_as)
-        file_menu.add_separator()
-        file_menu.add_command(label="Exit", command=self.exit_editor)
-        menu_bar.add_cascade(label="File", menu=file_menu)
-
-
-
-
-        # Edit menu
-        # Add more options to the menu as needed
-        edit_menu = tk.Menu(menu_bar, tearoff=0)
-        edit_menu.add_command(label="Cut", command=self.cut_text, accelerator="Ctrl+X")
-        edit_menu.add_command(label="Copy", command=self.copy_text, accelerator="Ctrl+C")
-        edit_menu.add_command(label="Paste", command=self.paste_text, accelerator="Ctrl+V")
-        menu_bar.add_cascade(label="Edit", menu=edit_menu)
-
-
-
-        SHAINE = tk.Menu(menu_bar, tearoff=0)
-        SHAINE.add_command(label="Continue", command=self.Continue_Button, accelerator="Ctrl+Q")
-        SHAINE.add_command(label="Use User Text", command=self.UseUserText, accelerator="Ctrl+U")
-        SHAINE.add_command(label="ReWrite Response", command=self.ReWrite, accelerator="Ctrl+R")
-        SHAINE.add_command(label="Review Prompts", command=self.ReviewPrompt, accelerator="Ctrl+P")
-
-
-        menu_bar.add_cascade(label="SHAINE", menu=SHAINE)
-
-
-         # Help menu
-        # Add more options to the menu as needed
-
-        self.window.config(menu=menu_bar)
-        self.text_widget = tk.Text(self.window, wrap=WORD)
-
-
-
-        while self.UserResponseProvided ==False:
-            self.window.mainloop()
-            #time.sleep(1)
-
-
-        return self.UserEdits
-    #
-    # def PullLastEdit(self):
-    #     self.UserInput.insert(tk.END, self.Text)
     def RestoreLastUserText(self):
 
-        self.UserInput.insert(tk.END, self.USERLASTEDIT)
-        return self.UserEdits
-
+        USERLASTEDIT = self.USERLASTEDIT
+        CustomWindow11.GetUserText(self)
+        CustomWindow11.UpdateUserText(self, self.USERLASTEDIT)
+        self.USERLASTEDIT = self.UserEdits
+        return self.USERLASTEDIT
 
     def GetUserText(self):
-        self.UserEdits = self.UserInput.get(1.0,END)
+
+        self.UserEdits = self.FrameText["USER EDITS"].toPlainText()
+
+
+
+        print("self.UserEdits")
+        print(self.UserEdits)
         return self.UserEdits
 
     def GetUserResponseMode(self):
@@ -403,144 +875,371 @@ class TextEdit():
 
     def GetUserResponseMain(self):
         self.UserConfirm = True
-        TextEdit.MakeWindow(self)
-        self.x = self.UserInput.get()
-        try:
-            self.window.destroy()
-        except:
-            print('Error With Window, continue, maybe look into later')
+        CustomWindow11.MakeWindow(self)
+        self.x =  self.FrameText["USER EDITS"].toPlainText()
+
+        # I May not want to do this, I may be closing windows I do not want to
+
+        # try:
+        #     if self.WindowClose == True:
+        #         self.window.destroy()
+        #     if self.WindowClose2 == True:
+        #         self.window2.destroy()
+        # except:
+        #     print('Error With Window, continue, maybe look into later')
         return self.x
 
-    def Continue_Button(self, Mode = 0):
-        TextEdit.UserResponse(self,Mode, self.UIversion)
-        #self.UserEdits = "0"
+    def Continue_Button2(self, Mode=0):
+
+        try:
+
+            self.WindowClose2 = True
+            self.WindowClose = True
+            self.CloseWindow = True
+        except:
+            dn = 1
+        CustomWindow11.UserResponse(self, Mode, UIversion=2)
+
+        # self.UserEdits = "0"
         return "0"
 
-    def EndUserInput(self, Mode = 5):
-        TextEdit.UserResponse(self,Mode, self.UIversion)
-        #self.UserEdits = "5"
+    def Continue_Button(self, Mode=0):
+
+        try:
+            self.FINALGPTOUTPUT= self.FrameText["CHAT GPT"].toPlainText()
+            #self.FINALGPTOUTPUT = self.FrameText["CHAT GPT"].toPlainText()
+            self.WindowClose = True
+            self.CloseWindow = True
+
+
+
+        except:
+            dn = 1
+        CustomWindow11.UserResponse(self, Mode, UIversion=1)
+
+        # self.UserEdits = "0"
+        return "0"
+
+    def EndUserInput(self, Mode=5):
+        CustomWindow11.UserResponse(self, Mode, UIversion=1)
+        # self.UserEdits = "5"
         return "5"
 
-    def RestoreUserInput(self, Mode = 50):
-        TextEdit.UserResponse(self,Mode, self.UIversion)
-        #self.UserEdits = "5"
+    def RestoreUserInput(self, Mode=50):
+        CustomWindow11.UserResponse(self, Mode, UIversion=1)
+        # self.UserEdits = "5"
         return "50"
 
-
-    def EndUserInputSmall(self, Mode = 6):
-        TextEdit.UserResponse(self,Mode, self.UIversion)
-        #self.UserEdits = "6"
+    def EndUserInputSmall(self, Mode=6):
+        CustomWindow11.UserResponse(self, Mode, UIversion=1)
+        # self.UserEdits = "6"
         return "6"
 
-    def EndUserInputMain(self, Mode = 7):
-        TextEdit.UserResponse(self,Mode, self.UIversion)
-        #self.UserEdits = "7"
+    def EndUserInputMain(self, Mode=7):
+        CustomWindow11.UserResponse(self, Mode, UIversion=1)
+        # self.UserEdits = "7"
         return "7"
 
-
-
-    def MakeArt(self, Mode = 8):
-        TextEdit.UserResponse(self,Mode, self.UIversion)
-        #self.UserEdits = "8"
+    def MakeArt(self, Mode=8):
+        CustomWindow11.UserResponse(self, Mode, UIversion=1)
+        # self.UserEdits = "8"
         return "8"
 
-
-    def ReviewPrompt(self, Mode = 10):
-        TextEdit.UserResponse(self,Mode, self.UIversion)
-        #self.UserEdits = "8"
+    def ReviewPrompt(self, Mode=10):
+        CustomWindow11.UserResponse(self, Mode, UIversion=1)
+        # self.UserEdits = "8"
         return "10"
 
-    def ReturnLast(self, Mode = 11):
-        TextEdit.UserResponse(self,Mode, self.UIversion)
-        #self.UserEdits = "8"
-        return "11"
-
-    def ReturnOrig(self, Mode = 12):
-        TextEdit.UserResponse(self,Mode, self.UIversion)
-        #self.UserEdits = "8"
+    def ReturnLast(self, Mode=12):
+        CustomWindow11.UserResponse(self, Mode, UIversion=1)
+        closeWindow = True
+        # self.UserEdits = "8"
         return "12"
 
+    def ReturnOrig(self, Mode=11):
+        CustomWindow11.UserResponse(self, Mode, UIversion=1, closeWindow=True)
+
+        # self.UserEdits = "8"
+        return "11"
+
+    def UpdateGPTResponse(self, Text):
+        # Get the new data from some source
+        new_data = "New data"
+        title = "CHAT GPT"
+        # Delete existing content in the Text widget
+        #self.Printtxt.delete("1.0", tk.END)
+        # Add the new data to the Text widget
+        #self.Printtxt.insert(tk.END, Text)
+        # print("self.FrameText[title]:")
+        # print(self.FrameText[title])
+
+        #self.TE_APP.text_changed.emit(Text, title)
+        self.FrameText[title].setText(Text)
 
 
 
 
+    def UpdateUserText(self, Text):
+        # Get the new data from some source
+        new_data = "New data"
+        # Delete existing content in the Text widget
+        #self.UserInput.delete("1.0", tk.END)
+        # Add the new data to the Text widget
+        #self.UserInput.insert(tk.END, Text)
 
-    def Speak(self, Mode = 6):
+        self.FrameText["USER EDITS"].setText(Text)
+
+
+    # def UpdateWordCountField(self, Text):
+    #     # Get the new data from some source
+    #     new_data = "New data"
+    #     # Delete existing content in the Text widget
+    #     self.WordCountField.delete("1.0", tk.END)
+    #     # Add the new data to the Text widget
+    #     self.WordCountField.insert(tk.END, Text)
+    #
+    # def UpdateWordCountField2(self, Text):
+    #     # Get the new data from some source
+    #     new_data = "New data"
+    #     # Delete existing content in the Text widget
+    #     self.WordCountField2.delete("1.0", tk.END)
+    #     # Add the new data to the Text widget
+    #     self.WordCountField2.insert(tk.END, Text)
+
+    def UpdateUserInput_fld_System(self, Text):
+        # Get the new data from some source
+        new_data = "New data"
+        # Delete existing content in the Text widget
+        #self.UserInput_fld_SYSTEM.delete("1.0", tk.END)
+        # Add the new data to the Text widget
+        #self.UserInput_fld_SYSTEM.insert(tk.END, Text)
+        self.FrameText["System"].setText(Text)
+
+    def UpdateUserInput_fld_Role(self, Text):
+        # Get the new data from some source
+        new_data = "New data"
+        # Delete existing content in the Text widget
+        #self.UserInput_fld_ROLE.delete("1.0", tk.END)
+        # Add the new data to the Text widget
+        #self.UserInput_fld_ROLE.insert(tk.END, Text)
+        self.FrameText["Role"].setText(Text)
+
+    def UpdateUserInput_fld_FORMAT(self, Text):
+        # Get the new data from some source
+        new_data = "New data"
+        # Delete existing content in the Text widget
+        #self.UserInput_fld_FORMAT.delete("1.0", tk.END)
+        # Add the new data to the Text widget
+        #self.UserInput_fld_FORMAT.insert(tk.END, Text)
+        self.FrameText["Format"].setText(Text)
+
+    def UpdateUserInput_fld_TASK(self, Text):
+        # Get the new data from some source
+        new_data = "New data"
+        # Delete existing content in the Text widget
+        # self.UserInput_fld_TASK.delete("1.0", tk.END)
+        # # Add the new data to the Text widget
+        # self.UserInput_fld_TASK.insert(tk.END, Text)
+        self.FrameText["Task"].setText(Text)
+
+
+    def UpdateUserInput_fld_Background(self, Text):
+        # Get the new data from some source
+        new_data = "New data"
+        # Delete existing content in the Text widget
+        # self.UserInput_fld_Background.delete("1.0", tk.END)
+        # # Add the new data to the Text widget
+        # self.UserInput_fld_Background.insert(tk.END, Text)
+        self.FrameText["Background"].setText(Text)
+
+    def UpdateUserInput_fld_Background2(self, Text):
+        # Delete existing content in the Text widget
+        # self.UserInput_fld_Background2.delete("1.0", tk.END)
+        # # Add the new data to the Text widget
+        # self.UserInput_fld_Background2.insert(tk.END, Text)
+        self.FrameText["Background2"].setText(Text)
+
+    def UpdateUserInput_fld_Background3(self, Text):
+        # self.UserInput_fld_Background3.delete("1.0", tk.END)
+        # self.UserInput_fld_Background3.insert(tk.END, Text)
+        self.FrameText["Background3"].setText(Text)
+
+    def UpdateUserInput_fld_Version(self, Text):
+        # self.UserInput_fld_version.delete("1.0", tk.END)
+        # self.UserInput_fld_version.insert(tk.END, Text)
+        self.FrameText["Version"].setText(Text)
+
+
+    def UpdateUserInput_fld_Crazy(self, Text):
+        #self.UserInput_fld_Crazy.delete("1.0", tk.END)
+        self.FrameText["Crazy"].setText(Text)
+
+    def UpdateGPTResponseWindow(self, NewGPTResponse, NewCurrentPrompt, NEWUSERLASTEDIT):
+        self.UserResponseProvided = False
+        CustomWindow11.UpdateGPTResponse(self, NewGPTResponse)
+        self.Current_PROMTS_ALL = NewCurrentPrompt
+        self.USERLASTEDIT = NEWUSERLASTEDIT
+        # self.Window.title(NEWWINDOWNAME)
+
+    def UpdatePromptWindow(self, NewSystem, NewRole, NewFormat, NewTask, NewBackground, NewBackground2, NewBackground3,
+                           NewCrazy, NewVersion, NewModel):
+        self.UserResponseProvided = False
+        CustomWindow11.UpdateUserInput_fld_System(self, NewSystem)
+        CustomWindow11.UpdateUserInput_fld_Role(self, NewRole)
+        CustomWindow11.UpdateUserInput_fld_FORMAT(self, NewFormat)
+        CustomWindow11.UpdateUserInput_fld_TASK(self, NewTask)
+        CustomWindow11.UpdateUserInput_fld_Background(self, NewBackground)
+        CustomWindow11.UpdateUserInput_fld_Background2(self, NewBackground2)
+        CustomWindow11.UpdateUserInput_fld_Background3(self, NewBackground3)
+        CustomWindow11.UpdateUserInput_fld_Crazy(self, NewCrazy)
+        # TextEdit.UpdateUserInput_fld_Version(self,NewVersion)
+
+    def UpdateWindow(self, Text1='', Text2='', Text3=''):
+        if Text != '':
+            x = 1
+
+    def GetSpeakText(self):
+        return self.Speak_Text
+
+    def Speak(self, Mode=9, Text = ""):
 
         try:
             try:
-                Text = self.Text
-                t = threading.Thread(target= cu.speak, args=(Text,)).start()
-                #threads.append(t)
+                self.Speak_Text = Text
+                CustomWindow11.UserResponse(self, Mode, UIversion=1, closeWindow=False)
+                # threads.append(t)
             except:
                 print("Error While trying to read outloud")
         except:
             print("Error While trying to read outloud #2")
 
-
-
-        self.UserEdits = "9"
+        #self.UserEdits = "9"
         return "9"
 
+    def SmallEdit(self, Mode=1):
 
+        #self.UserEdits = self.UserInput.get(1.0, END)
+        self.UserEdits = self.FrameText["USER EDITS"].toPlainText()
+        CustomWindow11.UserResponse(self, Mode, UIversion=1, closeWindow=False)
 
-
-    def SmallEdit(self, Mode = 1):
-
-        self.UserEdits = TextEdit.GetUserText(self)
-        TextEdit.UserResponse(self,Mode, self.UIversion)
         return "1"
 
+    def ReWriteWithEdit(self, Mode=2):
 
-    def ReWriteWithEdit(self, Mode = 2):
+        #self.UserEdits = self.UserInput.get(1.0, END)
+        self.UserEdits = self.FrameText["USER EDITS"].toPlainText()
+        CustomWindow11.UserResponse(self, Mode, UIversion=1, closeWindow=False)
 
-        self.UserEdits = TextEdit.GetUserText(self)
-        TextEdit.UserResponse(self,Mode, self.UIversion)
         return "2"
 
-    def ReWrite(self, Mode = 3):
-        TextEdit.UserResponse(self,Mode, self.UIversion)
-        #self.UserEdits = "3"
+    def ReWrite(self, Mode=3):
+        CustomWindow11.UserResponse(self, Mode, UIversion=1, closeWindow=False)
+
+        # self.UserEdits = "3"
         return "3"
 
-    def UseUserText(self, Mode = 4):
-        self.UserEdits = TextEdit.GetUserText(self)
-        TextEdit.UserResponse(self,Mode, self.UIversion)
-        #self.UserEdits = "4"
+    def UseUserText(self, Mode=4):
+        self.UserEdits = self.FrameText["USER EDITS"].toPlainText()
+        #might want to change this eventually
+        #self.CloseWindow = True
+        CustomWindow11.UserResponse(self, Mode, UIversion=1, closeWindow=True)
+
+        # self.UserEdits = "4"
         return "4"
 
+        # Decide which numbers not to close window on, for instance, Speak, Review Responses, use prior response,
 
-
-
-    def UserResponse(self, Mode,UIversion):
+    def UserResponse(self, Mode, UIversion, closeWindow=True):
         self.UserResponseMode = Mode
 
-        if UIversion == 2:
-            TextEdit.GetPrompts(self)# print(Mode)
-        elif UIversion == 1:
+        if UIversion == 2 and self.UserResponseProvided == False:
             try:
-                self.UserEdits = TextEdit.GetUserText(self)
+                CustomWindow11.GetPrompts(self)  # print(Mode)
+                self.UserResponseProvided = True
+
+                try:
+                    if self.CloseWindow == True:
+                        #self.window2.destroy()
+                        #CustomWindow11.closeWindow(self)
+                        #self.TE_APP.quit()
+                        dn = 100
+
+                        #self.TE_APP.close()
+                        #os._exit(1)
+                        # self.central_widget.close()
+                        #sys.exit()
+                except:
+
+                    print("Error Trying to close window")
+
             except:
                 print("Error while trying to pull User Values from Prompt")
 
 
+        elif UIversion == 1 and self.UserResponseProvided == False:
+            try:
 
+                self.UserResponseProvided = True
+                try:
+                    self.FINALGPTOUTPUT = self.FrameText["CHAT GPT"].toPlainText()
+                    self.UserEdits = CustomWindow11.GetUserText(self)
+                except:
+                    dn = 100
+                try:
+                    if self.CloseWindow == True:
+                        #self.window.destroy()
+                        #CustomWindow11.closeWindow(self)
+                        #self.central_widget.close()
+
+                        #self.TE_APP.quit()
+                        dn = 100
+
+                        #self.TE_APP.close()
+                        #os._exit(1)
+                        #sys.exit()
+
+                except:
+                    print("Error Trying to close window")
+
+            except:
+                print("Error while trying to pull User Values from Prompt")
+
+
+        self.CloseWindow = True
+        self.TE_APP.quit()
+        # if self.CloseWindow == True:
+        #     self.close()
+
+        self.UserResponseProvided = True
         if Mode == 0:
             # print("Pass")
             c = 1
-        self.UserResponseProvided = True
 
-        try:
-            self.window.destroy()
-        except:
-            print("Error Trying to close window")
         return Mode
+
+    def GetUserResponseProvided(self):
+        #print(self.UserResponseProvided)
+        return self.UserResponseProvided
+
+
+    def GetWindowClose(self):
+        return self.WindowClose
+
+    def GetWindowClose2(self):
+        return self.WindowClose2
+
+    def GetCloseWindow(self):
+        return self.CloseWindow
+
+
+    def GetUserResponseProvided2(self):
+        return self.UserResponseProvided2
 
     def GetUserResponse(self):
         return self.UserResponseMode
 
-
-
+    def GetFinalGPTOutput(self):
+        return self.FINALGPTOUTPUT
 
     def Get_System(self):
         return self.UserPromptSystem
@@ -564,19 +1263,11 @@ class TextEdit():
         return self.UserPromptBackground3
 
     def Get_version(self):
-        #TextEdit.GetPrompts(self)
+        # TextEdit.GetPrompts(self)
         return self.UserPromptversion
-
 
     def Get_Crazy(self):
         return self.UserPromptCrazy
-
-
-
-
-
-
-
 
     def GetPrompts(self):
         x = 1
@@ -600,134 +1291,113 @@ class TextEdit():
         self.UserPromptCrazy1 = ''
         self.UserPromptversion1 = ''
 
-
         try:
-            self.UserPromptSystem = self.UserInput_fld_SYSTEM.get(1.0,END)
+            self.UserPromptSystem = self.FrameText["System"].toPlainText()
             self.UserPromptSystem1 = "System: " + self.UserPromptSystem
         except:
             print('Error Getting User prompt System')
 
         try:
-            self.UserPromptRole = self.UserInput_fld_ROLE.get(1.0,END)
+            #self.UserPromptRole = self.UserInput_fld_ROLE.get(1.0, END)
+            self.UserPromptRole = self.FrameText["Role"].toPlainText()
             self.UserPromptRole1 = "Role: " + self.UserPromptRole
         except:
             print('Error Getting User prompt Role')
 
         try:
-            self.UserPromptFormat = self.UserInput_fld_FORMAT.get(1.0,END)
+            #self.UserPromptFormat = self.UserInput_fld_FORMAT.get(1.0, END)
+            self.UserPromptFormat = self.FrameText["Format"].toPlainText()
             self.UserPromptFormat1 = "Format: " + self.UserPromptFormat
         except:
             print('Error Getting User prompt Format')
 
         try:
-            self.UserPromptTask = self.UserInput_fld_TASK.get(1.0,END)
+            #self.UserPromptTask = self.UserInput_fld_TASK.get(1.0, END)
+            self.UserPromptTask = self.FrameText["Task"].toPlainText()
             self.UserPromptTask1 = "Task: " + self.UserPromptTask
         except:
             print('Error Getting User prompt Task')
 
         try:
-            self.UserPromptBackground = self.UserInput_fld_Background.get(1.0,END)
+            #self.UserPromptBackground = self.UserInput_fld_Background.get(1.0, END)
+            self.UserPromptBackground = self.FrameText["Background"].toPlainText()
             self.UserPromptBackground1 = "Background : " + self.UserPromptBackground
         except:
             print('Error Getting User prompt Background')
 
         try:
-            self.UserPromptBackground2 = self.UserInput_fld_Background2.get(1.0,END)
+            # self.UserPromptBackground2 = self.UserInput_fld_Background2.get(1.0, END)
+            self.UserPromptBackground2 = self.FrameText["Background2"].toPlainText()
             self.UserPromptBackground21 = "Background 2: " + self.UserPromptBackground2
         except:
             print('Error Getting User prompt Background2')
 
         try:
-            self.UserPromptBackground3 = self.UserInput_fld_Background3.get(1.0,END)
+            #self.UserPromptBackground3 = self.UserInput_fld_Background3.get(1.0, END)
+            self.UserPromptBackground3 = self.FrameText["Background3"].toPlainText()
             self.UserPromptBackground31 = "Background 3: " + self.UserPromptBackground3
         except:
             print('Error Getting User prompt Background3')
 
         try:
-            self.UserPromptCrazy = self.UserInput_fld_Crazy.get(1.0,END)
-            self.UserPromptCrazy1 = "Crazy: " +self.UserPromptCrazy
-
-        except:
-            print('Error Getting User prompt Crazy')
-
-        try:
-            self.UserPromptversion = self.UserInput_fld_version.get(1.0,END)
-            self.UserPromptversion1 = "Version: " +self.UserPromptversion
+            # self.UserPromptCrazy = self.UserInput_fld_Crazy.get(1.0, END)
+            self.UserPromptCrazy = self.FrameText["Crazy"].toPlainText()
+            self.UserPromptCrazy1 = "Crazy: " + self.UserPromptCrazy
 
         except:
             print('Error Getting User prompt Crazy')
 
 
 
+        self.Full_User_Prompt2 = self.UserPromptSystem + self.UserPromptRole + self.UserPromptFormat + self.UserPromptTask + self.UserPromptBackground + self.UserPromptBackground2 + self.UserPromptBackground3
 
-
-
-
-
-
-        self.Full_User_Prompt2 = self.UserPromptSystem +self.UserPromptRole +self.UserPromptFormat +self.UserPromptTask + self.UserPromptBackground +self.UserPromptBackground2 +self.UserPromptBackground3
-
-
-
-
-        self.Full_User_Prompt = self.UserPromptSystem1 +self.UserPromptRole1 +self.UserPromptFormat1 +self.UserPromptTask1 + self.UserPromptBackground1 +self.UserPromptBackground21 +self.UserPromptBackground31
-
+        self.Full_User_Prompt = self.UserPromptSystem1 + self.UserPromptRole1 + self.UserPromptFormat1 + self.UserPromptTask1 + self.UserPromptBackground1 + self.UserPromptBackground21 + self.UserPromptBackground31
 
         self.CountCharacters = len(self.Full_User_Prompt2)
         self.CountWords = cu.WordCount(self.Full_User_Prompt2)
 
-
-
-
-    def  UpdatePrompts1(self, Mode = 44):
+    def UpdatePrompts1(self, Mode=44):
         d = 1
-        #TextEdit.GetPrompts(self)
-        TextEdit.UserResponse(self,Mode, self.UIversion)
-        #self.UserEdits = "8"
+        # TextEdit.GetPrompts(self)
+        self.WindowClose2 = True
+        CustomWindow11.UserResponse(self, Mode, UIversion=2)
+        # self.UserEdits = "8"
         return "44"
 
     def RestorePrompt_original(self, Mode=14):
 
-        TextEdit.UserResponse(self, Mode, self.UIversion)
+        CustomWindow11.UserResponse(self, Mode, UIversion=2)
 
         return "14"
 
+    def RestorePrompt(self, Mode=13):
 
-    def RestorePrompt (self, Mode = 13):
-
-
-        TextEdit.UserResponse(self,Mode, self.UIversion)
-
-
+        CustomWindow11.UserResponse(self, Mode, UIversion=2)
 
         return "13"
 
+    def OPTIMIZEPROMPT(self, Mode=2002):
 
-
-    def OPTIMIZEPROMPT (self, Mode = 2002):
-
-
-        TextEdit.UserResponse(self,Mode, self.UIversion)
-
-
+        CustomWindow11.UserResponse(self, Mode, UIversion=2)
 
         return "2002"
 
-    def ChangeVersion(self, Mode = 2000):
+    def ChangeVersion(self, Mode=2000):
 
-        TextEdit.UserResponse(self,Mode, self.UIversion)
-        self.version
+        CustomWindow11.UserResponse(self, Mode, UIversion=2)
+        # self.version
 
         return 2000
 
-    def Speak2(self, Mode =9 ):
+    def Speak2(self, Mode=9, Text= ''):
         try:
             try:
                 try:
-                    TextEdit.GetPrompts(self)
-                    Text = self.Full_User_Prompt
-                    t = threading.Thread(target= cu.speak, args=(Text,)).start()
-                    #threads.append(t)
+                    CustomWindow11.GetPrompts(self)
+                    self.Speak_Text = self.Full_User_Prompt
+                    CustomWindow11.UserResponse(self, Mode, UIversion=2)
+                    #t = threading.Thread(target=cu.speak, args=(Text,)).start()
+                    # threads.append(t)
                 except:
                     print("Error While trying to read outloud")
             except:
@@ -735,486 +1405,304 @@ class TextEdit():
         except:
             print("Error While trying to read outloud #3")
 
-
-
         self.UserEdits = "9"
         return "9"
-
 
     def UpdateUI(self):
 
         d = 1
-
-
-
-
-    def new_file(self):
-
-
-        self.text_widget.delete("1.0", tk.END)
-        self.current_file = None
-
-    def openNewWindow(self):
-
-        # Toplevel object which will
-        # be treated as a new window
-
-        self.txt_edit3 = tk.Text(self.window)
-        self.txt_edit3.grid(row=0, column=2, sticky="nsew")
-
-        newWindow = tk.Toplevel( self.window)
-
-        # sets the title of the
-        # Toplevel widget
-        newWindow.title("New Window")
-
-        # sets the geometry of toplevel
-        newWindow.geometry("200x200")
-
-        # A Label widget to show in toplevel
-        tk.Label(newWindow,
-              text="This is a new window").pack()
+    def closeWindow(self):
+        # Add your custom logic here, if needed
+        # For example, save any unsaved data or perform cleanup tasks
+        # Then close the window
+        self.close()
 
     def KeepRunning_Button(self):
-        self.window.quit
-    def open_file(self):
+        # self.window.quit
+        self.WindowClose = True
+        self.WindowClose2 = True
+        self.UserResponseProvided = True
+        self.UserResponseProvided2 = True
 
 
-        file_path = filedialog.askopenfilename(filetypes=[("Text files", "*.txt")])
-        if file_path:
-            with open(file_path, "r") as file:
-                self.text_widget.delete("1.0", tk.END)
-        self.text_widget.insert(tk.END, file.read())
-        self.current_file = file_path
 
-    def save_file(self):
+    def WindowSetUp(self,Type= "GPT", GPTResponse = '', UserEdits = '', System = '', Role= '', Task= '', Format= '', Background= '', Background2= '', Background3= '', Crazy= .5):
+
+        #self.GPTResponse = "Default text 1"
+        self.main_buttons1 = ["Continue", "Cancel", "ReGenerate", "ReGenerate with Edit", "ReWrite Edit" , "Review Prompts",	"SPEAK","ALL", "BIG", "MEDIUM", "SMALL"]
+        self.main_buttons2 = ["Continue", "Cancel", "<", ">", "SAVE ALL", "OG","SPEAK"]
 
 
-        if self.current_file:
-            with open(self.current_file, "w") as file:
-                file.write(self.text_widget.get("1.0", tk.END))
+        self.FrameButtons_User = ["<", ">", "OG", "Save", "Generate", "Regenerate", "Speak", "Speak Input"]
+        self.FrameButtons_GPT = ["<", ">", "OG", "Save", "Generate", "Regenerate with Edit", "Rewrite with User Edits", "Use User Text", "Speak", "Speak Input"]
+        self.FrameButtons2 = ["<", ">", "OG", "Save", "Speak", "Generate"]
+        self.FrameButtons2.append("Optimize Prompt")
+        CurrentTest = "Prompt Test1"
+
+        self.WindowInfo1 = "Test1"
+        self.WindowInfo2 = "Test2"
+
+
+        if Type== "GPT":
+            self.WindowName = "SHAINE"
+            self.WindowSize = "large"
+            self.internal_frame = [("GPT Response", GPTResponse, self.FrameButtons_GPT, [], "black"),("USER EDITS", UserEdits, self.FrameButtons_User, [], "lightgreen")]
+            self.window_type = self.WindowInfo1
+            self.main_buttons = self.main_buttons1
+            self.window_info = [
+            (self.WindowName,self.window_type , self.WindowSize,self.main_buttons,["ALL", "BIG", "MEDIUM", "SMALL"], self.internal_frame)]
+
         else:
-            self.save_file_as
+            self.WindowName = "PROMPTS REVIEW"
+            self.WindowSize = "large"
+            self.window_type = self.WindowInfo1
+            self.main_buttons = self.main_buttons2
+            self.internal_frame =[("System", System, self.FrameButtons2, [], "lightyellow"),
+                ("Role", Role, self.FrameButtons2, [], "lightpink"),
+                ("Format", Format,  self.FrameButtons2, [], "green"),
+                ("Task", Task, self.FrameButtons2, [], "lightgreen"),
+                ("Background", Background, self.FrameButtons2, [], "lightblue"),
+                ("Background2", Background2, self.FrameButtons2, [], "blue"),
+                ("Background3", Background3, self.FrameButtons2, [], "purple"),("Crazy", Crazy, self.FrameButtons2, [], "yellow")]
+            self.window_info = [(self.WindowName, self.window_type,self.WindowSize ,self.main_buttons,self.internal_frame)]
+
+        # Create a separate thread to run the GUI
+        #x = create_windows6(window_info=window_info)
+        #gui_thread = threading.Thread(target=create_windows6, args=(window_info,))
+        #gui_thread.start()
+
+        return self.window_info
+
+
+
+
+def create_windows6(window_info):
+    app = QApplication([])
+    windows = []
+
+    for info in window_info:
+        window = CustomWindow11(*info)
+        windows.append(window)
+
+
+
+
+    app.exec_()
+    f = FALSE
+    while(f ==False):
+        d = 100
+        f = window.getClose()
+
+
+
+
+
+#
+# import sys
+# import threading
+# from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QPushButton, QTextEdit, QCheckBox, QLabel, QHBoxLayout, QStatusBar, QMenuBar, QMenu, QAction, QLineEdit
+# from PyQt5.QtGui import QIcon
+# from PyQt5.QtCore import Qt, QUrl
+# from PyQt5.QtWebEngineWidgets import QWebEngineView
+# class WebBrowserWindow(CustomWindow11):
+#     def __init__(self, window_title, window_type, window_size, internal_frames):
+#         super().__init__(window_title, window_type, window_size, internal_frames)
+#         self.web_view = None  # Add this line to initialize the web_view attribute
+#
+#     def setup_ui(self, internal_frames):
+#         super().setup_ui(internal_frames)
+#
+#         # Create the URL bar
+#         self.url_bar = QLineEdit()
+#         self.url_bar.setPlaceholderText("Enter URL")
+#         self.url_bar.returnPressed.connect(self.load_url)
+#         self.statusBar.addPermanentWidget(self.url_bar)
+#
+#         # Create the web view frame
+#         self.web_view = QWebEngineView()
+#         self.web_view.load(QUrl("https://www.you.com"))
+#         self.setCentralWidget(self.web_view)
+#
+#
+#         # Create the back button
+#         back_button = QPushButton("Back")
+#         back_button.clicked.connect(self.web_view.back)
+#         self.statusBar.addPermanentWidget(back_button)
+#
+#         # Create the forward button
+#         forward_button = QPushButton("Forward")
+#         forward_button.clicked.connect(self.web_view.forward)
+#         self.statusBar.addPermanentWidget(forward_button)
+#
+#         # Create the refresh button
+#         refresh_button = QPushButton("Refresh")
+#         refresh_button.clicked.connect(self.web_view.reload)
+#         self.statusBar.addPermanentWidget(refresh_button)
+#
+#
+#
+#     def load_url(self):
+#         url = self.url_bar.text()
+#         if not url.startswith("http://") and not url.startswith("https://"):
+#             url = "http://" + url
+#         self.web_view.load(QUrl(url))
+#
+# # Function to create the web browser window
+# def create_web_browser_window():
+#     app = QApplication([])
+#     app.setAttribute(Qt.AA_ShareOpenGLContexts, True)
+#     web_browser_window = WebBrowserWindow("Web Browser", "Web Browser", "large", [])
+#     web_browser_window.show()
+#     app.exec_()
 
-    def save_file_as(self):
+# Create a separate thread to run the web browser window
 
 
-        file_path = filedialog.asksaveasfilename(defaultextension=".txt", filetypes=[("Text files", "*.txt")])
-        if file_path:
-            with open(file_path, "w") as file:
-                file.write(self.text_widget.get("1.0", tk.END))
-        self.current_file = file_path
 
-    def exit_editor(self):
-        if messagebox.askokcancel("Exit", "Do you want to exit?"):
-            try:
-                self.window.destroy()
-            except:
-                print("Error Trying to close window")
 
-    def cut_text(self):
-        selected_text = self.text_widget.get(tk.SEL_FIRST, tk.SEL_LAST)
-        self.text_widget.delete(tk.SEL_FIRST, tk.SEL_LAST)
-        self.window.clipboard_clear()
-        self.window.clipboard_append(selected_text)
 
-    def copy_text(self):
-        selected_text = self.text_widget.get(tk.SEL_FIRST, tk.SEL_LAST)
-        self.window.clipboard_clear()
-        self.window.clipboard_append(selected_text)
+#I need to be able to call the class specifically so this needs to be in the code, and I need to be able to pull values from the respective text fields.
 
-    def paste_text(self):
-        text_to_paste = self.window.clipboard_get()
-        self.text_widget.insert(tk.INSERT, text_to_paste)
 
 
+import sys
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QIcon, QPixmap
+from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QFrame
 
+class DynamicGUI(QMainWindow):
+    def __init__(self, window_title, window_type, window_size, main_buttons, main_checkboxes, internal_frames):
+        super().__init__()
+        self.setWindowTitle(window_title)
+        self.setWindowFlags(window_type | Qt.WindowTitleHint)
+        self.setStyleSheet("background-color: lightgray;")
+        self.resize(window_size[0], window_size[1])
 
+        self.internal_frame_widgets = {}
+        self.frame_data = {}
 
+        main_widget = QWidget()
+        main_layout = QVBoxLayout(main_widget)
+        main_layout.addWidget(QLabel("Main Buttons: " + ", ".join(main_buttons)))
+        main_layout.addWidget(QLabel("Main Checkboxes: " + ", ".join(main_checkboxes)))
 
+        # Add logo image
+        logo_label = QLabel()
+        logo_pixmap = QPixmap(r"A:\Amini Amor\SHAINE\Requests\Beta\Audio Transcript\Extracted images\2024-02-15\Shane Show\Best\1111.png")
+        logo_label.setPixmap(logo_pixmap)
+        main_layout.addWidget(logo_label)
 
-#Do the Same thing for the Characters, the summaries, the Scene by Scene Outline, The Scene Outline,
-#Have a loader program where you can point certain files to the query and it allows you to not have to copy and paste the story in, we can have it let us select the files we need for various parts of the story.
-    def MakeWindow3(self,Task,System, crazy,Text= "",UserConfirm = False, WindowName = "SHAINE", Text_Title = '', version = '', Model = ''):
-        self.UserConfirm = UserConfirm
-        self.UIversion = 2
-        self.System = System
+        for frame_config in internal_frames:
+            frame_widget = self.create_frame(frame_config)
+            main_layout.addWidget(frame_widget)
 
-        self.Task = Task
-        self.crazy = crazy
-        self.Text = System
-        self.version = version
+        continue_button = QPushButton("Continue")
+        continue_button.clicked.connect(self.close_window)
+        main_layout.addWidget(continue_button)
 
-        self.current_file = None
-        self.window = tk.Tk()
+        self.setCentralWidget(main_widget)
 
-        self.window.title(WindowName)
-        self.window.state('zoomed')
-        self.window.bind( '<KeyRelease>',  self.keyPress2 )
-        self.window.focus()
+    def create_frame(self, frame_config):
+        frame_title, frame_text, frame_buttons, frame_checkboxes, frame_color = frame_config
 
+        frame_widget = QFrame()
+        frame_widget.setStyleSheet(f"background-color: {frame_color};")
 
-        self.window.rowconfigure(0, minsize=35, weight=1)
-        self.window.rowconfigure(1, minsize=400, weight=1)
-        self.window.rowconfigure(2, minsize=10, weight=1)
-        self.window.rowconfigure(3, minsize=10, weight=1)
+        frame_layout = QVBoxLayout(frame_widget)
+        frame_layout.addWidget(QLabel(frame_title))
 
-        self.window.columnconfigure(1, minsize=400, weight=1)
+        if frame_text:
+            frame_layout.addWidget(QLabel(frame_text))
 
+        for button_text in frame_buttons:
+            button = QPushButton(button_text)
+            button.clicked.connect(lambda _, btn_text=button_text: self.update_status_bar(btn_text))
+            frame_layout.addWidget(button)
 
+        for checkbox in frame_checkboxes:
+            frame_layout.addWidget(QLabel(checkbox))
 
-        frm_buttons = tk.Frame(self.window)
-        #relief = tk.RAISED
+        self.internal_frame_widgets[frame_title] = frame_widget
+        self.frame_data[frame_title] = {"frame_title": frame_title,
+                                        "frame_text": frame_text,
+                                        "frame_buttons": frame_buttons,
+                                        "frame_checkboxes": frame_checkboxes,
+                                        "frame_color": frame_color}
 
-        self.window.columnconfigure(2,  weight=1)
-        self.window.columnconfigure(3,  weight=1)
-        #self.window.columnconfigure(4, minsize=444, weight=1)
-        # btn_Continue = tk.Button(frm_buttons, text="***Continue (No Changes)***", command=self.Continue_Button, highlightbackground='white', style="Custom.TLabel")
-        # btn_UpdatePrompts1 = tk.Button(frm_buttons, text="**Update GPT Prompts with User Input**", command=self.UpdatePrompts1, highlightbackground='yellow', highlightcolor = 'red',style="Custom.TLabel")
-        # btn_RestorePrompt = tk.Button(frm_buttons, text="Restore Prior Prompts",command=self.RestorePrompt, style="Custom.TLabel", highlightbackground= 'black',highlightcolor = 'cyan')
-        # btn_RestorePrompt_original = tk.Button(frm_buttons, text="Restore Prior Prompts", command=self.RestorePrompt_original, highlightbackground= 'black', highlightcolor = 'red',style="Custom.TLabel")
-        # btn_Speak2 = tk.Button(frm_buttons, text="Speak Prompt", command=self.Speak2, highlightbackground= 'red', highlightcolor = 'black',style="Custom.TLabel")
-        #
-        #
+        return frame_widget
 
+    def update_frame_data(self, frame_title, frame_title_new=None, frame_text=None, frame_buttons=None, frame_checkboxes=None, frame_color=None):
+        frame_data = self.frame_data.get(frame_title, {})
+        if frame_data:
+            if frame_title_new is not None:
+                frame_data["frame_title"] = frame_title_new
 
-        btn_Continue = tk.Button(frm_buttons, text="***Continue (No Changes)***", command=self.Continue_Button)
-        btn_UpdatePrompts1 = tk.Button(frm_buttons, text="**Update GPT Prompts with User Input**", command=self.UpdatePrompts1)
-        btn_RestorePrompt = tk.Button(frm_buttons, text="Restore Prior Prompts",command=self.RestorePrompt)
-        btn_RestorePrompt_original = tk.Button(frm_buttons, text="Restore Original Prompts", command=self.RestorePrompt_original)
-        btn_Speak2 = tk.Button(frm_buttons, text="Speak Prompt", command=self.Speak2)
-        btn_OPTIMIZEPrompt_original = tk.Button(frm_buttons, text="OPTIMIZE Prompt", command=self.OPTIMIZEPROMPT)
-        btn_ChangeVersion = tk.Button(frm_buttons, text="CHange SHAINE Version", command=self.ChangeVersion)
+            if frame_text is not None:
+                frame_data["frame_text"] = frame_text
 
-        btn_Continue.grid(row=0, column=0, sticky="ew", padx=5, pady=5)
-        btn_UpdatePrompts1.grid(row=0, column=1, sticky="ew", padx=5, pady=5)
-        btn_Speak2.grid(row=0, column=2, sticky="ew", padx=5, pady=5)
-        btn_RestorePrompt.grid(row=0, column=3, sticky="ew", padx=5)
-        btn_RestorePrompt_original.grid(row=0, column=4, sticky="ew", padx=5)
-        btn_OPTIMIZEPrompt_original.grid(row=0, column=5, sticky="ew", padx=5)
-        btn_ChangeVersion.grid(row=0, column=6, sticky="ew", padx=5)
+            if frame_buttons is not None:
+                frame_data["frame_buttons"] = frame_buttons
 
-        RoleTip = Hovertip(btn_Continue, 'Continue - Back to the Review UI (SHAINE)')
-        UpdatePrompts1Tip = Hovertip(btn_UpdatePrompts1, 'USER Manually inputs the Chat GPT Prompts')
-        SpeakTip = Hovertip(btn_Speak2, 'Click Here to Here Text to Speech/AudioBook Preview')
-        RestorePromptTip = Hovertip(btn_RestorePrompt, 'Click Here to Restore the Prompts to their original State')
-        RestorePrompt_originalTip = Hovertip(btn_RestorePrompt_original, 'Click Here to Restore the Prompts to their original State')
+            if frame_checkboxes is not None:
+                frame_data["frame_checkboxes"] = frame_checkboxes
 
-        # self.UserInput_fld_SYSTEM = tk.Entry(self.window)
-        # self.UserInput_fld_SYSTEM.pack(side='left')
-        # self.UserInput_fld_SYSTEM.grid(row=0, column=0, sticky="nsew")
-        #
+            if frame_color is not None:
+                frame_data["frame_color"] = frame_color
 
+            self.frame_data[frame_title] = frame_data
 
-        print(self.Text)
-        self.UserInput_fld_SYSTEM = tk.Text(self.window, wrap=WORD)
-        self.UserInput_fld_SYSTEM.insert(tk.END, self.System)
+    def get_frame_data(self, frame_title):
+        return self.frame_data.get(frame_title, {})
 
-        self.UserInput_fld_SYSTEM.grid(column=0, row=1, sticky="nsew")
-        SystemTip = Hovertip(self.UserInput_fld_SYSTEM, 'System Prompt')
+    def update_status_bar(self, button_text):
+        status_bar = QLabel(f"Button '{button_text}' Pressed")
+        self.statusBar().addWidget(status_bar)
 
+    def close_window(self):
+        self.close()
 
 
+class Worker(QThread):
+    def __init__(self, window_title, window_type, window_size, main_buttons, main_checkboxes, internal_frames):
+        super().__init__()
+        self.window_title = window_title
+        self.window_type = window_type
+        self.window_size = window_size
+        self.main_buttons = main_buttons
+        self.main_checkboxes = main_checkboxes
+        self.internal_frames = internal_frames
+        self.dynamic_gui = None
 
+    def run(self):
+        app = QApplication(sys.argv)
+        app.setWindowIcon(QIcon(r"A:\Amini Amor\SHAINE\Requests\Beta\Audio Transcript\Extracted images\2024-02-15\Shane Show\Best\re should only be one person in your picture incorporate a train in your drawing.png"))
+        self.dynamic_gui = DynamicGUI(self.window_title, self.window_type, self.window_size, self.main_buttons, self.main_checkboxes, self.internal_frames)
+        self.dynamic_gui.show()
+        sys.exit(app.exec_())
 
-        self.UserInput_fld_TASK = tk.Text(self.window, wrap=WORD,)
-        self.UserInput_fld_TASK.insert(tk.END, self.Task)
-        self.UserInput_fld_TASK.grid(column=1, row=1, sticky="nsew")
-        TaskTip = Hovertip(self.UserInput_fld_TASK, 'Task Prompt')
+    def update_frame_data(self, frame_title, frame_title_new=None, frame_text=None, frame_buttons=None, frame_checkboxes=None, frame_color=None):
+        if self.dynamic_gui:
+            self.dynamic_gui.update_frame_data(frame_title, frame_title_new, frame_text, frame_buttons, frame_checkboxes, frame_color)
 
+    def get_frame_data(self, frame_title):
+        if self.dynamic_gui:
+            return self.dynamic_gui.get_frame_data(frame_title)
 
-        self.UserInput_fld_version = tk.Text(self.window, wrap=WORD,)
-        self.UserInput_fld_version.insert(tk.END, self.version)
-        self.UserInput_fld_version.grid(column=0,columnspan=1, row=2, sticky="nsew")
-        verzTip = Hovertip(self.UserInput_fld_version, 'Version Option, The original is Version 1 where it has smaller System message and a few User inputs, Version 2 is new and it puts background info and details into System and just has 1 prompt for USER which is the task')
+    def close_window(self):
+        if self.dynamic_gui:
+            self.dynamic_gui.close()
 
 
+if __name__ == "__main__":
+    window_title = "Dynamic GUI"
+    window_type = Qt.Window
+    window_size = (600, 400)
+    main_buttons = ["Button 1", "Button 2", "Continue"]
+    main_checkboxes = ["Checkbox 1", "Checkbox 2"]
+    internal_frames = [
+        ("Internal Frame 1", "Some text for Frame 1", ["Frame 1 Button 1", "Frame 1 Button 2"], ["Frame 1 Checkbox 1", "Frame 1 Checkbox 2"], "lightblue"),
+        ("Internal Frame 2", "Some text for Frame 2", ["Frame 2 Button 1", "Frame 2 Button 2"], ["Frame 2 Checkbox 1", "Frame 2 Checkbox 2"], "lightgreen")
+    ]
 
-        self.UserInput_fld_Crazy = tk.Text(self.window, wrap=WORD,)
-        self.UserInput_fld_Crazy.insert(tk.END, self.crazy)
-        self.UserInput_fld_Crazy.grid(column=1,columnspan=1, row=2, sticky="nsew")
-        CrazyTip = Hovertip(self.UserInput_fld_Crazy, 'Crazy/Temperature Prompt - Lower number means responses are less creative and more rigid, Too High of a number and it starts to make less sense')
-
-
-
-
-        TextEdit.GetPrompts(self)
-
-
-        self.WordCountField = tk.Text(self.window, wrap=WORD, )
-        self.WordCountField.insert(tk.END, "WORD COUNT: " + str(self.CountWords))
-        self.WordCountField.grid( row=3, sticky="nsew")
-        CrazyTip = Hovertip(self.WordCountField,
-                            'WORD COUNT, KEEP AN EYE ON THIS, IF RESULTS ARE WONKY TRY TO GET THIS NUMBER DOWN. ALSO IF ITS TOO LOW, YOU PROBABLY NEED TO ADD MORE INFO TO MAKE THE TOOL WORK PROPER')
-
-        frm_buttons.grid(row=0, column=0, sticky="ns")
-
-        self.window.state('zoomed')
-
-        menu_bar = tk.Menu(self.window)
-
-        # File menu
-        file_menu = tk.Menu(menu_bar, tearoff=0)
-        file_menu.add_command(label="New", command=self.new_file)
-        file_menu.add_command(label="Open", command=self.open_file)
-        file_menu.add_command(label="Save", command=self.save_file)
-        file_menu.add_command(label="Save As", command=self.save_file_as)
-        file_menu.add_separator()
-        file_menu.add_command(label="Exit", command=self.exit_editor)
-        menu_bar.add_cascade(label="File", menu=file_menu)
-
-        # Edit menu
-        # Add more options to the menu as needed
-        edit_menu = tk.Menu(menu_bar, tearoff=0)
-        edit_menu.add_command(label="Cut", command=self.cut_text, accelerator="Ctrl+X")
-        edit_menu.add_command(label="Copy", command=self.copy_text, accelerator="Ctrl+C")
-        edit_menu.add_command(label="Paste", command=self.paste_text, accelerator="Ctrl+V")
-        menu_bar.add_cascade(label="Edit", menu=edit_menu)
-        # Help menu
-        # Add more options to the menu as needed
-
-        self.window.config(menu=menu_bar)
-        self.text_widget = tk.Text(self.window)
-
-        while self.UserResponseProvided == False:
-            # TextEdit.GetPrompts(self)
-            self.window.mainloop()
-            # time.sleep(1)
-
-    def MakeWindow2(self, System, Role, Format, Task, Background, Background2, Background3, crazy, Text="",
-                    UserConfirm=False, WindowName="SHAINE", Text_Title='',version = 2 , Model = ''):
-        self.UserConfirm = UserConfirm
-        self.UIversion = 2
-        self.Role = Role
-        self.System = System
-        self.Format = Format
-        self.Task = Task
-        self.Background = Background
-        self.Background2 = Background2
-        self.Background3 = Background3
-        self.crazy = crazy
-        self.Text = Text
-        self.current_file = None
-        self.window = tk.Tk()
-
-        self.window.title(WindowName)
-        self.window.state('zoomed')
-        self.window.bind('<KeyRelease>', self.keyPress2)
-        self.window.focus()
-
-        self.window.rowconfigure(0, minsize=35, weight=1)
-        self.window.rowconfigure(1, minsize=400, weight=1)
-        self.window.rowconfigure(2, minsize=400, weight=1)
-        self.window.rowconfigure(3, minsize=10, weight=5)
-        self.window.columnconfigure(1, minsize=400, weight=1)
-
-
-        frm_buttons = tk.Frame(self.window)
-        # relief = tk.RAISED
-
-        self.window.columnconfigure(2, weight=1)
-        self.window.columnconfigure(3, weight=1)
-        # self.window.columnconfigure(4, minsize=444, weight=1)
-        # btn_Continue = tk.Button(frm_buttons, text="***Continue (No Changes)***", command=self.Continue_Button, highlightbackground='white', style="Custom.TLabel")
-        # btn_UpdatePrompts1 = tk.Button(frm_buttons, text="**Update GPT Prompts with User Input**", command=self.UpdatePrompts1, highlightbackground='yellow', highlightcolor = 'red',style="Custom.TLabel")
-        # btn_RestorePrompt = tk.Button(frm_buttons, text="Restore Prior Prompts",command=self.RestorePrompt, style="Custom.TLabel", highlightbackground= 'black',highlightcolor = 'cyan')
-        # btn_RestorePrompt_original = tk.Button(frm_buttons, text="Restore Prior Prompts", command=self.RestorePrompt_original, highlightbackground= 'black', highlightcolor = 'red',style="Custom.TLabel")
-        # btn_Speak2 = tk.Button(frm_buttons, text="Speak Prompt", command=self.Speak2, highlightbackground= 'red', highlightcolor = 'black',style="Custom.TLabel")
-        #
-        #
-
-        btn_Continue = tk.Button(frm_buttons, text="***Continue (No Changes)***", command=self.Continue_Button)
-        btn_UpdatePrompts1 = tk.Button(frm_buttons, text="**Update GPT Prompts with User Input**",
-                                       command=self.UpdatePrompts1)
-        btn_RestorePrompt = tk.Button(frm_buttons, text="Restore Prior Prompts", command=self.RestorePrompt)
-        btn_RestorePrompt_original = tk.Button(frm_buttons, text="Restore Original Prompts",
-                                               command=self.RestorePrompt_original)
-        btn_Speak2 = tk.Button(frm_buttons, text="Speak Prompt", command=self.Speak2)
-
-        btn_OPTIMIZEPrompt_original = tk.Button(frm_buttons, text="OPTIMIZE Prompt", command=self.OPTIMIZEPROMPT)
-        btn_ChangeVersion = tk.Button(frm_buttons, text="CHange SHAINE Version", command=self.ChangeVersion)
-        btn_OPTIMIZEPrompt_original.grid(row=0, column=5, sticky="ew", padx=5)
-        btn_ChangeVersion.grid(row=0, column=6, sticky="ew", padx=5)
-
-
-        btn_Continue.grid(row=0, column=0, sticky="ew", padx=5, pady=5)
-        btn_UpdatePrompts1.grid(row=0, column=1, sticky="ew", padx=5, pady=5)
-        btn_Speak2.grid(row=0, column=2, sticky="ew", padx=5, pady=5)
-        btn_RestorePrompt.grid(row=0, column=3, sticky="ew", padx=5)
-        btn_RestorePrompt_original.grid(row=0, column=4, sticky="ew", padx=5)
-
-        RoleTip = Hovertip(btn_Continue, 'Continue - Back to the Review UI (SHAINE)')
-        UpdatePrompts1Tip = Hovertip(btn_UpdatePrompts1, 'USER Manually inputs the Chat GPT Prompts')
-        SpeakTip = Hovertip(btn_Speak2, 'Click Here to Here Text to Speech/AudioBook Preview')
-        RestorePromptTip = Hovertip(btn_RestorePrompt, 'Click Here to Restore the Prompts to their original State')
-        RestorePrompt_originalTip = Hovertip(btn_RestorePrompt_original,
-                                             'Click Here to Restore the Prompts to their original State')
-
-        # self.UserInput_fld_SYSTEM = tk.Entry(self.window)
-        # self.UserInput_fld_SYSTEM.pack(side='left')
-        # self.UserInput_fld_SYSTEM.grid(row=0, column=0, sticky="nsew")
-        #
-
-        print(self.Text)
-        self.UserInput_fld_SYSTEM = tk.Text(self.window, wrap=WORD)
-        self.UserInput_fld_SYSTEM.insert(tk.END, self.System)
-
-        self.UserInput_fld_SYSTEM.grid(column=0, row=1, sticky="nsew")
-        SystemTip = Hovertip(self.UserInput_fld_SYSTEM, 'System Prompt')
-
-        x = self.UserInput_fld_SYSTEM.get(1.0, END)
-        print('Get Value:')
-        print(x)
-
-        self.UserInput_fld_ROLE = tk.Text(self.window, wrap=WORD, )
-        self.UserInput_fld_ROLE.insert(tk.END, self.Role)
-        self.UserInput_fld_ROLE.grid(column=0, row=2, sticky="nsew")
-        RoleTip = Hovertip(self.UserInput_fld_ROLE, 'Role Prompt')
-
-        self.UserInput_fld_FORMAT = tk.Text(self.window, wrap=WORD, )
-        self.UserInput_fld_FORMAT.insert(tk.END, self.Format)
-        self.UserInput_fld_FORMAT.grid(column=1, row=1, sticky="nsew")
-
-        FormatTip = Hovertip(self.UserInput_fld_FORMAT, 'Format Prompt')
-
-        self.UserInput_fld_TASK = tk.Text(self.window, wrap=WORD, )
-        self.UserInput_fld_TASK.insert(tk.END, self.Task)
-        self.UserInput_fld_TASK.grid(column=3, row=2, sticky="nsew")
-        TaskTip = Hovertip(self.UserInput_fld_TASK, 'Task Prompt')
-
-        self.UserInput_fld_Background = tk.Text(self.window, wrap=WORD, )
-        self.UserInput_fld_Background.insert(tk.END, self.Background)
-        self.UserInput_fld_Background.grid(column=2, row=1, sticky="nsew")
-        BTip = Hovertip(self.UserInput_fld_Background, 'Background Prompt')
-
-        self.UserInput_fld_Background2 = tk.Text(self.window, wrap=WORD, )
-        self.UserInput_fld_Background2.insert(tk.END, self.Background2)
-        self.UserInput_fld_Background2.grid(column=1, row=2, sticky="nsew")
-        B2Tip = Hovertip(self.UserInput_fld_Background2,
-                         'Background Prompt 2 - Not ideal to have too long of prompts, but sometimes doing it this way makes it much simpler. ')
-
-        self.UserInput_fld_Background3 = tk.Text(self.window, wrap=WORD, )
-        self.UserInput_fld_Background3.insert(tk.END, self.Background3)
-        self.UserInput_fld_Background3.grid(column=2, row=2, sticky="nsew")
-        B3Tip = Hovertip(self.UserInput_fld_Background3,
-                         'Background Prompt 3 - Not ideal to have too long of prompts, but sometimes doing it this way makes it much simpler. ')
-
-        self.UserInput_fld_Crazy = tk.Text(self.window, wrap=WORD, )
-        self.UserInput_fld_Crazy.insert(tk.END, self.crazy)
-        self.UserInput_fld_Crazy.grid(column=3, row=3, sticky="nsew")
-        CrazyTip = Hovertip(self.UserInput_fld_Crazy,
-                            'Crazy/Temperature Prompt - Lower number means responses are less creative and more rigid, Too High of a number and it starts to make less sense')
-
-        TextEdit.GetPrompts(self)
-
-        self.WordCountField = tk.Text(self.window, wrap=WORD, )
-        self.WordCountField.insert(tk.END, "WORD COUNT: " + str(self.CountWords))
-        self.WordCountField.grid( row=3, sticky="nsew")
-        CrazyTip = Hovertip(self.WordCountField,
-                            'WORD COUNT, KEEP AN EYE ON THIS, IF RESULTS ARE WONKY TRY TO GET THIS NUMBER DOWN. ALSO IF ITS TOO LOW, YOU PROBABLY NEED TO ADD MORE INFO TO MAKE THE TOOL WORK PROPER')
-
-    #
-    #
-    # self.CharCountField = tk.Text(self.window, wrap=WORD, )
-    # self.CharCountField.insert(tk.END, "CHARACTER COUNT: " + str(self.CountCharacters))
-    # self.CharCountField.grid(column=3, row=0, sticky="nsew")
-    # CrazyTip = Hovertip(self.UserInput_fld_Crazy,'WORD COUNT, KEEP AN EYE ON THIS, IF RESULTS ARE WONKY TRY TO GET THIS NUMBER DOWN. ALSO IF ITS TOO LOW, YOU PROBABLY NEED TO ADD MORE INFO TO MAKE THE TOOL WORK PROPER')
-    #
-    #
-
-
-
-    #
-
-
-
-    #
-
-    # # Create a scrollbar
-    #scroll_bar = tk.Scrollbar(self.UserInput_fld_SYSTEM)
-    # scroll_bar = tk.Scrollbar(self.UserInput_fld_FORMAT)
-    # scroll_bar = tk.Scrollbar(self.UserInput_fld_Crazy)
-    # scroll_bar = tk.Scrollbar(self.UserInput_fld_Background)
-    # scroll_bar = tk.Scrollbar(self.UserInput_fld_Background2)
-    # scroll_bar = tk.Scrollbar(self.UserInput_fld_Background3)
-    # scroll_bar = tk.Scrollbar(self.UserInput_fld_Crazy)
-
-
-
-
-
-
-
-        frm_buttons.grid(row=0, column=0, sticky="ns")
-
-        self.window.state('zoomed')
-
-
-
-        menu_bar = tk.Menu(self.window)
-
-        # File menu
-        file_menu = tk.Menu(menu_bar, tearoff=0)
-        file_menu.add_command(label="New", command=self.new_file)
-        file_menu.add_command(label="Open", command=self.open_file)
-        file_menu.add_command(label="Save", command=self.save_file)
-        file_menu.add_command(label="Save As", command=self.save_file_as)
-        file_menu.add_separator()
-        file_menu.add_command(label="Exit", command=self.exit_editor)
-        menu_bar.add_cascade(label="File", menu=file_menu)
-
-
-
-
-        # Edit menu
-        # Add more options to the menu as needed
-        edit_menu = tk.Menu(menu_bar, tearoff=0)
-        edit_menu.add_command(label="Cut", command=self.cut_text, accelerator="Ctrl+X")
-        edit_menu.add_command(label="Copy", command=self.copy_text, accelerator="Ctrl+C")
-        edit_menu.add_command(label="Paste", command=self.paste_text, accelerator="Ctrl+V")
-        menu_bar.add_cascade(label="Edit", menu=edit_menu)
-         # Help menu
-        # Add more options to the menu as needed
-
-        self.window.config(menu=menu_bar)
-        self.text_widget = tk.Text(self.window)
-
-
-
-        while self.UserResponseProvided ==False:
-            #TextEdit.GetPrompts(self)
-            self.window.mainloop()
-            #time.sleep(1)
-
-
-
-
-    #        self.window.pack()
-
-    # self.UserInput_fld_ROLE = tk.Entry(self.window)
-    # self.UserInput_fld_ROLE.pack()
-    # self.UserInput_fld_ROLE.grid(row=1, column=2, sticky="nsew")
-    #
-    # self.UserInput_fld_FORMAT = tk.Entry(self.window)
-    # self.UserInput_fld_FORMAT.pack()
-    # self.UserInput_fld_FORMAT.grid(row=1, column=1, sticky="nsew")
-    #
-    # self.UserInput_fld_TASK = tk.Entry(self.window)
-    # self.UserInput_fld_TASK.pack(side='right')
-    # self.UserInput_fld_TASK.grid(row=2, column=0, sticky="nsew")
-    #
-    # self.UserInput_fld_Background = tk.Entry(self.window)
-    # self.UserInput_fld_Background.pack()
-    # self.UserInput_fld_Background.grid(row=2, column=3, sticky="nsew")
-    #
-    # self.UserInput_fld_Background2 = tk.Entry(self.window)
-    # self.UserInput_fld_Background2.pack()
-    # self.UserInput_fld_Background2.grid(row=3, column=2, sticky="nsew")
-    #
-    # self.UserInput_fld_Background3 = tk.Entry(self.window)
-    # self.UserInput_fld_Background3.pack()
-    # self.UserInput_fld_Background3.grid(row=3, column=1, sticky="nsew")
-    #
-    # self.UserInput_fld_Crazy = tk.Entry(self.window)
-    #
-    # self.UserInput_fld_Crazy.grid(row=3, column=1, sticky="nsew")
+    worker = Worker(window_title, window_type, window_size, main_buttons, main_checkboxes, internal_frames)
+    worker.start()

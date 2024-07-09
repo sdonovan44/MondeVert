@@ -15,9 +15,6 @@ from threading import Event
 from gingerit.gingerit import GingerIt
 import numpy
 import time
-import matplotlib
-matplotlib.use('Qt5Agg')
-matplotlib.rcParams['backend'] = 'QT4Agg'
 import re
 #from MondeVert_IP.SHAINE_MonderVert.Testing_Files import AWS_Speech_Test  as AWS
 # from exceptions import PendingDeprecationWarning
@@ -40,7 +37,7 @@ import threading
 import shutil
 import os
 import MondeVert_IP.SHAINE_MonderVert.SHAINE_WIZARD_PROMPTS.StoryOutlines  as ShaneOriginals
-from MondeVert_IP.SHAINE_MonderVert.Utilities import TextEdit_Backup as TEB ,TextEdit as TextEdit, GUI as GUI
+from MondeVert_IP.SHAINE_MonderVert.Utilities import TextEdit as TextEdit
 
 from multiprocessing import Process
 from PyQt5.QtWidgets import QMainWindow, QApplication, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QWidget, QStatusBar, QTextEdit, QCheckBox,QGridLayout
@@ -50,8 +47,6 @@ from PyQt5.QtCore import QThread
 
 from PyQt5.QtCore import QThread
 from PyQt5.QtWidgets import QApplication
-#import gc
-
 
 
 
@@ -87,14 +82,14 @@ class GPT_Mode():
         self.UserConfirm = ''
         self.CurrentWindowName = ''
 
-    def Basic_GPT_Query(self,   Line2_Role  , Line3_Format ,Line4_Task ,Full_Transcript= '',FULL_Story = '',UserPrompts = '',UserPromptsCount = '',Big = False ,Background = '' ,Background2 = '', Background3 = '' ,Model = "gpt-3.5-turbo" ,upgradeLimit = 3000 ,Special = '' ,Line1_System_Rule = SP.System, crazy = .5, Subject= '', Outline = '', Allowed_Fails = 8, SaveFile = False ,MakeArt = False, Mode = 'SHAINE SAYS', SavePath= up.AI_AudioBook_Path, FileName= 'MONDEVERT PRESENTS - A No Named Story', User_Confirm = False, WINDOWNAME = "GPT Mode - ", ReviewPrompts = False,  version = 1, Retry= True,UserMode='UI', CurrentTime= "", Test = False)  :  # use this to create art style for the work
-        #Test = True
+    def Basic_GPT_Query(self,   Line2_Role  , Line3_Format ,Line4_Task ,Full_Transcript= '',FULL_Story = '',UserPrompts = '',UserPromptsCount = '',Big = False ,Background = '' ,Background2 = '', Background3 = '' ,Model = "gpt-3.5-turbo" ,upgradeLimit = 3000 ,Special = '' ,Line1_System_Rule = SP.System, crazy = .5, Subject= '', Outline = '', Allowed_Fails = 8, SaveFile = False ,MakeArt = False, Mode = 'SHAINE SAYS', SavePath= up.AI_AudioBook_Path, FileName= 'MONDEVERT PRESENTS - A No Named Story', User_Confirm = False, WINDOWNAME = "SHAINE Basic - ", ReviewPrompts = False,  version = 1, Retry= True,UserMode='UI', CurrentTime= "", Test = False)  :  # use this to create art style for the work
+        Test = True
 
         self.UserPrompts = UserPrompts
         self.Full_Transcript = Full_Transcript
         self.Full_Story = FULL_Story
         self.UserPromptsCount = UserPromptsCount
-        self.WINDOWNAME = WINDOWNAME
+
         self.PermanentSetPrompt = False
         ReviewPrompts_Original = ReviewPrompts
         self.UserMode = UserMode
@@ -245,7 +240,7 @@ class GPT_Mode():
 
                 else:
                     self.Full_Story += "Final Text used for Response: " + up.LineBreak + self.Current_GPTResponse + up.LineBreak + up.breakupOutput2
-                    print("Used the following Text  for Response: " +  up.LineBreak + self.Current_GPTResponse)
+                    print("Used the following Text  for Response: " + + up.LineBreak + self.Current_GPTResponse)
                     KeepGoing = True
 
 
@@ -271,11 +266,11 @@ class GPT_Mode():
                         self.Last_GPTResult = self.Current_GPTResponse
                         self.Current_GPTResponse = GPT_Mode.Basic_GPT_Query(self, Line2_Role='You are a skilled writer',
                                                              Line3_Format=Line3_Format, Line4_Task=Line4_Task,
-                                                             Line1_System_Rule=StoryMode.system_TextJoaT_quick, Retry=False,
+                                                             Line1_System_Rule=self.systemPrompt, Retry=False,
                                                              Allowed_Fails=3, WINDOWNAME="FAILED SEVERAL TIMES, NEEDS HELP OR WILL FAIL" +  WINDOWNAME)
                         self.GPT_Responses.append(self.Current_GPTResponse)
 
-                    #continue
+                    continue
 
             # print(up.breakupOutput)
 
@@ -314,15 +309,7 @@ class GPT_Mode():
                 shutil.copyfile(originalFilepath, PicNewPath)
         except:
             print("Could not move art to new folder")
-        #gc.collect()
-        # try:
-        #     del self.TE
-        # except:
-        #     d = 100
-        # try:
-        #     del self.TE2
-        # except:
-        #     d = 100
+
         return self.Current_GPTResponse
 
 
@@ -383,22 +370,16 @@ class GPT_Mode():
         KeepGoing = False
         FirstResponse = True
         WindowOpen = False
-        #gc.collect()
-        #self.TE2 = TextEdit.CustomWindow11()
-        #self.TE2 = TEB.TextEdit()
-
-        try:
-            self.TE2.destroy()
-            del self.TE2
-        except:
-            print("Already Destroyed? - Test Prior")
-        self.TE2 = GUI.GUIWindow()
-
-        WindowInfo = GPT_Mode.WindowSetUp(self, Type="Prompt",
-                                          GPTResponse=self.Current_GPTResponse)
-
-        self.TE2.CreateWindow(self.WindowName, self.WindowSize, self.main_buttons, self.main_checkboxes,
-                             self.internal_frame)
+        #self.TE = TextEdit.TextEdit(UserConfirm=True)
+        # query = self.TE2.MakeWindow2(Text=self.Full_User_Prompt, UserConfirm=True,
+        #                              WindowName=self.CurrentWindowName + str(
+        #                                  TryCount) + "GPT Prompt Reviewer - V1", System=self.CurrentSystem,
+        #                              Role=self.CurrentRole, Format=self.CurrentFormat, Task=self.CurrentTask,
+        #                              Background=self.CurrentBackground, Background2=self.CurrentBackground2,
+        #                              Background3=self.CurrentBackground3, crazy=self.Current_crazy,
+        #                              version=self.Currentversion, Model=self.CurrentModel)
+        # t = threading.Thread(target=self.TE.MakeWindow2, args=(self.CurrentSystem, self.CurrentRole,self.CurrentFormat,self.CurrentTask,self.CurrentBackground,self.CurrentBackground2,self.CurrentBackground3,self.Current_crazy,self.Currentversion,self.CurrentModel, True, self.CurrentWindowName + "Confirm Prompts"))
+        # t.start()
 
         while KeepGoing == False:
 
@@ -423,48 +404,30 @@ class GPT_Mode():
                                                    self.CurrentModel)
 
                         elif WindowOpen == False:
-                            # try:
-                            #     t.join()
-                            # except:
-                            #     dn = 100
+                            try:
+                                t.join()
+                            except:
+                                dn = 100
                             UserResponseProvided = False
 
-                            try:
-                                self.TE2.destroy()
-                                del self.TE2
-                            except:
-                                print("Already Destroyed?")
-                            self.TE2 = GUI.GUIWindow()
+                            self.TE2 = TextEdit.CustomWindow11()
+                            WindowInfo = GPT_Mode.WindowSetUp(Type="Prompts", System=self.CurrentSystem,Role= self.CurrentRole,Format= self.CurrentFormat, Task=self.CurrentTask,
+                            Background=self.CurrentBackground, Background2=self.CurrentBackground2, Background3=self.CurrentBackground3, Crazy=self.Current_crazy)
 
-                            WindowInfo = GPT_Mode.WindowSetUp(self, Type="Prompt",
-                                                              GPTResponse=self.Current_GPTResponse)
-
-                            self.TE2.CreateWindow(self.WindowName, self.WindowSize, self.main_buttons,
-                                                 self.main_checkboxes,
-                                                 self.internal_frame)
-
-
-                            #self.TE2 = TextEdit.CustomWindow11()
-                            #WindowInfo = GPT_Mode.WindowSetUp(self,Type="Prompts", System=self.CurrentSystem,Role= self.CurrentRole,Format= self.CurrentFormat, Task=self.CurrentTask,
-                            #Background=self.CurrentBackground, Background2=self.CurrentBackground2, Background3=self.CurrentBackground3, Crazy=self.Current_crazy)
-                            #self.TE2.MakeWindow2(WindowName=self.WindowName, System=self.CurrentSystem,Role=self.CurrentRole,Task=self.CurrentTask,Format=self.CurrentFormat,Background=self.CurrentBackground,Background2=self.CurrentBackground2,Background3=self.CurrentBackground3,crazy=self.Current_crazy, version=self.Currentversion, Model=self.CurrentModel)
-                            #self.TE2.MakeWindow2(self.WindowName, self.window_type, self.WindowSize, self.main_buttons, self.main_checkboxes, self.internal_frame)
-
-
-
-                            # t = threading.Thread(target=self.TE2.CreateWindow, args=(
-                            # self.WindowName, self.window_type, self.WindowSize, self.main_buttons, self.main_checkboxes,
-                            # self.internal_frame))
+                            t = threading.Thread(target=self.TE2.CreateWindow, args=(
+                            self.WindowName, self.window_type, self.WindowSize, self.main_buttons, self.main_checkboxes,
+                            self.internal_frame))
+                            t.start()
+                            # t = threading.Thread(target=self.TE2.MakeWindow, args=( self.WindowName, self.window_type, self.WindowSize, self.main_buttons,self.main_checkboxes,self.internal_frame))
                             # t.start()
 
 
-
-
+                        #UserResponseProvided = False
 
 
                         while UserResponseProvided ==False :
                                         UserResponseProvided = self.TE2.GetUserResponseProvided()
-                                        #WindowOpen = True
+                                        WindowOpen = True
 
 
 
@@ -473,7 +436,22 @@ class GPT_Mode():
                 else:
 
                     print ("Error, not running other version yet")
-
+                    # self.NewSystem = cu.Version2GPTSetUp(Format=self.CurrentFormat, System=self.CurrentSystem,
+                    #                                      Role=self.CurrentRole,
+                    #                                      Background=self.CurrentBackground,
+                    #                                      Background3=self.CurrentBackground3,
+                    #                                      Background2=self.CurrentBackground2)
+                    #
+                    # self.Full_User_Prompt = """User Inputs to Chat GPT:
+                    #                         System: """ + self.NewSystem + """
+                    #                         USER: """ + self.CurrentTask
+                    #
+                    # self.TE3 = TextEdit.TextEdit(UserConfirm=True)
+                    # query = self.TE3.MakeWindow3(Text=self.Full_User_Prompt, UserConfirm=True,
+                    #                             WindowName=self.CurrentWindowName + 'Try: ' + str(
+                    #                                 TryCount) + " - GPT Prompt Reviewer - V2 ",
+                    #                             System=self.NewSystem, Task=self.CurrentTask, crazy=self.Current_crazy,
+                    #                             version=self.Currentversion, Model=self.CurrentModel)
 
                 UserMode2 = -1
                 UserMode2 = self.TE2.GetUserResponseMode()
@@ -491,7 +469,7 @@ class GPT_Mode():
                 if UserMode2 == 0:
                     KeepGoing = True
                     ReviewPrompts = False
-                    #t.join()
+                    t.join()
 
 
 
@@ -502,7 +480,7 @@ class GPT_Mode():
                     if UserMode2 == 44:
                         KeepGoing = True
                         WindowOpen = False
-                        #t.join()
+                        t.join()
 
                     ReviewPrompts = False
 
@@ -764,7 +742,7 @@ class GPT_Mode():
                     print(self.promptB)
 
                 elif UserMode2 == 2000:
-                    self.Currentversion = self.TE2.Get_version()
+                    self.Currentversion = self.TE.Get_version()
                     if self.Currentversion == 1:
                         self.LastVersion = self.Currentversion
                         self.Currentversion = 2
@@ -812,10 +790,10 @@ class GPT_Mode():
                         except:
                             print("error 23234352")
                         # t = threading.Thread(target=cu.speak, args=(SPEAKTEXT,)).start()
-                        # t1 = Process(target=cu.speak, args=(SPEAKTEXT,))
-                        # t1.start()
-                        # t1.join()
-                        # t1.terminate()
+                        t1 = Process(target=cu.speak, args=(SPEAKTEXT,))
+                        t1.start()
+                        t1.join()
+                        t1.terminate()
                     except:
 
                         print("Error with Resetting to Original GPT Response Process")
@@ -920,11 +898,6 @@ class GPT_Mode():
             except:
                     d = 10
 
-        try:
-            self.TE2.destroy()
-            del self.TE2
-        except:
-            print("Already Destroyed? - Final Attempt")
         #t.join()
     def GPT_UserInput_Confirm_Tool(self, GPT_Response, System, Role, Format, Task, Background, Background2, Background3,
                                    crazy=.5, UserConfirm=True, WINDOWNAME="USER CONFIRM CHAT GPT RESULTS", TryCount=0,
@@ -938,42 +911,64 @@ class GPT_Mode():
             TryCount += 1
             WindowNAME1 ="USER CONFIRM CHAT GPT RESULTS " + self.CurrentWindowName + ' ' + str(
                                            TryCount) + ' '
+            # self.TE = TextEdit.TextEdit(UserConfirm=True)
+            # # query = self.TE.MakeWindow(Text=self.Current_GPTResponse, UserConfirm=True,
+            # #                            WindowName=WindowNAME1, USERLASTEDIT=self.EDIT,
+            # #                            Current_PROMTS_ALL=self.FULLPROMPTONLY, version=self.Currentversion)
+            # t = threading.Thread(target=self.TE.MakeWindow,args=(self.Current_GPTResponse,True,WindowNAME1,self.EDIT, self.FULLPROMPTONLY, self.Currentversion))
+            # t.start()
 
 
+            WindowInfo = GPT_Mode.WindowSetUp(self,Type="GPT", GPTResponse=self.Current_GPTResponse)
+            #self.TE.MakeWindow()
+            #self.TE = TextEdit.CustomWindow11(self.WindowName, self.window_type, self.WindowSize, self.main_buttons,self.main_checkboxes,self.internal_frame)
 
+            # self.TE = QApplication([])
+            windows = []
 
-            #self.TE = TextEdit.CustomWindow11()
-            #self.TE = TEB.TextEdit()
-            try:
-                self.TE.destroy()
-                del self.TE
-            except:
-                print("Already Destroyed? - Test Prior")
+            # for info in WindowInfo:
+            #     self.TE = TextEdit.CustomWindow11(*info)
+            #     windows.append( self.TE)
 
-            self.TE = GUI.GUIWindow()
+           #self.TE = TextEdit.CustomWindow11(self.WindowName, self.window_type, self.WindowSize, self.main_buttons,
+           #                                   self.main_checkboxes, self.internal_frame)
 
-            WindowInfo = GPT_Mode.WindowSetUp(self, Type="GPT",
-                                              GPTResponse=self.Current_GPTResponse)
-
-            self.TE.CreateWindow(self.WindowName, self.WindowSize, self.main_buttons,self.main_checkboxes, self.internal_frame)
-
-
-
-
-            #self.TE.MakeWindow(self.WindowName, self.window_type, self.WindowSize, self.main_buttons,
-               #                  self.main_checkboxes, self.internal_frame)
-
-            #self.TE.MakeWindow(WindowName=self.WindowName,Text=self.Current_GPTResponse, USERLASTEDIT=self.EDIT)
-            # t = threading.Thread(target=self.TE.MakeWindow, args=(self.WindowName, self.Current_GPTResponse,self.EDIT))
             #
-            # t = threading.Thread(target=self.TE.CreateWindow, args=(self.WindowName, self.WindowSize, self.main_buttons,self.main_checkboxes, self.internal_frame)).start()
+            # self.TE.exec_()
+            # t = threading.Thread(target=self.TE.WindowShow)
+            # t = threading.Thread(target=self.TE.CreateWindow,args=())
 
-            #t.start()
-
-            #self.TE.mainloop()
+            self.TE = TextEdit.CustomWindow11()
 
 
+            t = threading.Thread(target=self.TE.CreateWindow, args=(self.WindowName, self.window_type, self.WindowSize, self.main_buttons,
+                                               self.main_checkboxes, self.internal_frame))
 
+            t.start()
+
+            # self.TE = TextEdit.CustomWindow11()
+
+            # class MyThread(QThread):
+            #     def __init__(self, TE, WindowName, window_type, WindowSize, main_buttons, main_checkboxes,
+            #                  internal_frame):
+            #         super().__init__()
+            #         self.TE = TE
+            #         self.WindowName = WindowName
+            #         self.window_type = window_type
+            #         self.WindowSize = WindowSize
+            #         self.main_buttons = main_buttons
+            #         self.main_checkboxes = main_checkboxes
+            #         self.internal_frame = internal_frame
+            #
+            #     def run(self):
+            #         self.TE.CreateWindow(self.WindowName, self.window_type, self.WindowSize, self.main_buttons,
+            #                              self.main_checkboxes, self.internal_frame)
+            #
+            #
+            #
+            # t = MyThread(self.TE, self.WindowName, self.window_type, self.WindowSize, self.main_buttons,
+            #              self.main_checkboxes, self.internal_frame)
+            # t.start()
 
 
             KeepGoing = False
@@ -994,61 +989,27 @@ class GPT_Mode():
 
                             WINDOWNAME1 = "USER CONFIRM CHAT GPT RESULTS" + self.CurrentWindowName + ' ' + str(
                                                            TryCount) + ' '
-                            doneSpeak = True
+
                             if UserResponseProvided == True:
                                 try:
+                                    self.TE.UpdateGPTResponseWindow(self.Current_GPTResponse,self.FULLPROMPTONLY,self.EDIT)
                                     UserResponseProvided = False
-
-                                    #self.TE.UpdateGPTResponseWindow(self.Current_GPTResponse,self.FULLPROMPTONLY,self.EDIT)
-
-                                    #self.TE = TextEdit.CustomWindow11()
-
-                                    WindowInfo = GPT_Mode.WindowSetUp(self, Type="GPT",
-                                                                      GPTResponse=self.Current_GPTResponse)
-                                    try:
-                                        self.TE.destroy()
-                                        del self.TE
-                                    except:
-                                        print("Already Destroyed?")
-                                    self.TE = GUI.GUIWindow()
-                                    self.TE.CreateWindow(self.WindowName, self.WindowSize, self.main_buttons,
-                                                         self.main_checkboxes, self.internal_frame)
-
-                                    #self.TE.MakeWindow(self.WindowName, self.window_type, self.WindowSize, self.main_buttons,self.main_checkboxes,self.internal_frame)
-                                    #t.join()
-                                    # t = threading.Thread(target=self.TE.MakeWindow,
-                                    #                      args=(self.WindowName, self.Current_GPTResponse, self.EDIT))
-                                    # t.start()
-
                                 except:
-                                    # try:
-                                    #     t.join()
-                                    #
-                                    #
-                                    #
-                                    # except:
-                                    #     dn = 100
+                                    try:
+                                        t.join()
+
+
+
+                                    except:
+                                        dn = 100
                                     UserResponseProvided = False
-                                    #self.TE = TextEdit.CustomWindow11()
                                     #self.TE = TextEdit.CustomWindow11()
                                     WindowInfo = GPT_Mode.WindowSetUp(self,Type="GPT", GPTResponse=self.Current_GPTResponse)
-                                    try:
-                                        self.TE.destroy()
-                                        del self.TE
-                                    except:
-                                        print("Already Destroyed?")
+                                    t = threading.Thread(target=self.TE.CreateWindow, args=(self.WindowName, self.window_type, self.WindowSize, self.main_buttons,self.main_checkboxes,self.internal_frame))
+                                    t.start()
 
-                                    self.TE = GUI.GUIWindow()
-                                    self.TE.CreateWindow(self.WindowName, self.WindowSize, self.main_buttons,
-                                                         self.main_checkboxes, self.internal_frame)
 
-                                    # t = threading.Thread(target=self.TE.CreateWindow, args=(self.WindowName, self.window_type, self.WindowSize, self.main_buttons,self.main_checkboxes,self.internal_frame))
-                                    # t.start()
-                                    #self.TE.CreateWindow(self.WindowName, self.window_type, self.WindowSize, self.main_buttons,self.main_checkboxes,self.internal_frame)
-                                    #t.join
-                                    # t = threading.Thread(target=self.TE.MakeWindow,
-                                    #                      args=(self.WindowName, self.Current_GPTResponse, self.EDIT))
-                                    # t.start()
+
 
                             while UserResponseProvided ==False:
                                 UserResponseProvided = self.TE.GetUserResponseProvided()
@@ -1086,7 +1047,7 @@ class GPT_Mode():
                             # self.promptB = False
                             KeepGoing = False
                             if self.UserMode == "UI":
-                                self.EDIT =  self.TE.GetUserText()
+                                self.EDIT = query
                             else:
                                 self.EDIT = cu.editBotPrompt()
 
@@ -1133,7 +1094,7 @@ class GPT_Mode():
                         TryCount += 1
 
                         if self.UserMode == "UI":
-                            self.EDIT =  self.TE.GetUserText()
+                            self.EDIT = query
                         else:
                             self.EDIT = cu.editBotPrompt()
                         print("EDIT")
@@ -1215,14 +1176,8 @@ class GPT_Mode():
 
                     elif UserMode1 == 0:
                         self.Current_GPTResponse = self.TE.GetFinalGPTOutput()
-                        try:
-                            self.TE.destroy()
-                            del self.TE
-                        except:
-                            print("Already Destroyed?? Continue Button Version?")
                         KeepGoing = True
-                        #t.join()
-
+                        t.join()
 
 
 
@@ -1234,12 +1189,7 @@ class GPT_Mode():
                         self.MainPromptUser = False
                         self.SmallPromptUser = False
                         KeepGoing = True
-                        #t.join()
-                        try:
-                            self.TE.destroy()
-                            del self.TE
-                        except:
-                            print("Already Destroyed?? Continue Button Version5?")
+                        t.join()
 
 
 
@@ -1250,12 +1200,7 @@ class GPT_Mode():
                         KeepGoing = True
                         self.SmallPromptUser = False
                         UserConfirm = False
-                       # t.join()
-                        try:
-                            self.TE.destroy()
-                            del self.TE
-                        except:
-                            print("Already Destroyed?? Continue Button Version2?")
+                        t.join()
 
 
                     # End User Input for Main Items - Skip to next part
@@ -1266,27 +1211,17 @@ class GPT_Mode():
                         self.MainPromptUser = False
                         self.SmallPromptUser = False
                         UserConfirm = False
-                        #t.join()
-                        try:
-                            self.TE.destroy()
-                            del self.TE
-                        except:
-                            print("Already Destroyed?? Continue Button Version3?")
+                        t.join()
 
 
                     # Restores Asking User for confirmation (all prompts)
                     elif UserMode1 == 50:
                         self.Current_GPTResponse = self.TE.GetFinalGPTOutput()
-                        #t.join()
+                        t.join()
                         KeepGoing = True
                         self.MainPromptUser = True
                         self.SmallPromptUser = True
                         self.UserConfirm = True
-                        try:
-                            self.TE.destroy()
-                            del self.TE
-                        except:
-                            print("Already Destroyed?? Continue Button Version4?")
 
 
 
@@ -1322,7 +1257,6 @@ class GPT_Mode():
                     #Speaks the Text from the UI
                     elif UserMode1 == 9:
                         try:
-                            doneSpeak =False
                             SPEAKTEXT = ''
                             # self.promptB = False
                             KeepGoing = False
@@ -1331,19 +1265,10 @@ class GPT_Mode():
                             except:
                                 print("error 23234352")
                             #t = threading.Thread(target=cu.speak, args=(SPEAKTEXT,)).start()
-
-                            # try:
-                            #     t3 = Process(target=cu.speak, args=(SPEAKTEXT,))
-                            #     t3.start()
-                            # except:
-                            #     dn = 100
-
-                            # try:
-                            #     if doneSpeak == True:
-                            #         t3.join()
-                            #         t3.terminate()
-                            # except:
-                            #     print("Speak Error")
+                            t3 = Process(target=cu.speak, args=(SPEAKTEXT,))
+                            t3.start()
+                            t3.join()
+                            t3.terminate()
                         except:
 
                             print("Error with Resetting to Original GPT Response Process")
@@ -1430,20 +1355,15 @@ class GPT_Mode():
 
                                 WINDOWNAME = "PLEASE CONFIRM USERS TEXT BEING USED    -   " + self.CurrentWindowName
                                 #self.promptB = False
-                                #This uses the User Text immediately if = True
                                 KeepGoing = False
                             else:
                                 self.CurrentWindowName = ' *** ERROR - No Text Provided, but you selected a User Input Option - TRY AGAIN*** ' + self.CurrentWindowName
                         except:
-                            print("Error with User Input Process22")
+                            print("Error with User Input Process")
 
-            # t.join()
-            # t.terminate()
-        except Exception as e:
-            print(e)
-            print("Error with User Input Process1")
-
-
+   #         t.join()
+        except:
+            print("Error with User Input Process")
 
         return KeepGoing
 
@@ -1452,12 +1372,12 @@ class GPT_Mode():
     def WindowSetUp(self,Type= "GPT", GPTResponse = '', UserEdits = '', System = '', Role= '', Task= '', Format= '', Background= '', Background2= '', Background3= '', Crazy= .5):
 
         #self.GPTResponse = "Default text 1"
-        self.main_buttons1 = ["Continue", "Cancel", "Review Prompts","RESTORE ALL", "IGNORE ALL", "IGNORE BIG", "IGNORE SMALL"]
+        self.main_buttons1 = ["Continue", "Cancel", "ReGenerate", "ReGenerate with Edit", "ReWrite Edit" , "Review Prompts",	"SPEAK","ALL", "BIG", "MEDIUM", "SMALL"]
         self.main_buttons2 = ["Continue", "Cancel", "<", ">", "SAVE ALL", "OG","SPEAK"]
 
-#, "Speak Input"
-        self.FrameButtons_User = ["<", ">", "OG", "Save", "Generate", "Rewrite with User Edits","Use User Text","User Edits"]
-        self.FrameButtons_GPT = ["<", ">", "OG", "Save", "Generate", "ReWrite", "Speak"]
+
+        self.FrameButtons_User = ["<", ">", "OG", "Save", "Generate", "Use User Text", "Speak", "Speak Input"]
+        self.FrameButtons_GPT = ["<", ">", "OG", "Save", "Generate", "Regenerate with Edit", "Rewrite with User Edits", "Speak", "Speak Input"]
         self.FrameButtons2 = ["<", ">", "OG", "Save", "Speak", "Generate"]
         self.FrameButtons2.append("Optimize Prompt")
         CurrentTest = "Prompt Test1"
@@ -1467,29 +1387,27 @@ class GPT_Mode():
 
 
         if Type== "GPT":
-            self.WindowName = "SHAINE" + ' - ' + self.WINDOWNAME
+            self.WindowName = "SHAINE"
             self.WindowSize = "large"
             self.internal_frame = ([("CHAT GPT", GPTResponse, self.FrameButtons_GPT, [], "gray"),("USER EDITS", UserEdits, self.FrameButtons_User, [], "lightgreen")])
             self.window_type = self.WindowInfo1
             self.main_buttons = self.main_buttons1
-            self.main_checkboxes = ["RESTORE ALL", "IGNORE ALL", "IGNORE BIG", "IGNORE SMALL"]
+            self.main_checkboxes = ["ALL", "BIG", "MEDIUM", "SMALL"]
             self.window_info = [(self.WindowName,self.window_type , self.WindowSize,self.main_buttons,self.main_checkboxes, self.internal_frame)]
 
         else:
-            self.WindowName = "PROMPTS REVIEW" + ' - ' + self.WINDOWNAME
+            self.WindowName = "PROMPTS REVIEW"
             self.WindowSize = "large"
             self.main_checkboxes = []
             self.window_type = self.WindowInfo1
             self.main_buttons = self.main_buttons2
             self.internal_frame =([("System", System, self.FrameButtons2, [], "lightyellow"),
-                ("Role", Role, self.FrameButtons2, [], "lightpink"),
+                ("Role", Role, self.FrameButtons2, self.main_checkboxes, "lightpink"),
                 ("Format", Format,  self.FrameButtons2, [], "green"),
                 ("Task", Task, self.FrameButtons2, [], "lightgreen"),
                 ("Background", Background, self.FrameButtons2, [], "lightblue"),
                 ("Background2", Background2, self.FrameButtons2, [], "blue"),
-                ("Background3", Background3, self.FrameButtons2, [], "purple"),
-                                   ("Crazy", str(Crazy), self.FrameButtons2, [], "gray")])
-            #
+                ("Background3", Background3, self.FrameButtons2, [], "purple"),("Crazy", Crazy, self.FrameButtons2, [], "yellow")])
             self.window_info = [(self.WindowName, self.window_type,self.WindowSize ,self.main_buttons,self.main_checkboxes,self.internal_frame)]
 
         # Create a separate thread to run the GUI
@@ -1501,15 +1419,12 @@ class GPT_Mode():
 
 
     def Get_SmallPromptUser(self):
-        x = 1
         return self.SmallPromptUser
 
     def Get_UserConfirm(self):
-        x= 1
         return self.UserConfirm
 
     def Get_MainPromptUser(self):
-        x = 1
         return  self.MainPromptUser
 
 

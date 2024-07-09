@@ -175,43 +175,260 @@
 #To run a unit test, you can call the `run` function with the `test` parameter set to `True`.
 # This will return the `composition` object, which you can use to test the output of the code.
 
+#
+#
+# import musicpy as mp
+# import random
+#
+# # Define chords
+# C1 = mp.chord('C4, E4, G4') % (1, 1/8) * 4
+# C2 = mp.chord('F4, A4, C5') % (1, 1/8) * 4
+# C3 = mp.chord('G4, B4, D5') % (1, 1/8) * 4
+# C4 = mp.chord('A#4, D5, F5') % (1, 1/8) * 4
+#
+# # Define drum patterns
+# D1 = mp.drum('x..x..x..x..x..x..x..x..')
+# D2 = mp.drum('x...x...x...x...x...x...x...x..')
+# D3 = mp.drum('x...x.x...x...x...x.x...x...x..')
+# D4 = mp.drum('x..x.x..x..x..x..x.x..x..x..x..x..x..x..x..x..x..x..x..x..x..')
+#
+# # Define bassline
+# B1 = mp.bassline('C2', 'C2', 'C2', 'C2', 'F2', 'F2', 'F2', 'F2',
+#                  'G2', 'G2', 'G2', 'G2', 'A#2', 'A#2', 'A#2', 'A#2') % (1, 1/8) * 4
+#
+# # Define piano melody
+# piano_notes = ['C4', 'D4', 'E4', 'F4', 'G4', 'A4', 'B4']
+# piano_rhythm = [1/4, 1/4, 1/8, 1/8, 1/8, 1/8, 1/4]
+#
+# P1 = mp.melody(random.choices(piano_notes, k=8), random.choices(piano_rhythm, k=8)) % (1,1) * 2
+# P2 = mp.melody(random.choices(piano_notes, k=8), random.choices(piano_rhythm, k=8)) % (1,1) * 2
+# P3 = mp.melody(random.choices(piano_notes, k=8), random.choices(piano_rhythm, k=8)) % (1,1) * 2
+#
+# # Define piece
+# new_piece = mp.piece(tracks=[C1, C2, C3, C4, D1, D2, D3, D4, B1, P1, P2, P3],
+#                      instruments=['Electric Piano 1', 'Electric Piano 1', 'Electric Piano 1', 'Electric Piano 1',
+#                                   'Drum Kit', 'Drum Kit', 'Drum Kit', 'Drum Kit', 'Electric Bass (finger)',
+#                                   'Electric Piano 1', 'Electric Piano 1', 'Electric Piano 1'],
+#                      bpm=90,
+#                      start_times=[0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 4, 6],
+#                      track_names=['piano', 'piano', 'piano', 'piano', 'drums', 'drums', 'drums', 'drums', 'bass', 'melody', 'melody', 'melody'])
+#
+# # Play piece
+# #mp.play(new_piece, duration=90)
+
+#
+#
+# import music as m
+# import musicpy
+# # Create an instance of the Music class
+# music1 = m()
+#
+# # Set the parameters for the song
+# music1.set_tempo(120)
+# music1.set_key('C')
+# music1.set_time_signature(4, 4)
+#
+# # Add the saxophone melody
+# music1.add_note('G4', duration=1)
+# music1.add_note('A4', duration=1)
+# music1.add_note('B4', duration=1)
+# music1.add_note('C5', duration=1)
+#
+# # Add the trumpet melody
+# music1.add_note('E4', duration=1)
+# music1.add_note('D4', duration=1)
+# music1.add_note('C4', duration=1)
+# music1.add_note('B3', duration=1)
+#
+# # Add the light drums
+# music1.add_drum('kick', duration=1)
+# music1.add_drum('snare', duration=1)
+# music1.add_drum('kick', duration=1)
+# music1.add_drum('snare', duration=1)
+#
+# # Generate the audio file for the song
+# music1.generate_audio_file('song_snippet.wav')
+
+#
+# import pygame
+# import time
+#
+# # Initialize the Pygame mixer
+# pygame.mixer.init()
+#
+# # Set the tempo in beats per minute
+# tempo = 120
+#
+# # Set the saxophone, trumpet, and drum sounds
+# saxophone_sound = pygame.mixer.Sound('saxophone.wav')
+# trumpet_sound = pygame.mixer.Sound('trumpet.wav')
+# drum_sound = pygame.mixer.Sound('drums.wav')
+#
+# # Set the durations for each note
+# note_duration = 0.5  # in seconds
+# drum_duration = 0.25  # in seconds
+#
+# # Play the saxophone melody
+# saxophone_sound.play()
+# time.sleep(note_duration)
+# saxophone_sound.play()
+# time.sleep(note_duration)
+# saxophone_sound.play()
+# time.sleep(note_duration)
+# saxophone_sound.play()
+# time.sleep(note_duration)
+#
+# # Play the trumpet melody
+# trumpet_sound.play()
+# time.sleep(note_duration)
+# trumpet_sound.play()
+# time.sleep(note_duration)
+# trumpet_sound.play()
+# time.sleep(note_duration)
+# trumpet_sound.play()
+# time.sleep(note_duration)
+#
+# # Play the drum pattern
+# drum_sound.play()
+# time.sleep(drum_duration)
+# drum_sound.play()
+# time.sleep(drum_duration)
+# drum_sound.play()
+# time.sleep(drum_duration)
+# drum_sound.play()
+# time.sleep(drum_duration)
+#
+# # Stop all sounds
+# pygame.mixer.stop()
 
 
-import musicpy as mp
-import random
+import pydub
+import librosa
+import numpy as np
+from pydub.utils import make_chunks
+import  datetime
 
-# Define chords
-C1 = mp.chord('C4, E4, G4') % (1, 1/8) * 4
-C2 = mp.chord('F4, A4, C5') % (1, 1/8) * 4
-C3 = mp.chord('G4, B4, D5') % (1, 1/8) * 4
-C4 = mp.chord('A#4, D5, F5') % (1, 1/8) * 4
+current_time1 = datetime.datetime.now()
+current_time = current_time1.strftime('%m-%d-%Y_%H.%M')
 
-# Define drum patterns
-D1 = mp.drum('x..x..x..x..x..x..x..x..')
-D2 = mp.drum('x...x...x...x...x...x...x...x..')
-D3 = mp.drum('x...x.x...x...x...x.x...x...x..')
-D4 = mp.drum('x..x.x..x..x..x..x.x..x..x..x..x..x..x..x..x..x..x..x..x..x..')
 
-# Define bassline
-B1 = mp.bassline('C2', 'C2', 'C2', 'C2', 'F2', 'F2', 'F2', 'F2',
-                 'G2', 'G2', 'G2', 'G2', 'A#2', 'A#2', 'A#2', 'A#2') % (1, 1/8) * 4
 
-# Define piano melody
-piano_notes = ['C4', 'D4', 'E4', 'F4', 'G4', 'A4', 'B4']
-piano_rhythm = [1/4, 1/4, 1/8, 1/8, 1/8, 1/8, 1/4]
+import pydub
+import numpy as np
+import aubio
+import  madmom
 
-P1 = mp.melody(random.choices(piano_notes, k=8), random.choices(piano_rhythm, k=8)) % (1,1) * 2
-P2 = mp.melody(random.choices(piano_notes, k=8), random.choices(piano_rhythm, k=8)) % (1,1) * 2
-P3 = mp.melody(random.choices(piano_notes, k=8), random.choices(piano_rhythm, k=8)) % (1,1) * 2
+# Ask the user to select the input file and output file paths
+input_file = r"A:\Amini Amor\Music for DJ\The Four Seasons  Sherry Official Audio.mp3"
+output_file = r'A:\Amini Amor\DJ Mixes\Sherry ' + current_time
 
-# Define piece
-new_piece = mp.piece(tracks=[C1, C2, C3, C4, D1, D2, D3, D4, B1, P1, P2, P3],
-                     instruments=['Electric Piano 1', 'Electric Piano 1', 'Electric Piano 1', 'Electric Piano 1',
-                                  'Drum Kit', 'Drum Kit', 'Drum Kit', 'Drum Kit', 'Electric Bass (finger)',
-                                  'Electric Piano 1', 'Electric Piano 1', 'Electric Piano 1'],
-                     bpm=90,
-                     start_times=[0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 4, 6],
-                     track_names=['piano', 'piano', 'piano', 'piano', 'drums', 'drums', 'drums', 'drums', 'bass', 'melody', 'melody', 'melody'])
+# Load the input mp3 file
+audio = pydub.AudioSegment.from_file(input_file)
 
-# Play piece
-mp.play(new_piece, duration=90)
+# Convert the audio to a numpy array
+audio_array = np.array(audio.get_array_of_samples())
+
+# Perform beat detection on the audio to identify the timing and tempo
+proc = madmom.features.beats.DBNBeatTrackingProcessor(fps=audio.frame_rate)
+beats = proc(audio_array)
+
+# Set the length of each beat segment in milliseconds
+beat_length = int(60000 / (len(beats) / (len(audio) / 1000)))
+
+# Slice the audio based on the detected beats
+sliced_audio = [audio[start:end] for start, end in zip(beats[:-1], beats[1:])]
+
+# Generate regular beat patterns or drum patterns
+beat_pattern = [1, 0, 1, 0]  # Example beat pattern: 1 represents a beat, 0 represents a rest
+
+# Mix and arrange the sliced audio segments based on the beat patterns
+mixed_audio = pydub.AudioSegment.empty()
+
+for i, beat in enumerate(beat_pattern):
+    if beat:
+        mixed_audio += sliced_audio[i % len(sliced_audio)]
+
+# Save the new instrumental as a new audio file
+mixed_audio.export(output_file, format='mp3')
+
+
+
+
+#
+# # Load the input mp3 file
+# audio = pydub.AudioSegment.from_file(input_file)
+#
+# # Convert the audio to a numpy array
+# audio_array = np.array(audio.get_array_of_samples())
+#
+# # Set the parameters for beat detection
+# hop_size = 512
+# beat_detector = aubio.tempo("default", hop_size, audio.frame_rate)
+#
+# # Perform beat detection on the audio to identify the timing and tempo
+# beats = []
+# total_frames = len(audio_array)
+# for i in range(0, total_frames, hop_size):
+#     samples = audio_array[i:i + hop_size]
+#     is_beat = beat_detector(samples)
+#     if is_beat:
+#         beats.append(i)
+#
+# # Set the length of each beat segment in milliseconds
+# beat_length = int(60000 / (len(beats) / (len(audio) / 1000)))
+#
+# # Slice the audio based on the detected beats
+# sliced_audio = audio[:beat_length] * len(beats)
+#
+# # Generate regular beat patterns or drum patterns
+# beat_pattern = [1, 0, 1, 0]  # Example beat pattern: 1 represents a beat, 0 represents a rest
+#
+# # Mix and arrange the sliced audio segments based on the beat patterns
+# mixed_audio = pydub.AudioSegment.empty()
+#
+# for i, beat in enumerate(beat_pattern):
+#     if beat:
+#         mixed_audio += sliced_audio[i % len(sliced_audio)]
+#
+# # Save the new instrumental as a new audio file
+# mixed_audio.export(output_file, format='mp3')
+#
+#
+#
+
+
+
+#
+# import  datetime
+# # Ask the user to select the input file and output file paths
+# input_file = r"A:\Amini Amor\Music for DJ\The Four Seasons  Sherry Official Audio.mp3"
+# output_file = r'A:\Amini Amor\DJ Mixes\Sherry ' + current_time
+#
+#
+# # Load the input mp3 file
+# audio = pydub.AudioSegment.from_file(input_file)
+#
+# # Convert the audio to a numpy array
+# audio_array = np.array(audio.get_array_of_samples())
+#
+# # Perform beat detection on the audio to identify the timing and tempo
+# tempo, beats = librosa.beat.beat_track(audio_array, sr=audio.frame_rate)
+#
+# # Set the length of each beat segment in milliseconds
+# beat_length = int(60000 / tempo)
+#
+# # Slice the audio based on the detected beats
+# sliced_audio = make_chunks(audio, beat_length)
+#
+# # Generate regular beat patterns or drum patterns
+# beat_pattern = [1, 0, 1, 0]  # Example beat pattern: 1 represents a beat, 0 represents a rest
+#
+# # Mix and arrange the sliced audio segments based on the beat patterns
+# mixed_audio = pydub.AudioSegment.empty()
+#
+# for i, beat in enumerate(beat_pattern):
+#     if beat:
+#         mixed_audio += sliced_audio[i % len(sliced_audio)]
+#
+# # Save the new instrumental as a new audio file
+# mixed_audio.export(output_file, format='mp3')

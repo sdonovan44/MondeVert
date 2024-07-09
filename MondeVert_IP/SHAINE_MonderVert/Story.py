@@ -11,6 +11,8 @@ from MondeVert_IP.SHAINE_MonderVert.SHAINE_WIZARD_PROMPTS import Social_Media_SH
 from secrets import randbelow
 from MondeVert_IP.SHAINE_MonderVert.SHAINE_WIZARD_PROMPTS import Long_User_Prompts as lup, User_Prefs as up,Poetry_Wizard as PW, SuperSHAINE_WIZARD  as SSW,\
     Stories_For_Audio_Files as SAF, StoryMode_Wizard as StoryMode, ReWrites as RW, StoryPrompts as SP,Comedy_Ideas as CI
+import matplotlib
+matplotlib.use('Agg')
 from threading import Event
 from gingerit.gingerit import GingerIt
 import numpy
@@ -37,19 +39,20 @@ import shutil
 import os
 import MondeVert_IP.SHAINE_MonderVert.SHAINE_WIZARD_PROMPTS.StoryOutlines  as ShaneOriginals
 from MondeVert_IP.SHAINE_MonderVert.Utilities import TextEdit as TextEdit
-
+#import gc
 
 #OutputTypes = ["Play","Novel", "ScreenPlay","Song"]
 
 class Story():
-    def __init__(self, IDEA = '' ,UserConfirm = False, ConfirmInput = False, UserMode = 'UI',Mode = 'MVAA',Writer = '', UserInputs_Config = 'AI Only',OutputTypes = ["Play", "Novel", "ScreenPlay"],voice=4, Logic_AI = 0, language_settings=1,Chunk_Limit = 777,  SavePath =up.AI_AudioBook_Path,  Writer_Style = '',Artist = '', Artist_Style = '', Story_Type = 'ScreenPlay', Seasons = 1, Episodes = 3, Books = '', Acts = '', Scenes = '', Movies = '', Text_Output_Config = [''], IDEA_Source = 'AI', Output_Audio_Config = '' ):
+    def __init__(self, IDEA = '' ,UserConfirm = False, ConfirmInput = False, UserMode = 'UI',Mode = 'MVAA',Writer = '', UserInputs_Config = 'AI Only',OutputTypes = ["Play", "Novel", "ScreenPlay"],voice=4, Logic_AI = 0, language_settings=1,Chunk_Limit = 777,  SavePath =up.AI_AudioBook_Path,  Writer_Style = '',Artist = '', Artist_Style = '', Story_Type = 'ScreenPlay', Seasons = 1, Episodes = 3, Books = '', Acts = '', Scenes = '', Movies = '', Text_Output_Config = [''], IDEA_Source = 'AI', Output_Audio_Config = '', MakeArt = False, MakeAudio = False ):
         self.voice = voice
         self.language_settings = language_settings
         self.UserMode = UserMode
         self.ConfirmInput = ConfirmInput
         if  self.language_settings ==1:
             self.Translate = ['English']
-
+        self.MakeAudio = MakeAudio
+        self.MakeArt = MakeArt
         self.AssistantName = up.getAssistantName()
         self.UserName = up.getUserName()
         self.transcript_Final = ''
@@ -121,6 +124,8 @@ class Story():
         self.LivePlay = ''
         self.LiveMusical = ''
 
+        self.FileName = "MONDEVERT PRESENTS - SHAINEs  No Name Projects - " + Mode
+
         self.MainPromptUser = self.UserConfirm
         self.SmallPromptUser = self.UserConfirm
         self.PartPromptUser = self.UserConfirm
@@ -174,7 +179,7 @@ class Story():
             self.crazy =crazy
 
             #TE = TextEdit.TextEdit()
-            self.TE = TextEdit.TextEdit( UserConfirm=True)
+            #self.TE = TextEdit.TextEdit( UserConfirm=True)
 
 
 
@@ -279,7 +284,7 @@ class Story():
                 print(self.IDEA_Final)
 
 
-            if 'MVAA_QUICK' in Mode.upper() or 'POEM' in Mode.upper() or 'FAMIL' in Mode.upper():
+            if 'QUICK' in Mode.upper() or 'POEM' in Mode.upper() or 'FAMIL' in Mode.upper():
 
 
 
@@ -331,10 +336,6 @@ class Story():
                 self.Story_Role = self.IDEA_Role2
 
                 self.Song_Outline = Story.getSongOutline(self)
-
-
-
-
 
 
                 try:
@@ -550,10 +551,15 @@ class Story():
 #this is where you add code to go scene by scene and update characters etc.
 
     def NewStoryMode2(self, DelimiterCheck='@SCENE', ReplaceKey='@@SCENE',  upperWord='Scene', Delimiter='@@'):
-
+        #gc.collect()
         self.Episode1 = True
         self.Season1 = True
         self.Scene1 = True
+        del self.Writer
+        del self.IDEA
+        del self.Writer_Summary
+
+
 
         AllScenes_Outline_Task = SP.Story_AllScenes_Outline_Task
         AllScenes_Outline_Format = SP.Story_AllScenes_Outline_Format
@@ -580,6 +586,7 @@ class Story():
             Style_Details_Format = PW.Story_Episode_Writing_Style_Task
             Style_Details_Task2 = PW.Story_Episode_Writing_Style_Format
 
+
             self.Story_Scene_Outline_Format = PW.Poem_Outline_Format
             self.Story_Scene_Outline_Task = PW.Poem_Outline_Task
             DelimiterCheck = '@POEM'
@@ -587,9 +594,11 @@ class Story():
             upperWord = 'Poem'
 
 
+
+
         ##Note this is where you change the prompts for it to be Poetry prompts or other for you to use here
 
-
+        #gc.collect()
         self.Story_Role = 'You are a brilliant assistant to the user, Role Play as an award winning writer/Director/Playwrite able to impersonate any genre or style/voice base your persona on the following Writing Style  Writing Style: ' + self.Writer_Style_Summary
 
         self.StoryRoleAdd = Story.Basic_GPT_Query(self,Line2_Role=self.Story_Role, Line3_Format=Style_Details_Format,Line4_Task=Style_Details_Task2
@@ -597,14 +606,12 @@ class Story():
                                                                crazy=self.crazy,
                                                                Subject='', User_Confirm=self.SmallPromptUser,
                                                                WINDOWNAME='Story Writing Style  ' , Line1_System_Rule= self.systemPrompt)
-
+        #gc.collect()
         self.Outline_ALL_Seasons = self.IDEA_Final
         self.Story_Role = 'You are a brilliant assistant to the user, Role Play as an award winning writer able to impersonate any genre or style/voice base your persona on the following Writing Style  Writing Style: ' + self.StoryRoleAdd
         Story.getCharacters(self)
 
-
-
-
+        #gc.collect()
         self.Characters2 = self.Characters
 
 
@@ -618,10 +625,7 @@ class Story():
                                                      crazy=self.crazy, Big=True, User_Confirm=self.UserConfirm,
                                                      WINDOWNAME="Characters Summary (Too long of a character list)", Line1_System_Rule= self.systemPrompt)
 
-
-
-
-
+        #gc.collect()
         NewStory_Outline = Story.Basic_GPT_Query(self,
                                                  Line2_Role=self.Story_Role,
                                                  Line3_Format=Outline_Format,
@@ -688,10 +692,21 @@ class Story():
             self.Art_Style_For_Story = Story.getArtist_Style(self, arttext=self.arttext, Artist=self.Artist_Style)
         self.Season_num = 1
 
-
+        #gc.collect()
         self.Episode_by_Episode = Story.cutBy(self, Text=NewStory_Outline, upperWord='Part', Delimiter='@@',
                                               DelimiterCheck='@PART', ReplaceKey='@@PART')
 
+
+
+
+
+
+        #Try to make a version of this where you loop in between 1&2 (oultines or scenes or something, and you come up with 3-13 scenes to connect the two stories
+        # (it can have any sort of background details, foreshadowing, but the main thing is you connect Part 1 with Part B
+        #The key move is when you do this between part 1 & 2, you look at part 3, based on the story so far, you solidify the climax that part 2 is building 2, once you rewrite 2
+        #then you take 2 vs details of 3, and you tell your prompt to rewrite/adjust the details of Part 3 so that the climax is the best possible one that fits this story we have created so far.
+        #Then after you get done with Part 2, you do the same thing, instead of writing to part 4, you really nail down the climax, the connecting piece should have gotten us to the final climax
+        # (once we hit the climax we can start the falling action and resolution, maybe throw in one more arc plot wrap up)
 
 
         print("len(self.Episode_by_Episode):")
@@ -719,7 +734,7 @@ class Story():
 
             #note this is where it updates characters based on the current part of the story
             try:
-                Story.Character_Update(self, Outline=NewStory_Outline1,Episode=x1, Characters_Update_Task=StoryMode.Characters_Update_Task2)
+                 Story.Character_Update(self, Outline=NewStory_Outline1,Episode=x1, Characters_Update_Task=StoryMode.Characters_Update_Task2)
             except:
                 d = 100
 
@@ -727,15 +742,17 @@ class Story():
             self.Characters2 = self.Characters
 
 
-
+#this should maybe be optional or if user selects something else it will bypass this??? Make a button to wipe out part num fix
             PartNumFix = ''
 
-            if x1 == 1:
+            if x1 == 1 and countPart > 1:
                 PartNumFix = """DO NOT RESOLVE THE STORY/DO NOT WRITE THE CONCLUSION/RESOLUTION, Leave the story open ended: This is Part 1 (Beginning - Introduction & Exposition) out of 3 parts. This is the first part so make it exciting while laying the groundwork for the entire story, introduce characters and make the story come to life, do not write a conclusion, in fact the rising action should only just be starting for main plot, you can have arc plots get further along, and set up a red herring to make the story not obvious  Have some arc plots resolve but make sure the main plot is not resolved in this section of Scenes. introduce most of the characters and set up a plot twist or something else for the later 2 parts, make sure you set up another TWO THIRDS of the story. Introduce characters and Exposition with rising action/conflict development.  Again, Do not wrap up the entire story in this part,  You should end this part of the story with the major plot starting to get towards the rising action, in the first part establish the plots/arc plots for the second part to resolve the arc plots and build the conflict for the main plot in season 2, The first few scenes should be interesting and draw us in and then provide most of the background for the story in this part."""
             elif x1 == 2 and countPart > 2 :
-                PartNumFix = "DO NOT RESOLVE THE STORY/DO NOT WRITE THE CONCLUSION/RESOLUTION for the story, follow the outline provided you need to start where Part 1 left off and end in a spot that transitions smoothly into part 3,  Leave story open ended:  this is part 2 (Middle - Rising Action & conflict building up to the climax but not quite kicking the climax off yet, leave the final scene on a cliff hanger going into the next section)  out of 3 parts, start to finish building the rising action and reach the climax, you can reveal the major plot twists in part 2, build up the story for the final Climax, you should not go into detail of the climax, but rather explain the build up and set up the story to lead into part 3 with the climax rearing to go. , that is up to you, definitely have all characters introduced and set up the third part. Do not wrap up the entire story leave room for falling action and resolution in part 3"
-            elif x1 == 3 or countPart == 3:
-                PartNumFix = "this is the final part of the STORY (End - Climax & Falling Action & Resolution/Conclusion) , This should be the most exciting part right off the bat using the prior details continue where the plot is and start to complete the story.  wrap up the plot and other arc plots and make the story interesting and entertaining, build off the prior details and also use the outline provided for guidance. Your next set of scenes should start where the prior part ended and your Story should end according to the outline you have been provided saying how to end this part of the story. "
+                PartNumFix = "DO NOT RESOLVE THE STORY/DO NOT WRITE THE CONCLUSION/RESOLUTION for the story (This is Part 2 of 3),  you need to start where Part 1 left off and end in a spot that transitions smoothly into part 3 as per outline provided to you,  Leave story somewhat open ended. Note:  this is part 2 (Middle - Rising Action & conflict building up to the climax but not quite kicking the climax off yet, possibly leave the final scene on a cliff hanger going into the next section), start to finish building the rising action and reach the climax, you can reveal the major plot twists in part 2, build up the story for the final Climax, you should not go into detail of the climax, but rather explain the build up and set up the story to lead into part 3 with the climax rearing to go. , that is up to you, definitely have all characters introduced and set up the third part. Do not wrap up the entire story leave room for the story to develop further with falling action and resolution in part 3"
+            elif x1 == 2 and countPart == 2:
+                PartNumFix = "this is the final part of the STORY (End - Climax & Falling Action & Resolution/Conclusion) , This should be the most exciting part right off the bat using the prior details continue where the plot is and start to complete the story.  wrap up the plot and other arc plots and make the story interesting and entertaining, build off the prior details and also use the outline provided for guidance. Your next set of scenes should start where the prior part ended and your Story should end according to the outline you have been provided saying how to end this part of the story. If the outline is not clear, use the context and rest of the story to come up with either a twist ending, tragic ending, logical ending, or happy ending (that is still somewhat believeable based on rest of story). Be creative how you end, unless outline is 100% clear on the ending "
+            elif x1 == 3 and countPart == 3:
+                PartNumFix = "this is the final part of the STORY (End - Climax & Falling Action & Resolution/Conclusion) , This should be the most exciting part right off the bat using the prior details continue where the plot is and start to complete the story.  wrap up the plot and other arc plots and make the story interesting and entertaining, build off the prior details and also use the outline provided for guidance. Your next set of scenes should start where the prior part ended and your Story should end according to the outline you have been provided saying how to end this part of the story. If the outline is not clear, use the context and rest of the story to come up with either a twist ending, tragic ending, logical ending, or happy ending (that is still somewhat believeable based on rest of story). Be creative how you end, unless outline is 100% clear on the ending "
 
             elif x1 == 4:
                 PartNumFix = "this is the final part of the STORY (End - Climax & Falling Action & Resolution/Conclusion) , This should be the most exciting part right off the bat using the prior details continue where the plot is and start to complete the story.  wrap up the plot and other arc plots and make the story interesting and entertaining, build off the prior details and also use the outline provided for guidance. Your next set of scenes should start where the prior part ended and your Story should end according to the outline you have been provided saying how to end this part of the story. Note: This is more or less an error because you were supposed to write only 3 parts. For this part, focus on the climax of the story and come up with an alternate way of portraying the climax and how the events can unfold. Come up with a small Arc plot that can be related to something earlier in the story, you must resolve it. Also you can  create an origin story for the villain/antagonist in the story, you can also create origin stories for any of the characters you would like, make it fun and try to provide a new perspective to the story that can be explored further, maybe even come up with a scene from way in the past that sets the stage for the final scenes/final climax. Was there a prior friendship ruinded, did someone murder their family member in the past etc. Make sure it fits the tone and context of the story. If you are not given enough context or information about the outline you are supposed to work with, try to use the information provided about the characters to at least write an alternate storyline for them, you can also right dream sequences that are redherrings of the final scenes/climax, or you can write a scene that is from a random person's perspective, be creative these will end up being cool additional storylines that can be used in unique ways to make the story different. Try your best to make the story in the same world/universe as the original story it will be more interesting if they cross over in terms of characters, story elements, settings, etc. "
@@ -787,7 +804,7 @@ class Story():
 
             cu.SaveCSV(Text=NewStory_AllScenes_Outline, SavePath=self.SavePath_Outlines, Title=self.FileName + '_All Scenes Part ' + str(x1))
 
-            self.Story_Role2 =  """You are a brilliant assistant who is Role Playing as an award winning writer able to impersonate any genre or style/voice. Make sure you completely respond to the requests I provide and if I tell you the 'Desired Format:' I expect it to be exact based on your role playing persona on the following details""" + self.Outline_Episodes_Details
+            self.Story_Role2 =  """You are a brilliant assistant who is Role Playing as an award winning writer able to impersonate any genre or writing style/voice/master of dialogue and story telling. Make sure you completely respond to the requests I provide and if I tell you the 'Desired Format:' I expect it to be exact based on your role playing persona on the following details""" + self.Outline_Episodes_Details
 
 
             self.Scene_by_Scene = Story.cutBy(self, Text= NewStory_AllScenes_Outline , upperWord=upperWord, Delimiter=Delimiter,
@@ -1591,29 +1608,29 @@ class Story():
         #         Chunk_Limit=1444, Translate=['English'], Artist_Persona=self.Art_Style_For_Story)
         #
 
+        if self.MakeAudio ==True:
+            try:
+                # cu.SaveText2Audio(SavePath=SavePath, FileName=FileName_Episode3, Voice=Voice_Novel,
+                #                   Neural='Neural',
+                #                   Mode='AUDIOBOOK', Chunk_Limit=Chunk_Limit, Artist_Persona=Art_Style_For_Story,
+                #                   Text=Text2Add3,
+                #                   Translate=Translate)
+                #
+                #
+                #
+                # #Do Not Do Yet
+                cu.SaveText2Audio(SavePath=self.SavePath, FileName=FileName_3, Voice=Voice,
+                                  Neural='Neural',
+                                  Mode='AUDIOBOOK', Chunk_Limit=self.Chunk_Limit, Artist_Persona=self.Art_Style_For_Story,
+                                  Text=Text2Add3,
+                                  Translate=self.Translate)
 
-        try:
-            # cu.SaveText2Audio(SavePath=SavePath, FileName=FileName_Episode3, Voice=Voice_Novel,
-            #                   Neural='Neural',
-            #                   Mode='AUDIOBOOK', Chunk_Limit=Chunk_Limit, Artist_Persona=Art_Style_For_Story,
-            #                   Text=Text2Add3,
-            #                   Translate=Translate)
-            #
-            #
-            #
-            # #Do Not Do Yet
-            # cu.SaveText2Audio(SavePath=self.SavePath, FileName=FileName_3, Voice=Voice,
-            #                   Neural='Neural',
-            #                   Mode='AUDIOBOOK', Chunk_Limit=self.Chunk_Limit, Artist_Persona=self.Art_Style_For_Story,
-            #                   Text=Text2Add3,
-            #                   Translate=self.Translate)
-
-            d = 99
-        except:
-            print('Error - Not using the normal way of Save Text to Audio')
-            cu.SaveText2Audio(
-                FilePath=csv3,
-                Chunk_Limit=self.Chunk_Limit, Translate=['English'], Artist_Persona=self.Art_Style_For_Story)
+                d = 99
+            except:
+                print('Error - Not using the normal way of Save Text to Audio')
+                cu.SaveText2Audio(
+                    FilePath=csv3,
+                    Chunk_Limit=self.Chunk_Limit, Translate=['English'], Artist_Persona=self.Art_Style_For_Story)
 
     def FullScene(self ):
         x = 1
@@ -2085,7 +2102,8 @@ class Story():
                                                         Line4_Task=IDEA_Task, Special='',
                                                          crazy=self.crazy, Big=True, User_Confirm = self.UserConfirm, WINDOWNAME='IDEA/Subject Summary - Get IDEA', Line1_System_Rule= self.systemPrompt)
         self.Subject_Details += Subject_Summary
-        Story.quickArt1(self, Subject_Summary)
+        if self.MakeArt ==True:
+            Story.quickArt1(self, Subject_Summary)
         return Subject_Summary
 
 
@@ -2098,8 +2116,13 @@ class Story():
         else:
             Persona_Role = self.Persona_Role
 
+        if 'MUSIC' in self.Mode.upper():
+            self.Persona_Task = MW.Music_Persona_Task
+
         Writer_Summary = Story.Basic_GPT_Query(self,Line2_Role = Persona_Role,Line4_Task= self.Persona_Task, Line3_Format = self.Persona_Format,  crazy = self.crazy, User_Confirm = self.UserConfirm, WINDOWNAME='Get Writer info',  Line1_System_Rule= self.systemPrompt)
-        Story.quickArt1(self, Writer_Summary)
+
+        if self.MakeArt ==True:
+            Story.quickArt1(self, Writer_Summary)
         return Writer_Summary
 
 
@@ -2118,8 +2141,9 @@ class Story():
             Writer_Style_Summary = Story.Basic_GPT_Query(self, Line2_Role=self.Persona_Role,
                                                      Line4_Task= lup.Music_Persona_Task + self.Writer_Summary,
                                                      Line3_Format=lup.Music_Persona_Format, crazy=self.crazy, User_Confirm = self.UserConfirm, WINDOWNAME='Get Song Writer Style', Line1_System_Rule= self.systemPrompt)
+        if self.MakeArt ==True:
+            Story.quickArt1(self, Writer_Style_Summary)
 
-        Story.quickArt1(self, Writer_Style_Summary)
 
         return Writer_Style_Summary
 
@@ -2129,9 +2153,9 @@ class Story():
     def quickArt1(self, Text = ''):
         if Text != '':
             try:
-                ArtPrompt = Story.GPTArt2(self, User_Subject=Text, prompt='Pick a completely random artist or photographer| art style| theme| mood |and a short prompt for DALL-E (AI-Art generator) to create a work of art/photograph', ArtFormat=self.Art_Persona_Format + ', <Short description of Work of art under 250 characters>')
+                ArtPrompt = cu.GPTArt2(self, User_Subject=Text, prompt='Pick a random artist, art style, theme and  mood - your task is to write a short prompt for DALL-E (AI-Art generator) to create a work of art/photograph', ArtFormat=self.Art_Persona_Format + ', <Short description of a Work of art inspired by text in  under 200 characters>')
                 try:
-                    ArtPath = Story.makeArt(self, Prompt=ArtPrompt)
+                    ArtPath = cu.makeArt(self, Prompt=ArtPrompt)
                     self.PersonaArtPath = ArtPath
                 except:
                     dn = 100
@@ -2586,7 +2610,7 @@ class Story():
     #             shutil.copyfile(originalFilepath, PicNewPath)
     #         return GPT_Response
 
-    def Basic_GPT_Query2(self, Line2_Role, Line3_Format, Line4_Task, Big=False, Background='', Background2='',
+    def Basic_GPT_Query(self, Line2_Role, Line3_Format, Line4_Task, Big=False, Background='', Background2='',
                          Background3='', Model="gpt-3.5-turbo", upgradeLimit=3000, Special='',
                          Line1_System_Rule=SP.System, crazy=.5, Subject='', Outline='', Allowed_Fails=8, SaveFile=False,
                          MakeArt=False, Mode='SHAINE SAYS', SavePath='', User_Confirm=False,
@@ -2595,975 +2619,1016 @@ class Story():
 
 
         CHATGPT = GPT.GPT_Mode()
-        GPTResponse = CHATGPT.Basic_GPT_Query()
-
-
-
-    def Basic_GPT_Query2(self,   Line2_Role  , Line3_Format,Line4_Task,Big = False,Background = '',Background2 = '', Background3 = '',Model = "gpt-3.5-turbo",upgradeLimit = 3000,Special = '',Line1_System_Rule = SP.System, crazy = .5, Subject= '', Outline = '', Allowed_Fails = 8, SaveFile = False,MakeArt = False, Mode = 'SHAINE SAYS', SavePath= '', User_Confirm = False, WINDOWNAME = "SHAINE Basic - ", ReviewPrompts = False,  version = 1, Retry= True):#use this to create art style for the work
-        self.PermanentSetPrompt = False
-        ReviewPrompts_Original = ReviewPrompts
-
-        if SavePath == '':
-            SavePath = self.SavePath
-
-        if Subject != '':
-            Line2_Role = Line2_Role + """Your role and subject matter expertise should fit the following Subject and or style and mood in the {Text} provided by the user Text:###""" + Subject + """###"""
-
-
-        if Retry == True:
-            self.OriginalSystem = Line1_System_Rule
-            self.OriginalRole = Line2_Role
-            self.OriginalFormat = Line3_Format
-            self.OriginalTask = Line4_Task
-            self.OriginalBackground = Background
-            self.OriginalBackground2 = Background2
-            self.OriginalBackground3 = Background3
-            self.Original_crazy= crazy
-            self.Originalversion = version
-            self.OriginalModel = Model
-            self.OriginalWindowName = WINDOWNAME
-
-        self.CurrentSystem = Line1_System_Rule
-        self.CurrentRole = Line2_Role
-        self.CurrentFormat = Line3_Format
-        self.CurrentTask = Line4_Task
-        self.CurrentBackground = Background
-        self.CurrentBackground2 = Background2
-        self.CurrentBackground3 = Background3
-        self.Current_crazy = crazy
-        self.Currentversion = version
-        self.CurrentModel = Model
-        self.CurrentWindowName = WINDOWNAME
-        self.FULLPROMPTONLY = self.CurrentSystem + self.CurrentRole + self.CurrentFormat + self.CurrentTask +self.CurrentBackground  + self.CurrentBackground2 + self.CurrentBackground3
-
-
-
-
-        TryCount = 0
-        KeepGoing = False
-        KillSwitch = 0
-        while KeepGoing == False and KillSwitch < Allowed_Fails:
-            TryCount+=1
-            try:
-
-                if ReviewPrompts ==True or ReviewPrompts_Original ==True:
-                    Story.GPT_Confirm_Prompts(self,  System=self.CurrentSystem,Role=self.CurrentRole, Format=self.CurrentFormat, Task=self.CurrentTask, Background=self.CurrentBackground, Background2=self.CurrentBackground2, Background3=self.CurrentBackground3, User_Confirm = User_Confirm, crazy=self.Current_crazy, TryCount=TryCount, WINDOWNAME="CONFIRM CHAT GPT PROMPTS - " + self.CurrentWindowName, version=self.Currentversion, Model=self.CurrentModel)
-
-
-                if TryCount > 1:
-                    Story.SaveLastGPTResponse( self,GPT_Response=self.Current_GPTResponse)
-                    Story.SaveLast_Prompt(self, System=self.CurrentSystem,Role=self.CurrentRole, Format=self.CurrentFormat, Task=self.CurrentTask,Background=self.CurrentBackground, Background2=self.CurrentBackground2,Background3=self.CurrentBackground3,crazy=self.Current_crazy,version = self.Currentversion, Model=self.CurrentModel)
-
-                self.Full_User_Prompt = """User Inputs to Chat GPT: 
-                1). """ + self.CurrentSystem + """
-                2).""" + self.CurrentRole + """
-                3).""" + self.CurrentFormat + """
-                4).""" + self.CurrentTask + """
-                Background (If Any Provided): """ + self.CurrentBackground + """
-                Additional Background: """ + self.CurrentBackground2 +self.CurrentBackground3
-
-                if version == 2:
-                    self.NewSystem = cu.Version2GPTSetUp(Format=self.CurrentFormat, System=self.CurrentSystem, Role=self.CurrentRole,
-                                                    Background=self.CurrentBackground, Background3=self.CurrentBackground3,
-                                                    Background2=self.CurrentBackground2)
-                    self.Full_User_Prompt = """User Inputs to Chat GPT: 
-                    System: """ + self.NewSystem + """
-                    USER: """ + self.CurrentTask
-
-                if len(self.Full_User_Prompt) > upgradeLimit:
-                    Model = "gpt-3.5-turbo-16k-0613"
-                elif len(self.Full_User_Prompt) < upgradeLimit:
-                    Model = "gpt-3.5-turbo"
-
-                if Big == True:
-                    Model = "gpt-3.5-turbo-16k-0613"
-
-
-                self.Current_GPTResponse = cu.ASKGPT(System=self.CurrentSystem,Role=self.CurrentRole, Format=self.CurrentFormat, Task=self.CurrentTask, Background=self.CurrentBackground, Background2=self.CurrentBackground2, Background3=self.CurrentBackground3,  crazy=self.Current_crazy, Model=Model, version=self.Currentversion)
-               # Story.SaveOriginalGPTResponse(self, GPT_Response=self.Current_GPTResponse)
-
-                if TryCount == 1:
-                    self.Original_GPTResponse = self.Current_GPTResponse
-
-
-
-                self.UserPromptsCount += 1
-
-                self.UserPrompts += 'User Input #' + str(self.UserPromptsCount)
-
-                self.UserPrompts += self.Full_User_Prompt + up.breakupOutput2 + up.breakupOutput2
-                self.Full_Transcript += 'User Input #' + str(self.UserPromptsCount) + self.Full_User_Prompt + up.breakupOutput2 + up.breakupOutput2
-                self.Full_Story += up.breakupOutput + "****Original GPT Response****" + self.Current_GPTResponse
-                self.Full_Transcript += up.breakupOutput + "****Original GPT Response****"  + up.breakupOutput + self.Current_GPTResponse
-
-
-                if User_Confirm == True:
-                    KeepGoing = Story.GPT_UserInput_Confirm_Tool(self, GPT_Response=self.Current_GPTResponse, System=self.CurrentSystem,Role=self.CurrentRole, Format=self.CurrentFormat, Task=self.CurrentTask, Background=self.CurrentBackground, Background2=self.CurrentBackground2, Background3=self.CurrentBackground3, crazy=self.Current_crazy, TryCount=TryCount, UserConfirm=User_Confirm, version = self.Currentversion, WINDOWNAME=self.CurrentWindowName)
-
-
-                else:
-                    self.Full_Story += "Final Text used for Response: " + up.LineBreak + self.Current_GPTResponse + up.LineBreak + up.breakupOutput2
-                    print("Used the following Text  for Response: " +  + up.LineBreak +self.Current_GPTResponse)
-                    KeepGoing = True
-
-
-
-
-            except:
-                print(' Error ChatGPT failed, trying to rerun prompt now.... if this happens too many times we will kill the script')
-                KillSwitch += 1
-                print(self.Full_User_Prompt)
-                #ReviewPrompts = True
-
-
-                #as written this does not run but if I got rid of +1 it could
-                if KillSwitch == Allowed_Fails+1:
-                    print('could not create a writer persona, redoing it now')
-                    if User_Confirm ==True:
-                        Story.GPT_Confirm_Prompts(self, System=self.CurrentSystem, Role=self.CurrentRole,
-                                                  Format=self.CurrentFormat, Task=self.CurrentTask,
-                                                  Background=self.CurrentBackground, Background2=self.CurrentBackground2,
-                                                  Background3=self.CurrentBackground3, crazy=self.Current_crazy,
-                                                  Model=self.CurrentModel)
-                    if Retry ==True:
-                        GPT_Response = Story.Basic_GPT_Query(self, Line2_Role='You are a skilled writer', Line3_Format=Line3_Format, Line4_Task=Line4_Task, Line1_System_Rule=self.systemPrompt, Retry=False, Allowed_Fails=2)
-                    continue
-
-
-            #print(up.breakupOutput)
-
-        if self.SaveTranscript == True:
-            try:
-                cu.SaveCSV(Text=WINDOWNAME + self.Full_Story, SavePath=self.SavePath,
-                           Title=self.FileName + ' All Responses Transcript (no Prompts)')
-                cu.SaveCSV(Text=WINDOWNAME + self.Full_Transcript, SavePath=self.SavePath,
-                           Title=self.FileName + ' All Responses and prompts')
-
-            except:
-                print("could not save files")
-
-
-        Title = Mode + '_' + self.current_time
-        if SaveFile ==True:
-            SaveText = self.current_time+ up.breakupOutput2 + self.UserPrompts + up.breakupOutput2 + 'SHAINE SAYS: '+  GPT_Response
-            print(SaveText)
-            cu.SaveCSV(Text=SaveText, SavePath=SavePath, Title = Title)
-
-        try:
-            if MakeArt ==True:
-                config = self.Art_Type_Config + StoryMode.artDetailsPrompt
-                GPT_Response1 = self.Current_GPTResponse[:3000]
-                AP = Story.GPTArt2(self,User_Subject=GPT_Response1, ArtFormat=StoryMode.artDetailsFormat,
-                                               prompt=config)
-                ArtPrompt = self.Art_Style_For_Story + AP
-
-                print(ArtPrompt)
-                originalFilepath = Story.makeArt(self,Prompt=ArtPrompt)
-                if self.Mode.upper() not in str(SavePath).upper():
-                    PicNewPath1 = Path(PureWindowsPath(SavePath , self.Mode))
-                    cu.Check_Folder_Exists(PicNewPath1)
-                else:
-                    PicNewPath1 = SavePath
-                PicNewPath =Path(PureWindowsPath(PicNewPath1 , self.FileName + '.png'))
-                shutil.copyfile(originalFilepath, PicNewPath)
-        except:
-            print("Could not move art to new folder")
-
-
-        return self.Current_GPTResponse
-
-    def SaveLast_Prompt(self, System,Role, Format, Task, Background, Background2, Background3, crazy = .5, Model = '', version = ''):
-        d = 100
-        self.LastSystem = System
-        self.LastRole = Role
-        self.LastFormat = Format
-        self.LastTask = Task
-        self.LastBackground = Background
-        self.LastBackground2 = Background2
-        self.LastBackground3 = Background3
-        self.LastCrazy = crazy
-        self.LastModel = Model
-        self.Lastversionl = version
-
-#This is redundant/not needed
-    def SaveOriginal_Prompt(self,GPT_Response, System,Role, Format, Task, Background, Background2, Background3, crazy = .5, Model = '', version = ''):
-        self.OriginalSystem = System
-        self.OriginalRole = Role
-        self.OriginalFormat = Format
-        self.OriginalTask = Task
-        self.OriginalBackground = Background
-        self.OriginalBackground2 = Background2
-        self.OriginalBackground3 = Background3
-        self.Original_crazy = crazy
-        self.OriginalModel= Model
-        self.Originalversion = version
-
-
-    def SaveCurrentGPTResponse(self,GPT_Response):
-        self.Current_GPTResponse = GPT_Response
-
-    def SaveLastGPTResponse(self,GPT_Response, crazy = .5):
-        self.Last_GPTResult = GPT_Response
-
-
-    def SaveOriginalGPTResponse(self,GPT_Response, crazy = .5):
-        self.Original_GPTResponse = GPT_Response
-
-    def GPT_Confirm_Prompts(self, TryCount = 0, WINDOWNAME = "CHAT GPT USER REVIEW PROMPTS"):
-
-
-        KeepGoing = False
-        while KeepGoing  == False:
-
-            try:
-                UserMode2 = -1
-
-
-
-
-                self.TE = TextEdit.TextEdit(UserConfirm=True)
-
-
-                if self.Currentversion ==1:
-                    query = self.TE.MakeWindow2(Text=self.Full_User_Prompt, UserConfirm=True,
-                                            WindowName=self.CurrentWindowName + str(TryCount) + "GPT Prompt Reviewer - V1",System=self.CurrentSystem, Role= self.CurrentRole, Format=self.CurrentFormat, Task=self.CurrentTask, Background=self.CurrentBackground, Background2= self.CurrentBackground2, Background3=self.CurrentBackground3, crazy=self.Current_crazy, version=self.Currentversion, Model=self.CurrentModel)
-
-
-                else:
-
-                    self.NewSystem = cu.Version2GPTSetUp(Format=self.CurrentFormat, System=self.CurrentSystem,
-                                                         Role=self.CurrentRole,
-                                                         Background=self.CurrentBackground,
-                                                         Background3=self.CurrentBackground3,
-                                                         Background2=self.CurrentBackground2)
-
-
-
-                    self.Full_User_Prompt = """User Inputs to Chat GPT: 
-                                        System: """ + self.NewSystem + """
-                                        USER: """ + self.CurrentTask
-
-                    query = self.TE.MakeWindow3(Text=self.Full_User_Prompt, UserConfirm=True,
-                                                WindowName=self.CurrentWindowName +'Try: ' + str(TryCount) + " - GPT Prompt Reviewer - V2 ",
-                                                System=self.NewSystem, Task=self.CurrentTask, crazy=self.Current_crazy, version=self.Currentversion, Model= self.CurrentModel)
-
-                UserMode2 = -1
-                UserMode2 = self.TE.GetUserResponseMode()
-                # query = self.TE.GetUserText()
-                print("UserMode2:")
-                print(UserMode2)
-
-
-            #TE = TextEdit.TextEdit()
-            #UserMode2 = -1
-            #UserMode2 = TE.MakeWindow2(Text=self.Full_User_Prompt, UserConfirm=True, System=System, Role= Role, Format=Format, Task=Task, Background=Background, Background2= Background2, Background3=Background3, crazy=crazy, )
-            #query = TE.GetUserText()
-
-
-
-                # if user presses continue it means no change keep going
-
-                if UserMode2 == 0:
-                    KeepGoing = True
-                    ReviewPrompts = False
-                    print("self.promptB:")
-                    print(self.promptB)
-
-
-                # Write code for what happens to pull values from User input and set temporarily
-                elif UserMode2 == 44 or UserMode2 == 2002:
-                    if UserMode2 == 44:
-                        KeepGoing = True
-
-
-                    ReviewPrompts = False
-
-                    # note rather than original version we want to pull the values from Class/Text Edit
-                    #this is not ready yet need to reevaluate
-
-
-
-
-                    try:
-                        Prompts1 = []
-                        Prompts2 = []
-                        self.LastSystem = self.CurrentSystem
-                        self.LastFormat = self.CurrentFormat
-                        self.LastTask = self.CurrentTask
-                        self.LastRole = self.CurrentRole
-                        self.LastBackground = self.CurrentBackground
-                        self.LastBackground2 = self.CurrentBackground2
-                        self.LastBackground3 = self.CurrentBackground3
-                        self.LastCrazy = self.Current_crazy
-                        self.LastVersion = self.Currentversion
-                        self.LastModel = self.CurrentModel
-
-
-                    except:
-
-
-                        d = 10
-
-
-
-
-
-
-
-
-
-                    if self.Currentversion ==2:
-
-                        self.CurrentFormat = ''
-                        self.CurrentRole = ''
-                        self.CurrentBackground = ''
-                        self.CurrentBackground2 = ''
-                        self.CurrentBackground3 = ''
-
-
-                        try:
-                            CurrentSystem = self.TE.Get_System()
-                            self.LastSystem = self.CurrentSystem
-                            if CurrentSystem != '':
-                                self.CurrentSystem = CurrentSystem
-                                Prompts1.append(self.CurrentSystem)
-                                Prompts2.append(Prompts2.append("Please refer to the ChatGPT Request Code provided as Reference, You Are currently updating the portion where it says 'NewSystem' within the openai.ChatCompletion.create function under the messages parameter. Make the best possible query based on this.   Note: You are using Model = " + self.CurrentModel + "CHAT GPT PROMPT BEING REVIEWED: {Role: 'system',content: " + self.CurrentTask ))
-                        except:
-                            c = 1
-
-
-
-                        try:
-                            CurrentTask = self.TE.Get_Task()
-                            self.LastTask = self.CurrentTask
-                            if CurrentTask != '':
-                                self.CurrentTask = CurrentTask
-                                Prompts1.append(self.CurrentTask)
-                                Prompts2.append("Please refer to the ChatGPT Request Code provided as Reference, You Are currently updating the portion where it says 'USER' within the openai.ChatCompletion.create function under the messages parameter. Make the best possible query based on this.   Note: You are using Model = " + self.CurrentModel + "CHAT GPT PROMPT BEING REVIEWED: {Role: 'user',content: " + self.CurrentTask )
-                        except:
-                            c = 1
-
-
-
-                        try:
-                            crazy = self.TE.Get_Crazy()
-
-                        except:
-                            c = 1
-
-                        try:
-                            if cu.check_numeric(crazy) and crazy!= '':
-                                self.crazy = crazy
-
-                        except:
-                            c = 1
-
-                        try:
-                            Currentversion = self.TE.Get_version()
-                            if Currentversion != '':
-                                self.Currentversion = Currentversion
-                                Prompts1.append(self.CurrentSystem)
-                                Prompts2.append("System")
-
-                        except:
-                            c = 1
-
-
-                    else:
-
-                        try:
-                            CurrentSystem = self.TE.Get_System()
-                            self.LastSystem = self.CurrentSystem
-                            if CurrentSystem != '':
-                                self.CurrentSystem = CurrentSystem
-                        except:
-                            c = 1
-                        try:
-                            CurrentRole = self.TE.Get_Role()
-                            self.LastSystem = self.CurrentSystem
-                            if CurrentRole != '':
-                                self.CurrentRole = CurrentRole
-                        except:
-                            c = 1
-                        try:
-                            CurrentFormat = self.TE.Get_Format()
-                            self.LastFormat = self.CurrentFormat
-                            if CurrentFormat != '':
-                                self.CurrentFormat = CurrentFormat
-                        except:
-                            c = 1
-
-                        try:
-                            CurrentTask = self.TE.Get_Task()
-                            self.LastTask= self.CurrentTask
-
-                            if CurrentTask != '':
-                                self.CurrentTask = CurrentTask
-                        except:
-                            c = 1
-
-                        try:
-                            CurrentBackground = self.TE.Get_Background()
-                            self.LastBackground = self.CurrentBackground
-
-                            if CurrentBackground != '':
-                                self.CurrentBackground = CurrentBackground
-                        except:
-                            c = 1
-
-                        try:
-                            CurrentBackground2 = self.TE.Get_Background2()
-                            self.LastBackground2 = self.CurrentBackground2
-
-                            if CurrentBackground2 != '':
-                                self.CurrentBackground2 = CurrentBackground2
-                        except:
-                            c = 1
-                        try:
-                            CurrentBackground3 = self.TE.Get_Background3()
-                            self.LastBackground3 = self.CurrentBackground3
-                            if CurrentBackground3 != '':
-                                self.CurrentBackground3 = CurrentBackground3
-                        except:
-                            c = 1
-
-                        try:
-                            crazy = self.TE.Get_Crazy()
-                            self.LastCrazy = self.Current_crazy
-                        except:
-                            c = 1
-
-                        try:
-                            if cu.check_numeric(crazy) and crazy != '':
-                                self.crazy = crazy
-
-                        except:
-                            c = 1
-
-                        try:
-                            Currentversion = self.TE.Get_version()
-                            self.Lastversion  = self.Currentversion
-                            if Currentversion != '':
-                                self.Currentversion = Currentversion
-
-                        except:
-                            c = 1
-
-                        # This is the mode for optimizing prompts
-
-                            # Get GPT To give System Prompt
-                            # Get GPT To give USER PROMPT
-                        if UserMode2 ==2002:
-                            if self.Currentversion == 1:
-                                print("Error not currently set up to optimize for Version 1")
-
-                            else:
-                                # P1_length = len(Prompts1)
-                                #
-                                # for i in range (0,P1_length)
-                                try:
-
-                                    self.LastWindowName = self.CurrentWindowName
-
-                                    self.CurrentTask = Story.Basic_GPT_Query(System=SSW.PROMPTFIX_System, Line2_Role=SSW.PROMPTFIX_ROLE, Line3_Format= SSW.PROMPTFIX_Format , Background= SSW.ChatGPT_CodeRef,
-                                                                             Line4_Task= SSW.PROMPTFIX_USER + """Note, You are providing a revised version of  'USER' values provided to you in the following code where I show you how I am using the messages arg while calling the 'openai.ChatCompletion.create' function (see code for reference) Here is the portion of code you are to review and provide with an updated value for the USER text    messages = [{"role": "system", "content": """ + self.CurrentSystem + """}),
-                                                                             {"role": "user", "content":""" + self.CurrentSystem + """}]""",
-                                                                             crazy=.5, WINDOWNAME='PROMPT Optimizer - Task' + self.CurrentWindowName)
-                                    self.CurrentSystem = Story.Basic_GPT_Query(System=SSW.PROMPTFIX_System,
-                                                                             Line2_Role=SSW.PROMPTFIX_ROLE,
-                                                                             Line3_Format=SSW.PROMPTFIX_Format,
-                                                                             Background=SSW.ChatGPT_CodeRef,
-                                                                             Line4_Task=SSW.PROMPTFIX_USER + """Note, You are providing a revised version of  'NewSystem' values provided to you in the following code where I show you how I am using the messages arg while calling the 'openai.ChatCompletion.create' function (see code for reference) Here is the portion of code you are to review and provide with an updated value for the USER text    messages = [{"role": "system", "content": """ + self.CurrentSystem + """}),
-                                                                                                     {"role": "user", "content":""" + self.CurrentSystem + """}]""",
-                                                                            crazy=self.Current_crazy, version=self.Currentversion, Model=self.CurrentModel, WINDOWNAME='PROMPT Optimizer - System' + self.CurrentWindowName)
-
-
-
-                                    self.PromptCoaching = Story.Basic_GPT_Query(System=SSW.PROMPTFIX_System,
-                                                                             Line2_Role=SSW.PROMPTFIX_ROLE,
-                                                                             Line3_Format=SSW.PROMPTFIX_Format,
-                                                                             Background=SSW.ChatGPT_CodeRef,
-                                                                             Line4_Task=SSW.PROMPTFIX_USER2 + """Note, You are providing feedback based on the Following 'NewSystem' and 'USER' values, provided in the following code with the full value being entered in the messages arg of the 'openai.ChatCompletion.create' function (see code for reference)     messages = [{"role": "system", "content": """ + self.CurrentSystem+ """}),
-                                                                             {"role": "user", "content":"""+ self.CurrentSystem + """}]""", crazy=self.Current_crazy, WINDOWNAME='PROMPT Optimizer - Details' + self.CurrentWindowName)
-                                    print("self.PromptCoaching")
-                                    print(self.PromptCoaching)
-
-                                    self.CurrentWindowName = self.LastWindowName
-                                    try:
-                                        current_time1 = datetime.datetime.now()
-                                        current_time = current_time1.strftime('%m-%d-%Y_%H.%M.%S')
-
-                                        cu.SaveCSV(SavePath=self.SavePath,Title=self.FileName + ' Prompt Coaching' + current_time, Text= self.PromptCoaching)
-                                    except:
-                                        d= 1
-
-
-                                except:
-                                    d=1
-
-
-
-                             #Story.Basic_GPT_Query(self, System=SSW.PROMPTFIX_System, )
-
-                # This can be final update because it will be somewhat tricky
-                # Write code for what happens to pull values from User input and set Permanently (Will really only work for Role, System, Format*), will not work for task or background if I am entering text with the task then I cant really do this, For Background it makes virtually 0 sense.
-                # Eventually there should be a change character/review characters mode.
-                elif UserMode2 == 441:
-                    #KeepGoing = True
-                    print("self.promptB:")
-                    print(self.promptB)
-
-                elif UserMode2 == 2000:
-                    self.Currentversion = self.TE.Get_version()
-                    if self.Currentversion ==1:
-                        self.LastVersion = self.Currentversion
-                        self.Currentversion =2
-
-                    elif self.Currentversion == 2:
-                        self.LastVersion = self.Currentversion
-                        self.Currentversion = 1
-
-                # #This is the mode for optimizing prompts
-                # elif UserMode2 == 2002:
-                #     #Get GPT To give System Prompt
-                #     #Get GPT To give USER PROMPT
-                #     if  version ==1:
-                #         print("Error not currently set up to optimize for Version 1")
-                #
-                #     else:
-                #         try:
-                #             CurrentSystem = self.TE.Get_System()
-                #             if CurrentSystem != '':
-                #                 self.CurrentSystem = CurrentSystem
-                #         except:
-                #             c = 1
-                #
-                #
-                #
-                #         try:
-                #             CurrentTask = self.TE.Get_Task()
-                #             if CurrentTask != '':
-                #                 self.CurrentTask = CurrentTask
-                #         except:
-                #             c = 1
-                #         Story.Basic_GPT_Query(self, System = SSW.PROMPTFIX_System )
-
-                #(Eventually Make this for version 1 so its all variables you either go one by one or you can have them return)
-
-
-
-
-
-
-
-                # Pull Up Original Prompt
-
-                elif UserMode2 == 13 or UserMode2==14:
-
-
-                    KeepGoing = False
-                    if UserMode2 ==14:
-                        #Make them into an array of all prior values so I can go back through time and pull them all in case I want to go back, also would be cool to have way to either go back or edit templates on the fly a little more (like overwrite data in a file)
-
-                        self.LastSystem = self.CurrentSystem
-                        self.LastRole = self.CurrentRole
-                        self.LastFormat = self.CurrentFormat
-                        self.LastTask = self.CurrentTask
-                        self.LastBackground = self.CurrentBackground
-                        self.LastBackground2 = self.CurrentBackground2
-                        self.LastBackground3= self.CurrentBackground3
-                        self.LastCrazy
-                        self.CurrentModel = self.LastModel
-                        self.Currentversion = self.Lastversion
-
-
-
-
-                        self.CurrentSystem = self.OriginalSystem
-                        self.CurrentRole = self.OriginalRole
-                        self.CurrentFormat = self.OriginalFormat
-                        self.CurrentTask = self.OriginalTask
-                        self.CurrentBackground = self.OriginalBackground
-                        self.CurrentBackground2 = self.OriginalBackground2
-                        self.CurrentBackground3 = self.OriginalBackground3
-                        self.Current_crazy = self.Original_crazy
-                        self.CurrentModel = self.OriginalModel
-                        self.Currentversion = self.Originalversion
-
-
-
-                    # print("self.promptB:")
-                    # print(self.promptB)
-
-                # Pull Up Last Prompt
-                    elif UserMode2 == 13:
-                         KeepGoing = False
-
-                         self.LastSystemz = self.CurrentSystem
-                         self.LastRolez = self.CurrentRole
-                         self.LastFormatz = self.CurrentFormat
-                         self.LastTaskz = self.CurrentTask
-                         self.LastBackgroundz = self.CurrentBackground
-                         self.LastBackground2z = self.CurrentBackground2
-                         self.LastBackground3z = self.CurrentBackground3
-                         self.LastCrazyz
-                         self.CurrentModelz = self.LastModel
-                         self.Currentversionz = self.Lastversion
-
-                         self.CurrentSystem = self.LastSystem
-                         self.CurrentRole = self.LastRole
-                         self.CurrentFormat = self.LastFormat
-                         self.CurrentTask = self.LastTask
-                         self.CurrentBackground = self.LastBackground
-                         self.CurrentBackground2 = self.LastBackground2
-                         self.CurrentBackground3 = self.LastBackground3
-                         self.Current_crazy = self.LastCrazy
-                         self.CurrentModel = self.LastModel
-                         self.Currentversion = self.Lastversion
-
-
-                         self.LastSystem = self.LastSystemz
-                         self.LastRole  = self.LastRolez
-                         self.LastFormat  = self.LastFormatz
-                         self.LastTask  = self.LastTaskz
-                         self.LastBackground  = self.LastBackgroundz
-                         self.LastBackground2 = self.LastBackground2z
-                         self.LastBackground3 = self.LastBackground3z
-                         self.LastCrazy = self.LastCrazyz
-                         self.CurrentModel  = self.CurrentModelz
-                         self.Currentversion = self.Currentversionz
-
-
-
-                    # GPT_Response = self.Last_Prompt
-                    # print("self.promptB:")
-                    # print(self.promptB)
-                    #
-
-                self.Full_User_Prompt = """User Inputs to Chat GPT: 
-                    1). """ + self.CurrentSystem + """
-                    2).""" + self.CurrentRole + """
-                    3).""" + self.CurrentFormat + """
-                    4).""" + self.CurrentTask + """
-                    Background (If Any Provided): """ + self.CurrentBackground + """
-                    Additional Background: """ + self.CurrentBackground2 + self.CurrentBackground3 + """
-                    Crazy:""" + self.Current_crazy + "Model: " + self.CurrentModel + "Version: " + self.Currentversion
-
-
-
-
-            except:
-                d = 10
-
-    def GPT_UserInput_Confirm_Tool(self,GPT_Response, System,Role, Format, Task, Background, Background2, Background3, crazy = .5, UserConfirm = True, WINDOWNAME = "USER CONFIRM CHAT GPT RESULTS",TryCount = 0, version = 2):
-
-
-        self.FULLPROMPTONLY = self.CurrentSystem + self.CurrentRole + self.CurrentFormat + self.CurrentTask +self.CurrentBackground  + self.CurrentBackground2 + self.CurrentBackground3
+        GPTResponse = CHATGPT.Basic_GPT_Query(Full_Transcript= self.Full_Transcript,FULL_Story = self.Full_Story,UserPrompts = self.UserPrompts,UserPromptsCount = self.UserPromptsCount,Mode = Mode, MakeArt=MakeArt, WINDOWNAME=WINDOWNAME, ReviewPrompts=ReviewPrompts, User_Confirm=User_Confirm, UserMode= self.UserMode,Line1_System_Rule= Line1_System_Rule, Line2_Role= Line2_Role, Line3_Format=Line3_Format, Line4_Task=Line4_Task, Background=Background, Background2=Background2, Background3=Background3,Retry=Retry, Model=Model, version=version, upgradeLimit=upgradeLimit, Allowed_Fails=Allowed_Fails, FileName=self.FileName, SavePath=self.SavePath, Big=Big, crazy=crazy, SaveFile=SaveFile, CurrentTime = self.current_time)
+        self.UserPrompts = CHATGPT.Get_UserPrompts()
+        self.Full_Story = CHATGPT.Get_Transcript()
+        self.Full_Transcript = CHATGPT.Get_Story()
+        self.UserPromptsCount = CHATGPT.Get_UserPromptsCount()
 
 
         try:
-            KeepGoing = False
-            EDIT = ''
-            #self.promptB = False
-            while KeepGoing == False:
-
-                speak1 = self.Speak
-                TryCount += 1
-
-
-
-                if KeepGoing == False:
-
-                    UserMode1 = -1
-                    if self.UserMode == "UI":
-
-                        try:
-                            self.TE = TextEdit.TextEdit(UserConfirm=True)
-                            query = self.TE.MakeWindow(Text=GPT_Response, UserConfirm=True,
-                                                       WindowName= "USER CONFIRM CHAT GPT RESULTS" +  self.CurrentWindowName + ' '  + str(TryCount) + ' ', USERLASTEDIT=EDIT, Current_Prompt=self.FULLPROMPTONLY, version=version)
-                            UserMode1 = -1
-                            UserMode1 = self.TE.GetUserResponseMode()
-                            # query = self.TE.GetUserText()
-                            print("UserMode1:")
-                            print(UserMode1)
-
-                        except:
-                            TE = TextEdit.TextEdit()
-                            UserMode1 = -1
-                            query1 = TE.MakeWindow(Text=GPT_Response, UserConfirm=True)
-                            query = TE.GetUserText()
-
-                    else:
-                        print("""
-                                                   Do you want to 
-                                                   1). Small Edit, Take the text and switch a few things
-                                                   2). ReWrite With Edits (Big Edit)
-                                                   3). Rewrite No Edits
-    
-                                                   """)
-                        self.promptB = cu.ConfirmBOT(GPT_Response, speak1)
-                        query = cu.getUserResponse()
-
-                    if (('one' in query or 'small' in query or 'few' in query or 'mini') and self.UserMode != "UI") or UserMode1 == 1:
-                        TryCount += 1
-                        #promptB2 = True
-                        #self.promptB = False
-                        KeepGoing = False
-                        if self.UserMode == "UI":
-                            EDIT = query
-                        else:
-                            EDIT = cu.editBotPrompt()
-
-                        print("EDIT")
-                        print(EDIT)
-
-                        self.Last_GPTResult = GPT_Response
-                        self.CurrentTempBackground2 =  self.CurrentBackground2 + self.CurrentBackground3
-                        if EDIT != '':
-
-                            Story.SaveLastGPTResponse(self, self.Current_GPTResponse)
-                            Story.SaveLast_Prompt(self, self.CurrentSystem, self.CurrentRole, self.CurrentFormat, self.CurrentTask, self.CurrentBackground, self.CurrentBackground2, self.CurrentBackground3,
-                                                  crazy=self.Currentcrazy, Model=self.CurrentModel,version=self.Currentversion, WindowName=  "USER CONFIRM CHAT GPT RESULTS" +  self.CurrentWindowName + ' '  + str(TryCount) + ' ' )
-
-                            self.Current_GPTResponse = cu.ASKGPT(crazy=self.Current_crazy,
-                                                     System="** YOUR FIRST RESPONSE WAS NOT CORRECT, FOLLOW THE SPECIFIC INSTRUCTIONS OF  THE USER EDITS PROVIDED TO YOU IN ORDER TO MAKE THE CORRECT ADJUSTMENTS to the Text. It is critical you follow my instructions" + self.CurrentSystem,
-                                                     Role=self.CurrentRole, Format=self.CurrentFormat,
-                                                     Task="""Rewrite the following text using the edits/Requirements provided and make it in the respective formate described. ReWrite Text: ###""" + self.Current_GPTResponse + "###",
-                                                     Background="***YOUR FIRST ATTEMPT WAS A FAIL, IT IS CRITICAL THAT YOU Use the following USER EDITS/REQUIREMENTS when completing your task USER EDIT/REQUIREMENTS: ###: " + EDIT + "### ***",
-                                                     Background2=self.CurrentBackground,Background3 = self.CurrentTempBackground2, version=self.Currentversion, Model=self.CurrentModel)
-
-                            Story.SaveCurrentGPTResponse(self, self.Current_GPTResponse)
-
-
-
-
-                            WINDOWNAME = self.CurrentWindowName + " - Small Edit"
-                            self.Full_Story += up.breakupOutput + "****Small Edit****" + EDIT + up.breakupOutput + GPT_Response
-                            self.Full_Transcript += up.breakupOutput + "****Small Edit****" + EDIT + up.breakupOutput + GPT_Response
-                            print(
-                                up.breakupOutput + "***************Used Quick Edit Based on User Input***********************" + up.breakupOutput + "Edit: " + EDIT + up.breakupOutput + GPT_Response + up.breakupOutput)
-
-                        else:
-                            WINDOWNAME += ' *** ERROR - No Text Provided, but you selected a User Input Option*** '
-
-
-
-                    elif (('rewrite' in query or 'with edits' in query or 'redo' in query or 'two' in query) and self.UserMode != "UI") or UserMode1 == 2:
-                        KeepGoing = False
-                        TryCount +=1
-
-                        if self.UserMode == "UI":
-                            EDIT = query
-                        else:
-                            EDIT = cu.editBotPrompt()
-                        print("EDIT")
-                        print(EDIT)
-
-                        self.Last_GPTResult = GPT_Response
-                        if EDIT != '':
-                            self.CurrentTempBackground2 =  self.CurrentBackground2 + self.CurrentBackground3
-
-                            Story.SaveLastGPTResponse(self, GPT_Response=self.Current_GPTResponse)
-                            Story.SaveLast_Prompt(self, System=self.CurrentSystem, Role=self.CurrentRole,
-                                                  Format=self.CurrentFormat, Task=self.CurrentTask,
-                                                  Background=self.CurrentBackground, Background2=self.CurrentBackground2,Background3=self.CurrentBackground3
-                                                  ,crazy=self.Current_crazy, version=self.Currentversion, Model=self.CurrentModel, WindowName=  self.CurrentWindowName + ' TRY # '  + str(TryCount) + ' ' )
-
-                            self.Current_GPTResponse = cu.ASKGPT(crazy=self.Current_crazy,
-                                                     System="** YOU Already tried once and failed, YOU MUST FOLLOW THE USER EDIT/REQUIREMENT INSTRUCTIONS from the USER in order TO COMPLETE THE TASK you are being requested. It is critical you answer this question according to the USER Edit/Requirements/Feeback Provided." + self.CurrentSystem,
-                                                     Role=self.CurrentRole,
-                                                     Format=self.CurrentFormat,
-                                                     Task=self.CurrentTask + "***YOUR FIRST ATTEMPT WAS A FAIL and you are doing the task for the " + str(TryCount)+  " , IT IS CRITICAL THAT YOU Follow the USER EDITS/Requirements in order to get the outcome/Response from you that the USER NEEDS TO MOVE FORWARD.  Use the following USER EDITS/REQUIREMENTS when completing your task.*** USER EDIT/REQUIREMENTS: ###: " + EDIT + "### ",
-                                                     Background=self.CurrentBackground,
-                                                     Background2=self.CurrentBackground2,Background3 = self.CurrentTempBackground3, version=self.Currentversion, Model=self.CurrentModel)
-
-
-                            #Story.SaveLastGPTResponse(self, self.Current_GPTResponse)
-
-
-                            TryCount += 1
-                            self.UserPrompts += up.breakupOutput + "****Rewrite with Edits***:" + EDIT + up.breakupOutput
-
-                            self.Full_Story += up.breakupOutput + "****Rewrite with Edits***:" + EDIT + up.breakupOutput + GPT_Response
-                            self.Full_Transcript += up.breakupOutput + "****Rewrite with Edits***:" + EDIT + up.breakupOutput + GPT_Response
-                            WINDOWNAME = self.WINDOWNAME + " - ReWrite with Edit"
-                            print(
-                                up.breakupOutput + "***************Used Redo With Notes/Edits Based on User Input***********************" + up.breakupOutput + "Edit: " + EDIT + up.breakupOutput + GPT_Response + up.breakupOutput)
-
-                        else:
-                            WINDOWNAME += ' *** ERROR - No Text Provided, but you selected a User Input Option*** '
-
-
-
-                    elif (('full' in query or 'try new' in query or 'new' in query or 'three' in query) and self.UserMode != "UI") or UserMode1 == 3:
-                        TryCount +=1
-
-                        Story.SaveLastGPTResponse(self, GPT_Response=self.Current_GPTResponse)
-                        Story.SaveLast_Prompt(self, System=self.CurrentSystem, Role=self.CurrentRole,
-                                              Format=self.CurrentFormat, Task=self.CurrentTask,
-                                              Background=self.CurrentBackground, Background2=self.CurrentBackground2,Background3=self.CurrentBackground3,
-                                              crazy=self.Current_crazy, version=self.Currentversion, Model=self.CurrentModel)
-
-                        self.Current_GPTResponse = cu.ASKGPT(crazy=self.Current_crazy,
-                                                     System="** YOUR FIRST ATTEMPT DID NOT SUCCEED, LISTEN TO THE #USER EDITS# PROVIDED TO YOU IN ORDER TO MAKE THE CORRECT ADJUSTMENTS" + self.CurrentSystem,
-                                                     Role=self.CurrentRole,
-                                                     Format=self.CurrentFormat,
-                                                     Task=self.CurrentTask, Background=self.CurrentBackground,Background2=self.CurrentBackground2,Background3 = self.CurrentBackground3, version=self.Currentversion, Model=self.CurrentModel)
-
-                        print(
-                            up.breakupOutput + "***************Used Redo ***********************" + up.breakupOutput + GPT_Response + up.breakupOutput)
-
-                        self.UserPrompts += up.breakupOutput + "****Rewrite***" + up.breakupOutput
-
-                        WINDOWNAME = WINDOWNAME + " - ReWrite"
-                        self.Full_Story += up.breakupOutput + "****Rewrite***" + up.breakupOutput + GPT_Response
-                        self.Full_Transcript += up.breakupOutput + "****Rewrite***" + up.breakupOutput + GPT_Response
-
-                    elif UserMode1 == 0:
-
-                        KeepGoing = True
-                        print("self.promptB:")
-                        print(self.promptB)
-
-
-                    # End All User Input, Run All The Way through
-                    elif UserMode1 == 5:
-                        self.UserConfirm = False
-                        KeepGoing = True
-                        print("self.promptB:")
-                        print(self.promptB)
-
-
-
-                    # End User Input for Small Items
-                    elif UserMode1 == 6:
-                        KeepGoing = True
-                        self.SmallPromptUser = False
-                        print("self.promptB:")
-                        print(self.promptB)
-
-
-                    # End User Input for Main Items - Skip to next part
-                    elif UserMode1 == 7:
-
-                        KeepGoing = True
-                        self.MainPromptUser = False
-                        print("self.promptB:")
-                        print(self.promptB)
-
-
-                    #Restores Asking User for confirmation (all prompts)
-                    elif UserMode1 == 50:
-
-                        KeepGoing = True
-                        self.MainPromptUser = True
-                        self.SmallPromptUser = True
-                        self.UserConfirm = True
-                        print("self.promptB:")
-                        print(self.promptB)
-
-
-
-
-                    # User Review Prompts
-                    elif UserMode1 == 10:
-
-
-
-                        #print("self.promptB:")
-                        # print(self.promptB)
-                        Story.GPT_Confirm_Prompts(self, TryCount=TryCount, WINDOWNAME= "CHAT GPT USER REVIEW PROMPTS - " + self.CurrentWindowName )
-                        ReviewPrompts = True
-                        KeepGoing = False
-
-
-                    # NOT DOING THIS NOW< FOR NOW I CAN HAVE IT SO I JUST PRESS REVIEW PROMPTS AND DO IT THERE IF I HAVE TO, IF ITS BOTHERSOME I CAN EVENTUALLY CODE THIS
-                    # #Restore original Response & Original Prompt
-                    # elif UserMode1 == 10:
-                    #     self.promptB = False
-                    #     print("self.promptB:")
-                    #     print(self.promptB)
-                    #     self.Reset_Prompts = True
-                    #     KillSwitch -= 1
-                    #
-                    #     continue
-
-                    # Pull Up Original Response
-                    elif UserMode1 == 11:
-                        #self.promptB = False
-                        KeepGoing = False
-                        GPT_Response = self.Original_GPTResponse
-                        # print("self.promptB:")
-                        # print(self.promptB)
-
-                    # Pull Up Last GPT
-                    elif UserMode1 == 12:
-                        #self.promptB = False
-                        KeepGoing = False
-                        GPT_Response = self.Last_GPTResult
-                        # print("self.promptB:")
-                        # print(self.promptB)
-
-
-                    # Option to Make Art
-                    elif UserMode1 == 8:
-                        self.MakeArtGPT = True
-                        config = self.Art_Type_Config + StoryMode.artDetailsPrompt
-                        GPT_Response1 = self.Current_GPTResponse[:3000]
-
-                        x44 = Story()
-                        Art_Role = self.Art_Style_For_Story
-                        Art_Format = StoryMode.artDetailsFormat
-                        t = threading.Thread(target=x44.GPTArt2, args=(Art_Role,GPT_Response1, config,Art_Format,self.Current_crazy,)).start()
-                        AP = x44.GPTArt2(self, Art_Role, User_Subject=GPT_Response1, ArtFormat=StoryMode.artDetailsFormat,
-                                           prompt=config, UserConfirm = UserConfirm, )
-                        ArtPrompt = self.Art_Style_For_Story + AP
-
-                        print(ArtPrompt)
-                        originalFilepath = Story.makeArt(self, Prompt=ArtPrompt)
-                        if self.Mode.upper() not in str(SavePath).upper():
-                            PicNewPath1 = Path(PureWindowsPath(SavePath, self.Mode))
-                            cu.Check_Folder_Exists(PicNewPath1)
-                        else:
-                            PicNewPath1 = SavePath
-                        PicNewPath = Path(PureWindowsPath(PicNewPath1, self.FileName + '.png'))
-                        shutil.copyfile(originalFilepath, PicNewPath)
-
-
-
-                        SavePath = self.SavePath
-                        SaveFile = self.FileName
-                        print("self.promptB:")
-                        print(self.promptB)
-                        #self.promptB = True
-
-
-
-                    # Selects the text from the user input
-                    elif UserMode1 == 4:
-                        if self.UserMode == "UI":
-                            EDIT = query
-                        else:
-                            EDIT = cu.editBotPrompt()
-
-                        if EDIT != '':
-                            GPT_Response = EDIT
-                            print(
-                                up.breakupOutput + "***************Input User  GPT Response Manually ***********************" + up.breakupOutput + GPT_Response + up.breakupOutput)
-                            WINDOWNAME = "PLEASE CONFIRM USERS TEXT BEING USED    -   " +  WINDOWNAME
-                            self.promptB = False
-                            KeepGoing = False
-                        else:
-                            WINDOWNAME = ' *** ERROR - No Text Provided, but you selected a User Input Option - TRY AGAIN*** ' + WINDOWNAME
+            SmallPromptUser = CHATGPT.Get_SmallPromptUser()
+            if SmallPromptUser == '':
+                x = 1
+            else:
+                self.SmallPromptUser = SmallPromptUser
+        except:
+            print("Error pulling small prompt user")
+
+        try:
+            UserConfirm = CHATGPT.Get_UserConfirm()
+            if UserConfirm == '':
+                x = 1
+            else:
+                self.UserConfirm = UserConfirm
 
         except:
-            print("Error with User Input Process")
+            print("Error pulling user confirm")
 
 
+        try:
+            MainPromptUser = CHATGPT.Get_MainPromptUser()
+            if MainPromptUser == '':
+                x= 1
+            else:
+                self.MainPromptUser = MainPromptUser
+
+        except:
+            print("Error pulling MainPromptUser")
 
 
-        return KeepGoing
+        return GPTResponse
 
+
+#
+#     def Basic_GPT_Query2(self,   Line2_Role  , Line3_Format,Line4_Task,Big = False,Background = '',Background2 = '', Background3 = '',Model = "gpt-3.5-turbo",upgradeLimit = 3000,Special = '',Line1_System_Rule = SP.System, crazy = .5, Subject= '', Outline = '', Allowed_Fails = 8, SaveFile = False,MakeArt = False, Mode = 'SHAINE SAYS', SavePath= '', User_Confirm = False, WINDOWNAME = "SHAINE Basic - ", ReviewPrompts = False,  version = 1, Retry= True):#use this to create art style for the work
+#         self.PermanentSetPrompt = False
+#         ReviewPrompts_Original = ReviewPrompts
+#
+#         if SavePath == '':
+#             SavePath = self.SavePath
+#
+#         if Subject != '':
+#             Line2_Role = Line2_Role + """Your role and subject matter expertise should fit the following Subject and or style and mood in the {Text} provided by the user Text:###""" + Subject + """###"""
+#
+#
+#         if Retry == True:
+#             self.OriginalSystem = Line1_System_Rule
+#             self.OriginalRole = Line2_Role
+#             self.OriginalFormat = Line3_Format
+#             self.OriginalTask = Line4_Task
+#             self.OriginalBackground = Background
+#             self.OriginalBackground2 = Background2
+#             self.OriginalBackground3 = Background3
+#             self.Original_crazy= crazy
+#             self.Originalversion = version
+#             self.OriginalModel = Model
+#             self.OriginalWindowName = WINDOWNAME
+#
+#         self.CurrentSystem = Line1_System_Rule
+#         self.CurrentRole = Line2_Role
+#         self.CurrentFormat = Line3_Format
+#         self.CurrentTask = Line4_Task
+#         self.CurrentBackground = Background
+#         self.CurrentBackground2 = Background2
+#         self.CurrentBackground3 = Background3
+#         self.Current_crazy = crazy
+#         self.Currentversion = version
+#         self.CurrentModel = Model
+#         self.CurrentWindowName = WINDOWNAME
+#         self.FULLPROMPTONLY = self.CurrentSystem + self.CurrentRole + self.CurrentFormat + self.CurrentTask +self.CurrentBackground  + self.CurrentBackground2 + self.CurrentBackground3
+#
+#
+#
+#
+#         TryCount = 0
+#         KeepGoing = False
+#         KillSwitch = 0
+#         while KeepGoing == False and KillSwitch < Allowed_Fails:
+#             TryCount+=1
+#             try:
+#
+#                 if ReviewPrompts ==True or ReviewPrompts_Original ==True:
+#                     Story.GPT_Confirm_Prompts(self,  System=self.CurrentSystem,Role=self.CurrentRole, Format=self.CurrentFormat, Task=self.CurrentTask, Background=self.CurrentBackground, Background2=self.CurrentBackground2, Background3=self.CurrentBackground3, User_Confirm = User_Confirm, crazy=self.Current_crazy, TryCount=TryCount, WINDOWNAME="CONFIRM CHAT GPT PROMPTS - " + self.CurrentWindowName, version=self.Currentversion, Model=self.CurrentModel)
+#
+#
+#                 if TryCount > 1:
+#                     Story.SaveLastGPTResponse( self,GPT_Response=self.Current_GPTResponse)
+#                     Story.SaveLast_Prompt(self, System=self.CurrentSystem,Role=self.CurrentRole, Format=self.CurrentFormat, Task=self.CurrentTask,Background=self.CurrentBackground, Background2=self.CurrentBackground2,Background3=self.CurrentBackground3,crazy=self.Current_crazy,version = self.Currentversion, Model=self.CurrentModel)
+#
+#                 self.Full_User_Prompt = """User Inputs to Chat GPT:
+#                 1). """ + self.CurrentSystem + """
+#                 2).""" + self.CurrentRole + """
+#                 3).""" + self.CurrentFormat + """
+#                 4).""" + self.CurrentTask + """
+#                 Background (If Any Provided): """ + self.CurrentBackground + """
+#                 Additional Background: """ + self.CurrentBackground2 +self.CurrentBackground3
+#
+#                 if version == 2:
+#                     self.NewSystem = cu.Version2GPTSetUp(Format=self.CurrentFormat, System=self.CurrentSystem, Role=self.CurrentRole,
+#                                                     Background=self.CurrentBackground, Background3=self.CurrentBackground3,
+#                                                     Background2=self.CurrentBackground2)
+#                     self.Full_User_Prompt = """User Inputs to Chat GPT:
+#                     System: """ + self.NewSystem + """
+#                     USER: """ + self.CurrentTask
+#
+#                 if len(self.Full_User_Prompt) > upgradeLimit:
+#                     Model = "gpt-3.5-turbo-16k-0613"
+#                 elif len(self.Full_User_Prompt) < upgradeLimit:
+#                     Model = "gpt-3.5-turbo"
+#
+#                 if Big == True:
+#                     Model = "gpt-3.5-turbo-16k-0613"
+#
+#
+#                 self.Current_GPTResponse = cu.ASKGPT(System=self.CurrentSystem,Role=self.CurrentRole, Format=self.CurrentFormat, Task=self.CurrentTask, Background=self.CurrentBackground, Background2=self.CurrentBackground2, Background3=self.CurrentBackground3,  crazy=self.Current_crazy, Model=Model, version=self.Currentversion)
+#                # Story.SaveOriginalGPTResponse(self, GPT_Response=self.Current_GPTResponse)
+#
+#                 if TryCount == 1:
+#                     self.Original_GPTResponse = self.Current_GPTResponse
+#
+#
+#
+#                 self.UserPromptsCount += 1
+#
+#                 self.UserPrompts += 'User Input #' + str(self.UserPromptsCount)
+#
+#                 self.UserPrompts += self.Full_User_Prompt + up.breakupOutput2 + up.breakupOutput2
+#                 self.Full_Transcript += 'User Input #' + str(self.UserPromptsCount) + self.Full_User_Prompt + up.breakupOutput2 + up.breakupOutput2
+#                 self.Full_Story += up.breakupOutput + "****Original GPT Response****" + self.Current_GPTResponse
+#                 self.Full_Transcript += up.breakupOutput + "****Original GPT Response****"  + up.breakupOutput + self.Current_GPTResponse
+#
+#
+#                 if User_Confirm == True:
+#                     KeepGoing = Story.GPT_UserInput_Confirm_Tool(self, GPT_Response=self.Current_GPTResponse, System=self.CurrentSystem,Role=self.CurrentRole, Format=self.CurrentFormat, Task=self.CurrentTask, Background=self.CurrentBackground, Background2=self.CurrentBackground2, Background3=self.CurrentBackground3, crazy=self.Current_crazy, TryCount=TryCount, UserConfirm=User_Confirm, version = self.Currentversion, WINDOWNAME=self.CurrentWindowName)
+#
+#
+#                 else:
+#                     self.Full_Story += "Final Text used for Response: " + up.LineBreak + self.Current_GPTResponse + up.LineBreak + up.breakupOutput2
+#                     print("Used the following Text  for Response: " +  + up.LineBreak +self.Current_GPTResponse)
+#                     KeepGoing = True
+#
+#
+#
+#
+#             except:
+#                 print(' Error ChatGPT failed, trying to rerun prompt now.... if this happens too many times we will kill the script')
+#                 KillSwitch += 1
+#                 print(self.Full_User_Prompt)
+#                 #ReviewPrompts = True
+#
+#
+#                 #as written this does not run but if I got rid of +1 it could
+#                 if KillSwitch == Allowed_Fails+1:
+#                     print('could not create a writer persona, redoing it now')
+#                     if User_Confirm ==True:
+#                         Story.GPT_Confirm_Prompts(self, System=self.CurrentSystem, Role=self.CurrentRole,
+#                                                   Format=self.CurrentFormat, Task=self.CurrentTask,
+#                                                   Background=self.CurrentBackground, Background2=self.CurrentBackground2,
+#                                                   Background3=self.CurrentBackground3, crazy=self.Current_crazy,
+#                                                   Model=self.CurrentModel)
+#                     if Retry ==True:
+#                         GPT_Response = Story.Basic_GPT_Query(self, Line2_Role='You are a skilled writer', Line3_Format=Line3_Format, Line4_Task=Line4_Task, Line1_System_Rule=self.systemPrompt, Retry=False, Allowed_Fails=2)
+#                     continue
+#
+#
+#             #print(up.breakupOutput)
+#
+#         if self.SaveTranscript == True:
+#             try:
+#                 cu.SaveCSV(Text=WINDOWNAME + self.Full_Story, SavePath=self.SavePath,
+#                            Title=self.FileName + ' All Responses Transcript (no Prompts)')
+#                 cu.SaveCSV(Text=WINDOWNAME + self.Full_Transcript, SavePath=self.SavePath,
+#                            Title=self.FileName + ' All Responses and prompts')
+#
+#             except:
+#                 print("could not save files")
+#
+#
+#         Title = Mode + '_' + self.current_time
+#         if SaveFile ==True:
+#             SaveText = self.current_time+ up.breakupOutput2 + self.UserPrompts + up.breakupOutput2 + 'SHAINE SAYS: '+  GPT_Response
+#             print(SaveText)
+#             cu.SaveCSV(Text=SaveText, SavePath=SavePath, Title = Title)
+#
+#         try:
+#             if MakeArt ==True:
+#                 config = self.Art_Type_Config + StoryMode.artDetailsPrompt
+#                 GPT_Response1 = self.Current_GPTResponse[:3000]
+#                 AP = Story.GPTArt2(self,User_Subject=GPT_Response1, ArtFormat=StoryMode.artDetailsFormat,
+#                                                prompt=config)
+#                 ArtPrompt = self.Art_Style_For_Story + AP
+#
+#                 print(ArtPrompt)
+#                 originalFilepath = Story.makeArt(self,Prompt=ArtPrompt)
+#                 if self.Mode.upper() not in str(SavePath).upper():
+#                     PicNewPath1 = Path(PureWindowsPath(SavePath , self.Mode))
+#                     cu.Check_Folder_Exists(PicNewPath1)
+#                 else:
+#                     PicNewPath1 = SavePath
+#                 PicNewPath =Path(PureWindowsPath(PicNewPath1 , self.FileName + '.png'))
+#                 shutil.copyfile(originalFilepath, PicNewPath)
+#         except:
+#             print("Could not move art to new folder")
+#
+#
+#         return self.Current_GPTResponse
+#
+#     def SaveLast_Prompt(self, System,Role, Format, Task, Background, Background2, Background3, crazy = .5, Model = '', version = ''):
+#         d = 100
+#         self.LastSystem = System
+#         self.LastRole = Role
+#         self.LastFormat = Format
+#         self.LastTask = Task
+#         self.LastBackground = Background
+#         self.LastBackground2 = Background2
+#         self.LastBackground3 = Background3
+#         self.LastCrazy = crazy
+#         self.LastModel = Model
+#         self.Lastversionl = version
+#
+# #This is redundant/not needed
+#     def SaveOriginal_Prompt(self,GPT_Response, System,Role, Format, Task, Background, Background2, Background3, crazy = .5, Model = '', version = ''):
+#         self.OriginalSystem = System
+#         self.OriginalRole = Role
+#         self.OriginalFormat = Format
+#         self.OriginalTask = Task
+#         self.OriginalBackground = Background
+#         self.OriginalBackground2 = Background2
+#         self.OriginalBackground3 = Background3
+#         self.Original_crazy = crazy
+#         self.OriginalModel= Model
+#         self.Originalversion = version
+#
+#
+#     def SaveCurrentGPTResponse(self,GPT_Response):
+#         self.Current_GPTResponse = GPT_Response
+#
+#     def SaveLastGPTResponse(self,GPT_Response, crazy = .5):
+#         self.Last_GPTResult = GPT_Response
+#
+#
+#     def SaveOriginalGPTResponse(self,GPT_Response, crazy = .5):
+#         self.Original_GPTResponse = GPT_Response
+#
+#     def GPT_Confirm_Prompts(self, TryCount = 0, WINDOWNAME = "CHAT GPT USER REVIEW PROMPTS"):
+#
+#
+#         KeepGoing = False
+#         while KeepGoing  == False:
+#
+#             try:
+#                 UserMode2 = -1
+#
+#
+#
+#
+#                 self.TE = TextEdit.TextEdit(UserConfirm=True)
+#
+#
+#                 if self.Currentversion ==1:
+#                     query = self.TE.MakeWindow2(Text=self.Full_User_Prompt, UserConfirm=True,
+#                                             WindowName=self.CurrentWindowName + str(TryCount) + "GPT Prompt Reviewer - V1",System=self.CurrentSystem, Role= self.CurrentRole, Format=self.CurrentFormat, Task=self.CurrentTask, Background=self.CurrentBackground, Background2= self.CurrentBackground2, Background3=self.CurrentBackground3, crazy=self.Current_crazy, version=self.Currentversion, Model=self.CurrentModel)
+#
+#
+#                 else:
+#
+#                     self.NewSystem = cu.Version2GPTSetUp(Format=self.CurrentFormat, System=self.CurrentSystem,
+#                                                          Role=self.CurrentRole,
+#                                                          Background=self.CurrentBackground,
+#                                                          Background3=self.CurrentBackground3,
+#                                                          Background2=self.CurrentBackground2)
+#
+#
+#
+#                     self.Full_User_Prompt = """User Inputs to Chat GPT:
+#                                         System: """ + self.NewSystem + """
+#                                         USER: """ + self.CurrentTask
+#
+#                     query = self.TE.MakeWindow3(Text=self.Full_User_Prompt, UserConfirm=True,
+#                                                 WindowName=self.CurrentWindowName +'Try: ' + str(TryCount) + " - GPT Prompt Reviewer - V2 ",
+#                                                 System=self.NewSystem, Task=self.CurrentTask, crazy=self.Current_crazy, version=self.Currentversion, Model= self.CurrentModel)
+#
+#                 UserMode2 = -1
+#                 UserMode2 = self.TE.GetUserResponseMode()
+#                 # query = self.TE.GetUserText()
+#                 print("UserMode2:")
+#                 print(UserMode2)
+#
+#
+#             #TE = TextEdit.TextEdit()
+#             #UserMode2 = -1
+#             #UserMode2 = TE.MakeWindow2(Text=self.Full_User_Prompt, UserConfirm=True, System=System, Role= Role, Format=Format, Task=Task, Background=Background, Background2= Background2, Background3=Background3, crazy=crazy, )
+#             #query = TE.GetUserText()
+#
+#
+#
+#                 # if user presses continue it means no change keep going
+#
+#                 if UserMode2 == 0:
+#                     KeepGoing = True
+#                     ReviewPrompts = False
+#                     print("self.promptB:")
+#                     print(self.promptB)
+#
+#
+#                 # Write code for what happens to pull values from User input and set temporarily
+#                 elif UserMode2 == 44 or UserMode2 == 2002:
+#                     if UserMode2 == 44:
+#                         KeepGoing = True
+#
+#
+#                     ReviewPrompts = False
+#
+#                     # note rather than original version we want to pull the values from Class/Text Edit
+#                     #this is not ready yet need to reevaluate
+#
+#
+#
+#
+#                     try:
+#                         Prompts1 = []
+#                         Prompts2 = []
+#                         self.LastSystem = self.CurrentSystem
+#                         self.LastFormat = self.CurrentFormat
+#                         self.LastTask = self.CurrentTask
+#                         self.LastRole = self.CurrentRole
+#                         self.LastBackground = self.CurrentBackground
+#                         self.LastBackground2 = self.CurrentBackground2
+#                         self.LastBackground3 = self.CurrentBackground3
+#                         self.LastCrazy = self.Current_crazy
+#                         self.LastVersion = self.Currentversion
+#                         self.LastModel = self.CurrentModel
+#
+#
+#                     except:
+#
+#
+#                         d = 10
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#                     if self.Currentversion ==2:
+#
+#                         self.CurrentFormat = ''
+#                         self.CurrentRole = ''
+#                         self.CurrentBackground = ''
+#                         self.CurrentBackground2 = ''
+#                         self.CurrentBackground3 = ''
+#
+#
+#                         try:
+#                             CurrentSystem = self.TE.Get_System()
+#                             self.LastSystem = self.CurrentSystem
+#                             if CurrentSystem != '':
+#                                 self.CurrentSystem = CurrentSystem
+#                                 Prompts1.append(self.CurrentSystem)
+#                                 Prompts2.append(Prompts2.append("Please refer to the ChatGPT Request Code provided as Reference, You Are currently updating the portion where it says 'NewSystem' within the openai.ChatCompletion.create function under the messages parameter. Make the best possible query based on this.   Note: You are using Model = " + self.CurrentModel + "CHAT GPT PROMPT BEING REVIEWED: {Role: 'system',content: " + self.CurrentTask ))
+#                         except:
+#                             c = 1
+#
+#
+#
+#                         try:
+#                             CurrentTask = self.TE.Get_Task()
+#                             self.LastTask = self.CurrentTask
+#                             if CurrentTask != '':
+#                                 self.CurrentTask = CurrentTask
+#                                 Prompts1.append(self.CurrentTask)
+#                                 Prompts2.append("Please refer to the ChatGPT Request Code provided as Reference, You Are currently updating the portion where it says 'USER' within the openai.ChatCompletion.create function under the messages parameter. Make the best possible query based on this.   Note: You are using Model = " + self.CurrentModel + "CHAT GPT PROMPT BEING REVIEWED: {Role: 'user',content: " + self.CurrentTask )
+#                         except:
+#                             c = 1
+#
+#
+#
+#                         try:
+#                             crazy = self.TE.Get_Crazy()
+#
+#                         except:
+#                             c = 1
+#
+#                         try:
+#                             if cu.check_numeric(crazy) and crazy!= '':
+#                                 self.crazy = crazy
+#
+#                         except:
+#                             c = 1
+#
+#                         try:
+#                             Currentversion = self.TE.Get_version()
+#                             if Currentversion != '':
+#                                 self.Currentversion = Currentversion
+#                                 Prompts1.append(self.CurrentSystem)
+#                                 Prompts2.append("System")
+#
+#                         except:
+#                             c = 1
+#
+#
+#                     else:
+#
+#                         try:
+#                             CurrentSystem = self.TE.Get_System()
+#                             self.LastSystem = self.CurrentSystem
+#                             if CurrentSystem != '':
+#                                 self.CurrentSystem = CurrentSystem
+#                         except:
+#                             c = 1
+#                         try:
+#                             CurrentRole = self.TE.Get_Role()
+#                             self.LastSystem = self.CurrentSystem
+#                             if CurrentRole != '':
+#                                 self.CurrentRole = CurrentRole
+#                         except:
+#                             c = 1
+#                         try:
+#                             CurrentFormat = self.TE.Get_Format()
+#                             self.LastFormat = self.CurrentFormat
+#                             if CurrentFormat != '':
+#                                 self.CurrentFormat = CurrentFormat
+#                         except:
+#                             c = 1
+#
+#                         try:
+#                             CurrentTask = self.TE.Get_Task()
+#                             self.LastTask= self.CurrentTask
+#
+#                             if CurrentTask != '':
+#                                 self.CurrentTask = CurrentTask
+#                         except:
+#                             c = 1
+#
+#                         try:
+#                             CurrentBackground = self.TE.Get_Background()
+#                             self.LastBackground = self.CurrentBackground
+#
+#                             if CurrentBackground != '':
+#                                 self.CurrentBackground = CurrentBackground
+#                         except:
+#                             c = 1
+#
+#                         try:
+#                             CurrentBackground2 = self.TE.Get_Background2()
+#                             self.LastBackground2 = self.CurrentBackground2
+#
+#                             if CurrentBackground2 != '':
+#                                 self.CurrentBackground2 = CurrentBackground2
+#                         except:
+#                             c = 1
+#                         try:
+#                             CurrentBackground3 = self.TE.Get_Background3()
+#                             self.LastBackground3 = self.CurrentBackground3
+#                             if CurrentBackground3 != '':
+#                                 self.CurrentBackground3 = CurrentBackground3
+#                         except:
+#                             c = 1
+#
+#                         try:
+#                             crazy = self.TE.Get_Crazy()
+#                             self.LastCrazy = self.Current_crazy
+#                         except:
+#                             c = 1
+#
+#                         try:
+#                             if cu.check_numeric(crazy) and crazy != '':
+#                                 self.crazy = crazy
+#
+#                         except:
+#                             c = 1
+#
+#                         try:
+#                             Currentversion = self.TE.Get_version()
+#                             self.Lastversion  = self.Currentversion
+#                             if Currentversion != '':
+#                                 self.Currentversion = Currentversion
+#
+#                         except:
+#                             c = 1
+#
+#                         # This is the mode for optimizing prompts
+#
+#                             # Get GPT To give System Prompt
+#                             # Get GPT To give USER PROMPT
+#                         if UserMode2 ==2002:
+#                             if self.Currentversion == 1:
+#                                 print("Error not currently set up to optimize for Version 1")
+#
+#                             else:
+#                                 # P1_length = len(Prompts1)
+#                                 #
+#                                 # for i in range (0,P1_length)
+#                                 try:
+#
+#                                     self.LastWindowName = self.CurrentWindowName
+#
+#                                     self.CurrentTask = Story.Basic_GPT_Query(System=SSW.PROMPTFIX_System, Line2_Role=SSW.PROMPTFIX_ROLE, Line3_Format= SSW.PROMPTFIX_Format , Background= SSW.ChatGPT_CodeRef,
+#                                                                              Line4_Task= SSW.PROMPTFIX_USER + """Note, You are providing a revised version of  'USER' values provided to you in the following code where I show you how I am using the messages arg while calling the 'openai.ChatCompletion.create' function (see code for reference) Here is the portion of code you are to review and provide with an updated value for the USER text    messages = [{"role": "system", "content": """ + self.CurrentSystem + """}),
+#                                                                              {"role": "user", "content":""" + self.CurrentSystem + """}]""",
+#                                                                              crazy=.5, WINDOWNAME='PROMPT Optimizer - Task' + self.CurrentWindowName)
+#                                     self.CurrentSystem = Story.Basic_GPT_Query(System=SSW.PROMPTFIX_System,
+#                                                                              Line2_Role=SSW.PROMPTFIX_ROLE,
+#                                                                              Line3_Format=SSW.PROMPTFIX_Format,
+#                                                                              Background=SSW.ChatGPT_CodeRef,
+#                                                                              Line4_Task=SSW.PROMPTFIX_USER + """Note, You are providing a revised version of  'NewSystem' values provided to you in the following code where I show you how I am using the messages arg while calling the 'openai.ChatCompletion.create' function (see code for reference) Here is the portion of code you are to review and provide with an updated value for the USER text    messages = [{"role": "system", "content": """ + self.CurrentSystem + """}),
+#                                                                                                      {"role": "user", "content":""" + self.CurrentSystem + """}]""",
+#                                                                             crazy=self.Current_crazy, version=self.Currentversion, Model=self.CurrentModel, WINDOWNAME='PROMPT Optimizer - System' + self.CurrentWindowName)
+#
+#
+#
+#                                     self.PromptCoaching = Story.Basic_GPT_Query(System=SSW.PROMPTFIX_System,
+#                                                                              Line2_Role=SSW.PROMPTFIX_ROLE,
+#                                                                              Line3_Format=SSW.PROMPTFIX_Format,
+#                                                                              Background=SSW.ChatGPT_CodeRef,
+#                                                                              Line4_Task=SSW.PROMPTFIX_USER2 + """Note, You are providing feedback based on the Following 'NewSystem' and 'USER' values, provided in the following code with the full value being entered in the messages arg of the 'openai.ChatCompletion.create' function (see code for reference)     messages = [{"role": "system", "content": """ + self.CurrentSystem+ """}),
+#                                                                              {"role": "user", "content":"""+ self.CurrentSystem + """}]""", crazy=self.Current_crazy, WINDOWNAME='PROMPT Optimizer - Details' + self.CurrentWindowName)
+#                                     print("self.PromptCoaching")
+#                                     print(self.PromptCoaching)
+#
+#                                     self.CurrentWindowName = self.LastWindowName
+#                                     try:
+#                                         current_time1 = datetime.datetime.now()
+#                                         current_time = current_time1.strftime('%m-%d-%Y_%H.%M.%S')
+#
+#                                         cu.SaveCSV(SavePath=self.SavePath,Title=self.FileName + ' Prompt Coaching' + current_time, Text= self.PromptCoaching)
+#                                     except:
+#                                         d= 1
+#
+#
+#                                 except:
+#                                     d=1
+#
+#
+#
+#                              #Story.Basic_GPT_Query(self, System=SSW.PROMPTFIX_System, )
+#
+#                 # This can be final update because it will be somewhat tricky
+#                 # Write code for what happens to pull values from User input and set Permanently (Will really only work for Role, System, Format*), will not work for task or background if I am entering text with the task then I cant really do this, For Background it makes virtually 0 sense.
+#                 # Eventually there should be a change character/review characters mode.
+#                 elif UserMode2 == 441:
+#                     #KeepGoing = True
+#                     print("self.promptB:")
+#                     print(self.promptB)
+#
+#                 elif UserMode2 == 2000:
+#                     self.Currentversion = self.TE.Get_version()
+#                     if self.Currentversion ==1:
+#                         self.LastVersion = self.Currentversion
+#                         self.Currentversion =2
+#
+#                     elif self.Currentversion == 2:
+#                         self.LastVersion = self.Currentversion
+#                         self.Currentversion = 1
+#
+#                 # #This is the mode for optimizing prompts
+#                 # elif UserMode2 == 2002:
+#                 #     #Get GPT To give System Prompt
+#                 #     #Get GPT To give USER PROMPT
+#                 #     if  version ==1:
+#                 #         print("Error not currently set up to optimize for Version 1")
+#                 #
+#                 #     else:
+#                 #         try:
+#                 #             CurrentSystem = self.TE.Get_System()
+#                 #             if CurrentSystem != '':
+#                 #                 self.CurrentSystem = CurrentSystem
+#                 #         except:
+#                 #             c = 1
+#                 #
+#                 #
+#                 #
+#                 #         try:
+#                 #             CurrentTask = self.TE.Get_Task()
+#                 #             if CurrentTask != '':
+#                 #                 self.CurrentTask = CurrentTask
+#                 #         except:
+#                 #             c = 1
+#                 #         Story.Basic_GPT_Query(self, System = SSW.PROMPTFIX_System )
+#
+#                 #(Eventually Make this for version 1 so its all variables you either go one by one or you can have them return)
+#
+#
+#
+#
+#
+#
+#
+#                 # Pull Up Original Prompt
+#
+#                 elif UserMode2 == 13 or UserMode2==14:
+#
+#
+#                     KeepGoing = False
+#                     if UserMode2 ==14:
+#                         #Make them into an array of all prior values so I can go back through time and pull them all in case I want to go back, also would be cool to have way to either go back or edit templates on the fly a little more (like overwrite data in a file)
+#
+#                         self.LastSystem = self.CurrentSystem
+#                         self.LastRole = self.CurrentRole
+#                         self.LastFormat = self.CurrentFormat
+#                         self.LastTask = self.CurrentTask
+#                         self.LastBackground = self.CurrentBackground
+#                         self.LastBackground2 = self.CurrentBackground2
+#                         self.LastBackground3= self.CurrentBackground3
+#                         self.LastCrazy
+#                         self.CurrentModel = self.LastModel
+#                         self.Currentversion = self.Lastversion
+#
+#
+#
+#
+#                         self.CurrentSystem = self.OriginalSystem
+#                         self.CurrentRole = self.OriginalRole
+#                         self.CurrentFormat = self.OriginalFormat
+#                         self.CurrentTask = self.OriginalTask
+#                         self.CurrentBackground = self.OriginalBackground
+#                         self.CurrentBackground2 = self.OriginalBackground2
+#                         self.CurrentBackground3 = self.OriginalBackground3
+#                         self.Current_crazy = self.Original_crazy
+#                         self.CurrentModel = self.OriginalModel
+#                         self.Currentversion = self.Originalversion
+#
+#
+#
+#                     # print("self.promptB:")
+#                     # print(self.promptB)
+#
+#                 # Pull Up Last Prompt
+#                     elif UserMode2 == 13:
+#                          KeepGoing = False
+#
+#                          self.LastSystemz = self.CurrentSystem
+#                          self.LastRolez = self.CurrentRole
+#                          self.LastFormatz = self.CurrentFormat
+#                          self.LastTaskz = self.CurrentTask
+#                          self.LastBackgroundz = self.CurrentBackground
+#                          self.LastBackground2z = self.CurrentBackground2
+#                          self.LastBackground3z = self.CurrentBackground3
+#                          self.LastCrazyz
+#                          self.CurrentModelz = self.LastModel
+#                          self.Currentversionz = self.Lastversion
+#
+#                          self.CurrentSystem = self.LastSystem
+#                          self.CurrentRole = self.LastRole
+#                          self.CurrentFormat = self.LastFormat
+#                          self.CurrentTask = self.LastTask
+#                          self.CurrentBackground = self.LastBackground
+#                          self.CurrentBackground2 = self.LastBackground2
+#                          self.CurrentBackground3 = self.LastBackground3
+#                          self.Current_crazy = self.LastCrazy
+#                          self.CurrentModel = self.LastModel
+#                          self.Currentversion = self.Lastversion
+#
+#
+#                          self.LastSystem = self.LastSystemz
+#                          self.LastRole  = self.LastRolez
+#                          self.LastFormat  = self.LastFormatz
+#                          self.LastTask  = self.LastTaskz
+#                          self.LastBackground  = self.LastBackgroundz
+#                          self.LastBackground2 = self.LastBackground2z
+#                          self.LastBackground3 = self.LastBackground3z
+#                          self.LastCrazy = self.LastCrazyz
+#                          self.CurrentModel  = self.CurrentModelz
+#                          self.Currentversion = self.Currentversionz
+#
+#
+#
+#                     # GPT_Response = self.Last_Prompt
+#                     # print("self.promptB:")
+#                     # print(self.promptB)
+#                     #
+#
+#                 self.Full_User_Prompt = """User Inputs to Chat GPT:
+#                     1). """ + self.CurrentSystem + """
+#                     2).""" + self.CurrentRole + """
+#                     3).""" + self.CurrentFormat + """
+#                     4).""" + self.CurrentTask + """
+#                     Background (If Any Provided): """ + self.CurrentBackground + """
+#                     Additional Background: """ + self.CurrentBackground2 + self.CurrentBackground3 + """
+#                     Crazy:""" + self.Current_crazy + "Model: " + self.CurrentModel + "Version: " + self.Currentversion
+#
+#
+#
+#
+#             except:
+#                 d = 10
+#
+#     def GPT_UserInput_Confirm_Tool(self,GPT_Response, System,Role, Format, Task, Background, Background2, Background3, crazy = .5, UserConfirm = True, WINDOWNAME = "USER CONFIRM CHAT GPT RESULTS",TryCount = 0, version = 2):
+#
+#
+#         self.FULLPROMPTONLY = self.CurrentSystem + self.CurrentRole + self.CurrentFormat + self.CurrentTask +self.CurrentBackground  + self.CurrentBackground2 + self.CurrentBackground3
+#
+#
+#         try:
+#             KeepGoing = False
+#             EDIT = ''
+#             #self.promptB = False
+#             while KeepGoing == False:
+#
+#                 speak1 = self.Speak
+#                 TryCount += 1
+#
+#
+#
+#                 if KeepGoing == False:
+#
+#                     UserMode1 = -1
+#                     if self.UserMode == "UI":
+#
+#                         try:
+#                             self.TE = TextEdit.TextEdit(UserConfirm=True)
+#                             query = self.TE.MakeWindow(Text=GPT_Response, UserConfirm=True,
+#                                                        WindowName= "USER CONFIRM CHAT GPT RESULTS" +  self.CurrentWindowName + ' '  + str(TryCount) + ' ', USERLASTEDIT=EDIT, Current_Prompt=self.FULLPROMPTONLY, version=version)
+#                             UserMode1 = -1
+#                             UserMode1 = self.TE.GetUserResponseMode()
+#                             # query = self.TE.GetUserText()
+#                             print("UserMode1:")
+#                             print(UserMode1)
+#
+#                         except:
+#                             TE = TextEdit.TextEdit()
+#                             UserMode1 = -1
+#                             query1 = TE.MakeWindow(Text=GPT_Response, UserConfirm=True)
+#                             query = TE.GetUserText()
+#
+#                     else:
+#                         print("""
+#                                                    Do you want to
+#                                                    1). Small Edit, Take the text and switch a few things
+#                                                    2). ReWrite With Edits (Big Edit)
+#                                                    3). Rewrite No Edits
+#
+#                                                    """)
+#                         self.promptB = cu.ConfirmBOT(GPT_Response, speak1)
+#                         query = cu.getUserResponse()
+#
+#                     if (('one' in query or 'small' in query or 'few' in query or 'mini') and self.UserMode != "UI") or UserMode1 == 1:
+#                         TryCount += 1
+#                         #promptB2 = True
+#                         #self.promptB = False
+#                         KeepGoing = False
+#                         if self.UserMode == "UI":
+#                             EDIT = query
+#                         else:
+#                             EDIT = cu.editBotPrompt()
+#
+#                         print("EDIT")
+#                         print(EDIT)
+#
+#                         self.Last_GPTResult = GPT_Response
+#                         self.CurrentTempBackground2 =  self.CurrentBackground2 + self.CurrentBackground3
+#                         if EDIT != '':
+#
+#                             Story.SaveLastGPTResponse(self, self.Current_GPTResponse)
+#                             Story.SaveLast_Prompt(self, self.CurrentSystem, self.CurrentRole, self.CurrentFormat, self.CurrentTask, self.CurrentBackground, self.CurrentBackground2, self.CurrentBackground3,
+#                                                   crazy=self.Currentcrazy, Model=self.CurrentModel,version=self.Currentversion, WindowName=  "USER CONFIRM CHAT GPT RESULTS" +  self.CurrentWindowName + ' '  + str(TryCount) + ' ' )
+#
+#                             self.Current_GPTResponse = cu.ASKGPT(crazy=self.Current_crazy,
+#                                                      System="** YOUR FIRST RESPONSE WAS NOT CORRECT, FOLLOW THE SPECIFIC INSTRUCTIONS OF  THE USER EDITS PROVIDED TO YOU IN ORDER TO MAKE THE CORRECT ADJUSTMENTS to the Text. It is critical you follow my instructions" + self.CurrentSystem,
+#                                                      Role=self.CurrentRole, Format=self.CurrentFormat,
+#                                                      Task="""Rewrite the following text using the edits/Requirements provided and make it in the respective formate described. ReWrite Text: ###""" + self.Current_GPTResponse + "###",
+#                                                      Background3="***YOUR FIRST ATTEMPT WAS A FAIL, IT IS CRITICAL THAT YOU Use the following USER EDITS/REQUIREMENTS when completing your task USER EDIT/REQUIREMENTS: ###: " + EDIT + "### ***",
+#                                                      Background=self.CurrentBackground,Background2 = self.CurrentTempBackground2, version=self.Currentversion, Model=self.CurrentModel)
+#
+#                             Story.SaveCurrentGPTResponse(self, self.Current_GPTResponse)
+#
+#
+#
+#
+#                             WINDOWNAME = self.CurrentWindowName + " - Small Edit"
+#                             self.Full_Story += up.breakupOutput + "****Small Edit****" + EDIT + up.breakupOutput + GPT_Response
+#                             self.Full_Transcript += up.breakupOutput + "****Small Edit****" + EDIT + up.breakupOutput + GPT_Response
+#                             print(
+#                                 up.breakupOutput + "***************Used Quick Edit Based on User Input***********************" + up.breakupOutput + "Edit: " + EDIT + up.breakupOutput + GPT_Response + up.breakupOutput)
+#
+#                         else:
+#                             WINDOWNAME += ' *** ERROR - No Text Provided, but you selected a User Input Option*** '
+#
+#
+#
+#                     elif (('rewrite' in query or 'with edits' in query or 'redo' in query or 'two' in query) and self.UserMode != "UI") or UserMode1 == 2:
+#
+#                         try:
+#                             KeepGoing = False
+#                             TryCount +=1
+#
+#                             if self.UserMode == "UI":
+#                                 EDIT = query
+#                             else:
+#                                 EDIT = cu.editBotPrompt()
+#                             print("EDIT")
+#                             print(EDIT)
+#
+#                             self.Last_GPTResult = GPT_Response
+#                             if EDIT != '':
+#                                 self.CurrentTempBackground2 =  self.CurrentBackground2 + self.CurrentBackground3
+#
+#                                 Story.SaveLastGPTResponse(self, GPT_Response=self.Current_GPTResponse)
+#                                 Story.SaveLast_Prompt(self, System=self.CurrentSystem, Role=self.CurrentRole,
+#                                                       Format=self.CurrentFormat, Task=self.CurrentTask,
+#                                                       Background=self.CurrentBackground, Background2=self.CurrentBackground2,Background3=self.CurrentBackground3
+#                                                       ,crazy=self.Current_crazy, version=self.Currentversion, Model=self.CurrentModel, WindowName=  self.CurrentWindowName + ' TRY # '  + str(TryCount) + ' ' )
+#
+#                                 self.Current_GPTResponse = cu.ASKGPT(crazy=self.Current_crazy,
+#                                                          System="** YOU Already tried once and failed, YOU MUST FOLLOW THE USER EDIT/REQUIREMENT INSTRUCTIONS from the USER in order TO COMPLETE THE TASK you are being requested. It is critical you answer this question according to the USER Edit/Requirements/Feeback Provided." + self.CurrentSystem,
+#                                                          Role=self.CurrentRole,
+#                                                          Format=self.CurrentFormat,
+#                                                          Task=self.CurrentTask + "***YOUR FIRST ATTEMPT WAS A FAIL and you are doing the task for the " + str(TryCount)+  " , IT IS CRITICAL THAT YOU Follow the USER EDITS/Requirements in order to get the outcome/Response from you that the USER NEEDS TO MOVE FORWARD.  Use the following USER EDITS/REQUIREMENTS when completing your task.*** USER EDIT/REQUIREMENTS: ###: " + EDIT + "### ",
+#                                                          Background=self.CurrentBackground,
+#                                                          Background2=self.CurrentBackground2,Background3 = self.CurrentBackground3, version=self.Currentversion, Model=self.CurrentModel)
+#
+#
+#                                 #Story.SaveLastGPTResponse(self, self.Current_GPTResponse)
+#
+#
+#                                 TryCount += 1
+#                                 self.UserPrompts += up.breakupOutput + "****Rewrite with Edits***:" + EDIT + up.breakupOutput
+#
+#                                 self.Full_Story += up.breakupOutput + "****Rewrite with Edits***:" + EDIT + up.breakupOutput + GPT_Response
+#                                 self.Full_Transcript += up.breakupOutput + "****Rewrite with Edits***:" + EDIT + up.breakupOutput + GPT_Response
+#                                 WINDOWNAME = self.WINDOWNAME + " - ReWrite with Edit"
+#                                 print(
+#                                     up.breakupOutput + "***************Used Redo With Notes/Edits Based on User Input***********************" + up.breakupOutput + "Edit: " + EDIT + up.breakupOutput + GPT_Response + up.breakupOutput)
+#
+#                             else:
+#                                 WINDOWNAME += ' *** ERROR - No Text Provided, but you selected a User Input Option*** '
+#                         except:
+#                             print("Error Doing Small Edit for User")
+#
+#
+#                     elif (('full' in query or 'try new' in query or 'new' in query or 'three' in query) and self.UserMode != "UI") or UserMode1 == 3:
+#                         TryCount +=1
+#
+#                         Story.SaveLastGPTResponse(self, GPT_Response=self.Current_GPTResponse)
+#                         Story.SaveLast_Prompt(self, System=self.CurrentSystem, Role=self.CurrentRole,
+#                                               Format=self.CurrentFormat, Task=self.CurrentTask,
+#                                               Background=self.CurrentBackground, Background2=self.CurrentBackground2,Background3=self.CurrentBackground3,
+#                                               crazy=self.Current_crazy, version=self.Currentversion, Model=self.CurrentModel)
+#
+#                         self.Current_GPTResponse = cu.ASKGPT(crazy=self.Current_crazy,
+#                                                      System="** YOUR FIRST ATTEMPT DID NOT SUCCEED, LISTEN TO THE #USER EDITS# PROVIDED TO YOU IN ORDER TO MAKE THE CORRECT ADJUSTMENTS" + self.CurrentSystem,
+#                                                      Role=self.CurrentRole,
+#                                                      Format=self.CurrentFormat,
+#                                                      Task=self.CurrentTask, Background=self.CurrentBackground,Background2=self.CurrentBackground2,Background3 = self.CurrentBackground3, version=self.Currentversion, Model=self.CurrentModel)
+#
+#                         print(
+#                             up.breakupOutput + "***************Used Redo ***********************" + up.breakupOutput + GPT_Response + up.breakupOutput)
+#
+#                         self.UserPrompts += up.breakupOutput + "****Rewrite***" + up.breakupOutput
+#
+#                         WINDOWNAME = WINDOWNAME + " - ReWrite"
+#                         self.Full_Story += up.breakupOutput + "****Rewrite***" + up.breakupOutput + GPT_Response
+#                         self.Full_Transcript += up.breakupOutput + "****Rewrite***" + up.breakupOutput + GPT_Response
+#
+#                     elif UserMode1 == 0:
+#
+#                         KeepGoing = True
+#                         print("self.promptB:")
+#                         print(self.promptB)
+#
+#
+#                     # End All User Input, Run All The Way through
+#                     elif UserMode1 == 5:
+#                         self.UserConfirm = False
+#                         KeepGoing = True
+#                         print("self.promptB:")
+#                         print(self.promptB)
+#
+#
+#
+#                     # End User Input for Small Items
+#                     elif UserMode1 == 6:
+#                         KeepGoing = True
+#                         self.SmallPromptUser = False
+#                         print("self.promptB:")
+#                         print(self.promptB)
+#
+#
+#                     # End User Input for Main Items - Skip to next part
+#                     elif UserMode1 == 7:
+#
+#                         KeepGoing = True
+#                         self.MainPromptUser = False
+#                         print("self.promptB:")
+#                         print(self.promptB)
+#
+#
+#                     #Restores Asking User for confirmation (all prompts)
+#                     elif UserMode1 == 50:
+#
+#                         KeepGoing = True
+#                         self.MainPromptUser = True
+#                         self.SmallPromptUser = True
+#                         self.UserConfirm = True
+#                         print("self.promptB:")
+#                         print(self.promptB)
+#
+#
+#
+#
+#                     # User Review Prompts
+#                     elif UserMode1 == 10:
+#
+#
+#
+#                         #print("self.promptB:")
+#                         # print(self.promptB)
+#                         Story.GPT_Confirm_Prompts(self, TryCount=TryCount, WINDOWNAME= "CHAT GPT USER REVIEW PROMPTS - " + self.CurrentWindowName )
+#                         ReviewPrompts = True
+#                         KeepGoing = False
+#
+#
+#                     # NOT DOING THIS NOW< FOR NOW I CAN HAVE IT SO I JUST PRESS REVIEW PROMPTS AND DO IT THERE IF I HAVE TO, IF ITS BOTHERSOME I CAN EVENTUALLY CODE THIS
+#                     # #Restore original Response & Original Prompt
+#                     # elif UserMode1 == 10:
+#                     #     self.promptB = False
+#                     #     print("self.promptB:")
+#                     #     print(self.promptB)
+#                     #     self.Reset_Prompts = True
+#                     #     KillSwitch -= 1
+#                     #
+#                     #     continue
+#
+#                     # Pull Up Original Response
+#                     elif UserMode1 == 11:
+#                         #self.promptB = False
+#                         KeepGoing = False
+#                         GPT_Response = self.Original_GPTResponse
+#                         # print("self.promptB:")
+#                         # print(self.promptB)
+#
+#                     # Pull Up Last GPT
+#                     elif UserMode1 == 12:
+#                         #self.promptB = False
+#                         KeepGoing = False
+#                         GPT_Response = self.Last_GPTResult
+#                         # print("self.promptB:")
+#                         # print(self.promptB)
+#
+#
+#                     # Option to Make Art
+#                     elif UserMode1 == 8:
+#                         self.MakeArtGPT = True
+#                         config = self.Art_Type_Config + StoryMode.artDetailsPrompt
+#                         GPT_Response1 = self.Current_GPTResponse[:3000]
+#
+#                         x44 = Story()
+#                         Art_Role = self.Art_Style_For_Story
+#                         Art_Format = StoryMode.artDetailsFormat
+#                         t = threading.Thread(target=x44.GPTArt2, args=(Art_Role,GPT_Response1, config,Art_Format,self.Current_crazy,)).start()
+#                         AP = x44.GPTArt2(self, Art_Role, User_Subject=GPT_Response1, ArtFormat=StoryMode.artDetailsFormat,
+#                                            prompt=config, UserConfirm = UserConfirm, )
+#                         ArtPrompt = self.Art_Style_For_Story + AP
+#
+#                         print(ArtPrompt)
+#                         originalFilepath = Story.makeArt(self, Prompt=ArtPrompt)
+#                         if self.Mode.upper() not in str(SavePath).upper():
+#                             PicNewPath1 = Path(PureWindowsPath(SavePath, self.Mode))
+#                             cu.Check_Folder_Exists(PicNewPath1)
+#                         else:
+#                             PicNewPath1 = SavePath
+#                         PicNewPath = Path(PureWindowsPath(PicNewPath1, self.FileName + '.png'))
+#                         shutil.copyfile(originalFilepath, PicNewPath)
+#
+#
+#
+#                         SavePath = self.SavePath
+#                         SaveFile = self.FileName
+#                         print("self.promptB:")
+#                         print(self.promptB)
+#                         #self.promptB = True
+#
+#
+#
+#                     # Selects the text from the user input
+#                     elif UserMode1 == 4:
+#                         if self.UserMode == "UI":
+#                             EDIT = query
+#                         else:
+#                             EDIT = cu.editBotPrompt()
+#
+#                         if EDIT != '':
+#                             GPT_Response = EDIT
+#                             print(
+#                                 up.breakupOutput + "***************Input User  GPT Response Manually ***********************" + up.breakupOutput + GPT_Response + up.breakupOutput)
+#                             WINDOWNAME = "PLEASE CONFIRM USERS TEXT BEING USED    -   " +  WINDOWNAME
+#                             self.promptB = False
+#                             KeepGoing = False
+#                         else:
+#                             WINDOWNAME = ' *** ERROR - No Text Provided, but you selected a User Input Option - TRY AGAIN*** ' + WINDOWNAME
+#
+#         except:
+#             print("Error with User Input Process")
+#
+#
+#
+#
+#         return KeepGoing
+#
 
 
     #, )
@@ -3593,7 +3658,8 @@ class Story():
               #
               #     GPTARTPROMPT = Art_Prompt1.choices[0].message.content
                   ArtRole1 = "You are a skilled artist who is able to easily take text and come up with beautiful works of art of all artistic mediums and styles. Your masterpieces go along with the story perfectly matching the context/theme/mood of the text. You are a master artist and skilled communicator able to take a lot of details and come up with a succinct prompt for AI to make a work of are with. Use the Artistic Style described to your persona along with the text to come up with your response" + ArtRole
-                  GPTARTPROMPT = Story.Basic_GPT_Query(Model= Model, Line1_System_Rule=sys_prompt, Line2_Role=ArtRole1, Line3_Format=ArtFormat, Line4_Task="Task: ### " + prompt + "###", Background=User_Subject, User_Confirm=UserConfirm, crazy=crazy)
+                  ARTBot = GPT.GPT_Mode()
+                  GPTARTPROMPT = ARTBot.Basic_GPT_Query(Model= Model, Line1_System_Rule=sys_prompt, Line2_Role=ArtRole1, Line3_Format=ArtFormat, Line4_Task="Task: ### " + prompt + """Base your ART Prompt RESPONSE  off of the ideas/context of the following Text: """ +  User_Subject + "###",  User_Confirm=UserConfirm, crazy=crazy)
                   keepgoing = False
 
               except:
@@ -3982,8 +4048,24 @@ def SHAINEBootUP( Order = 1):
                       UserInputs_Config='Summarize',Seasons=2, Episodes=2)
 
         elif Order == 13:
-            x = Story(IDEA=ShaneOriginals.Comedy_Tarentino2, Mode='MVAA_QUICK', Writer=ShaneOriginals.ShaneBioDark,
+            x = Story(IDEA=ShaneOriginals.Comedy_Tarentino_Optimized, Mode='MVAA_QUICK', Writer=ShaneOriginals.ShaneBioDark,
                       UserInputs_Config='Summarize', Seasons=1, Episodes=3, UserConfirm=True)
+
+        elif Order == 1333333:
+            x = Story(IDEA=ShaneOriginals.Comedy_Tarentino_O_Poe, Mode='MVAA_QUICK', Writer=ShaneOriginals.ShaneBioDark,
+                      UserInputs_Config='Summarize', Seasons=1, Episodes=3, UserConfirm=True)
+
+
+
+        elif Order == 313:
+            x = Story(IDEA=ShaneOriginals.Comedy_Tarentino3, Mode='MVAA_QUICK', Writer=ShaneOriginals.ShaneBioDark,
+                      UserInputs_Config='Summarize', Seasons=1, Episodes=3, UserConfirm=True)
+
+
+        elif Order == 3133:
+            x = Story(IDEA=ShaneOriginals.Snatch_Prequel, Mode='MVAA_QUICK', Writer=ShaneOriginals.ShaneBioDark,
+                      UserInputs_Config='Summarize', Seasons=1, Episodes=3, UserConfirm=True)
+
 
 
         elif Order == 1300:
@@ -4077,6 +4159,10 @@ def SHAINEBootUP( Order = 1):
         elif Order == 4444113339:
             x = Story(IDEA=ShaneOriginals.Gritty_Comedy, Mode='MVAA_QUICK', Writer=ShaneOriginals.ShaneBioDark,
                       UserInputs_Config='Summarize', Seasons=1, Episodes=3, UserConfirm=False)
+        elif Order == 99999999:
+            x = Story(IDEA=ShaneOriginals.Bryson, Mode='MVAA_QUICK', Writer=ShaneOriginals.ShaneBioDark,
+                      UserInputs_Config='Summarize', Seasons=1, Episodes=3, UserConfirm=False)
+
 #KillingDrake
 #Magnolia_Like
         #Gritty_Bricktop2
@@ -4115,9 +4201,9 @@ def SHAINEBootUP( Order = 1):
 
 
         elif Order == 444:
-            x = Story(IDEA=MW.Subject_LikeThese, Mode='Music_Shane',
-                      UserInputs_Config='Summarize', Writer=MW.Artist_Bio_DetailsSD, SavePath= up.AI_Music_Path, UserConfirm=False)
-
+            x = Story(IDEA=MW.Subject_LikeThese, Mode='Music_Shane', Writer=MW.Artist_Bio_DetailsSD,
+                      UserInputs_Config='Summarize', SavePath= up.AI_Music_Path, UserConfirm=False)
+#, Writer=MW.Artist_Bio_DetailsSD
 
         elif Order == 4441:
             x = Story( Mode='Music_Shane',
@@ -4134,7 +4220,7 @@ def SHAINEBootUP( Order = 1):
 
         elif Order == 4444:
             x = Story(IDEA=MW.Subject, Mode='Music_Shane',
-                      UserInputs_Config='Summarize', SavePath= up.AI_Music_Path)
+                      UserInputs_Config='Summarize', SavePath= up.AI_Music_Path, UserConfirm=False)
 
 
 
@@ -4173,7 +4259,7 @@ if __name__ == '__main__':
     #arg = [5,0]
    # arg = [444, 443]
     #4444113335, 4444113334, 4444113333, 4444113332, 444411333
-    arg = [13]
+    arg = [313]
     #arg = [44, 13,10]
     #arg = [7,44]
     number_of_commands = len(arg)
@@ -4197,10 +4283,11 @@ if __name__ == '__main__':
         try:
 
             print("Start Thread " + str(i))
-            #t = threading.Thread(target=SHAINEBootUP, args = (Mode,IDEA,Writer)).start()
-            t = threading.Thread(target=SHAINEBootUP, args=(argX,)).start()
-            threads.append(t)
 
+            # t = threading.Thread(target=SHAINEBootUP, args=(argX,)).start()
+            # threads.append(t)
+            #1333333
+            SHAINEBootUP(313)
         except:
             print('Error - Could not start new thread')
 

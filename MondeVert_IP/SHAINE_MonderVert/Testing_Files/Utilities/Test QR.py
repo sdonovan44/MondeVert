@@ -28,6 +28,25 @@ from urllib.request import urlopen
 #
 #
 
+data = '''BEGIN:VCARD
+
+VERSION:3.0
+
+N:Donovan;Shane
+
+FN:Shane Donovan - Add Contact
+
+ORG:REALTOR: BRG Real Estate (SC) | SUCCESS! Real Estate (MA/RI) | MondeVert, CEO
+NOTE: Thanks for adding me I look forward to working with You! Founder of MondeVert where "WE DO IT ALL!"
+
+URL:'http://www.mondevert.co/'
+
+EMAIL:sdonovan@mondevert.co
+Title: 'CEO: MondeVert | LoveYourLawn.Care '
+TEL;TYPE=voice,work,pref:+7819748735
+PHOTO;PNG:https://img1.wsimg.com/isteam/ip/66426138-3855-4875-acde-e684162b3f44/59.png/:/rs=w:600,cg:true,m
+LOGO;PNG:https://img1.wsimg.com/isteam/ip/66426138-3855-4875-acde-e684162b3f44/59.png/:/rs=w:600,cg:true,m
+END:VCARD'''
 
 
 
@@ -36,32 +55,53 @@ from urllib.request import urlopen
 #"A:\MondeVert_IP Productions\the-big-lebowski-the-dude ceiling.gif"
 #"A:\MondeVert_IP Productions\the-big-lebowski-coen-brothers.gif"
 #"A:\MondeVert_IP Productions\balls-polishing-dude-lebowski-jesus.gif"
+def create_qr_code(output_path: str):
+    """Create QR code image from content to output path."""
 
+    return qrcode
 
 import cv2
 import base64
 from MondeVert_IP.SHAINE_MonderVert import Instagram_Posts as IP
-
 if __name__ == '__main__':
 
 
 
+
     Folder = r"A:\Amini Amor\QR Code and ads\QR Testing\Add Contact"
-    Mode = "Add Shane Contact"
+    Folder1 = Folder+r"\LoveYourLawnCare.png"
+    Mode = "LoveYourLawn.Care"
     bio = 'Thanks for adding me I look forward to working with You! Founder of MondeVert where "WE DO IT ALL!"'
 
     # Some params accept multiple values, like email, phone, url
-    qrcode = helpers.make_vcard(nickname='Shane D - Realtor & Solar Guy',
+    qrcode = helpers.make_vcard(nickname='Shane D - Realtor | Landscaper | Entrepreneur',
                                 name = 'Shane Donovan',
                                  displayname='Shane Donovan',
                                 title='CEO: MondeVert | LoveYourLawn.Care ',
-                                org=('REALTOR: BRG Real Estate (SC) | SUCCESS! Real Estate (MA)'),
+                                org=('REALTOR: BRG Real Estate (SC) | SUCCESS! Real Estate (MA/RI)'),
                                     phone = '7819748735',
                                  email=('sdonovan@mondevert.co'),
                                  url=['http://www.mondevert.co/','http://www.loveyourlawn.care/',  'Instagram.com/MondeVert_llc','Instagram.com/Shanedthatsme'],
-                                photo_uri = '',
+                                photo_uri = 'https://img1.wsimg.com/isteam/ip/66426138-3855-4875-acde-e684162b3f44/59.png/:/rs=w:600,cg:true,m',
                                  memo = (bio)
                                  )
+    #
+    # qr_object = qr.QRCode(
+    #     version=1,
+    #     error_correction=qr.ERROR_CORRECT_H,
+    #     box_size=10,
+    #     border=4,
+    # )
+    # qr_object.add_data(data)
+    # qr_object.make(fit=True)
+    #
+    # qrcode = qr_object.make_image(fill_color="green", back_color="lightgreen").convert("RGBA")
+    # qrcode.save(Folder1)
+
+
+
+
+
 
     # dColor = 'darkgreen'
     # dDataColor = 'green'
@@ -84,8 +124,13 @@ if __name__ == '__main__':
     # dLight = 'lightgray'
 
 
-    DarkColors = ['red','orange','blue','purple','darkblue','darkgray','gray','darkred','darkgreen','darkorange']
-    LightColors = ['pink','orange','yellow','lightblue','lightgray', 'lightgreen']
+    DarkColors2 = ['red','orange','blue','purple','darkblue','darkgray','gray','darkred','darkgreen','darkorange', 'green']
+    LightColors2 = ['pink','orange','yellow','lightblue','lightgray', 'lightgreen']
+
+
+    DarkColors = ['darkgray','gray','darkgreen','green','black']
+    LightColors = ['white','lightblue','lightgray', 'lightgreen' ]
+
 
     RunNum = 10
     for i in range(0,RunNum):
@@ -108,7 +153,7 @@ if __name__ == '__main__':
 
 
         SaveLoc = Folder + r"/QR_" + Mode + "_" + current_time + ".png"
-        #qrcode = segno.make('http://www.LoveYourLawn.care')
+        qrcode = segno.make('http://www.LoveYourLawn.care')
         img = qrcode.to_pil(dark=dColor, data_dark=dDataColor,
                             data_light=dLight, scale = 8)
         img.save(SaveLoc)
@@ -174,14 +219,16 @@ if __name__ == '__main__':
 
     FN:Shane Donovan - Add Contact
 
-    ORG:MondeVert, CEO | SUCCESS! Real Estate, Realtor
+    ORG:REALTOR: BRG Real Estate (SC) | SUCCESS! Real Estate (MA/RI) | MondeVert, CEO
+    NOTE: Thanks for adding me, Please check out my website mondevert.co, reach out to me with any questions you have!
 
     URL:'http://www.mondevert.co/'
 
     EMAIL:sdonovan@mondevert.co
 
     TEL;TYPE=voice,work,pref:+7819748735
-
+    PHOTO;PNG:https://img1.wsimg.com/isteam/ip/66426138-3855-4875-acde-e684162b3f44/59.png/:/rs=w:600,cg:true,m
+    LOGO;PNG:https://img1.wsimg.com/isteam/ip/66426138-3855-4875-acde-e684162b3f44/59.png/:/rs=w:600,cg:true,m
     END:VCARD'''
 
     # # img = qr.make_image(fill_color="black", back_color="white")
