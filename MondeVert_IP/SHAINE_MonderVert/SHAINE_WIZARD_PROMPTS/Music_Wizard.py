@@ -175,7 +175,9 @@ I'll riddle you with rap, it's a drive-by!"""
 #Subject = SubJect_YB + " Use the following Lyrics to make up your own, Do not copy but build off them Sample Lyrics: ###" + SampleLyrics + "###"
 
 #"""Make a song about smoking Backwood Blunts filled with dank weed, talk about the different strains, go into detail about the food the rapper is making/eating. Also make it very descriptive with a complex vocaBULARY AND RHYME SCHEME."""
-Subject = """Your song is about something abstract filled with literary devices and you should mention specific locations and famous restaurants with the dishes you would be eating there make it extremely descriptive and use the 5 senses whenever possible to make the listener really engage with the lyrics"""
+Subject = "Make a basic song with some deep thoughts and deeper meanings, but try to keep it relateable and use poetry and literary devices to make the best song possible. Come up with an idea for the song to base the chorus about, try to focus mostly on the ideas/themes more than the lyrics."
+
+###"""Your song is about something abstract filled with literary devices and you should mention specific locations and famous restaurants with the dishes you would be eating there make it extremely descriptive and use the 5 senses whenever possible to make the listener really engage with the lyrics"""
 
 
 
@@ -188,7 +190,8 @@ Song_Outline_Task =  Song_Outline_Task1 + Song_Special_Sauce
 Song_Task1 = """Write an original  song based on the  outline provided, use the details provided by the outline directly in your song, be creative but do not stray from original ideas/styles and influences and try to use the lyrics provided for you to use in the song. """
 Song_Task2= """Write an original  song based on the  outline provided, use the details provided by the outline directly in your song, be creative but do not stray from original ideas/styles and influences and try to use the lyrics provided for you to sample/use in the song. Create unique and deep lyrics use the persona you have created and make it relatable and feel human. Be abstract and metaphorical in your stories, witty and funny is ok. The topic should be relatable and the chorus should be somewhat catchy. try to tell a story and/or describe some of your 5 senses what they are experiencing to make the story feel real.  relatable struggles make his lyrics tell an exciting story that draws the audience in. Be Descriptive make the audience feel like they are living the moment you are describing. Remember show do not tell, make it full of literary devices and  draw from talented song-writers of the past to make something uniquely your own. Be abstract and poetic, but make it somewhat understandable and make it something a listener can connect to. Make it relateable and thought provoking. Take on the idea of show dont tell, do not be obvious and over the top, it should be able to be read through the lines of what you are saying. If lyrics are provided use them as a base and add to them/reword them as needed to make the best song you think is possible based on all other details provided. For your song lyrics you should let the musician know what key to sing in, write where to pause, also let the musician know if its rapped, sung, or spoken word, try to make the notes/instruction so clear that anyone could sing the song exactly as its intended. Fit the format that is requested, do not stray format wise.Feel  Free to change the lyrics provided to you and make the best version of the song you can"""
 
-Song_Task = Song_Task2 + Song_Special_Sauce
+Song_Task = Song_Task1
+    #Song_Task2 + Song_Special_Sauce
 
 
 
@@ -213,16 +216,19 @@ Desired Format:
     Melodies: -||-
     Message: {What is this song about and why is it important/what is the message?}
     Influences (music, literature, film, other): -||-
-    Suggested_Instrumentals: {Songs to use as instrumental (These must be actual songs that exist and can be obtained by user for the instrumental of their song)}
-    Instrumental_Detail: {Explain How to use instrumental suggested, what parts to use and how to make it uniquely your own}
-    Suggested_Samples: {Provide specific Songs to Sample (These must be actual songs that exist and can be obtained by user for the instrumental of their song)}
-    Samples_Detail: {Explain How to use Samples suggested}
+
     Summary of Song/Story/Poem: <Extremely_Detailed_Description>
     Sample Lyrics: <Lyrics to use in Song only if provided by user (DO NOT ADD LYRICS IF NO USER LYRICS PROVIDED)>
     Rhyme Scheme: -||-
 
 
 """
+
+
+#     Suggested_Instrumentals: {Songs to use as instrumental (These must be actual songs that exist and can be obtained by user for the instrumental of their song)}
+#     Instrumental_Detail: {Explain How to use instrumental suggested, what parts to use and how to make it uniquely your own}
+#     Suggested_Samples: {Provide specific Songs to Sample (These must be actual songs that exist and can be obtained by user for the instrumental of their song)}
+#     Samples_Detail: {Explain How to use Samples suggested}
 
 
 Song_Outline_Format = """Complete the {Task} provided below, use the {Persona} you created to do all of the tasks. Make sure the result is in the correct format.

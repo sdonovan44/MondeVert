@@ -6,6 +6,7 @@ from MondeVert_IP.SHAINE_MonderVert.SHAINE_WIZARD_PROMPTS import User_Prefs as u
 from MondeVert_IP.SHAINE_MonderVert.SHAINE_WIZARD_PROMPTS import Long_User_Prompts as lup, User_Prefs as up,Poetry_Wizard as PW, SuperSHAINE_WIZARD  as SSW
 import threading
 import pandas as pd
+from MondeVert_IP.SHAINE_MonderVert.SHAINE_WIZARD_PROMPTS import Stories_For_Audio_Files as SAF
 import random
 from MondeVert_IP.SHAINE_MonderVert import Instagram_Posts as IP
 from pathlib import Path, PureWindowsPath
@@ -81,6 +82,25 @@ Runs.append('Social_Media_Clean_Post')
 
 # for i in Runs:
 #     x.MondeVertMenu_up(Mode=i)
+
+#Text2Add3 =
+
+Voice = random.choices(SAF.Original_List_of_Voices_English[0])
+Voice = 'Olivia'
+FilePath = r"A:\Amini Amor\SHAINE\Requests\Beta\AI AudioBooks\MVAA_QUICK\Top Toad\Top Toad 1\Top Toad Audio\Top Toad Text.txt"
+#Text  = pd.read_fwf(FilePath)
+
+# Text  = str(pd.read_csv(FilePath))
+# print(Text)
+
+Text= [SAF.Text2]
+
+
+cu.SaveText2Audio(SavePath=r"A:\Amini Amor\SHAINE\Requests\Beta\AI AudioBooks\MVAA_QUICK\Top Toad\Top Toad 1\Top Toad Audio", FileName="Top Toad", Voice=Voice,
+				  Neural='Neural',
+				  Mode='AUDIOBOOK' ,
+				  Text=Text,FilePath=r"A:\Amini Amor\SHAINE\Requests\Beta\AI AudioBooks\MVAA_QUICK\Top Toad\Top Toad 1\Top Toad Audio\Top Toad Text.txt",
+				  Translate=['English'])
 
 # cu.SaveText2Audio( FilePath = audio_new3, Chunk_Limit=444)
 
@@ -235,23 +255,23 @@ Arts = [
     """"Success is stumbling from failure to failure with no loss of enthusiasm." - Winston Churchill"""
 ]
 
-path22 = r'A:\Amini Amor\Social Media Posts\2024-03  March 6 - March 12'
-for f in Arts:
-	current_time1 = datetime.datetime.now()
-	current_time = current_time1.strftime('%M.%S')
-	art1 = f
-	Art1 = cu.quickArt2(art1)
-	Art2 = cu.quickArt2(ArtContext + art1)
-	TrimCharR = art1.find(' - ')
-	#TrimCharL = self.Song_Outline.find("Title:")
-
-	filename = filename1 + art1[TrimCharR:]
-
-	pic22 = cu.makeArt(Prompt=Art1, SavePath=path22, filename=filename +  current_time )
-	pic22 = cu.makeArt(Prompt= Art2, SavePath=path22, filename=filename + current_time + 'v2')
-	#pic22 = cu.makeArt(Prompt=ArtContext + art1, SavePath=path22, filename=filename + current_time + 'v3')
-
-
+# path22 = r'A:\Amini Amor\Social Media Posts\2024-03  March 6 - March 12'
+# for f in Arts:
+# 	current_time1 = datetime.datetime.now()
+# 	current_time = current_time1.strftime('%M.%S')
+# 	art1 = f
+# 	Art1 = cu.quickArt2(art1)
+# 	Art2 = cu.quickArt2(ArtContext + art1)
+# 	TrimCharR = art1.find(' - ')
+# 	#TrimCharL = self.Song_Outline.find("Title:")
+#
+# 	filename = filename1 + art1[TrimCharR:]
+#
+# 	pic22 = cu.makeArt(Prompt=Art1, SavePath=path22, filename=filename +  current_time )
+# 	pic22 = cu.makeArt(Prompt= Art2, SavePath=path22, filename=filename + current_time + 'v2')
+# 	#pic22 = cu.makeArt(Prompt=ArtContext + art1, SavePath=path22, filename=filename + current_time + 'v3')
+#
+#
 
 
 #
@@ -291,12 +311,12 @@ path21 = r"A:\Amini Amor\Social Media Posts\2024-02-23\2"
 pic21 = r"A:\Amini Amor\Social Media Posts\2024-02-23\2\and the duality of human nature in a captivating and thought provoking manner.png"
 
 
-path22 = r"A:\Amini Amor\Social Media Posts\2024-02-26"
-pic22 = r"A:\Amini Amor\Social Media Posts\2024-02-26\Jim M.PNG"
+path22 = r"A:\Amini Amor\Social Media Posts\Logo Frog Guy"
+pic22 = r"A:\Amini Amor\Social Media Posts\Logo Frog Guy\IMG_5772.jpeg"
 
-# IP.JPG2PNG(pic22, path22, "Moody Black New", path22, Del=False)
-#
-# Version1 = path22 + '\\' + "Moody Black New"
+IP.JPG2PNG(pic22, path22, "Moody Black New", path22, Del=False)
+
+Version1 = path22 + '\\' + "Moody Black New"
 #
 # for i in range (1,9):
 #     Version1 = cu.MakeVariationArt(Pic=pic22, FileName='Variant  ' + str(i) + '  '+ current_time, SavePath= path22)

@@ -1,10 +1,11 @@
 from __future__ import unicode_literals
 from pathlib import Path, PureWindowsPath
 import platform
-
+import openai
 # from ffmpeg import Progress
 # from ffmpeg.asyncio import FFmpeg
 import threading
+from boto3.session import Session
 import whisper
 from secrets import randbelow
 import random
@@ -141,7 +142,7 @@ def ReviewVoices(self, Quick=False):
 
 def MakeVariationArt(Pic, Size = '512x512', NumVars = 1, SavePath =   Path(PureWindowsPath(up.AI_Audio_Transcript, 'Extracted images')) , FileName= 'Version'):
 
-    response = openai.Image.create_variation(
+    response = client.Image.create_variation(
         image=open(Pic, "rb"),
         n=NumVars,
         size=Size
@@ -639,7 +640,7 @@ def Translator(Line1 = SAF.Translate_Sys,Origin_Language = 'English', Language_F
 
     File_Name = File_Name + '_' +Origin_Language + ' to ' + Language_Final+'_Translation'
     Translated_Text = ''
-    if Text != ' ' and Text != '  ' and Text != '':
+    if Text != [' '] and Text != ['  '] and Text != ['']:
         Translated_Text = Basic_GPT_Query2(Line2_Role= Line1 , Line3_Format=Line3, Line4_Task= Line2, Line5_Task= Line4)
     return Translated_Text
 
@@ -1265,7 +1266,7 @@ def Basic_GPT_Query2(   Line2_Role  , Line5_Task,Line3_Format,Line4_Task,Big = F
 
 
             # This is for the result if you let the AI describe project and details and then make the response
-            response = openai.ChatCompletion.create(
+            response = client.ChatCompletion.create(
                 model=Model,
                 messages=[
                     {"role": "system", "content": Line1_System_Rule},
@@ -1676,12 +1677,14 @@ def Split_Audio2(Text, SavePath, FileName,FilePath = '', OpeningSound = up.Monde
             countl += 1
             Text_Chunk = Text_New[:Chunk_Limit]
             Audio_File_Count += 1
-            Text_Chunk_Info_only= Text_Chunk
+            Text_Chunk_Info_only= str(Text_Chunk)
             for i in Chunk_Replaces:
                 Text_Chunk_Info_only = Text_Chunk_Info_only.replace(i, Chunk_Delimiter)
 
-            LastPunc =Text_Chunk_Info_only.rfind(Chunk_Delimiter)
-
+            try:
+                LastPunc =Text_Chunk_Info_only.astype(str).str.rfind(Chunk_Delimiter)
+            except:
+                LastPunc = -1
 
             #
             # print(l + 'Voice: ' + v)
@@ -1695,7 +1698,10 @@ def Split_Audio2(Text, SavePath, FileName,FilePath = '', OpeningSound = up.Monde
             #LastPunc = Text_Chunk_Info_only.rfind(Chunk_Delimiter)
             if LastPunc == -1 and len(Text_New) > Chunk_Limit:
 
-                LastPunc = Text_Chunk_Info_only.rfind('\\n')
+                try:
+                    LastPunc = Text_Chunk_Info_only.astype(str).str.rfind('\\n')
+                except:
+                    LastPunc = -1
                 # print('Last Punc Position(using new Char)')
                 # print(LastPunc)
                 if LastPunc == -1 and len(Text_New) > Chunk_Limit:
@@ -1903,7 +1909,8 @@ def SaveText2Audio( MultiThread = True,Translate = ["English"],Text = '', SavePa
         print('Save text to audio for : '+ FileName + ', should be saving to : ' + str(SavePath))
         FilePath_m = Path(PureWindowsPath(SavePath, FileName  +  '.mp3'))
     else:
-        if Text == '' and os.path.exists(FilePath) and FilePath != '':
+        #if Text == '' and os.path.exists(FilePath) and FilePath != '':
+        if 1==1:
 
             FilePath_m = str(FilePath)[:-4] + '.mp3'
             SavePath_index = str(FilePath).rfind(up.System_Folder_Path_Fix)
@@ -1913,13 +1920,13 @@ def SaveText2Audio( MultiThread = True,Translate = ["English"],Text = '', SavePa
             # print('SavePath: ' + SavePath)
             # print('FileName: ' + FileName)
 
-            with open(FilePath) as f:
-                Text = f.read()
+
+            Text = pd.read_fwf(FilePath)
 
         else:
             FilePath_m = Path(PureWindowsPath(SavePath ,  FileName + '.mp3'))
 
-    if Artist_Persona == 'embrace the spirit/symbolism and culture of the following text describe it to be illustrated by an artist' or Artist_Persona == '':
+    if Artist_Persona == ['embrace the spirit/symbolism and culture of the following text describe it to be illustrated by an artist'] or Artist_Persona == ['']:
         arttext = Text
         try:
             arttext = Text[:1700]
@@ -1954,19 +1961,19 @@ def SaveText2Audio( MultiThread = True,Translate = ["English"],Text = '', SavePa
 
         else:
             #FilePaths = ''
-
+            q = 100
             # print(FilePath)
             # print(len(str(Text)))
-            if Voice not in FileName:
-                FileName = FileName + '_' + Voice
-                FilePath1 = 'No File Saved'
+            # if Voice not in FileName:
+            #     FileName = FileName + '_' + Voice
+            #     FilePath1 = 'No File Saved'
 
             try:
                 session = Session(aws_access_key_id=DNC.aws_access_key_id, aws_secret_access_key=DNC.aws_secret_access_key,
                                   region_name='us-west-2')
                 polly = session.client("polly")
                 response = polly.synthesize_speech(Text=Text, OutputFormat="mp3",
-                                                   VoiceId=Voice, Engine='neural', )
+                                                   VoiceId='Joanna', Engine='neural', )
 
                 # # Request speech synthesis #StartSpeechSynthesisTask #synthesize_speech
                 # response = polly.start_speech_synthesis_task(Text=Text, OutputFormat="mp3",

@@ -44,7 +44,7 @@ from MondeVert_IP.SHAINE_MonderVert.Utilities import TextEdit as TextEdit
 #OutputTypes = ["Play","Novel", "ScreenPlay","Song"]
 
 class Story():
-    def __init__(self, IDEA = '' ,UserConfirm = False, ConfirmInput = False, UserMode = 'UI',Mode = 'MVAA',Writer = '', UserInputs_Config = 'AI Only',OutputTypes = ["Play", "Novel", "ScreenPlay"],voice=4, Logic_AI = 0, language_settings=1,Chunk_Limit = 777,  SavePath =up.AI_AudioBook_Path,  Writer_Style = '',Artist = '', Artist_Style = '', Story_Type = 'ScreenPlay', Seasons = 1, Episodes = 3, Books = '', Acts = '', Scenes = '', Movies = '', Text_Output_Config = [''], IDEA_Source = 'AI', Output_Audio_Config = '', MakeArt = False, MakeAudio = False ):
+    def __init__(self, IDEA = '' ,UserConfirm = False, ConfirmInput = False, UserMode = 'UI',Mode = 'MVAA',Writer = '', UserInputs_Config = 'AI Only',OutputTypes = ["Play", "Novel", "ScreenPlay","Poem"],voice=4, Logic_AI = 0, language_settings=1,Chunk_Limit = 777,  SavePath =up.AI_AudioBook_Path,  Writer_Style = '',Artist = '', Artist_Style = '', Story_Type = 'ScreenPlay', Seasons = 1, Episodes = 3, Books = '', Acts = '', Scenes = '', Movies = '', Text_Output_Config = [''], IDEA_Source = 'AI', Output_Audio_Config = '', MakeArt = False, MakeAudio = False ):
         self.voice = voice
         self.language_settings = language_settings
         self.UserMode = UserMode
@@ -260,7 +260,7 @@ class Story():
 
 
 
-
+            xxx = 1
 
 
 
@@ -565,12 +565,14 @@ class Story():
         AllScenes_Outline_Format = SP.Story_AllScenes_Outline_Format
         Outline_Expand_Task = SP.Story_Outline_Expand_Task
         Outline_Expand_Format = SP.Story_Outline_Expand_Format
-        Outline_Task = SP.Story_Outline_Task
-        Outline_Format = SP.Story_Outline_Format
+        Outline_Task = SP.Story_Outline_Task4
+        Outline_Format = SP.Story_Outline_Format4
         AllScenes_Char_Summary_Task = SP.Story_AllScenes_Char_Summary_Task
         AllScenes_Char_Summary_Format = SP.Story_AllScenes_Char_Summary_Format
-        Style_Details_Format = self.Story_Style_Details_Format
-        Style_Details_Task2 = self.Story_Style_Details_Task2
+        Style_Details_Format = SP.Story_Style_Details_Format2
+        Style_Details_Task2 = SP.Story_Style_Details_Task2
+        self.Story_Scene_Outline_Task = SP.Story_Scene_Outline_Task
+        self.Story_Scene_Outline_Format = SP.Story_Scene_Outline_Format
 
 
 
@@ -583,8 +585,9 @@ class Story():
             Outline_Format = PW.Story_Outline_Format
             AllScenes_Char_Summary_Task = PW.Story_AllScenes_Char_Summary_Task
             AllScenes_Char_Summary_Format = PW.Story_AllScenes_Char_Summary_Format
-            Style_Details_Format = PW.Story_Episode_Writing_Style_Task
-            Style_Details_Task2 = PW.Story_Episode_Writing_Style_Format
+            Style_Details_Format = PW.Story_Episode_Writing_Style_Format
+            Style_Details_Task2 = PW.Story_Episode_Writing_Style_Task
+
 
 
             self.Story_Scene_Outline_Format = PW.Poem_Outline_Format
@@ -599,7 +602,7 @@ class Story():
         ##Note this is where you change the prompts for it to be Poetry prompts or other for you to use here
 
         #gc.collect()
-        self.Story_Role = 'You are a brilliant assistant to the user, Role Play as an award winning writer/Director/Playwrite able to impersonate any genre or style/voice base your persona on the following Writing Style  Writing Style: ' + self.Writer_Style_Summary
+        self.Story_Role = 'You are a brilliant assistant to the user, Role Play as an award winning writer/Director/Playwrite able to impersonate any genre or style/voice. You are required to base your persona on the following Writing Style  Writing Style: ' + self.Writer_Style_Summary
 
         self.StoryRoleAdd = Story.Basic_GPT_Query(self,Line2_Role=self.Story_Role, Line3_Format=Style_Details_Format,Line4_Task=Style_Details_Task2
                                                   ,Background ="""Use the following Writing Style for your response Writing Style:### """ + self.Writer_Style_Summary ,
@@ -626,8 +629,25 @@ class Story():
                                                      WINDOWNAME="Characters Summary (Too long of a character list)", Line1_System_Rule= self.systemPrompt)
 
         #gc.collect()
+        Delim1 = "@PART"
+        Delim2 = "@@PART"
+        uWord = 'Part'
+
+
+        self.xpartNum = 1
+        if self.xpartNum == 1:
+            Outline_Task = SP.Story_Outline_Task
+            Outline_Format = SP.Story_Outline_Format
+
+
+            Delim1 = "@STORYLINE"
+            Delim2 = "@@STORYLINE"
+            uWord = "StoryLine"
+
+
         NewStory_Outline = Story.Basic_GPT_Query(self,
-                                                 Line2_Role=self.Story_Role,
+
+                                                Line2_Role=self.Story_Role,
                                                  Line3_Format=Outline_Format,
                                                  Background= """Use the following  Text  as background for your Outline   IDEA:###""" + self.IDEA_Final + """### Characters: ###""" + self.Characters2 +  """###""",
                                                  Line4_Task=Outline_Task,
@@ -693,8 +713,9 @@ class Story():
         self.Season_num = 1
 
         #gc.collect()
-        self.Episode_by_Episode = Story.cutBy(self, Text=NewStory_Outline, upperWord='Part', Delimiter='@@',
-                                              DelimiterCheck='@PART', ReplaceKey='@@PART')
+
+        self.Episode_by_Episode = Story.cutBy(self, Text=NewStory_Outline, upperWord=uWord, Delimiter='@@',
+                                              DelimiterCheck=Delim1, ReplaceKey=Delim2)
 
 
 
@@ -745,6 +766,8 @@ class Story():
 #this should maybe be optional or if user selects something else it will bypass this??? Make a button to wipe out part num fix
             PartNumFix = ''
 
+
+
             if x1 == 1 and countPart > 1:
                 PartNumFix = """DO NOT RESOLVE THE STORY/DO NOT WRITE THE CONCLUSION/RESOLUTION, Leave the story open ended: This is Part 1 (Beginning - Introduction & Exposition) out of 3 parts. This is the first part so make it exciting while laying the groundwork for the entire story, introduce characters and make the story come to life, do not write a conclusion, in fact the rising action should only just be starting for main plot, you can have arc plots get further along, and set up a red herring to make the story not obvious  Have some arc plots resolve but make sure the main plot is not resolved in this section of Scenes. introduce most of the characters and set up a plot twist or something else for the later 2 parts, make sure you set up another TWO THIRDS of the story. Introduce characters and Exposition with rising action/conflict development.  Again, Do not wrap up the entire story in this part,  You should end this part of the story with the major plot starting to get towards the rising action, in the first part establish the plots/arc plots for the second part to resolve the arc plots and build the conflict for the main plot in season 2, The first few scenes should be interesting and draw us in and then provide most of the background for the story in this part."""
             elif x1 == 2 and countPart > 2 :
@@ -761,8 +784,12 @@ class Story():
 
             #PartNumFix = "DO NOT RESOLVE THE STORY"
 
-            Background = PartNumFix + ''
 
+
+            if self.xpartNum ==1:
+                PartNumFix = ''
+
+            Background = PartNumFix + ''
 
 
             if x1 > 1:
@@ -1661,7 +1688,7 @@ class Story():
             if self.Episode1 == True and self.Season1 == True and self.Scene_Num == 1:
                 self.Background_Scene = 'This is the opening scene, be sure to draw in the audience, make it exciting and peak the curiosity of the audience use the following characters for reference: ' + self.CharactersTrim
             else:
-                self.Background_Scene = 'Make sure the Outline you make for this scene makes sense given the past events in the story if the original outline provided is not 100% logical make the neccesary adjustments to make the story you outline make sense and not completely random/illogical. ' + self.Story_Background_Task +  " Prior Scenes (Do Not Repeat, but potentially build off this): " + self.Prior_Scenes + "###" + 'Characters: ###' + self.CharactersTrim +  '###'
+                self.Background_Scene = 'Make sure the Outline you make for this scene makes sense given the past events in the story if the original outline provided is not 100% logical make the neccesary adjustments to make the story you outline make sense and not completely random/illogical. ' + self.Story_Background_Task +  " Prior Scenes (Do Not Repeat lines or redundant information this is to be used for reference so you can build the story off this): " + self.Prior_Scenes + "###" + 'Characters: ###' + self.CharactersTrim +  '###'
 
             #
             # try:
@@ -2268,7 +2295,7 @@ class Story():
             Title = ''
             try:
                 if len(Text)> 6000:
-                    Model= "gpt-3.5-turbo-16k-0613"
+                    Model= "gpt-3.5-turbo"
                 elif len(Text)< 6000:
                     Model = "gpt-3.5-turbo"
                 while KeepGoing == False and KillSwitch < 8:
@@ -3638,7 +3665,7 @@ class Story():
 
         Full_User_Prompt = sys_prompt + prompt + User_Subject + ArtFormat
         if len(Full_User_Prompt) > 6000:
-            Model = "gpt-3.5-turbo-16k-0613"
+            Model = "gpt-3.5-turbo"
         elif len(Full_User_Prompt) < 6000:
             Model = "gpt-3.5-turbo"
 
@@ -3907,7 +3934,7 @@ class Story():
 
 
     def MakeRecipe(self, Line2_Role=StoryMode.Recipe_Role, Line3_Format=StoryMode.Recipe_Format,
-                   Line4_Task=StoryMode.Recipe_Task, Model="gpt-3.5-turbo-16k-0613", Special='',
+                   Line4_Task=StoryMode.Recipe_Task, Model="gpt-3.5-turbo", Special='',
                    Line1_System_Rule=StoryMode.system_TextJoaT_quick, crazy=.5, Subject='', Outline='', Allowed_Fails=8,
                    SaveFile=True, MakeArt=True, Mode='getBAIKED',
                    SavePath=up.SavePath , upgradeLimit= 2000):  # use this to create art style for the work
@@ -3926,7 +3953,7 @@ class Story():
         3).""" + Line4_Task
 
         if len(Full_User_Prompt) > upgradeLimit:
-            Model = "gpt-3.5-turbo-16k-0613"
+            Model = "gpt-3.5-turbo"
         elif len(Full_User_Prompt) < upgradeLimit:
             Model = "gpt-3.5-turbo"
 
@@ -4056,13 +4083,34 @@ def SHAINEBootUP( Order = 1):
                       UserInputs_Config='Summarize', Seasons=1, Episodes=3, UserConfirm=True)
 
 
-
-        elif Order == 313:
-            x = Story(IDEA=ShaneOriginals.Comedy_Tarentino3, Mode='MVAA_QUICK', Writer=ShaneOriginals.ShaneBioDark,
+        elif Order == 313000:
+            x = Story(IDEA=ShaneOriginals.Drug_Kill_Runaway, Mode='MVAA_QUICK', Writer=ShaneOriginals.ShaneBioDark,
                       UserInputs_Config='Summarize', Seasons=1, Episodes=3, UserConfirm=True)
 
 
-        elif Order == 3133:
+        elif Order == 313:
+            x = Story(IDEA=ShaneOriginals.Shane_TopToad, Mode='MVAA_QUICK', Writer=ShaneOriginals.ShaneBioDark,
+                      UserInputs_Config='Summarize', Seasons=1, Episodes=3, UserConfirm=True)
+        # Top Versions so Far (as of 1/5/2024)
+        #Charlie_Hustle2
+        #RobesP
+        # Comedy_Tarentino2
+        # Children_Idea1
+        # Gritty_Fever
+        #Gonzo_Musician
+        #KillingDrake
+#Comedy_LSD #Fever_Dreams
+        elif Order == 3313:
+            x = Story(IDEA=ShaneOriginals.Fever_Dreams, Mode='MVAA_QUICK', Writer=ShaneOriginals.ShaneBioDark,
+                      UserInputs_Config='Summarize', Seasons=1, Episodes=3, UserConfirm=True)
+
+
+        elif Order == 33313:
+            x = Story(IDEA=ShaneOriginals.Manson, Mode='MVAA_QUICK', Writer=ShaneOriginals.ShaneBioDark,
+                      UserInputs_Config='Summarize', Seasons=1, Episodes=3, UserConfirm=True)
+
+
+        elif Order == 33133:
             x = Story(IDEA=ShaneOriginals.Snatch_Prequel, Mode='MVAA_QUICK', Writer=ShaneOriginals.ShaneBioDark,
                       UserInputs_Config='Summarize', Seasons=1, Episodes=3, UserConfirm=True)
 
@@ -4080,13 +4128,14 @@ def SHAINEBootUP( Order = 1):
 
 
         elif Order == 133:
-            x = Story(IDEA=ShaneOriginals.Comedy_Tarentino2, Mode='BOOK_of_POEMS', Writer=ShaneOriginals.ShaneBioDark,
+            x = Story(IDEA=ShaneOriginals.Gritty_Fever, Mode='BOOK_of_POEMS', Writer=ShaneOriginals.ShaneBioDark,
                       UserInputs_Config='Summarize',UserConfirm=True, OutputTypes=['Poem'])
 
 #Top Versions so Far (as of 1/5/2024)
 #Comedy_Tarentino2
 #Children_Idea1
-
+        #Gritty_Fever
+#Comedy_Tarentino2
         elif Order == 130:
             x = Story( Mode='MVAA_QUICK',
                       UserInputs_Config='Summarize', Seasons=1, Episodes=3, UserConfirm=True)
@@ -4202,7 +4251,11 @@ def SHAINEBootUP( Order = 1):
 
         elif Order == 444:
             x = Story(IDEA=MW.Subject_LikeThese, Mode='Music_Shane', Writer=MW.Artist_Bio_DetailsSD,
-                      UserInputs_Config='Summarize', SavePath= up.AI_Music_Path, UserConfirm=False)
+                      UserInputs_Config='Summarize', SavePath= up.AI_Music_Path,UserConfirm=True)
+
+        elif Order == 44404:
+            x = Story(IDEA=MW.Subject, Mode='Music_Shane', Writer=MW.Artist_Bio_DetailsSD,
+                      UserInputs_Config='Summarize', SavePath= up.AI_Music_Path, UserConfirm=True)
 #, Writer=MW.Artist_Bio_DetailsSD
 
         elif Order == 4441:
@@ -4259,7 +4312,7 @@ if __name__ == '__main__':
     #arg = [5,0]
    # arg = [444, 443]
     #4444113335, 4444113334, 4444113333, 4444113332, 444411333
-    arg = [313]
+    arg = [3313]
     #arg = [44, 13,10]
     #arg = [7,44]
     number_of_commands = len(arg)

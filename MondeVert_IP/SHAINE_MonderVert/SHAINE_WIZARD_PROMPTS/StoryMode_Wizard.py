@@ -155,7 +155,7 @@ Persona_Summary_Format = Default_Format + """
 Desired Format: 
 Writing Style:{Writing Style}|Influences:{Influences}|Audience:{Audience}|Tone:{Tone}|Themes:{Themes}|Dialogue Style:{Dialogue Style}|Signature:{what makes their writing unique}
 """
-Persona_Summary_Task = """Task:  ###  Using the details you have been provided come up with a way of describing a prose, language, what time period, what style of language they use and the skills they posses or like to incorporate into their writing, be descriptive and use more definitions and words to describe rather than comparing to people. be unique and concise. Keep this under 120 words total.  ###   Persona: ###"""
+Persona_Summary_Task = """Task:  ###  Using the details you have been provided come up with a way of describing your unique writing style. Describe how you write dialogue, your prose, language, what time period, what style of language they use and the skills they posses or like to incorporate into their writing, be descriptive and use more definitions and words to describe rather than comparing to people. be unique and concise. Keep this under 120 words total.  ###   Persona: ###"""
 
 #"Task: ###  Reformat the details provided and fit them into a more condensed format. Be creative and make them feel real and human. Follow the format I provided and give me a complete response ('N/A' is not the correct response). ###   Persona: ###"
 
@@ -215,7 +215,7 @@ Characters_Role = Persona_Role
 #Characters_Task ="""{Task}: Create the a Short description of the relevant characters in the given text based on the Character Description Provided. Your response should be less than 150 words in total keep each character description concise  Character Description: """
 Characters_Task_Fine = """ Use the following Text to pick out the relevant characters that are needed for this section of the story (DO NOT PICK any CHARACTERS NOT MENTIONED IN THIS SPECIFIC TEXT/OUTLINE, does not matter if major/main/minor). Base your description/characters you choose on the current context and plot points. Be extensive and pull all neccesary characters., only pick the characters that are in the respective text, do not describe every character at your disposal. Your response should be less than 40 words for each character, keep the descriptions concise for each and try to be under 250 words total """
 Characters_Format_Fine = Default_Format + """
-Desired Format: Characters_in_Text:{@Name:{Role:{Role}|How they move the storyline/plot/arc plot/story forward in this part of the story/text (make this detailed and specific to this part of the story/text)|8 word or less description of body language/mood/style of clothes they wear/smell/etc. based on the text}"""
+Desired Format: Characters_in_Text:{@Name:{Role:{Role}|How They Speak?(Describe their dialogue)|How they move the storyline/plot/arc plot/story forward in this part of the story/text (make this detailed and specific to this part of the story/text)|8 word or less description of body language/mood/style of clothes they wear/smell/etc. based on the text}"""
 
 Characters_Update_Task ="""{Task}: Take/use the original Character descriptions and based on the text provided showing you what has taken place already, adjust your character description so it is fully up to speed with their current status/wants/needs/description it helps us reference the characters while writing the rest of our story. Update the respective details based on the text provided.  (Add details for new main characters and significant character development) based on the text that is to be provided. Keep all known characters in your response so we do not lose information (do not lose any characters only add new ones and update current ones), but keep details based on latest text where appplicable. You should adjust the characters based on how the story has progressed so far. For Minor characters you can add a short description about them, but keep it very brief """
 Characters_Update_Task2 ="""{Task}: ### Take/use the original Character descriptions and based on the text provided showing you what is coming up next in the story,
@@ -342,6 +342,11 @@ Story_Style_Details_Format = Default_Format + """
 Desired Format:
 Writing Style: {Mood: {Mood}|Theme:{Theme}|style:{style}|genre:{genre}|Similar Writer:{Similar Writer}|Narrator:Narrator(s)|Narrative:{Narrative}|Point of view:{Point of view}|Language(s):{Language(s)}|Imagery:{Imagery}|Symbolism:{Symbolism}|Juxtapositions:{Juxtapositions}|Irony:{Irony}|Allusion:{Allusion}| Allegory:{Allegory}"""
 
+Story_Style_Details_Format2 = Default_Format + """
+Desired Format:
+Writing Style: {Describe your writer's unique writing style, use this as an opportunity to showcase how you write in your own personal description, it should include Prose, writing styles, common influences/allegory and other  literary devices you use in your writying, keep your response concise and short while still giving good information as to how the writing should sound from your persona}"""
+
+
 Story_Style_Details_Task2 = """Using the current Writing style you are using for the series and the following text, come up with a specific style that is similar but somewhat unique based on the following text.   Text:"""
 
 
@@ -431,27 +436,33 @@ Desired Format:
 
 SceneFix = """Follow these guidelines for your scene:
 
-Paint a vivid scene through actions and dialogue, allowing the audience to interpret for themselves.
+Use the 5 senses to Paint a vivid scene through actions and dialogue, allowing the audience to interpret for themselves.
 Avoid mentioning the audience or the reader in your response.
 Provide only relevant information for building the scene, avoiding spoilers.
 Incorporate red herrings or elements that may mislead the audience.
 Describe the setting, dialogue, and action without using the word 'scene' or breaking the 4th wall.
 Avoid clichés, repetitive phrases, and corny lines.
-Use strong dialogue that moves the plot forward, showing rather than telling.
+Use strong dialogue that moves the plot forward, showing rather than telling. **** Make the dialogue match the character speaking****
 Avoid using the phrase 'little did they/he/she know' or corny lines like 'no matter what' or 'no matter the cost'.
-Fill any egregious plot holes, such as describing the purpose of a protest indirectly through signs or chants.
-Instead of clichés, describe the plan they have to move forward."""
+Show Don't tell, make the reader understand the underlying tones and messages without saying them outright
+Use the outline you have been provided as a guide, expand on the dialogue so it fits the story and develops the characters with the dialogue."""
 
 
-Story_Scene_Outline_Task = SceneFix + """Task: ### write a detailed outline for The respective scene from the story keep the description in bullet format with all of the details that will happen in the scene, the emotion, the clothes they are wearing, go over the 5 senses (what are the characters feeling, smelling, tasting, hearing, seeing) to make the scene feel as real as possible. Be as specific and detailed as possible. Leave no ambiguity and 0  plot holes. If something has already been said or an action has taken place do not repeat it, at least change the wording as you move the plot forward.  Be Specific, do not be vague and leave the details up to specilation, the details should be 100% clear.   Have strong dialogue and make the audience eager for more. Do not be repetetive and make it interesting dialogue is important but make it drive the plot further and be unique and witty. Do not be vague, give details to important actions, do not have illogical things like a normal civilian sneaking into government buildings make it believeable and not a corny action film. There are ways for normal people to figure out what the government is doing, by confronting the officials based on evidence or speculation etc. it should not be easy. Do not make the plans fall right into the main characters lap, it should be earned and a complex story. The antagonist can make mistakes and if its not unbelievable the main character can do detective work, but only if it fits the story and is believable/relateable to the character/audience. Do not explain the scene at the end of your response, your details should be in chronological order for the scene what is going to be shown/revealed in the story, put context at the top of your outline, but the details should be only dialogue and/or event and/or plot/arc plot driven context and details. DO NOT PUT ANY NOTES AT THE END OF THE RESPONSE, STICK TO THE FORMAT!!  ###"""
+Story_Scene_Outline_Task = SceneFix + """Task: ### write a detailed outline for The respective scene from the story. Use the 5 senses to create a vivid scene, be creative as to how you use the characters you are given and use the way they talk/details about them to make their dialogue unique and one of a kind. Keep in mind the narrative/point of view and whether or not the narrator is reliable. Use historical context/make sure the scene fits the general genre/storyline you are provided. Use your writing style to make the scene your own with all of the details you have been provided.
+ keep the description in bullet format with all of the details that will happen in the scene, the emotion, the clothes they are wearing, go over the 5 senses (what are the characters feeling, smelling, tasting, hearing, seeing) to make the scene feel as real as possible. Be as specific and detailed as possible. Leave no ambiguity and 0  plot holes. If something has already been said or an action has taken place do not repeat it, at least change the wording as you move the plot forward.  
+ Be Specific, do not be vague and do not leave the key details up to speculation (you can leave some things up for interpretation, but do this on rare ocassions to make the story better)
+ , the details should be 100% clear with regard to key story details.
+ Have strong dialogue and make the audience eager for more. 
+ Do not be repetitive and make it interesting dialogue is important but make it drive the plot further and be unique and witty. The dialogue should match the respective character, use the character information as a guide. Do not be vague, give details to important actions, do not have illogical things like a normal civilian sneaking into government buildings make it believeable and not a corny action film. There are ways for normal people to figure out what the government is doing, by confronting the officials based on evidence or speculation etc. it should not be easy. Do not make the plans fall right into the main characters lap, it should be earned and a complex story. The antagonist can make mistakes and if its not unbelievable the main character can do detective work, but only if it fits the story and is believable/relateable to the character/audience. 
+ Do not explain the scene at the end of your response, your details should be in chronological order for the scene what is going to be shown/revealed in the story, put context at the top of your outline, but the details should be only dialogue and/or event and/or plot/arc plot driven context and details. 
+ DO NOT PUT ANY NOTES AT THE END OF THE RESPONSE, STICK TO THE FORMAT!!  ###"""
+
 Story_Scene_Outline_Format = """Complete the {Task} provided , Role play that you are the {Persona} and use the {Characters} you created to do provide your response in the format shown below.
 
 Desired Format:
-@Scene:{Setting:{Setting(s)}|Length of Scene:{Short/Medium/Long}|genre:{genre}|mood:{mood}|Theme:{Theme}|Narrative:{Narrative}|Point of view:{Point of view}|Reliable Narrator: {Yes/No}|Characters:{Characters_in_Scene_By_Name}|
-Plot Notes: How does it drive the plot/arc plots for this specific scene (do not be vague, or have any spoilers, explain what needs to happen in this specific scene for the plot to move forward in the right direction)
-Scene Dialogue: {Scene Dialogue}
+@Scene:{Setting:{Setting(s)}|Length of Scene:{Short/Medium/Long}|genre:{genre}|mood:{mood}|Theme:{Theme}|Narrative:{Narrative}|Point of view:{Point of view, (Reliable Narrator?)}|Characters:{Characters_in_Scene_By_Name}|
 Scene Description: {Detailed Scene Description}
-
+Scene Dialogue: {Scene Dialogue}
 """
 
 
@@ -556,16 +567,32 @@ Output_Fix2 = "Do not put a  'Note:' section in the output/result ###"
 Output_Fix = """
 Follow these requirements for your task:
 
+***Critical Rules Below***
+1. Extensively (often poetically) Use the 5 senses to Paint a vivid scene through actions and dialogue, allowing the audience to interpret for themselves.
+2. ********It is critical you obey the following rule: You must tell the story in the correct Narrative/Point of view, if you are telling story in the 1st person write in the respective characters prose. Refer to the outline provided so you know what narative/point of view to tell the story from. Write the Scene details in the respective narrative/point of view, note the style of writing should adapt to the characters way of speaking, their observations and perspective should be unique to their character, pull your style from the main writing style combined with the characters unique voice to make the story vivid. You must, it is critical, that you write your outline from the correct point of view and from the correct person's point of view based on the outline you are provided(note the outline provided to you says the narrative/perspective and point of view of the specific character, You should adjust your writing style based on the narrator's voice and way of thinking/speaking)********
+3.Use literary devices and your unique writing style to make the story interestingly your own.
+4. Provide only relevant information for building the scene, avoiding spoilers.
+5. Incorporate red herrings or elements that may mislead the audience.
+6. Describe the setting, dialogue, and action without using the word 'scene' or breaking the 4th wall.
+7. Avoid clichés, repetitive phrases, and corny lines. Avoid using the phrase 'little did they/he/she know' or corny lines like 'no matter what' or 'no matter the cost', Do not say 'Reminding' or 'A Reminder that' or anything that is similar to that phrasing.
+8. Use strong dialogue that moves the plot forward, showing rather than telling. 
+9. **** Make the dialogue for each character match the respective character speaking****
+10.  Avoid mentioning the audience or the reader in your response.
+11. Show Don't tell, make the reader understand the underlying tones and messages without saying them outright. You can be abstract and leave things open ended, but also do not be vague unless its intentionally
+12. Use the outline you have been provided as a guide, expand on the dialogue so it fits the story and develops the characters with the dialogue.
+13. Use historical information and historically accurate details in your story (pop culture, sports, political, international, world news, major events, music etc.), make sure it logically/chronologically fits the time period and use the details to make your story more vivid
+***Use your Writing style to use all of the details provided and tell the story in your own unique way (this is the most important rule!)***
+***Use the Descriptions of how the characters sound/their dialogue style (along with your own style) to make the dialogue fit the character***
+***Each character should have a unique way of speaking, make it interesting their dialogue should fit their persona***
+***Show don't tell, make the reader/audience have to interpret the deeper meanings and infer certain things without saying them in your writing***
+
+
+ 
+Other important  Rules to follow: 
 Do not break the 4th wall or address the audience.
-Do not add any notes or additional context to the reader, even if the outline mentions the scene/audience/reader.
+Do not add any notes or additional context to the reader, even if the outline mentions the scene/audience/reader your response is the final version of the story/text.
 Provide details and emotions through dialogue and actions in the story.
-Avoid clichés, repetitive phrases, and corny lines.
-Source information from the outline but use your own wording while staying consistent with the ideas.
-Use the outline as a foundation, adding your own flair and tying it into the story.
-Anything you add should have no bearing on the plot or arc plots, you can have character witness something horrific or tragic, make story interesting without it ruining the main storyline. 
-You can create a random person/character and have them randomly interact with main character in no way for the plot besides giving reference to the type of character the person is
-Ensure logical continuity and fill any egregious plot holes.
-End the scenes with dialogue or action avoiding any excessive plot explanations or notes to the reader/audience.
+Ensure logical continuity of the story based on the details you have been provided and fill any egregious plot holes.
 """+ Output_Fix2
 
 #****************************************************************************************************************************************************************************************************************************************************************
@@ -573,17 +600,21 @@ End the scenes with dialogue or action avoiding any excessive plot explanations 
 #****************************************************************************************************************************************************************************************************************************************************************
 ## User Config type things and also prework like characters
 
+
+
+
 Short_Story_Role = """use the outline provided for most of the details (build on them but most of them have been provided already) your task is to w role play that you are an award winning writer and director with all the talents neccesary to make a succesful screenplay/audio book that is exciting and draws the audience for more and more"""
 Short_Story_Special = """Have fun, be creative and follow the rules. It is imperative that you understand that You are currently writing the story/screenplay using the information  I provided  for Episode #:"""
-Short_Story_Task = Output_Fix + """Task:  #### your task is to write a Scene  for the respective movie's your story/Scene.  The Story should read like an award winning ScreenPlay.  {Detailed Outline}:"""
-Short_Story_Task2 = Output_Fix + """Task: #### your task is to write a Scene  for the respective movie screenplay of your story/Scene.   The Story should read like an award winning Hollywoord ScreenPlay.  Do not mention episodes/Seasons/Scenes, Use the respective Detailed Outline Text and background info to make a continuous storyline in your response (follow the outline for reference)  ####  {Detailed Outline}: """
-Short_Story_Task_Novel_Chapter =  Output_Fix +  """Task: #### DO NOT MENTION THE CAMERA IN ANY WAY (UNLESS THERE IS A CAMERA IN THE STORY DO NOT MENTION THE CAMERA YOUR RESPONSE IS NOT A MOVIE so there is no camera)  your task is to write a Scene  for a chapter in an award winning novel, your format should mimic your writing styles/persona in the style of a novel.  The Story should read like an award winning Novel that mimics your persona perfectly and uses the details provided to make the perfect scene given the details provided.  Use the respective Detailed Outline Text and background info to make your story have logical continuity.  DO not to say the words 'Chapter' and DO NOT SAY 'Scene'.  If two characters are talking you can describe the conversation with vivid details, but you should for the most part also  have the characters speak the line/idea themself so the audience can interpret the dialogue.  ####  {Detailed Outline}: """
-Short_Story_Task_Play_Scene =   Output_Fix + """Task: #### DO NOT MENTION THE CAMERA IN ANY WAY (UNLESS THERE IS A CAMERA IN THE STORY DO NOT MENTION THE CAMERA YOUR RESPONSE IS NOT A MOVIE so there is no camera)   your task is to write a unique scene for the respective play to be performed on stage based on the details you have been provided .  Add dialogue where its needed and be specific.  Be Abstract and show don't tell, make it up to the reader to interpret  The Story should read like an award winning Play/Musical (and/or Script) Use the respective Detailed Outline Text and background info to make a continuous story (follow the detailed outline ). it should read like a script that can also be sold as a book for readers to enjoy. ####  {Detailed Outline}: """
+Short_Story_Task = Output_Fix + """Task:  #### your task is to write a Scene  for the respective movie's your story.  The Story should read like an award winning ScreenPlay.  {Detailed Outline}:"""
+Short_Story_Task2 = Output_Fix + """Task: #### your task is to write a Scene  for the respective movie screenplay of your story.   The Story should read like an award winning Hollywoord ScreenPlay.  Do not mention episodes/Seasons/Scenes, Use the respective Detailed Outline Text and background info to make a continuous storyline in your response (follow the outline for reference) Be sure to write the outline from the specific characters perspective and use their way of thinking/speaking/character details to make your writinggg style merge with the characters internal dialogue and way of speaking. ####  {Detailed Outline}: """
+Short_Story_Task_Novel_Chapter =  Output_Fix +  """Task: #### DO NOT MENTION THE CAMERA IN ANY WAY (UNLESS THERE IS A CAMERA IN THE STORY DO NOT MENTION THE CAMERA YOUR RESPONSE IS NOT A MOVIE so there is no camera)  your task is to write a Scene  for a chapter in an award winning novel, your format should mimic your writing styles/persona in the style of a novel.  The Story should read like an award winning Novel that mimics your persona perfectly and uses the details provided to make the perfect scene given the details provided.  Use the respective Detailed Outline Text and background info to make your story have logical continuity.  DO not to say the words 'Chapter' and DO NOT SAY 'Scene'.  Be sure to write the outline from the specific characters perspective and use their way of thinking/speaking/character details to make your writinggg style merge with the characters internal dialogue and way of speaking.  ####  {Detailed Outline}: """
+Short_Story_Task_Play_Scene =   Output_Fix + """Task: #### DO NOT MENTION THE CAMERA IN ANY WAY (UNLESS THERE IS A CAMERA IN THE STORY DO NOT MENTION THE CAMERA YOUR RESPONSE IS NOT A MOVIE so there is no camera)   your task is to write a unique scene for the respective play to be performed on stage based on the details you have been provided .  Add dialogue where its needed and be specific.  Be Abstract and show don't tell, make it up to the reader to interpret  The Story should read like an award winning Play/Musical (and/or Script) Use the respective Detailed Outline Text and background info to make a continuous story (follow the detailed outline ). it should read like a script that can also be sold as a book for readers to enjoy. Be sure to write the outline from the specific characters perspective and use their way of thinking/speaking/character details to make your writinggg style merge with the characters internal dialogue and way of speaking. ####  {Detailed Outline}: """
 
-Short_Story_Task_PlayMusical_Scene =   """Task: ####  DO NOT MENTION THE CAMERA IN ANY WAY (UNLESS THERE IS A CAMERA IN THE STORY DO NOT MENTION THE CAMERA YOUR RESPONSE IS NOT A MOVIE),  your task is to write a unique scene for the respective musical/play to be performed on stage based on the details you have been provided .  Add dialogue where its needed and be specific.  Be Abstract and show don't tell, make it up to the reader to interpret. (Do Not mention the audience or the reader in your response).  The Story should read like an award winning Play/Musical (and/or Script) Use the respective Detailed Outline Text and background info to make a continuous story (follow the detailed outline ). it should read like a script that can also be sold as a book for readers to enjoy. #### {Detailed Outline}: """
+Short_Story_Task_PlayMusical_Scene =   """Task: ####  DO NOT MENTION THE CAMERA IN ANY WAY (UNLESS THERE IS A CAMERA IN THE STORY DO NOT MENTION THE CAMERA YOUR RESPONSE IS NOT A MOVIE),  your task is to write a unique scene for the respective musical/play to be performed on stage based on the details you have been provided .  Add dialogue where its needed and be specific.  Be Abstract and show don't tell, make it up to the reader to interpret. (Do Not mention the audience or the reader in your response).  The Story should read like an award winning Play/Musical (and/or Script) Use the respective Detailed Outline Text and background info to make a continuous story (follow the detailed outline ). it should read like a script that can also be sold as a book for readers to enjoy. Be sure to write the outline from the specific characters perspective and use their way of thinking/speaking/character details to make your writinggg style merge with the characters internal dialogue and way of speaking. #### {Detailed Outline}: """
 
-Short_Story_Task_Poem =  "DO NOT BREAK THE 4th WALL, your response should take the details of the OUTLINE you are provided and write a unique poem using the details of the outline and adding your own flare based on your persona"
+#Short_Story_Task_Poem =  "DO NOT BREAK THE 4th WALL, your response should take the details of the OUTLINE you are provided and write a unique poem using the details of the outline and adding your own flare based on your persona"
 
+Short_Story_Task_Poem =  "DO NOT BREAK THE 4th WALL, your response should take the details of the OUTLINE you are provided and write a unique scene  based on the outline provided. Your response should read like your own style of a William Shakespeare style play using intricate wording and sometimes nonsensical writing/words to have iambic pantameter and other poetry/william shakespeare tactics. It should feel like a modern day Shakespear Play.  You can stray from the outlines dialogue, but its important to make it sound like a modern days William Shakespeare writing the story (along with the persona you created). use the details of the outline and add your own flare based on your persona. Be sure to write the outline from the specific characters perspective and use their way of thinking/speaking/character details to make your writinggg style merge with the characters internal dialogue and way of speaking."
 
 
 #For the results, you should format the text as a screen play where the Narrator is written like one of the characters named 'NARRATOR'. The Narrator will say the non verbal words from the text, for example the mood, the actions happening, the scenery, the smells etc. anything not spoken should be 'spoken' by the NARRATOR.  All of the Narrator non-verbal parts should be in parenthesis so the reader knows it is not being spoken aloud.
@@ -599,14 +630,39 @@ NARRATOR(Name_which_character_is_narrating): (<Narrates_and_Describes_actions_em
 Short_Story_Format_Screenplay =  Output_Fix + 'For your response use the basic screen play format with proper narration, description of setting, and dialog, make it look like a real hollywood script.  Put quotes on spoken words.'
 
 
-Short_Story_Format_Screenplay_Scene =  ' For your response use the basic screen play format with proper narration, description of setting, and dialog, make it look like a real movie/TV script. Put quotes on spoken words'
-Short_Story_Format_Play_Scene = ' For your response format the text as a part/Scene of a  script for a Play. Include dialogue, settings, and narration etc.. Do not have plot notes or any other spoilers, make it read like a script that is also a good read for someone to enjoy'
-Short_Story_Format_PlayMusical_Scene =  ' For your response format the text as part/Scene of a script for a Musical/Play it should explain the music and how it is song, make it in the typical format for a script of a musical (including the musical numbers). Include dialogue, settings, and narration etc.. Do not have plot notes or any other spoilers, make it read like a script that is also a good read for someone to enjoy, and songs should be fun and exciting'
+Short_Story_Format_Screenplay_Scene =  """  For your response use the basic screen play format with proper narration, description of setting, and dialog, make it look like a real movie/TV script. Put quotes on spoken words
+Also include 
+Scene Name: {Scene Name}
+Perspective:{}
+Narrative: {}
+{Text_Formatted_as_ScreenPlay}
+"""
+Short_Story_Format_Play_Scene = """  For your response format the text as a part/Scene of a  script for a Play. Include dialogue, settings, and narration etc.. Do not have plot notes or any other spoilers, make it read like a script that is also a good read for someone to enjoy
+Also include 
+Scene Name: {Scene Name}
+Perspective:{}
+Narrative: {}
+{Text_Formatted_as_Play}"""
+Short_Story_Format_PlayMusical_Scene =  """ For your response format the text as part/Scene of a script for a Musical/Play it should explain the music and how it is song, make it in the typical format for a script of a musical (including the musical numbers). Include dialogue, settings, and narration etc.. Do not have plot notes or any other spoilers, make it read like a script that is also a good read for someone to enjoy, and songs should be fun and exciting
+Also include 
+Scene Name: {Scene Name}
+Perspective:{}
+Narrative: {}
+{Text_Formatted_as_Musical_Play}"""
 Short_Story_Format_Novel_Chapter =   """ For your response format the text as part/chapter of a published Novel (this chapter is based on details provided, do not mention the audience, make the audience feel it and experience it with your writing)
 Desired Format:
+Scene Name: {Scene Name}
+Perspective:{}
+Narrative: {}
 {Text_Formatted_as_Novel}"""
 
-Short_Story_Format_Poem = """ For your response, format the text so that it is a poem in the proper format for the style you have been provided in your outline to write about. """
+#Short_Story_Format_Poem = """ For your response, format the text so that it is a poem in the proper format for the style you have been provided in your outline to write about. """
+Short_Story_Format_Poem = """ For your response, format the text so that it is a William Shakespeare Play (Like Romeo and Juliet, Hamlet, Oedepus etc.) in the proper format/writing style based on the details you have been provided in your outline to write about. Use your poetic license to take the story details and make a unique Play with complex wording and ways of speaking so it is like a William Shakespeare  Play
+Also include 
+Scene Name: {Scene Name}
+Perspective:{}
+Narrative: {}
+{Text_Formatted_as_Shakespeare_Play}"""
 
 
 Short_Story_Song_Task =   """Task: Using the {Persona} you created expand your expertise to writing music and music production, and create short/unique song that tells a story about the text provided (can be abstract, catchy or a little different, try not to be boring. Use proper music theory). Use rhyme schemes and a combination of Rap/Spoken Word/Singing to make a mix of verses/bridges and a chorus. Text: """

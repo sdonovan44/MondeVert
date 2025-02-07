@@ -87,7 +87,7 @@ class GPT_Mode():
         self.UserConfirm = ''
         self.CurrentWindowName = ''
 
-    def Basic_GPT_Query(self,   Line2_Role  , Line3_Format ,Line4_Task ,Full_Transcript= '',FULL_Story = '',UserPrompts = '',UserPromptsCount = '',Big = False ,Background = '' ,Background2 = '', Background3 = '' ,Model = "gpt-3.5-turbo" ,upgradeLimit = 3000 ,Special = '' ,Line1_System_Rule = SP.System, crazy = .5, Subject= '', Outline = '', Allowed_Fails = 8, SaveFile = False ,MakeArt = False, Mode = 'SHAINE SAYS', SavePath= up.AI_AudioBook_Path, FileName= 'MONDEVERT PRESENTS - A No Named Story', User_Confirm = False, WINDOWNAME = "GPT Mode - ", ReviewPrompts = False,  version = 1, Retry= True,UserMode='UI', CurrentTime= "", Test = False)  :  # use this to create art style for the work
+    def Basic_GPT_Query(self,   Line2_Role  , Line3_Format ,Line4_Task ,Full_Transcript= '',FULL_Story = '',UserPrompts = '',UserPromptsCount = '',Big = False ,Background = '' ,Background2 = '', Background3 = '' ,Model = "gpt-4o-mini" ,upgradeLimit = 3000 ,Special = '' ,Line1_System_Rule = SP.System, crazy = .5, Subject= '', Outline = '', Allowed_Fails = 8, SaveFile = False ,MakeArt = False, Mode = 'SHAINE SAYS', SavePath= up.AI_AudioBook_Path, FileName= 'MONDEVERT PRESENTS - A No Named Story', User_Confirm = False, WINDOWNAME = "GPT Mode - ", ReviewPrompts = False,  version = 1, Retry= True,UserMode='UI', CurrentTime= "", Test = False)  :  # use this to create art style for the work
         #Test = True
 
         self.UserPrompts = UserPrompts
@@ -194,12 +194,12 @@ class GPT_Mode():
                         USER: """ + self.CurrentTask
 
                 if len(self.Full_User_Prompt) > upgradeLimit:
-                    self.CurrentModel = "gpt-3.5-turbo-16k-0613"
+                    self.CurrentModel = "gpt-4o-mini"
                 elif len(self.Full_User_Prompt) < upgradeLimit:
-                    self.CurrentModel = "gpt-3.5-turbo"
+                    self.CurrentModel = "gpt-4o-mini"
 
                 if Big == True:
-                    self.CurrentModel = "gpt-3.5-turbo-16k-0613"
+                    self.CurrentModel = "gpt-4o-mini"
 
                 if Test ==False:
                     self.Current_GPTResponse = cu.ASKGPT(System=self.CurrentSystem, Role=self.CurrentRole,
@@ -1567,7 +1567,7 @@ class GPT_Mode():
                 crazy=.5, sys_prompt=sms.ArtPrompt_Sys, Model="gpt-3.5-turbo", UserConfirm='False'):
         Full_User_Prompt = sys_prompt + prompt + User_Subject + ArtFormat
         if len(Full_User_Prompt) > 6000:
-            Model = "gpt-3.5-turbo-16k-0613"
+            Model = "gpt-3.5-turbo"
         elif len(Full_User_Prompt) < 6000:
             Model = "gpt-3.5-turbo"
 
